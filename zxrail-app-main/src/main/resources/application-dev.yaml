@@ -1,0 +1,64 @@
+# 项目相关配置
+zxrail:
+  security:
+    # 系统登录方式 支持以下
+    # 1、system_self_login: 系统自带登录， 尚需开发;
+    # 2、platform_sso: 平台sso;
+    # 3、mock: 任意token即可完成登录,可自定义实现MockUserProvider提供用户信息,仅仅在dev环境才生效
+    # 4、not_support 不使用系统自带
+    loginType: mock
+    platformLogin:
+      # 平台主地址
+      platformDomain: http://localhost:8080
+      # 检查token的请求路径
+      checkTokenPath: /oauth/check_token
+    # 安全拦截白名单列表(数组)
+    excludes:
+      - /account/login
+      - /app/account/login
+    #  -- 规则A
+    #  -- 规则B
+    # 防止XSS攻击
+    xss:
+      # 过滤开关
+      enabled: true
+      # 排除链接（多个用逗号分隔）
+      excludes:
+      # 匹配链接
+      urlPatterns: /system/*,/monitor/*,/tool/*
+  file:
+    # 支持 minio localServer 模式
+    fileType: minio
+    savePath: http://192.168.30.130:9000
+    imgPath: http://192.168.30.130:9000
+    bucket: demo
+    accessKey: miniominio
+    secretKey: miniominio
+spring:
+  # todo redis配置
+  redis:
+    host: 192.168.30.156
+    port: 6379
+    timeout: 3000
+    database: 0
+    # password: yehuan
+
+mybatis-flex:
+  configuration:
+    # 更详细的日志输出 会有性能损耗 org.apache.ibatis.logging.stdout.StdOutImpl
+    logImpl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+  global-config:
+    print-banner: true
+  # 数据源配置
+  datasource:
+
+    #    master:
+    #      type: hikari
+    #      url: jdbc:oracle:thin:@192.168.30.104:1521:ORCLcdb
+    #      username: C##CKD
+    #      password: 123456
+    master:
+      type: hikari
+      url: jdbc:mysql://192.168.30.113:3306/demo?useSSL=false
+      username: root
+      password: zxwz@123
