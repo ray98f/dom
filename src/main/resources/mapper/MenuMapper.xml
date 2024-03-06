@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzmtr.dom.mapper.common.MenuMapper">
+
+    <select id="listLoginMenuRootList" resultType="com.wzmtr.dom.dto.res.common.MenuResDTO">
+        SELECT DISTINCT sp.*
+        FROM SYS_USER_ROLE sur left join SYS_ROLE_PERMISSION srp on srp.ROLE_ID=sur.ROLE_ID
+        left join SYS_PERMISSION sp on sp.ID=srp.PERMISSION_ID and sp.DEL_FLAG=0 and sp.STATUS=0
+        WHERE sp.TYPE=1 AND sp.PARENT_ID IS NULL and sur.USER_ID=#{personId}
+        ORDER BY sp.SORT
+    </select>
+
+    <select id="listLoginMenuBodyList" resultType="com.wzmtr.dom.dto.res.common.MenuResDTO">
+        SELECT DISTINCT sp.*
+        FROM SYS_USER_ROLE sur left join SYS_ROLE_PERMISSION srp on srp.ROLE_ID=sur.ROLE_ID
+        left join SYS_PERMISSION sp on sp.ID=srp.PERMISSION_ID and sp.DEL_FLAG=0 and sp.STATUS=0
+        WHERE sp.TYPE!=1 AND sp.PARENT_ID IS NOT NULL and sur.USER_ID=#{personId}
+        ORDER BY sp.SORT
+    </select>
+
+    <select id="listUseMenuRootList" resultType="com.wzmtr.dom.dto.res.common.MenuResDTO">
+        SELECT *
+        FROM SYS_PERMISSION WHERE TYPE=1 AND DEL_FLAG=0 AND PARENT_ID IS NULL
+        AND STATUS=0 AND IS_SHOW=1
+        ORDER BY SORT
+    </select>
+
+    <select id="listUseMenuBodyList" resultType="com.wzmtr.dom.dto.res.common.MenuResDTO">
+        SELECT *
+        FROM SYS_PERMISSION WHERE TYPE=!1 AND DEL_FLAG=0 AND PARENT_ID IS NOT NULL
+        AND STATUS=0 AND IS_SHOW=1
+        ORDER BY SORT
+    </select>
+
+    <select id="listMenuRootList" resultType="com.wzmtr.dom.dto.res.common.MenuResDTO">
+        SELECT
+        ID as id,NAME as name,PARENT_ID as parentId,PERM_CODE as permCode,
+        TYPE as type ,URL as url,SORT as sort,COMPONENT as component,
+        IS_SHOW as isShow,STATUS as status,ICON as icon
+        FROM SYS_PERMISSION WHERE TYPE=1 AND DEL_FLAG=0 AND PARENT_ID IS NULL
+        ORDER BY SORT
+    </select>
+
+    <select id="listMenuBodyList" resultType="com.wzmtr.dom.dto.res.common.MenuResDTO">
+        SELECT
+        ID as id,NAME as name,PARENT_ID as parentId,PERM_CODE as permCode,
+        TYPE as type ,URL as url,SORT as sort,COMPONENT as component,
+        IS_SHOW as isShow,STATUS as status,ICON as icon
+        FROM SYS_PERMISSION WHERE TYPE!=1 AND DEL_FLAG=0 AND PARENT_ID IS NOT NULL
+        ORDER BY SORT
+    </select>
+
+    <select id="getMenuDetail" resultType="com.wzmtr.dom.dto.res.common.MenuDetailResDTO">
+        select sp.*, sp1.name as parent_name from SYS_PERMISSION sp
+        left join SYS_PERMISSION sp1 on sp1.ID=sp.PARENT_ID AND sp1.DEL_FLAG=0
+        where sp.ID=#{id} AND sp.DEL_FLAG=0
+    </select>
+
+    <insert id="insertMenu">
+        INSERT INTO SYS_PERMISSION
+        <trim prefix="(" suffix=")">
+            <if test="id!=null and id!=''">
+                ID,
+            </if>
+            <if test="name!=null and name!=''">
+                NAME,
+            </if>
+            <if test="parentId!=null and parentId!=''">
+                PARENT_ID,
+            </if>
+            <if test="permCode!=null and permCode!=''">
+                PERM_CODE,
+            </if>
+            <if test="type!=null">
+                TYPE,
+            </if>
+            <if test="url!=null and url!=''">
+                URL,
+            </if>
+            <if test="sort!=null">
+                SORT,
+            </if>
+            <if test="remarks!=null and remarks!=''">
+                REMARKS,
+            </if>
+            <if test="component!=null and component!=''">
+                COMPONENT,
+            </if>
+            <if test="status!=null">
+                STATUS,
+            </if>
+            <if test="isShow!=null">
+                IS_SHOW,
+            </if>
+            <if test="icon!=null and icon!=''">
+                ICON,
+            </if>
+            CREATE_BY
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")">
+            <if test="id!=null and id!=''">
+                #{id},
+            </if>
+            <if test="name!=null and name!=''">
+                #{name},
+            </if>
+            <if test="parentId!=null and parentId!=''">
+                #{parentId},
+            </if>
+            <if test="permCode!=null and permCode!=''">
+                #{permCode},
+            </if>
+            <if test="type!=null">
+                #{type},
+            </if>
+            <if test="url!=null and url!=''">
+                #{url},
+            </if>
+            <if test="sort!=null">
+                #{sort},
+            </if>
+            <if test="remarks!=null and remarks!=''">
+                #{remarks},
+            </if>
+            <if test="component!=null and component!=''">
+                #{component},
+            </if>
+            <if test="status!=null">
+                #{status},
+            </if>
+            <if test="isShow!=null">
+                #{isShow},
+            </if>
+            <if test="icon!=null and icon!=''">
+                #{icon},
+            </if>
+            #{userId}
+        </trim>
+    </insert>
+
+    <update id="modifyMenu">
+        update SYS_PERMISSION set
+        <if test="name!=null">
+            NAME=#{name},
+        </if>
+        <if test="parentId!=null">
+            PARENT_ID=#{parentId},
+        </if>
+        <if test="permCode!=null">
+            PERM_CODE=#{permCode},
+        </if>
+        <if test="type!=null">
+            TYPE=#{type},
+        </if>
+        <if test="url!=null">
+            URL=#{url},
+        </if>
+        <if test="sort!=null">
+            SORT=#{sort},
+        </if>
+        <if test="remarks!=null">
+            REMARKS=#{remarks},
+        </if>
+        <if test="component!=null">
+            COMPONENT=#{component},
+        </if>
+        <if test="status!=null">
+            STATUS=#{status},
+        </if>
+        <if test="isShow!=null">
+            IS_SHOW=#{isShow},
+        </if>
+        <if test="icon!=null">
+            ICON=#{icon},
+        </if>
+        UPDATE_BY=#{userId}, UPDATE_DATE=sysdate
+        where ID=#{id} AND DEL_FLAG=0
+    </update>
+
+    <select id="selectMenuHadChildren" resultType="java.lang.Integer">
+        select count(1) from SYS_PERMISSION where PARENT_ID=#{id} AND DEL_FLAG=0 AND rownum=1
+    </select>
+
+    <update id="deleteMenu">
+        update SYS_PERMISSION set UPDATE_BY=#{userId}, UPDATE_DATE=sysdate, DEL_FLAG=1 WHERE ID=#{id} AND DEL_FLAG=0
+    </update>
+</mapper>

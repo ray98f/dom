@@ -1,0 +1,49 @@
+server:
+  port: 8900
+  tomcat:
+    uri-encoding: UTF-8
+  servlet:
+    context-path: /dom
+  compression:
+    enabled: true
+    mime-types:
+      - application/json
+      - application/xml
+      - text/html
+      - text/xml
+      - text/plain
+    min-response-size: 4096
+
+spring:
+  profiles:
+    active: zte_dev
+  jmx:
+    enabled: false
+  main:
+    allow-circular-references: true
+    allow-bean-definition-overriding: true
+  servlet:
+    multipart:
+      max-request-size: 50MB
+      max-file-size: 50MB
+      enabled: true
+  messages:
+    basename: i18n/messages
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.log4j2.Log4j2Impl
+#      log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+  global-config:
+    db-config:
+      logic-delete-field: 1
+      logic-not-delete-value: 0
+logging:
+  file:
+    path: ./logs
+  level:
+    com.wzmtr.dom.mapper: debug
