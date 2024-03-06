@@ -23,7 +23,6 @@ public class BaseEntity {
     /**
      * id
      */
-    @NotNull(message = "32000006",groups = {ValidationGroup.update.class})
     private String id;
 
     /**

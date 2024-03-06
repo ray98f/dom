@@ -2,8 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wzmtr.dom.mapper.common.UserAccountMapper">
 
-    <select id="listUserAccount" resultType="com.wzmtr.dom.dto.res.common.UserAccountListResDTO">
-        select ID, LOGIN_NAME, NO, NAME, EMAIL, PHONE, MOBILE, HIRE_DATE, ROOM, DISABLED from SYS_USER
+    <select id="listUserAccount" resultType="com.wzmtr.dom.dto.res.common.UserAccountResDTO">
+        select ID, LOGIN_NAME, NO, NAME, EMAIL, PHONE, MOBILE, HIRE_DATE, ROOM, DISABLED
+        from SYS_USER
         where DEL_FLAG=0 and EXPIRED=0
         <if test="searchKey!=null and searchKey!=''">
             and ((NAME like '%' || #{searchKey} || '%') or (MOBILE like '%' || #{searchKey} || '%'))
@@ -11,7 +12,7 @@
         order by ORDER_NUM asc
     </select>
 
-    <select id="selectUserAccountById" resultType="com.wzmtr.dom.dto.res.common.UserAccountListResDTO">
+    <select id="selectUserAccountById" resultType="com.wzmtr.dom.dto.res.common.UserAccountResDTO">
         select distinct ID, LOGIN_NAME, NO, NAME, EMAIL, PHONE, MOBILE, HIRE_DATE, ROOM, DISABLED from SYS_USER
         where DEL_FLAG=0 and EXPIRED=0 and DISABLED=0 and
         ID in (
@@ -19,10 +20,6 @@
             #{id}
         </foreach>
         )
-    </select>
-
-    <select id="listOutUserAccount" resultType="com.wzmtr.dom.entity.SysUserAccount">
-        select * from SYS_USER_ACCOUNT
     </select>
 
     <delete id="cleanTable">

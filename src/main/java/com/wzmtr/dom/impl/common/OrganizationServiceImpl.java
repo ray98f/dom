@@ -17,10 +17,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * 公共分类-组织机构管理
+ * @author  Ray
+ * @version 1.0
+ * @date 2024/03/06
+ */
 @Service
 @Slf4j
 public class OrganizationServiceImpl implements OrganizationService {
@@ -62,23 +67,12 @@ public class OrganizationServiceImpl implements OrganizationService {
             page = organizationMapper.pageMember(pageReqDTO.of(), "," + id, name);
         }
         List<MemberResDTO> list = page.getRecords();
-        if (null != list && !list.isEmpty()) {
+        if (StringUtils.isNotEmpty(list)) {
             for (MemberResDTO memberResDTO : list) {
-                StringBuilder names = new StringBuilder();
-                List<String> ids = Arrays.asList(memberResDTO.getParentIds().split(","));
-                if (!ids.isEmpty()) {
-                    for (String officeId : ids) {
-                        if ("root".equals(officeId)) {
-                            continue;
-                        }
-                        String officeName = organizationMapper.selectOfficeNameById(officeId);
-                        if (StringUtils.isNotEmpty(officeName)) {
-                            names.append(officeName).append("-");
-                        }
-                    }
+                if (CommonConstants.ROOT.equals(memberResDTO.getParentId())) {
+                    continue;
                 }
-                names.deleteCharAt(names.length() - 1);
-                memberResDTO.setOrgPath(names.toString());
+                memberResDTO.setOrgPath(organizationMapper.selectOfficeNameById(memberResDTO.getParentId()));
             }
         }
         page.setRecords(list);
@@ -86,18 +80,18 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public List<MemberResDTO> listMember(String id) {
+    public List<MemberResDTO> listMember(String id, String name) {
         List<MemberResDTO> list;
         String newId = organizationMapper.getIdByAreaId(id);
         if (!Objects.isNull(newId)) {
             return organizationMapper.listUserByOffice(newId);
         }
         if (CommonConstants.ROOT.equals(id)) {
-            list = organizationMapper.listMember(id);
+            list = organizationMapper.listMember(id, name);
         } else {
-            list = organizationMapper.listMember("," + id);
+            list = organizationMapper.listMember("," + id, name);
         }
-        if (null != list && !list.isEmpty()) {
+        if (StringUtils.isNotEmpty(list)) {
             for (MemberResDTO memberResDTO : list) {
                 if (CommonConstants.ROOT.equals(memberResDTO.getParentId())) {
                     continue;

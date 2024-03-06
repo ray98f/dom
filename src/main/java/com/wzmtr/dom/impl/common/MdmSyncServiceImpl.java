@@ -338,7 +338,7 @@ public class MdmSyncServiceImpl implements MdmSyncService {
             com.wzmtr.dom.soft.mdm.suppcontactsquery.vo.Result result2 = (com.wzmtr.dom.soft.mdm.suppcontactsquery.vo.Result) result;
             if (!StringUtils.isEmpty(result2.getPerId()) && !CommonConstants.PROCESS_ERROR_CODE.equals(result2.getExtraOrg())
                     && !StringUtils.isEmpty(result2.getExtraOrg()) && CommonConstants.ONE_STRING.equals(result2.getIsUse())) {
-                String parentIds = organizationMapper.selectCompanyIdByOfficeId(result2.getExtraOrg());
+                String parentIds = organizationMapper.selectParentIdsByOfficeId(result2.getExtraOrg());
                 if (parentIds != null) {
                     user.setId(result2.getPerId());
                     user.setLoginName(result2.getPhone());

@@ -1,15 +1,12 @@
 package com.wzmtr.dom.controller.common;
 
-import com.wzmtr.dom.dto.res.common.UserAccountListResDTO;
+import com.wzmtr.dom.dto.res.common.UserAccountResDTO;
 import com.wzmtr.dom.dto.res.common.UserCenterInfoResDTO;
 import com.wzmtr.dom.entity.BaseIdsEntity;
-import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
-import com.wzmtr.dom.entity.SysUserAccount;
 import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.entity.response.PageResponse;
 import com.wzmtr.dom.service.common.UserAccountService;
-import com.wzmtr.dom.utils.TokenUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -21,50 +18,63 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
 
+/**
+ * 公共分类-用户管理
+ * @author  Ray
+ * @version 1.0
+ * @date 2024/03/06
+ */
 @Slf4j
 @RestController
 @RequestMapping("/user")
-@Api(tags = "基础管理-用户账号管理")
+@Api(tags = "公共分类-用户管理")
 @Validated
 @CrossOrigin
-
 public class UserAccountController {
 
     @Resource
     private UserAccountService userAccountService;
 
+    /**
+     * 获取用户信息列表
+     * @param searchKey 关键字
+     * @param pageReqDTO 分页参数
+     * @return 用户信息列表
+     */
     @GetMapping("/list")
-    @ApiOperation(value = "用户账户信息列表")
-    public PageResponse<UserAccountListResDTO> listUserAccount(@RequestParam(required = false) @ApiParam("检索关键词") String searchKey,
-                                                               @Valid PageReqDTO pageReqDTO) {
+    @ApiOperation(value = "获取用户信息列表")
+    public PageResponse<UserAccountResDTO> listUserAccount(@RequestParam(required = false) @ApiParam("检索关键词") String searchKey,
+                                                           @Valid PageReqDTO pageReqDTO) {
         return PageResponse.of(userAccountService.listUserAccount(searchKey, pageReqDTO));
     }
 
+    /**
+     * 根据ids获取用户信息列表
+     * @param baseIdsEntity ids
+     * @return 用户信息列表
+     */
     @PostMapping("/ids")
-    @ApiOperation(value = "根据id获取信息")
-    public DataResponse<List<UserAccountListResDTO>> selectUserAccountById(@RequestBody BaseIdsEntity baseIdsEntity) {
+    @ApiOperation(value = "根据ids获取用户信息列表")
+    public DataResponse<List<UserAccountResDTO>> selectUserAccountById(@RequestBody BaseIdsEntity baseIdsEntity) {
         return DataResponse.of(userAccountService.selectUserAccountById(baseIdsEntity.getIds()));
     }
 
-    @GetMapping("/listOut")
-    @ApiOperation(value = "外部用户账户信息列表")
-    public PageResponse<SysUserAccount> listOutUserAccount(@Valid PageReqDTO pageReqDTO) {
-        return PageResponse.of(userAccountService.listOutUserAccount(pageReqDTO));
-    }
-
+    /**
+     * 获取登录用户token
+     * @return token
+     */
     @GetMapping("/getToken")
-    @ApiOperation(value = "获取用户token")
-    public DataResponse<String> getToken(@RequestParam String userId) {
-        return DataResponse.of(userAccountService.getToken(userId));
-    }
-    @GetMapping("/getCurrentUser")
-    @ApiOperation(value = "获取当前登录人信息")
-    public DataResponse<CurrentLoginUser> getCurrentUser() {
-        return DataResponse.of(TokenUtils.getCurrentPerson());
+    @ApiOperation(value = "获取登录用户token")
+    public DataResponse<String> getToken() {
+        return DataResponse.of(userAccountService.getToken());
     }
 
+    /**
+     * 获取登录用户详情
+     * @return 用户详情
+     */
     @GetMapping("/userInfo")
-    @ApiOperation(value = "用户详情")
+    @ApiOperation(value = "获取登录用户详情")
     public DataResponse<UserCenterInfoResDTO> getUserDetail() {
         return DataResponse.of(userAccountService.getUserDetail());
     }
