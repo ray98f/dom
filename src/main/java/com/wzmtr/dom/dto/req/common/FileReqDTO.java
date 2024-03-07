@@ -1,41 +1,43 @@
-package com.wzmtr.dom.entity;
+package com.wzmtr.dom.dto.req.common;
 
+import lombok.Builder;
 import lombok.Data;
 
 /**
- * 文件类
+ * 文件上传类
  * @author  Ray
  * @version 1.0
  * @date 2024/03/07
  */
 @Data
-public class File {
+@Builder
+public class FileReqDTO {
+    /**
+     * id
+     */
+    private String id;
+    /**
+     * 文件名
+     */
+    private String fileName;
     /**
      * 文件原始名称
      */
     private String oldName;
     /**
-     * 文件名称
+     * 文件桶编号
      */
-    private String fileName;
+    private String bucket;
     /**
      * 链接
      */
     private String url;
     /**
-     * 新增人
+     * 创建人
      */
     private String createBy;
     /**
-     * 新增时间
+     * 创建时间
      */
     private String createDate;
-    /**
-     * 文件桶编号
-     */
-    private String bucket;
-    /**
-     * id
-     */
-    private String id;
 }
