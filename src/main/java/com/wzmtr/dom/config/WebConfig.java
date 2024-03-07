@@ -16,14 +16,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 import java.util.List;
 
 /**
- * 配置类
- *
- * @author frp
+ * Web配置
+ * @author  Ray
+ * @version 1.0
+ * @date 2024/03/06
  */
 @Configuration
 public class WebConfig extends WebMvcConfigurationSupport {
-
-    public static final String REGEX = ",";
 
     @Autowired
     private JwtFilter jwtFilter;

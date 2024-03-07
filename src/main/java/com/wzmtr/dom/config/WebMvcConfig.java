@@ -18,9 +18,10 @@ import java.util.List;
 import java.util.TimeZone;
 
 /**
- * @author zhanghongquan
- * @data 2022/7/6 14:11
- * @describe
+ * WebMvc配置
+ * @author  Ray
+ * @version 1.0
+ * @date 2024/03/06
  */
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {

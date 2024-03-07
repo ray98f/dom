@@ -26,14 +26,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * description:
- *
- * @author zhangxin
+ * ShiroCas配置
+ * @author  Ray
  * @version 1.0
- * @date 2021/8/4 9:58
+ * @date 2024/03/06
  */
 @Configuration
-public class ShiroCasConfiguration {
+public class ShiroCasConfig {
 
     /**
      * 的server地址

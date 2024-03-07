@@ -18,6 +18,12 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 
+/**
+ * Jwt校验过滤器
+ * @author  Ray
+ * @version 1.0
+ * @date 2024/03/06
+ */
 @Slf4j
 @Component
 public class JwtFilter implements Filter {

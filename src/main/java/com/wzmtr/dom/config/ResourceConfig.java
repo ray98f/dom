@@ -8,11 +8,17 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * Resource配置
+ * @author  Ray
+ * @version 1.0
+ * @date 2024/03/06
+ */
 @Slf4j
 @Data
 @Component
 @ConfigurationProperties(prefix = "spring.static")
-public class ConfigResource {
+public class ResourceConfig {
     List<Resource> resources;
 }
 

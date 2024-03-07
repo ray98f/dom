@@ -43,7 +43,7 @@ public class FileController {
     @PostMapping("/upload")
     public DataResponse<File> upload(@RequestParam MultipartFile file, String bucketCode) {
         if (file.getSize() > NUM) {
-            throw new CommonException(ErrorCode.NORMAL_ERROR, "上传文件大小超出限制");
+            throw new CommonException(ErrorCode.FILE_BIG);
         }
         return DataResponse.of(fileService.upload(file, bucketCode));
     }
