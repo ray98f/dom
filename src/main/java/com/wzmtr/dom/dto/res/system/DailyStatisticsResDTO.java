@@ -8,31 +8,19 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 /**
- * 审核站权限结果类
+ * 日报统计参数设置结果类
  * @author  Ray
  * @version 1.0
  * @date 2024/03/06
  */
 @Data
-public class StationRoleResDTO {
+public class DailyStatisticsResDTO {
 
     /**
      * id
      */
     @ApiModelProperty(value = "id")
     private String id;
-
-    /**
-     * 车站编号
-     */
-    @ApiModelProperty(value = "车站编号")
-    private String stationCode;
-
-    /**
-     * 车站名称
-     */
-    @ApiModelProperty(value = "车站名称")
-    private String stationName;
 
     /**
      * 开始时间

@@ -21,10 +21,9 @@ public interface StationRoleMapper {
     /**
      * 分页查询审核站权限列表
      * @param page 分页参数
-     * @param name 名称
      * @return 审核站权限列表
      */
-    Page<StationRoleResDTO> page(Page<StationRoleResDTO> page, String name);
+    Page<StationRoleResDTO> page(Page<StationRoleResDTO> page);
 
     /**
      * 获取审核站权限详情
@@ -35,15 +34,15 @@ public interface StationRoleMapper {
 
     /**
      * 新增审核站权限
-     * @param dictTypeReqDTO 审核站权限参数
+     * @param stationRoleReqDTO 审核站权限参数
      */
-    void add(StationRoleReqDTO dictTypeReqDTO);
+    void add(StationRoleReqDTO stationRoleReqDTO);
 
     /**
      * 编辑审核站权限
-     * @param dictTypeReqDTO 审核站权限参数
+     * @param stationRoleReqDTO 审核站权限参数
      */
-    void modify(StationRoleReqDTO dictTypeReqDTO);
+    void modify(StationRoleReqDTO stationRoleReqDTO);
 
     /**
      * 删除审核站权限

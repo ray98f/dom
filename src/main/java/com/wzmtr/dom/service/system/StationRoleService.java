@@ -17,11 +17,10 @@ public interface StationRoleService {
 
     /**
      * 分页查询审核站权限列表
-     * @param name 名称
      * @param pageReqDTO 分页参数
      * @return 审核站权限列表
      */
-    Page<StationRoleResDTO> page(String name, PageReqDTO pageReqDTO);
+    Page<StationRoleResDTO> page(PageReqDTO pageReqDTO);
 
     /**
      * 获取审核站权限详情

@@ -1,38 +1,29 @@
-package com.wzmtr.dom.dto.res.system;
+package com.wzmtr.dom.dto.req.system;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.wzmtr.dom.entity.BaseEntity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
 /**
- * 审核站权限结果类
+ * 审核站权限请求类
  * @author  Ray
  * @version 1.0
  * @date 2024/03/06
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class StationRoleResDTO {
+public class DailyStatisticsReqDTO extends BaseEntity {
 
     /**
      * id
      */
     @ApiModelProperty(value = "id")
     private String id;
-
-    /**
-     * 车站编号
-     */
-    @ApiModelProperty(value = "车站编号")
-    private String stationCode;
-
-    /**
-     * 车站名称
-     */
-    @ApiModelProperty(value = "车站名称")
-    private String stationName;
 
     /**
      * 开始时间
@@ -55,21 +46,4 @@ public class StationRoleResDTO {
             timezone = "GMT+8"
     )
     private Date endTime;
-
-    /**
-     * 结束时间
-     */
-    @ApiModelProperty(value = "新增时间")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(
-            pattern = "yyyy-MM-dd HH:mm:ss",
-            timezone = "GMT+8"
-    )
-    private Date createDate;
-
-    /**
-     * 结束时间
-     */
-    @ApiModelProperty(value = "新增人")
-    private String createBy;
 }

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzmtr.dom.mapper.system.DailyStatisticsMapper">
+
+    <select id="page" resultType="com.wzmtr.dom.dto.res.system.DailyStatisticsResDTO">
+        SELECT ds.ID, ds.START_TIME, ds.END_TIME, ds.CREATE_DATE, u.NAME AS CREATE_BY
+        FROM SYS_DAILY_STATISTICS ds
+        LEFT JOIN SYS_USER u on u.ID=ds.CREATE_BY
+        WHERE ds.DEL_FLAG='0'
+        ORDER BY ds.CREATE_DATE desc
+    </select>
+
+    <select id="detail" resultType="com.wzmtr.dom.dto.res.system.DailyStatisticsResDTO">
+        SELECT ds.ID, ds.START_TIME, ds.END_TIME, ds.CREATE_DATE, u.NAME AS CREATE_BY
+        FROM SYS_DAILY_STATISTICS ds
+        LEFT JOIN SYS_USER u on u.ID=ds.CREATE_BY
+        WHERE ds.DEL_FLAG='0' AND ds.ID=#{id}
+    </select>
+
+    <insert id="add">
+        INSERT INTO SYS_DAILY_STATISTICS
+        (ID, START_TIME, END_TIME, CREATE_BY, CREATE_DATE)
+        VALUES (#{id}, #{startTime}, #{endTime}, #{createBy}, sysdate)
+    </insert>
+
+    <update id="modify">
+        UPDATE SYS_DAILY_STATISTICS SET
+        <if test="startTime!=null">
+            START_TIME=#{startTime},
+        </if>
+        <if test="endTime!=null">
+            END_TIME=#{endTime},
+        </if>
+        UPDATE_BY=#{updateBy}, UPDATE_DATE=sysdate
+        WHERE ID=#{id}
+    </update>
+
+    <update id="delete">
+        UPDATE SYS_DAILY_STATISTICS SET
+        DEL_FLAG='1', UPDATE_BY=#{userId}, UPDATE_DATE=sysdate
+        WHERE ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+
+</mapper>

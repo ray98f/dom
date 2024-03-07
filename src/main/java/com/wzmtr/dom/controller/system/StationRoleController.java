@@ -9,7 +9,6 @@ import com.wzmtr.dom.entity.response.PageResponse;
 import com.wzmtr.dom.service.system.StationRoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -34,15 +33,13 @@ public class StationRoleController {
 
     /**
      * 分页查询审核站权限列表
-     * @param name 名称
      * @param pageReqDTO 分页参数
      * @return 审核站权限列表
      */
     @GetMapping("/page")
     @ApiOperation(value = "审核站权限列表(分页)")
-    public PageResponse<StationRoleResDTO> page(@RequestParam(required = false) @ApiParam("名称") String name,
-                                                @Valid PageReqDTO pageReqDTO) {
-        return PageResponse.of(stationRoleService.page(name, pageReqDTO));
+    public PageResponse<StationRoleResDTO> page(@Valid PageReqDTO pageReqDTO) {
+        return PageResponse.of(stationRoleService.page(pageReqDTO));
     }
 
     /**

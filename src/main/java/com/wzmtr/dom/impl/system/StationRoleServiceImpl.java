@@ -27,9 +27,9 @@ public class StationRoleServiceImpl implements StationRoleService {
     private StationRoleMapper stationRoleMapper;
 
     @Override
-    public Page<StationRoleResDTO> page(String name, PageReqDTO pageReqDTO) {
+    public Page<StationRoleResDTO> page(PageReqDTO pageReqDTO) {
         PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return stationRoleMapper.page(pageReqDTO.of(), name);
+        return stationRoleMapper.page(pageReqDTO.of());
     }
 
     @Override
