@@ -32,9 +32,10 @@ public interface UserAccountService {
 
     /**
      * 获取登录用户token
+     * @param no 用户登录账号
      * @return token
      */
-    String getToken();
+    String getToken(String no);
 
     /**
      * 获取登录用户详情

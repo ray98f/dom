@@ -47,9 +47,9 @@ public class UserAccountServiceImpl implements UserAccountService {
     }
 
     @Override
-    public String getToken() {
+    public String getToken(String no) {
         CurrentLoginUser person = new CurrentLoginUser();
-            Person p = personService.searchPersonByNo(TokenUtils.getCurrentPersonId());
+            Person p = personService.searchPersonByNo(no);
             if (p != null) {
                 person.setPersonId(p.getId());
                 person.setPersonNo(p.getNo());

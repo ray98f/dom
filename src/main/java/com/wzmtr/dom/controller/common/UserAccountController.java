@@ -61,12 +61,13 @@ public class UserAccountController {
 
     /**
      * 获取登录用户token
+     * @param no 用户登录账号
      * @return token
      */
     @GetMapping("/getToken")
     @ApiOperation(value = "获取登录用户token")
-    public DataResponse<String> getToken() {
-        return DataResponse.of(userAccountService.getToken());
+    public DataResponse<String> getToken(@RequestParam String no) {
+        return DataResponse.of(userAccountService.getToken(no));
     }
 
     /**

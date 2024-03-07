@@ -9,6 +9,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PersonMapper {
 
+    /**
+     * 获取登录用户信息
+     * @param no 用户登录账号
+     * @return 用户信息
+     */
     Person searchPersonByNo(@Param("no") String no);
 
 }
