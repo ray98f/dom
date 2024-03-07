@@ -21,7 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @date 2024/03/07
  */
 @RestController
-@RequestMapping("/minIO")
+@RequestMapping("/file")
 @Api(tags = "公共分类-文件管理")
 public class FileController {
 
