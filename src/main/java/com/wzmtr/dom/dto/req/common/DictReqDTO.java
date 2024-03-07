@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 字典值结果类
+ * 字典值请求类
  * @author  Ray
  * @version 1.0
  * @date 2024/03/06

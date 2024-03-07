@@ -3,7 +3,7 @@
 <mapper namespace="com.wzmtr.dom.mapper.common.FileMapper">
 
     <select id="getFile" resultType="com.wzmtr.dom.entity.File">
-        select * from T_FILE
+        select * from SYS_FILE
         <trim prefix="WHERE" prefixOverrides="AND">
             <if test="url!=null and url!=''">
                 and URL = #{url}
@@ -18,7 +18,7 @@
     </select>
 
     <insert id="insertFile">
-        INSERT INTO T_FILE
+        INSERT INTO SYS_FILE
         (ID,
         FILE_NAME,
         OLD_NAME,
@@ -37,7 +37,7 @@
     </insert>
 
     <select id="selectFileInfo" resultType="com.wzmtr.dom.entity.File">
-        select * from T_FILE
+        select * from SYS_FILE
         where id in (
         <foreach collection="ids" index="index" item="id" separator=",">
             #{id}
