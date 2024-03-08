@@ -1,5 +1,7 @@
 package com.wzmtr.dom.utils;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.ObjectUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
@@ -139,5 +141,21 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
         return sdf.format(cal.getTime());
     }
 
+    /**
+     * 校验字符串是否为对应的日期格式
+     * @return boolean
+     */
+    public static boolean isValidDateFormat(String dateStr, String dateFormat) {
+        if (ObjectUtil.isEmpty(dateStr)) {
+            return false;
+        }
+        try {
+            // 将字符串解析为日期对象，如果解析成功，则说明字符串是有效的日期格式；否则说明字符串不是有效的日期格式。
+            DateUtil.parse(dateStr, dateFormat);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
 }

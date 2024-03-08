@@ -94,4 +94,7 @@ public class CommonConstants {
     public static final String LINE_CODE_ONE = "01";
     public static final String LINE_CODE_TWO = "02";
 
+    // 指定的日期格式
+    public static final String  DATE_FORMAT = "yyyy-MM-dd";
+
 }

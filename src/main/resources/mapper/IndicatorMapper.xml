@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzmtr.dom.mapper.vehicle.IndicatorMapper">
+
+
+
+    <insert id="add">
+        INSERT INTO VEHICLE_IMPORTANT_INDICATOR (ID, CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+        VALUES (#{day}, #{createBy}, sysdate,#{createBy}, sysdate)
+    </insert>
+
+
+
+</mapper>
