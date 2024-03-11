@@ -2,6 +2,7 @@ package com.wzmtr.dom.entity.response;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
+import lombok.Getter;
 
 /**
  * description:
@@ -22,8 +23,6 @@ public class BaseResponse {
 
     private String message;
 
-    private Object referInfo;
-
     public BaseResponse(AppStatus status) {
         this.code = status.getCode();
         this.message = status.getMessage();
@@ -42,21 +41,20 @@ public class BaseResponse {
         return this;
     }
 
-    public BaseResponse referInfo(Object referInfo) {
-        this.referInfo = referInfo;
-        return this;
-    }
-
     static {
         SUCCESS = new BaseResponse(AppStatus.SUCCESS);
         AUTH_FAILED = new BaseResponse(AppStatus.AUTH_FAILED);
     }
 
-    protected enum AppStatus {
+    @Getter
+    public enum AppStatus {
         /**
-         *
+         * 成功
          */
         SUCCESS(0, "success"),
+        /**
+         * 鉴权失败
+         */
         AUTH_FAILED(401, "auth failed");
 
         private String message;
@@ -67,13 +65,6 @@ public class BaseResponse {
             this.message = message;
         }
 
-        public String getMessage() {
-            return this.message;
-        }
-
-        public Integer getCode() {
-            return this.code;
-        }
     }
 
 }

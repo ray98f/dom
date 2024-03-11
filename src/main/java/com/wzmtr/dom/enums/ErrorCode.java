@@ -1,5 +1,11 @@
 package com.wzmtr.dom.enums;
 
+/**
+ * 异常枚举
+ * @author  Ray
+ * @version 1.0
+ * @date 2024/03/06
+ */
 public enum ErrorCode {
 
     NORMAL_ERROR(99999999, "normal.error"),
@@ -67,7 +73,6 @@ public enum ErrorCode {
 
     DELETE_ERROR(31000015, "delete.error"),
 
-    SIGN_ERROR(31000016, "signTime.error"),
     CLOCK_ERROR(31000017, "clock.error"),
 
     /**
@@ -89,17 +94,10 @@ public enum ErrorCode {
     OLD_PASSWORD_ERROR(32000023, "old.password.error"),
     PASSWORD_SAME(32000024, "password.same"),
     PASSWORD_ERROR(32000025, "password.error"),
-
     /**
      * OpenApi签名校验
      */
     OPENAPI_VERIFY_FAIL(32000026, "openapi.verify.fail"),
-
-    /**
-     * 字典
-     */
-    DIC_TYPE_ALREADY_EXIST(32000027, "dic.type.already.exist"),
-    DIC_TYPE_NOT_EXIST(32000028, "dic.type.not.exist"),
     /**
      * 其他
      */
@@ -108,30 +106,17 @@ public enum ErrorCode {
     FILE_DELETE_ERROR(32100031, "file.delete.error"),
 
     IMPORT_ERROR(32100032, "import.error"),
-
-    TRANSFER_QUANTITY_ERROR(32100033, "transfer.quantity.error"),
-    TRANSFER_HAS_HANDLE(32100034, "transfer.has.handle"),
-    TRANSFER_SPLIT_ERROR(32100035, "transfer.split.error"),
     SELECT_NOTHING(32000036, "select.nothing"),
     REQUIRED_NULL(32000037, "required.null"),
-    EQUIP_CODE_ERROR(32000038, "equip.code.error"),
     CREATOR_USER_ERROR(32000039, "creator.user.error"),
     CAN_NOT_MODIFY(32000040, "can.not.modify"),
-    PLAN_HAS_DETAIL(32000041, "plan.has.detail"),
-    VERIFY_DATE_ERROR(32000042, "verify.date.error"),
-    ONLY_OWN_SUBJECT(32000043, "only.own.subject"),
     NO_DETAIL(32000044, "no.detail"),
     ROOT_ERROR(32000045,"root.error"),
     RESOURCE_USE(32000046, "resource.use"),
     EXAMINE_DONE(32000047, "examine.done"),
     EXAMINE_NOT_DONE(32000048, "examine.not.done"),
     REJECT_ERROR(32000049, "reject.error"),
-    BPMN_ERROR(32000050, "bpmn.error"),
     NOT_REVIEWER(32000051, "not.reviewer"),
-    /**
-     * 当日列车里程及能耗已存在
-     */
-    TRAIN_MILE_DAILY_EXIST(32000052, "train.mile.daily.exist"),
     /**
      * 导出失败
      */

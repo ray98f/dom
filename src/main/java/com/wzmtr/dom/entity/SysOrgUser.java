@@ -10,9 +10,6 @@ import java.util.Date;
 @ApiModel
 public class SysOrgUser {
 
-    // departfullpath, jobcategory, jobgrade, activestatus, joblevel, jobname, jobcategoryname, joblevelname,
-    // jobgradename, positionlevel, jobleveldate, mdm_user_id, oldinfoid, procresult
-
     @ApiModelProperty(value = "ID")
     private String id;
 

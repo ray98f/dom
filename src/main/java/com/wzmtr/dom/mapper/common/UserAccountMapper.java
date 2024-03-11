@@ -1,12 +1,11 @@
 package com.wzmtr.dom.mapper.common;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.wzmtr.dom.dto.res.common.UserAccountListResDTO;
+import com.wzmtr.dom.dto.res.common.UserAccountResDTO;
 import com.wzmtr.dom.dto.res.common.UserCenterInfoResDTO;
 import com.wzmtr.dom.dto.res.common.UserRoleResDTO;
 import com.wzmtr.dom.entity.SysOrgUser;
 import com.wzmtr.dom.entity.SysUser;
-import com.wzmtr.dom.entity.SysUserAccount;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -15,57 +14,81 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author frp
+ * 公共分类-用户管理
+ * @author  Ray
+ * @version 1.0
+ * @date 2024/03/06
  */
 @Mapper
 @Repository
 public interface UserAccountMapper {
 
     /**
-     * 用户账户信息列表
-     *
-     * @param page
-     * @param searchKey
-     * @return
+     * 获取用户信息列表
+     * @param page 分页参数
+     * @param searchKey 关键字
+     * @return 用户信息列表
      */
-    Page<UserAccountListResDTO> listUserAccount(Page<UserAccountListResDTO> page, @Param("searchKey") String searchKey);
+    Page<UserAccountResDTO> listUserAccount(Page<UserAccountResDTO> page, @Param("searchKey") String searchKey);
 
     /**
-     * 根据id获取信息
-     *
-     * @param ids
-     * @return
+     * 根据ids获取用户信息列表
+     * @param ids ids
+     * @return 用户信息列表
      */
-    List<UserAccountListResDTO> selectUserAccountById(List<String> ids);
-
-    Page<SysUserAccount> listOutUserAccount(Page<SysUserAccount> page);
+    List<UserAccountResDTO> selectUserAccountById(List<String> ids);
 
     /**
-     * 清空表(全量同步时使用)
-     *
-     * @return
+     * 清空用户表(不包含外部用户)
      */
-    Integer cleanTable();
+    void cleanTable();
 
-    Integer cleanSuppCon();
+    /**
+     * 清空外部用户表
+     */
+    void cleanSuppCon();
 
-    Integer createPerson(SysUser sysUser);
+    /**
+     * 新增用户
+     * @param sysUser 用户信息
+     */
+    void createPerson(SysUser sysUser);
 
     /**
      * 清空人员职位信息
-     *
-     * @return
      */
-    Integer cleanEmpJob();
+    void cleanEmpJob();
 
-    Integer createEmpJob(SysOrgUser sysOrgUser);
+    /**
+     * 新增用户职位
+     * @param sysOrgUser 用户职位信息
+     */
+    void createEmpJob(SysOrgUser sysOrgUser);
 
-    Integer updateUserCompany(SysUser sysUser);
+    /**
+     * 修改用户公司
+     * @param sysUser 用户信息
+     */
+    void updateUserCompany(SysUser sysUser);
 
-    Integer updatePersonPlus(Map<String, Object> paramMap);
+    /**
+     * 修改用户额外信息
+     * @param paramMap 用户信息
+     */
+    void updatePersonPlus(Map<String, Object> paramMap);
 
+    /**
+     * 获取登录用户详情
+     * @param userId 登录用户id
+     * @return 登录用户详情
+     */
     UserCenterInfoResDTO userCenterInfo(@Param("userId") String userId);
 
+    /**
+     * 获取登录用户权限
+     * @param userId 登录用户id
+     * @return 登录用户权限
+     */
     List<UserRoleResDTO> getUserRoles(@Param("userId") String userId);
 
 }

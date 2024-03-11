@@ -27,7 +27,7 @@
 
     <select id="listUseMenuBodyList" resultType="com.wzmtr.dom.dto.res.common.MenuResDTO">
         SELECT *
-        FROM SYS_PERMISSION WHERE TYPE=!1 AND DEL_FLAG=0 AND PARENT_ID IS NOT NULL
+        FROM SYS_PERMISSION WHERE TYPE!=1 AND DEL_FLAG=0 AND PARENT_ID IS NOT NULL
         AND STATUS=0 AND IS_SHOW=1
         ORDER BY SORT
     </select>

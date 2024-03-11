@@ -1,9 +1,10 @@
 package com.wzmtr.dom.enums;
 
 /**
- * token状态
- *
- * @author frp
+ * token状态枚举
+ * @author  Ray
+ * @version 1.0
+ * @date 2024/03/06
  */
 public enum TokenStatus {
     /**

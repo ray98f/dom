@@ -1,5 +1,11 @@
 package com.wzmtr.dom.constant;
 
+/**
+ * 通用字典
+ * @author  Ray
+ * @version 1.0
+ * @date 2024/03/06
+ */
 public class CommonConstants {
 
     /**
@@ -37,20 +43,6 @@ public class CommonConstants {
      * 权限
      */
     public static final String ADMIN = "admin";
-    public static final String DM_006 = "DM_006";
-    public static final String DM_007 = "DM_007";
-    public static final String DM_012 = "DM_012";
-    public static final String DM_037 = "DM_037";
-    public static final String DM_045 = "DM_045";
-
-    /**
-     * 故障分析流程--部长审核节点
-     */
-    public static final String FAULT_ANALIZE_REVIEW_NODE = "UserTask_0zkqpyn";
-    /**
-     * 故障跟踪流程--部长审核节点
-     */
-    public static final String FAULT_TRACK_REVIEW_NODE = "UserTask_1ftz952";
 
     /**
      * 字符串数字
@@ -96,39 +88,10 @@ public class CommonConstants {
     public static final String CODE = "code";
     public static final String PROCESS_ERROR_CODE = "-1";
 
-    public static final String CAR_DEVICE_SUBJECT_CODE = "06";
-    public static final String CAR_SUBJECT_CODE = "07";
-
-    /**
-     * 工班类别
-     */
-    public static final String FIRST_REPAIR_SHIFT = "一级修";
-    public static final String SECOND_REPAIR_SHIFT = "二级修";
-
     /**
      * 线路编号
      */
     public static final String LINE_CODE_ONE = "01";
     public static final String LINE_CODE_TWO = "02";
-
-    /**
-     * 设备分类编号
-     */
-    public static final String EQUIP_CATE_ENGINEER_CAR_CODE = "17";
-
-    /**
-     * 字典字段code
-     */
-    public static final String DM_VEHICLE_SPECIALTY_CODE = "dm.vehicleSpecialty";
-    public static final String DM_MATCH_CONTROL_CODE = "dm.matchControl";
-
-    /**
-     * 工单推送内容相关
-     */
-    public static final String FAULT_CONTENT_BEGIN = "【市铁投集团】工单号：";
-    public static final String FAULT_CONTENT_END = "】故障管理流程";
-    public static final String FAULT_FINISHED_CONFIRM_CN = "故障完工确认";
-    public static final String FAULT_FINISHED_CONFIRM_AND_DISPATCH_CN = "工单完工确认并故障再派工";
-    public static final String FAULT_TUNING_CONFIRM_CN = "故障设调确认";
 
 }
