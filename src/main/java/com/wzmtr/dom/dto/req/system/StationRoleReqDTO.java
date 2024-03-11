@@ -20,12 +20,6 @@ import java.util.Date;
 public class StationRoleReqDTO extends BaseEntity {
 
     /**
-     * id
-     */
-    @ApiModelProperty(value = "id")
-    private String id;
-
-    /**
      * 车站编号
      */
     @ApiModelProperty(value = "车站编号")

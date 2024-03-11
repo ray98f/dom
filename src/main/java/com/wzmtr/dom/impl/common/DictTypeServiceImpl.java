@@ -33,7 +33,7 @@ public class DictTypeServiceImpl implements DictTypeService {
     }
 
     @Override
-    public DictTypeResDTO detail(Integer id) {
+    public DictTypeResDTO detail(String id) {
         return dictTypeMapper.detail(id);
     }
 

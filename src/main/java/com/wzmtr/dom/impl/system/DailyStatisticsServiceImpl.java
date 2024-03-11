@@ -33,7 +33,7 @@ public class DailyStatisticsServiceImpl implements DailyStatisticsService {
     }
 
     @Override
-    public DailyStatisticsResDTO detail(Integer id) {
+    public DailyStatisticsResDTO detail(String id) {
         return dailyStatisticsMapper.detail(id);
     }
 

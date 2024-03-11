@@ -33,7 +33,7 @@ public class StationRoleServiceImpl implements StationRoleService {
     }
 
     @Override
-    public StationRoleResDTO detail(Integer id) {
+    public StationRoleResDTO detail(String id) {
         return stationRoleMapper.detail(id);
     }
 
