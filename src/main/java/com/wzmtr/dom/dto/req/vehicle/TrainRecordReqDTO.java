@@ -13,7 +13,7 @@ import java.util.Date;
  * 班组培训情况请求类
  * @author  Ray
  * @version 1.0
- * @date 2024/03/06
+ * @date 2024/03/11
  */
 @EqualsAndHashCode(callSuper = true)
 @Data

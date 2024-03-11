@@ -41,6 +41,7 @@ public class TrainRecordServiceImpl implements TrainRecordService {
 
     @Override
     public void add(TrainRecordReqDTO trainRecordReqDTO) {
+        // 判断新增数据所属时间是否已存在数据
         Integer result = trainRecordMapper.selectIsExist(trainRecordReqDTO);
         if (result > 0) {
             throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期班组培训数据已存在，无法重复新增");
@@ -52,9 +53,10 @@ public class TrainRecordServiceImpl implements TrainRecordService {
 
     @Override
     public void modify(TrainRecordReqDTO trainRecordReqDTO) {
+        // 判断修改数据版本号是否一致
         Integer result = trainRecordMapper.selectIsExist(trainRecordReqDTO);
         if (result == 0) {
-            throw new CommonException(ErrorCode.NORMAL_ERROR, "当前数据已更新，请刷新列表并重新编辑数据");
+            throw new CommonException(ErrorCode.NORMAL_ERROR, "当前数据已被编辑，请刷新列表并重新编辑数据");
         }
         trainRecordReqDTO.setUpdateBy(TokenUtils.getCurrentPersonId());
         trainRecordMapper.modify(trainRecordReqDTO);
