@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzmtr.dom.mapper.vehicle.DispatchMapper">
+
+    <select id="pageRecord" resultType="com.wzmtr.dom.dto.res.vehicle.DispatchRecordResDTO">
+        SELECT ID, ORDER_NUM, VERSION, BELONG_DATE
+        FROM VEHICLE_DISPATCH_RECORD
+        WHERE DEL_FLAG='0'
+        <if test="startTime!=null and startTime!=''">
+            AND BELONG_DATE>=to_date(#{startTime},'YYYY-MM-DD')
+        </if>
+        <if test="endTime!=null and endTime!=''">
+            AND to_date(#{endTime},'YYYY-MM-DD')>=BELONG_DATE
+        </if>
+        ORDER BY BELONG_DATE desc
+    </select>
+
+    <select id="listOrder" resultType="com.wzmtr.dom.dto.res.vehicle.DispatchOrderResDTO">
+        SELECT ID, RECORD_ID, ORDER_TIME, ORDER_CODE, ORDER_DESC, VERSION
+        FROM VEHICLE_DISPATCH_ORDER
+        WHERE DEL_FLAG='0' AND RECORD_ID=#{recordId}
+        ORDER BY ORDER_TIME desc
+    </select>
+
+    <select id="selectRecordIsExist" resultType="java.lang.Integer">
+        select count(1) from VEHICLE_DISPATCH_RECORD
+        where BELONG_DATE=#{record.belongDate}
+        <if test="record.version!=null and record.version!=''">
+            AND VERSION=#{record.version}
+        </if>
+        AND DEL_FLAG='0' AND rownum=1
+    </select>
+
+    <insert id="addRecord">
+        INSERT INTO VEHICLE_TRAIN_RECORD
+        (ID,
+        <if test="orderNum!=null">
+            ORDER_NUM,
+        </if>
+        CREATE_DATE, CREATE_BY, BELONG_DATE)
+        VALUES (#{id},
+        <if test="orderNum!=null">
+            #{orderNum},
+        </if>
+        #{createBy}, sysdate, #{belongDate})
+    </insert>
+
+    <insert id="addOrder">
+        INSERT INTO VEHICLE_DISPATCH_ORDER
+        (ID, RECORD_ID,
+        <if test="orderTime!=null and orderTime!=''">
+            ORDER_TIME,
+        </if>
+        <if test="orderCode!=null and orderCode!=''">
+            ORDER_CODE,
+        </if>
+        <if test="orderDesc!=null and orderDesc!=''">
+            ORDER_DESC,
+        </if>
+        CREATE_DATE, CREATE_BY)
+        VALUES (#{id}, #{recordId},
+        <if test="orderTime!=null and orderTime!=''">
+            #{orderTime},
+        </if>
+        <if test="orderCode!=null and orderCode!=''">
+            #{orderCode},
+        </if>
+        <if test="orderDesc!=null and orderDesc!=''">
+            #{orderDesc},
+        </if>
+        #{createBy}, sysdate)
+    </insert>
+
+    <update id="modifyRecord">
+        UPDATE VEHICLE_DISPATCH_RECORD SET
+        ORDER_NUM=#{orderNum}, VERSION=VERSION+1, UPDATE_BY=#{updateBy}, UPDATE_DATE=sysdate
+        WHERE ID=#{id} and VERSION=#{version}
+    </update>
+
+    <update id="modifyOrder">
+        UPDATE VEHICLE_DISPATCH_ORDER SET
+        <if test="orderTime!=null">
+            ORDER_TIME=#{orderTime},
+        </if>
+        <if test="orderCode!=null">
+            ORDER_CODE=#{orderCode},
+        </if>
+        <if test="orderDesc!=null">
+            ORDER_DESC=#{orderDesc},
+        </if>
+        VERSION=VERSION+1, UPDATE_BY=#{updateBy}, UPDATE_DATE=sysdate
+        WHERE ID=#{id} and VERSION=#{version}
+    </update>
+
+    <update id="deleteRecord">
+        UPDATE VEHICLE_DISPATCH_RECORD SET
+        DEL_FLAG='1', UPDATE_BY=#{userId}, UPDATE_DATE=sysdate
+        WHERE ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+
+    <update id="deleteOrder">
+        UPDATE VEHICLE_DISPATCH_ORDER SET
+        DEL_FLAG='1', UPDATE_BY=#{userId}, UPDATE_DATE=sysdate
+        WHERE RECORD_ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+
+</mapper>
