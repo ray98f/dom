@@ -44,7 +44,7 @@ public class DispatchServiceImpl implements DispatchService {
 
     @Override
     public List<DispatchOrderResDTO> getCsmDispatch(String time) {
-        // todo 调用csm系统接口 根据日期获取调度命令数据
+        // todo 调用 施工调度系统接口 根据日期获取调度命令数据
         return new ArrayList<>();
     }
 

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzmtr.dom.mapper.vehicle.PersonRecordMapper">
+
+    <select id="page" resultType="com.wzmtr.dom.dto.res.vehicle.PersonRecordResDTO">
+        SELECT ID, DISPATCH_XT_DAY, DISPATCH_XT_NIGHT, DISPATCH_TT_DAY, DISPATCH_TT_NIGHT,
+        DCC_XT_DAY, DCC_XT_NIGHT, DCC_TT_DAY, DCC_TT_NIGHT, RELIEF, LEAVE_PERSONAL, LEAVE_SICK,
+        LEAVE_ANNUAL, LEAVE_OTHER, POST_WAITING, VERSION, BELONG_DATE
+        FROM VEHICLE_PERSON_RECORD
+        WHERE DEL_FLAG='0'
+        <if test="startTime!=null and startTime!=''">
+            AND BELONG_DATE>=to_date(#{startTime},'YYYY-MM-DD')
+        </if>
+        <if test="endTime!=null and endTime!=''">
+            AND to_date(#{endTime},'YYYY-MM-DD')>=BELONG_DATE
+        </if>
+        ORDER BY BELONG_DATE desc
+    </select>
+
+    <select id="detail" resultType="com.wzmtr.dom.dto.res.vehicle.PersonRecordResDTO">
+        SELECT ID, DISPATCH_XT_DAY, DISPATCH_XT_NIGHT, DISPATCH_TT_DAY, DISPATCH_TT_NIGHT,
+        DCC_XT_DAY, DCC_XT_NIGHT, DCC_TT_DAY, DCC_TT_NIGHT, RELIEF, LEAVE_PERSONAL, LEAVE_SICK,
+        LEAVE_ANNUAL, LEAVE_OTHER, POST_WAITING, VERSION, BELONG_DATE
+        FROM VEHICLE_PERSON_RECORD
+        WHERE DEL_FLAG='0' AND ID=#{id}
+    </select>
+
+    <select id="selectIsExist" resultType="java.lang.Integer">
+        select count(1) from VEHICLE_PERSON_RECORD
+        where BELONG_DATE=#{belongDate}
+        <if test="version!=null and version!=''">
+            AND VERSION=#{version}
+        </if>
+        AND DEL_FLAG='0' AND rownum=1
+    </select>
+
+    <insert id="add" parameterType="com.wzmtr.dom.dto.req.vehicle.PersonRecordReqDTO">
+        INSERT INTO VEHICLE_PERSON_RECORD
+        (ID,
+        <if test="dispatchXtDay!=null and dispatchXtDay!=''">
+            DISPATCH_XT_DAY,
+        </if>
+        <if test="dispatchXtNight!=null and dispatchXtNight!=''">
+            DISPATCH_XT_NIGHT,
+        </if>
+        <if test="dispatchTtDay!=null and dispatchTtDay!=''">
+            DISPATCH_TT_DAY,
+        </if>
+        <if test="dispatchTtNight!=null and dispatchTtNight!=''">
+            DISPATCH_TT_NIGHT,
+        </if>
+        <if test="dccXtDay!=null and dccXtDay!=''">
+            DCC_XT_DAY,
+        </if>
+        <if test="dccXtNight!=null and dccXtNight!=''">
+            DCC_XT_NIGHT,
+        </if>
+        <if test="dccTtDay!=null and dccTtDay!=''">
+            DCC_TT_DAY,
+        </if>
+        <if test="dccTtNight!=null and dccTtNight!=''">
+            DCC_TT_NIGHT,
+        </if>
+        <if test="relief!=null and relief!=''">
+            RELIEF,
+        </if>
+        <if test="leavePersonal!=null and leavePersonal!=''">
+            LEAVE_PERSONAL,
+        </if>
+        <if test="leaveSick!=null and leaveSick!=''">
+            LEAVE_SICK,
+        </if>
+        <if test="leaveAnnual!=null and leaveAnnual!=''">
+            LEAVE_ANNUAL,
+        </if>
+        <if test="leaveOther!=null and leaveOther!=''">
+            LEAVE_OTHER,
+        </if>
+        <if test="postWaiting!=null and postWaiting!=''">
+            POST_WAITING,
+        </if>
+        CREATE_DATE, CREATE_BY, BELONG_DATE)
+        VALUES (#{id},
+        <if test="dispatchXtDay!=null and dispatchXtDay!=''">
+            #{dispatchXtDay},
+        </if>
+        <if test="dispatchXtNight!=null and dispatchXtNight!=''">
+            #{dispatchXtNight},
+        </if>
+        <if test="dispatchTtDay!=null and dispatchTtDay!=''">
+            #{dispatchTtDay},
+        </if>
+        <if test="dispatchTtNight!=null and dispatchTtNight!=''">
+            #{dispatchTtNight},
+        </if>
+        <if test="dccXtDay!=null and dccXtDay!=''">
+            #{dccXtDay},
+        </if>
+        <if test="dccXtNight!=null and dccXtNight!=''">
+            #{dccXtNight},
+        </if>
+        <if test="dccTtDay!=null and dccTtDay!=''">
+            #{dccTtDay},
+        </if>
+        <if test="dccTtNight!=null and dccTtNight!=''">
+            #{dccTtNight},
+        </if>
+        <if test="relief!=null and relief!=''">
+            #{relief},
+        </if>
+        <if test="leavePersonal!=null and leavePersonal!=''">
+            #{leavePersonal},
+        </if>
+        <if test="leaveSick!=null and leaveSick!=''">
+            #{leaveSick},
+        </if>
+        <if test="leaveAnnual!=null and leaveAnnual!=''">
+            #{leaveAnnual},
+        </if>
+        <if test="leaveOther!=null and leaveOther!=''">
+            #{leaveOther},
+        </if>
+        <if test="postWaiting!=null and postWaiting!=''">
+            #{postWaiting},
+        </if>
+        #{createBy}, sysdate, #{belongDate})
+    </insert>
+
+    <update id="modify">
+        UPDATE VEHICLE_PERSON_RECORD SET
+        <if test="dispatchXtDay!=null">
+            DISPATCH_XT_DAY=#{dispatchXtDay},
+        </if>
+        <if test="dispatchXtNight!=null">
+            DISPATCH_XT_NIGHT=#{dispatchXtNight},
+        </if>
+        <if test="dispatchTtDay!=null">
+            DISPATCH_TT_DAY=#{dispatchTtDay},
+        </if>
+        <if test="dispatchTtNight!=null">
+            DISPATCH_TT_NIGHT=#{dispatchTtNight},
+        </if>
+        <if test="dccXtDay!=null">
+            DCC_XT_DAY=#{dccXtDay},
+        </if>
+        <if test="dccXtNight!=null">
+            DCC_XT_NIGHT=#{dccXtNight},
+        </if>
+        <if test="dccTtDay!=null">
+            DCC_TT_DAY=#{dccTtDay},
+        </if>
+        <if test="dccTtNight!=null">
+            DCC_TT_NIGHT=#{dccTtNight},
+        </if>
+        <if test="relief!=null">
+            RELIEF=#{relief},
+        </if>
+        <if test="leavePersonal!=null">
+            LEAVE_PERSONAL=#{leavePersonal},
+        </if>
+        <if test="leaveSick!=null">
+            LEAVE_SICK=#{leaveSick},
+        </if>
+        <if test="leaveAnnual!=null">
+            LEAVE_ANNUAL=#{leaveAnnual},
+        </if>
+        <if test="leaveOther!=null">
+            LEAVE_OTHER=#{leaveOther},
+        </if>
+        <if test="postWaiting!=null">
+            POST_WAITING=#{postWaiting},
+        </if>
+        VERSION=VERSION+1, UPDATE_BY=#{updateBy}, UPDATE_DATE=sysdate
+        WHERE ID=#{id} and VERSION=#{version}
+    </update>
+
+    <update id="delete">
+        UPDATE VEHICLE_PERSON_RECORD SET
+        DEL_FLAG='1', UPDATE_BY=#{userId}, UPDATE_DATE=sysdate
+        WHERE ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+
+</mapper>

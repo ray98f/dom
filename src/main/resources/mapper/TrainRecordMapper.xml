@@ -51,8 +51,8 @@
             GROUP_PARK,
         </if>
         <if test="trainDriver!=null and trainDriver!=''">
-            TRAIN_DRIVER
-        </if>,
+            TRAIN_DRIVER,
+        </if>
         <if test="remark!=null and remark!=''">
             REMARK,
         </if>
@@ -74,8 +74,8 @@
             #{groupPark},
         </if>
         <if test="trainDriver!=null and trainDriver!=''">
-            #{trainDriver}
-        </if>,
+            #{trainDriver},
+        </if>
         <if test="remark!=null and remark!=''">
             #{remark},
         </if>
@@ -100,8 +100,8 @@
             GROUP_PARK=#{groupPark},
         </if>
         <if test="trainDriver!=null">
-            TRAIN_DRIVER=#{trainDriver}
-        </if>,
+            TRAIN_DRIVER=#{trainDriver},
+        </if>
         <if test="remark!=null">
             REMARK=#{remark},
         </if>
