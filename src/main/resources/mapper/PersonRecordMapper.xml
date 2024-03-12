@@ -79,7 +79,7 @@
         <if test="postWaiting!=null and postWaiting!=''">
             POST_WAITING,
         </if>
-        CREATE_DATE, CREATE_BY, BELONG_DATE)
+        CREATE_BY, CREATE_DATE, BELONG_DATE)
         VALUES (#{id},
         <if test="dispatchXtDay!=null and dispatchXtDay!=''">
             #{dispatchXtDay},

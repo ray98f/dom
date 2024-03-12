@@ -56,7 +56,7 @@
         <if test="remark!=null and remark!=''">
             REMARK,
         </if>
-        CREATE_DATE, CREATE_BY, BELONG_DATE)
+        CREATE_BY, CREATE_DATE, BELONG_DATE)
         VALUES (#{id},
         <if test="groupOne!=null and groupOne!=''">
             #{groupOne},

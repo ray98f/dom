@@ -39,7 +39,7 @@
         <if test="depotAttention!=null and depotAttention!=''">
             DEPOT_ATTENTION,
         </if>
-        CREATE_DATE, CREATE_BY, BELONG_DATE)
+        CREATE_BY, CREATE_DATE, BELONG_DATE)
         VALUES (#{id},
         <if test="lineAttention!=null and lineAttention!=''">
             #{lineAttention},

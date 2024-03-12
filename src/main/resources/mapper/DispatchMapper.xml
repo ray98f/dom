@@ -3,7 +3,7 @@
 <mapper namespace="com.wzmtr.dom.mapper.vehicle.DispatchMapper">
 
     <select id="pageRecord" resultType="com.wzmtr.dom.dto.res.vehicle.DispatchRecordResDTO">
-        SELECT ID, ORDER_NUM, VERSION, BELONG_DATE
+        SELECT ID, ORDER_NUM, VERSION, BELONG_DATE, DATA_TYPE, START_DATE, END_DATE
         FROM VEHICLE_DISPATCH_RECORD
         WHERE DEL_FLAG='0'
         <if test="startTime!=null and startTime!=''">
@@ -37,12 +37,32 @@
         <if test="orderNum!=null">
             ORDER_NUM,
         </if>
-        CREATE_DATE, CREATE_BY, BELONG_DATE)
+        CREATE_BY, CREATE_DATE,
+        <if test="dataType!=null and dataType!=''">
+            DATA_TYPE,
+        </if>
+        <if test="startDate!=null and startDate!=''">
+            START_DATE,
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            END_DATE,
+        </if>
+        BELONG_DATE)
         VALUES (#{id},
         <if test="orderNum!=null">
             #{orderNum},
         </if>
-        #{createBy}, sysdate, #{belongDate})
+        #{createBy}, sysdate,
+        <if test="dataType!=null and dataType!=''">
+            #{dataType},
+        </if>
+        <if test="startDate!=null and startDate!=''">
+            #{startDate},
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            #{endDate},
+        </if>
+        #{belongDate})
     </insert>
 
     <insert id="addOrder">
@@ -57,7 +77,7 @@
         <if test="orderDesc!=null and orderDesc!=''">
             ORDER_DESC,
         </if>
-        CREATE_DATE, CREATE_BY)
+        CREATE_BY, CREATE_DATE)
         VALUES (#{id}, #{recordId},
         <if test="orderTime!=null and orderTime!=''">
             #{orderTime},

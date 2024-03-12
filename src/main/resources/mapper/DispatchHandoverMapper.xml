@@ -39,7 +39,7 @@
         <if test="otherDesc!=null and otherDesc!=''">
             OTHER_DESC,
         </if>
-        CREATE_DATE, CREATE_BY, BELONG_DATE)
+        CREATE_BY, CREATE_DATE, BELONG_DATE)
         VALUES (#{id},
         <if test="faultDesc!=null and faultDesc!=''">
             #{faultDesc},
