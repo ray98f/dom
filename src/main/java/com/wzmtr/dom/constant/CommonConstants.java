@@ -94,7 +94,28 @@ public class CommonConstants {
     public static final String LINE_CODE_ONE = "01";
     public static final String LINE_CODE_TWO = "02";
 
-    // 指定的日期格式
+    /**
+     * 下塘停车场
+     */
+    public static final String  STATION_280 = "280";
+
+    /**
+     * 汀田车辆段
+     */
+    public static final String  STATION_281 = "281";
+
+    /**
+     * 汀田车辆段
+     */
+    public static final String[]  STATION_280_281 = {"280","281"};
+
+    /**
+     * 指定的日期格式
+     */
     public static final String  DATE_FORMAT = "yyyy-MM-dd";
 
+    /**
+     * 指定数据获取时间
+     */
+    public static final String  DEFAULT_TIME = " 05:00:00";
 }

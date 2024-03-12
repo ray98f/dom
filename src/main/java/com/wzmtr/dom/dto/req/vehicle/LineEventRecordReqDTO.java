@@ -10,23 +10,19 @@ import javax.validation.constraints.NotNull;
 
 /**
  * 日数据请求类
- * @author  zhangxin
+ *
+ * @author zhangxin
  * @version 1.0
- * @date 2024/3/8 16:25
+ * @date 2024/3/11 19:57
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class IndicatorReqDTO extends BaseEntity {
+public class LineEventRecordReqDTO extends BaseEntity {
 
     @ApiModelProperty(value = "日期")
     @NotNull(message = "32000006",groups = ValidationGroup.create.class)
     private String day;
 
-    @ApiModelProperty(value = "责任晚点统计")
-    @NotNull(message = "32000006",groups = ValidationGroup.modify.class)
-    private Integer delayCount;
-
     @ApiModelProperty(value = "版本号")
     private String version;
-
 }

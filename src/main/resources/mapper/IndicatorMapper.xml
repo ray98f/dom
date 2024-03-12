@@ -2,13 +2,45 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wzmtr.dom.mapper.vehicle.IndicatorMapper">
 
+    <select id="list" resultType="com.wzmtr.dom.dto.res.vehicle.IndicatorResDTO">
+        SELECT ID, TRAIN_COUNT, CONSTRUCT_COUNT, DELAY_COUNT, VERSION, DATA_DATE, CREATE_DATE, UPDATE_DATE
+        FROM VEHICLE_IMPORTANT_INDICATOR
+        WHERE DEL_FLAG='0'
+        <if test="startDate != null">
+            AND DATA_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=DATA_DATE
+        </if>
+        ORDER BY CREATE_DATE desc
+    </select>
 
+    <select id="queryInfoById" resultType="com.wzmtr.dom.dto.res.vehicle.IndicatorResDTO">
+        SELECT ID, TRAIN_COUNT, CONSTRUCT_COUNT, DELAY_COUNT, VERSION
+        FROM VEHICLE_IMPORTANT_INDICATOR
+        WHERE ID=#{id} AND DEL_FLAG = '0'
+    </select>
 
     <insert id="add">
-        INSERT INTO VEHICLE_IMPORTANT_INDICATOR (ID, CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
-        VALUES (#{day}, #{createBy}, sysdate,#{createBy}, sysdate)
+        INSERT INTO VEHICLE_IMPORTANT_INDICATOR (ID, CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE,DATA_DATE)
+        VALUES (#{day}, #{createBy}, sysdate,#{createBy}, sysdate,to_date(#{day},'yyyy-mm-dd hh24:mi:ss'))
     </insert>
 
+    <update id="modify">
+        UPDATE VEHICLE_IMPORTANT_INDICATOR SET
+            DELAY_COUNT=#{delayCount},
+            VERSION = VERSION+1,
+            UPDATE_BY=#{updateBy},
+            UPDATE_DATE=sysdate
+        WHERE ID=#{id} and VERSION = #{version}
+    </update>
 
-
+    <delete id="delete">
+        DELETE FROM VEHICLE_IMPORTANT_INDICATOR
+        WHERE ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </delete>
 </mapper>
