@@ -8,13 +8,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 /**
- * 调度命令记录结果类
+ * 其他情况说明结果类
  * @author  Ray
  * @version 1.0
- * @date 2024/03/11
+ * @date 2024/03/12
  */
 @Data
-public class DispatchRecordResDTO {
+public class OtherRecordResDTO {
 
     /**
      * id
@@ -23,10 +23,16 @@ public class DispatchRecordResDTO {
     private String id;
 
     /**
-     * 调度命令数
+     * 其他情况说明
      */
-    @ApiModelProperty(value = "调度命令数")
-    private Integer orderNum;
+    @ApiModelProperty(value = "其他情况说明")
+    private String otherDesc;
+
+    /**
+     * 版本号(乐观锁)
+     */
+    @ApiModelProperty(value = "版本号(乐观锁)")
+    private String version;
 
     /**
      * 所属日期
@@ -66,10 +72,4 @@ public class DispatchRecordResDTO {
             timezone = "GMT+8"
     )
     private Date endDate;
-
-    /**
-     * 版本号(乐观锁)
-     */
-    @ApiModelProperty(value = "版本号(乐观锁)")
-    private String version;
 }

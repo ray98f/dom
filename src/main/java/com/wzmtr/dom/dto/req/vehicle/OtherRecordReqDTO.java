@@ -1,32 +1,35 @@
-package com.wzmtr.dom.dto.res.vehicle;
+package com.wzmtr.dom.dto.req.vehicle;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.wzmtr.dom.entity.BaseEntity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
 /**
- * 调度命令记录结果类
+ * 其他情况说明请求类
  * @author  Ray
  * @version 1.0
- * @date 2024/03/11
+ * @date 2024/03/12
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class DispatchRecordResDTO {
+public class OtherRecordReqDTO extends BaseEntity {
 
     /**
-     * id
+     * 其他情况说明
      */
-    @ApiModelProperty(value = "id")
-    private String id;
+    @ApiModelProperty(value = "其他情况说明")
+    private String otherDesc;
 
     /**
-     * 调度命令数
+     * 版本号(乐观锁)
      */
-    @ApiModelProperty(value = "调度命令数")
-    private Integer orderNum;
+    @ApiModelProperty(value = "版本号(乐观锁)")
+    private String version;
 
     /**
      * 所属日期
@@ -66,10 +69,4 @@ public class DispatchRecordResDTO {
             timezone = "GMT+8"
     )
     private Date endDate;
-
-    /**
-     * 版本号(乐观锁)
-     */
-    @ApiModelProperty(value = "版本号(乐观锁)")
-    private String version;
 }
