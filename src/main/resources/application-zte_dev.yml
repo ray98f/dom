@@ -1,4 +1,4 @@
-# 中兴测试环境
+# 中兴开发环境
 spring:
   datasource:
     url: jdbc:oracle:thin:@192.168.30.113:1521/xe
@@ -33,11 +33,11 @@ excluded:
 
 sso:
   url: http://zxgd.softether.net:4443/cas
-  home: http://192.168.30.140:8002/dom/
+  home: http://192.168.30.140:8900/dom/
 
 cas:
   serverUrlPrefix: "${sso.url}"
-  serviceUrlPrefix: "http://192.168.30.140:8002/dom"
+  serviceUrlPrefix: "http://192.168.30.140:8900/dom"
   casFilterUrlPattern: "/cas"
   loginUrlPattern: "/login"
   logoutUrlPattern: "/logout"
@@ -74,7 +74,7 @@ mdm:
     address: "http://esb.wzmtr.com:7003/mdmwebservice/ps/getAllPersonPlusList?wsdl"
 
 local:
-  base-url: http://192.168.30.140:8002/dom
+  base-url: http://192.168.30.140:8900/dom
   data-sync: off
 
 minio:

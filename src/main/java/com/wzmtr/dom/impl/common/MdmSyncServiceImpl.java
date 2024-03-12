@@ -88,7 +88,7 @@ public class MdmSyncServiceImpl implements MdmSyncService {
         requestMessage.setNoun("allPersonList");
         message.setOperType(1);
         message.setIfPhoto(0);
-        message.setSyscode("EAM");
+        message.setSyscode("DOM");
         requestMessage.setMessage(message);
         List<SysUser> personList = new ArrayList<>();
         try {
@@ -120,7 +120,7 @@ public class MdmSyncServiceImpl implements MdmSyncService {
         requestMessage.setVerb("Get");
         requestMessage.setNoun("allSuppContactsList");
         message.setOperType(1);
-        message.setSyscode("EAM");
+        message.setSyscode("DOM");
         requestMessage.setMessage(message);
         List<SysUser> personList = new ArrayList<>();
         try {
@@ -151,7 +151,7 @@ public class MdmSyncServiceImpl implements MdmSyncService {
         requestMessage.setVerb("Get");
         requestMessage.setNoun("allPersonPlusList");
         message.setOperType(1);
-        message.setSyscode("EAM");
+        message.setSyscode("DOM");
         requestMessage.setMessage(message);
         List<Map<String, Object>> plusList = new ArrayList<>();
         try {
@@ -189,7 +189,7 @@ public class MdmSyncServiceImpl implements MdmSyncService {
         requestMessage.setVerb("Get");
         requestMessage.setNoun("allOrgList");
         message.setOperType(1);
-        message.setSyscode("EAM");
+        message.setSyscode("DOM");
         requestMessage.setMessage(message);
         List<SysOffice> orgList = new ArrayList<>();
         try {
@@ -221,7 +221,7 @@ public class MdmSyncServiceImpl implements MdmSyncService {
         requestMessage.setVerb("Get");
         requestMessage.setNoun("allSuppList");
         message.setOperType(1);
-        message.setSyscode("EAM");
+        message.setSyscode("DOM");
         requestMessage.setMessage(message);
         List<SysOffice> orgList = new ArrayList<>();
         try {
@@ -254,7 +254,7 @@ public class MdmSyncServiceImpl implements MdmSyncService {
         requestMessage.setVerb("Get");
         requestMessage.setNoun("allExtraOrgList");
         message.setOperType(1);
-        message.setSyscode("EAM");
+        message.setSyscode("DOM");
         requestMessage.setMessage(message);
         List<SysOffice> orgList = new ArrayList<>();
         try {
@@ -287,7 +287,7 @@ public class MdmSyncServiceImpl implements MdmSyncService {
         requestMessage.setVerb("Get");
         requestMessage.setNoun("allEmpJobInfoList");
         message.setOperType(1);
-        message.setSyscode("EAM");
+        message.setSyscode("DOM");
         requestMessage.setMessage(message);
         List<SysOrgUser> empJobList = new ArrayList<>();
         try {

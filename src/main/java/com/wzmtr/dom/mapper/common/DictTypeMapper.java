@@ -31,7 +31,7 @@ public interface DictTypeMapper {
      * @param id id
      * @return 字典类型详情
      */
-    DictTypeResDTO detail(Integer id);
+    DictTypeResDTO detail(String id);
 
     /**
      * 新增字典类型

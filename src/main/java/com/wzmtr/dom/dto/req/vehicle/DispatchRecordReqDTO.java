@@ -1,4 +1,4 @@
-package com.wzmtr.dom.dto.req.system;
+package com.wzmtr.dom.dto.req.vehicle;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wzmtr.dom.entity.BaseEntity;
@@ -10,34 +10,35 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 /**
- * 审核站权限请求类
+ * 调度命令记录请求类
  * @author  Ray
  * @version 1.0
- * @date 2024/03/06
+ * @date 2024/03/11
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class DailyStatisticsReqDTO extends BaseEntity {
+public class DispatchRecordReqDTO extends BaseEntity {
 
     /**
-     * 开始时间
+     * 调度命令数
      */
-    @ApiModelProperty(value = "开始时间")
+    @ApiModelProperty(value = "调度命令数")
+    private Integer orderNum;
+
+    /**
+     * 所属日期
+     */
+    @ApiModelProperty(value = "所属日期")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonFormat(
             pattern = "yyyy-MM-dd",
             timezone = "GMT+8"
     )
-    private Date startTime;
+    private Date belongDate;
 
     /**
-     * 结束时间
+     * 版本号(乐观锁)
      */
-    @ApiModelProperty(value = "结束时间")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonFormat(
-            pattern = "yyyy-MM-dd",
-            timezone = "GMT+8"
-    )
-    private Date endTime;
+    @ApiModelProperty(value = "版本号(乐观锁)")
+    private String version;
 }

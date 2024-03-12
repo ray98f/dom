@@ -60,8 +60,8 @@ public class UserAccountController {
     }
 
     /**
-     * 获取登录用户token
-     * @param no 用户登录账号
+     * 获取用户token
+     * @param no 用户账号
      * @return token
      */
     @GetMapping("/getToken")
