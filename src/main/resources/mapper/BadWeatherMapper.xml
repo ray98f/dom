@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzmtr.dom.mapper.vehicle.BadWeatherMapper">
+
+    <select id="page" resultType="com.wzmtr.dom.dto.res.vehicle.BadWeatherResDTO">
+        SELECT ID, WEATHER_INFO, VERSION, BELONG_DATE, DATA_TYPE, START_DATE, END_DATE
+        FROM VEHICLE_BAD_WEATHER
+        WHERE DEL_FLAG='0'
+        <if test="dataType=='1'">
+            <if test="startTime!=null and startTime!=''">
+                AND BELONG_DATE>=to_date(#{startTime},'YYYY-MM-DD')
+            </if>
+            <if test="endTime!=null and endTime!=''">
+                AND to_date(#{endTime},'YYYY-MM-DD')>=BELONG_DATE
+            </if>
+            ORDER BY BELONG_DATE desc
+        </if>
+        <if test="dataType!='1'">
+            <if test="startTime!=null and startTime!=''">
+                AND START_DATE>=to_date(#{startTime},'YYYY-MM-DD')
+            </if>
+            <if test="endTime!=null and endTime!=''">
+                AND to_date(#{endTime},'YYYY-MM-DD')>=END_DATE
+            </if>
+            ORDER BY START_DATE desc
+        </if>
+    </select>
+
+    <select id="detail" resultType="com.wzmtr.dom.dto.res.vehicle.BadWeatherResDTO">
+        SELECT ID, WEATHER_INFO, VERSION, BELONG_DATE, DATA_TYPE, START_DATE, END_DATE
+        FROM VEHICLE_BAD_WEATHER
+        WHERE DEL_FLAG='0' AND ID=#{id}
+    </select>
+
+    <select id="selectIsExist" resultType="java.lang.Integer">
+        select count(1) from VEHICLE_BAD_WEATHER
+        WHERE
+        <if test="dataType=='1'">
+            BELONG_DATE=#{belongDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="dataType!='1'">
+            START_DATE=#{startDate,jdbcType=TIMESTAMP} and END_DATE=#{endDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="version!=null and version!=''">
+            AND VERSION=#{version,jdbcType=VARCHAR}
+        </if>
+        AND DEL_FLAG='0' AND rownum=1
+    </select>
+
+    <insert id="add">
+        INSERT INTO VEHICLE_BAD_WEATHER
+        (ID,
+        <if test="weatherInfo!=null and weatherInfo!=''">
+            WEATHER_INFO,
+        </if>
+        <if test="dataType!=null and dataType!=''">
+            DATA_TYPE,
+        </if>
+        <if test="startDate!=null and startDate!=''">
+            START_DATE,
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            END_DATE,
+        </if>
+        CREATE_BY, CREATE_DATE, BELONG_DATE)
+        VALUES (#{id},
+        <if test="weatherInfo!=null and weatherInfo!=''">
+            #{weatherInfo},
+        </if>
+        <if test="dataType!=null and dataType!=''">
+            #{dataType},
+        </if>
+        <if test="startDate!=null and startDate!=''">
+            #{startDate},
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            #{endDate},
+        </if>
+        #{createBy}, sysdate, #{belongDate})
+    </insert>
+
+    <update id="modify">
+        UPDATE VEHICLE_BAD_WEATHER SET
+        <if test="weatherInfo!=null">
+            WEATHER_INFO=#{weatherInfo},
+        </if>
+        <if test="dataType!=null">
+            DATA_TYPE=#{dataType},
+        </if>
+        <if test="startDate!=null">
+            START_DATE=#{startDate},
+        </if>
+        <if test="endDate!=null">
+            END_DATE=#{endDate},
+        </if>
+        VERSION=VERSION+1, UPDATE_BY=#{updateBy}, UPDATE_DATE=sysdate
+        WHERE ID=#{id} and VERSION=#{version}
+    </update>
+
+    <update id="delete">
+        UPDATE VEHICLE_BAD_WEATHER SET
+        DEL_FLAG='1', UPDATE_BY=#{userId}, UPDATE_DATE=sysdate
+        WHERE ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+
+</mapper>
