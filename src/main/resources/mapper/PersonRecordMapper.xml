@@ -5,7 +5,8 @@
     <select id="page" resultType="com.wzmtr.dom.dto.res.vehicle.PersonRecordResDTO">
         SELECT ID, DISPATCH_XT_DAY, DISPATCH_XT_NIGHT, DISPATCH_TT_DAY, DISPATCH_TT_NIGHT,
         DCC_XT_DAY, DCC_XT_NIGHT, DCC_TT_DAY, DCC_TT_NIGHT, RELIEF, LEAVE_PERSONAL, LEAVE_SICK,
-        LEAVE_ANNUAL, LEAVE_OTHER, POST_WAITING, VERSION, BELONG_DATE
+        LEAVE_ANNUAL, LEAVE_OTHER, POST_WAITING, VERSION, BELONG_DATE,
+        MAIN_DRIVER_DAY, MAIN_DRIVER_NIGHT, GUIDE_DRIVER_DAY, GUIDE_DRIVER_NIGHT
         FROM VEHICLE_PERSON_RECORD
         WHERE DEL_FLAG='0'
         <if test="startDate!=null and startDate!=''">
@@ -20,7 +21,8 @@
     <select id="detail" resultType="com.wzmtr.dom.dto.res.vehicle.PersonRecordResDTO">
         SELECT ID, DISPATCH_XT_DAY, DISPATCH_XT_NIGHT, DISPATCH_TT_DAY, DISPATCH_TT_NIGHT,
         DCC_XT_DAY, DCC_XT_NIGHT, DCC_TT_DAY, DCC_TT_NIGHT, RELIEF, LEAVE_PERSONAL, LEAVE_SICK,
-        LEAVE_ANNUAL, LEAVE_OTHER, POST_WAITING, VERSION, BELONG_DATE
+        LEAVE_ANNUAL, LEAVE_OTHER, POST_WAITING, VERSION, BELONG_DATE,
+        MAIN_DRIVER_DAY, MAIN_DRIVER_NIGHT, GUIDE_DRIVER_DAY, GUIDE_DRIVER_NIGHT
         FROM VEHICLE_PERSON_RECORD
         WHERE DEL_FLAG='0' AND ID=#{id}
     </select>
@@ -60,6 +62,18 @@
         </if>
         <if test="dccTtNight!=null and dccTtNight!=''">
             DCC_TT_NIGHT,
+        </if>
+        <if test="mainDriverDay!=null and mainDriverDay!=''">
+            MAIN_DRIVER_DAY,
+        </if>
+        <if test="mainDriverNight!=null and mainDriverNight!=''">
+            MAIN_DRIVER_NIGHT,
+        </if>
+        <if test="guideDriverDay!=null and guideDriverDay!=''">
+            GUIDE_DRIVER_DAY,
+        </if>
+        <if test="guideDriverNight!=null and guideDriverNight!=''">
+            GUIDE_DRIVER_NIGHT,
         </if>
         <if test="relief!=null and relief!=''">
             RELIEF,
@@ -104,6 +118,18 @@
         </if>
         <if test="dccTtNight!=null and dccTtNight!=''">
             #{dccTtNight},
+        </if>
+        <if test="mainDriverDay!=null and mainDriverDay!=''">
+            #{mainDriverDay},
+        </if>
+        <if test="mainDriverNight!=null and mainDriverNight!=''">
+            #{mainDriverNight},
+        </if>
+        <if test="guideDriverDay!=null and guideDriverDay!=''">
+            #{guideDriverDay},
+        </if>
+        <if test="guideDriverNight!=null and guideDriverNight!=''">
+            #{guideDriverNight},
         </if>
         <if test="relief!=null and relief!=''">
             #{relief},
@@ -151,6 +177,18 @@
         </if>
         <if test="dccTtNight!=null">
             DCC_TT_NIGHT=#{dccTtNight},
+        </if>
+        <if test="mainDriverDay!=null">
+            MAIN_DRIVER_DAY=#{mainDriverDay},
+        </if>
+        <if test="mainDriverNight!=null">
+            MAIN_DRIVER_NIGHT=#{mainDriverNight},
+        </if>
+        <if test="guideDriverDay!=null">
+            GUIDE_DRIVER_DAY=#{guideDriverDay},
+        </if>
+        <if test="guideDriverNight!=null">
+            GUIDE_DRIVER_NIGHT=#{guideDriverNight},
         </if>
         <if test="relief!=null">
             RELIEF=#{relief},

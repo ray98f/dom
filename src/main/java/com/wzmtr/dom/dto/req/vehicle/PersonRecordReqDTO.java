@@ -68,6 +68,30 @@ public class PersonRecordReqDTO extends BaseEntity {
     private String dccTtNight;
 
     /**
+     * 司机长(白)
+     */
+    @ApiModelProperty(value = "司机长(白)")
+    private String mainDriverDay;
+
+    /**
+     * 司机长(夜)
+     */
+    @ApiModelProperty(value = "司机长(夜)")
+    private String mainDriverNight;
+
+    /**
+     * 指导司机(白)
+     */
+    @ApiModelProperty(value = "指导司机(白)")
+    private String guideDriverDay;
+
+    /**
+     * 指导司机(夜)
+     */
+    @ApiModelProperty(value = "指导司机(夜)")
+    private String guideDriverNight;
+
+    /**
      * 替班
      */
     @ApiModelProperty(value = "替班")
