@@ -1,29 +1,32 @@
-package com.wzmtr.dom.dto.req.vehicle;
+package com.wzmtr.dom.dto.res.vehicle;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.wzmtr.dom.entity.BaseEntity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
 /**
- * 乘务中心情况总结请求类
+ * 乘务中心班组培训情况结果类
  * @author  Ray
  * @version 1.0
  * @date 2024/03/13
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class CrewSummaryReqDTO extends BaseEntity {
+public class CrewTrainResDTO {
 
     /**
-     * 乘务中心情况总结
+     * id
      */
-    @ApiModelProperty(value = "乘务中心情况总结")
-    private String summaryDesc;
+    @ApiModelProperty(value = "id")
+    private String id;
+
+    /**
+     * 乘务中心班组培训情况
+     */
+    @ApiModelProperty(value = "乘务中心班组培训情况")
+    private String trainDesc;
 
     /**
      * 版本号(乐观锁)

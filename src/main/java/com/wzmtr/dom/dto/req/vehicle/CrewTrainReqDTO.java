@@ -10,20 +10,20 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 /**
- * 乘务中心情况总结请求类
+ * 乘务中心班组培训情况请求类
  * @author  Ray
  * @version 1.0
  * @date 2024/03/13
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class CrewSummaryReqDTO extends BaseEntity {
+public class CrewTrainReqDTO extends BaseEntity {
 
     /**
-     * 乘务中心情况总结
+     * 乘务中心班组培训情况
      */
-    @ApiModelProperty(value = "乘务中心情况总结")
-    private String summaryDesc;
+    @ApiModelProperty(value = "乘务中心班组培训情况")
+    private String trainDesc;
 
     /**
      * 版本号(乐观锁)
