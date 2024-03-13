@@ -17,12 +17,12 @@ public interface TrainRecordService {
 
     /**
      * 分页查询班组培训情况列表
-     * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param startDate 开始时间
+     * @param endDate 结束时间
      * @param pageReqDTO 分页参数
      * @return 班组培训情况列表
      */
-    Page<TrainRecordResDTO> page(String startTime, String endTime, PageReqDTO pageReqDTO);
+    Page<TrainRecordResDTO> page(String startDate, String endDate, PageReqDTO pageReqDTO);
 
     /**
      * 获取班组培训情况详情

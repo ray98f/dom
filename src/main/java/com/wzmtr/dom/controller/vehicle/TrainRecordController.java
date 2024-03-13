@@ -33,17 +33,17 @@ public class TrainRecordController {
 
     /**
      * 分页查询班组培训情况列表
-     * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param startDate 开始时间
+     * @param endDate 结束时间
      * @param pageReqDTO 分页参数
      * @return 班组培训情况列表
      */
     @GetMapping("/page")
     @ApiOperation(value = "班组培训情况列表(分页)")
-    public PageResponse<TrainRecordResDTO> page(@RequestParam(required = false) String startTime,
-                                                @RequestParam(required = false) String endTime,
+    public PageResponse<TrainRecordResDTO> page(@RequestParam(required = false) String startDate,
+                                                @RequestParam(required = false) String endDate,
                                                 @Valid PageReqDTO pageReqDTO) {
-        return PageResponse.of(trainRecordService.page(startTime, endTime, pageReqDTO));
+        return PageResponse.of(trainRecordService.page(startDate, endDate, pageReqDTO));
     }
 
     /**
@@ -53,7 +53,7 @@ public class TrainRecordController {
      */
     @GetMapping("/detail")
     @ApiOperation(value = "班组培训情况详情")
-    public DataResponse<TrainRecordResDTO> detail(@RequestParam("id") String id) {
+    public DataResponse<TrainRecordResDTO> detail(@RequestParam String id) {
         return DataResponse.of(trainRecordService.detail(id));
     }
 

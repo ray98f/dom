@@ -70,7 +70,7 @@ public class DictController {
      */
     @GetMapping("/detail")
     @ApiOperation(value = "字典详情")
-    public DataResponse<DictResDTO> detail(@RequestParam("id") String id) {
+    public DataResponse<DictResDTO> detail(@RequestParam String id) {
         return DataResponse.of(dictService.detail(id));
     }
 

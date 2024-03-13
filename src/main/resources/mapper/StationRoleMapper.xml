@@ -21,7 +21,7 @@
         INSERT INTO SYS_STATION_ROLE (ID, STATION_CODE, STATION_NAME,
         START_TIME, END_TIME, CREATE_BY, CREATE_DATE)
         VALUES (#{id}, #{stationCode}, #{stationName},
-        #{startTime}, #{endTime}, #{createBy}, sysdate)
+        #{startTime}, #{endDate}, #{createBy}, sysdate)
     </insert>
 
     <update id="modify">
@@ -35,8 +35,8 @@
         <if test="startTime!=null">
             START_TIME=#{startTime},
         </if>
-        <if test="endTime!=null">
-            END_TIME=#{endTime},
+        <if test="endDate!=null">
+            END_TIME=#{endDate},
         </if>
         UPDATE_BY=#{updateBy}, UPDATE_DATE=sysdate
         WHERE ID=#{id}

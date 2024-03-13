@@ -49,7 +49,7 @@ public class StationRoleController {
      */
     @GetMapping("/detail")
     @ApiOperation(value = "审核站权限详情")
-    public DataResponse<StationRoleResDTO> detail(@RequestParam("id") String id) {
+    public DataResponse<StationRoleResDTO> detail(@RequestParam String id) {
         return DataResponse.of(stationRoleService.detail(id));
     }
 

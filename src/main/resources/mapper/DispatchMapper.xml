@@ -3,30 +3,71 @@
 <mapper namespace="com.wzmtr.dom.mapper.vehicle.DispatchMapper">
 
     <select id="pageRecord" resultType="com.wzmtr.dom.dto.res.vehicle.DispatchRecordResDTO">
-        SELECT ID, ORDER_NUM, VERSION, BELONG_DATE
+        SELECT ID, ORDER_NUM, VERSION, BELONG_DATE, DATA_TYPE, START_DATE, END_DATE
         FROM VEHICLE_DISPATCH_RECORD
         WHERE DEL_FLAG='0'
-        <if test="startTime!=null and startTime!=''">
-            AND BELONG_DATE>=to_date(#{startTime},'YYYY-MM-DD')
+        <if test="dataType=='1'">
+            <if test="startDate!=null and startDate!=''">
+                AND BELONG_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+            </if>
+            <if test="endDate!=null and endDate!=''">
+                AND to_date(#{endDate},'YYYY-MM-DD')>=BELONG_DATE
+            </if>
+            ORDER BY BELONG_DATE desc
         </if>
-        <if test="endTime!=null and endTime!=''">
-            AND to_date(#{endTime},'YYYY-MM-DD')>=BELONG_DATE
+        <if test="dataType!='1'">
+            <if test="startDate!=null and startDate!=''">
+                AND START_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+            </if>
+            <if test="endDate!=null and endDate!=''">
+                AND to_date(#{endDate},'YYYY-MM-DD')>=END_DATE
+            </if>
+            ORDER BY START_DATE desc
         </if>
-        ORDER BY BELONG_DATE desc
     </select>
 
-    <select id="listOrder" resultType="com.wzmtr.dom.dto.res.vehicle.DispatchOrderResDTO">
+    <select id="pageOrder" resultType="com.wzmtr.dom.dto.res.vehicle.DispatchOrderResDTO">
+        SELECT do.ID, do.RECORD_ID, do.ORDER_TIME, do.ORDER_CODE, do.ORDER_DESC, do.VERSION
+        FROM VEHICLE_DISPATCH_RECORD dr
+        LEFT JOIN VEHICLE_DISPATCH_ORDER do ON do.RECORD_ID=dr.ID AND do.DEL_FLAG='0'
+        WHERE do.DEL_FLAG='0'
+        <if test="id!=null and id!=''">
+            AND dr.ID=#{id}
+        </if>
+        <if test="startDate!=null and startDate!=''">
+            AND dr.BELONG_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'YYYY-MM-DD')>=dr.BELONG_DATE
+        </if>
+        ORDER BY dr.BELONG_DATE ASC, do.ORDER_TIME ASC
+    </select>
+
+    <select id="getRecordDetail" resultType="com.wzmtr.dom.dto.res.vehicle.DispatchRecordResDTO">
+        SELECT ID, ORDER_NUM, VERSION, BELONG_DATE, DATA_TYPE, START_DATE, END_DATE
+        FROM VEHICLE_DISPATCH_RECORD
+        WHERE DEL_FLAG='0' AND ID=#{id}
+    </select>
+
+    <select id="getOrderDetail" resultType="com.wzmtr.dom.dto.res.vehicle.DispatchOrderResDTO">
         SELECT ID, RECORD_ID, ORDER_TIME, ORDER_CODE, ORDER_DESC, VERSION
         FROM VEHICLE_DISPATCH_ORDER
-        WHERE DEL_FLAG='0' AND RECORD_ID=#{recordId}
-        ORDER BY ORDER_TIME desc
+        WHERE DEL_FLAG='0' AND ID=#{id}
     </select>
 
     <select id="selectRecordIsExist" resultType="java.lang.Integer">
         select count(1) from VEHICLE_DISPATCH_RECORD
-        where BELONG_DATE=#{record.belongDate}
+        where BELONG_DATE=#{belongDate}
         <if test="record.version!=null and record.version!=''">
-            AND VERSION=#{record.version}
+            AND VERSION=#{version}
+        </if>
+        AND DEL_FLAG='0' AND rownum=1
+    </select>
+
+    <select id="selectOrderIsExist" resultType="java.lang.Integer">
+        select count(1) from VEHICLE_DISPATCH_ORDER
+        <if test="record.version!=null and record.version!=''">
+            WHERE VERSION=#{version}
         </if>
         AND DEL_FLAG='0' AND rownum=1
     </select>
@@ -37,12 +78,32 @@
         <if test="orderNum!=null">
             ORDER_NUM,
         </if>
-        CREATE_DATE, CREATE_BY, BELONG_DATE)
+        CREATE_BY, CREATE_DATE,
+        <if test="dataType!=null and dataType!=''">
+            DATA_TYPE,
+        </if>
+        <if test="startDate!=null and startDate!=''">
+            START_DATE,
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            END_DATE,
+        </if>
+        BELONG_DATE)
         VALUES (#{id},
         <if test="orderNum!=null">
             #{orderNum},
         </if>
-        #{createBy}, sysdate, #{belongDate})
+        #{createBy}, sysdate,
+        <if test="dataType!=null and dataType!=''">
+            #{dataType},
+        </if>
+        <if test="startDate!=null and startDate!=''">
+            #{startDate},
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            #{endDate},
+        </if>
+        #{belongDate})
     </insert>
 
     <insert id="addOrder">
@@ -57,7 +118,7 @@
         <if test="orderDesc!=null and orderDesc!=''">
             ORDER_DESC,
         </if>
-        CREATE_DATE, CREATE_BY)
+        CREATE_BY, CREATE_DATE)
         VALUES (#{id}, #{recordId},
         <if test="orderTime!=null and orderTime!=''">
             #{orderTime},
@@ -73,7 +134,10 @@
 
     <update id="modifyRecord">
         UPDATE VEHICLE_DISPATCH_RECORD SET
-        ORDER_NUM=#{orderNum}, VERSION=VERSION+1, UPDATE_BY=#{updateBy}, UPDATE_DATE=sysdate
+        ORDER_NUM=(SELECT COUNT(*) FROM VEHICLE_DISPATCH_ORDER WHERE RECORD_ID=#{id} AND DEL_FLAG='0'),
+        VERSION=VERSION+1,
+        UPDATE_BY=#{updateBy},
+        UPDATE_DATE=sysdate
         WHERE ID=#{id} and VERSION=#{version}
     </update>
 
