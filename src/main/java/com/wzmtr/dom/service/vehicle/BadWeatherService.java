@@ -17,13 +17,13 @@ public interface BadWeatherService {
 
     /**
      * 分页查询恶劣天气组织列表
-     * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param startDate 开始时间
+     * @param endDate 结束时间
      * @param dataType 数据类型 1:日报 2:周报 3:月报
      * @param pageReqDTO 分页参数
      * @return 恶劣天气组织列表
      */
-    Page<BadWeatherResDTO> page(String startTime, String endTime, String dataType, PageReqDTO pageReqDTO);
+    Page<BadWeatherResDTO> page(String startDate, String endDate, String dataType, PageReqDTO pageReqDTO);
 
     /**
      * 获取恶劣天气组织详情

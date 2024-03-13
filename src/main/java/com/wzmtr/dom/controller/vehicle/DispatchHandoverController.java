@@ -33,17 +33,17 @@ public class DispatchHandoverController {
 
     /**
      * 分页查询车场调度员交接班情况列表
-     * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param startDate 开始时间
+     * @param endDate 结束时间
      * @param pageReqDTO 分页参数
      * @return 车场调度员交接班情况列表
      */
     @GetMapping("/page")
     @ApiOperation(value = "车场调度员交接班情况列表(分页)")
-    public PageResponse<DispatchHandoverResDTO> page(@RequestParam(required = false) String startTime,
-                                                     @RequestParam(required = false) String endTime,
+    public PageResponse<DispatchHandoverResDTO> page(@RequestParam(required = false) String startDate,
+                                                     @RequestParam(required = false) String endDate,
                                                      @Valid PageReqDTO pageReqDTO) {
-        return PageResponse.of(dispatchHandoverService.page(startTime, endTime, pageReqDTO));
+        return PageResponse.of(dispatchHandoverService.page(startDate, endDate, pageReqDTO));
     }
 
     /**

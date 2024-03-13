@@ -29,9 +29,9 @@ public class DispatchHandoverServiceImpl implements DispatchHandoverService {
     private DispatchHandoverMapper dispatchHandoverMapper;
 
     @Override
-    public Page<DispatchHandoverResDTO> page(String startTime, String endTime, PageReqDTO pageReqDTO) {
+    public Page<DispatchHandoverResDTO> page(String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return dispatchHandoverMapper.page(pageReqDTO.of(), startTime, endTime);
+        return dispatchHandoverMapper.page(pageReqDTO.of(), startDate, endDate);
     }
 
     @Override

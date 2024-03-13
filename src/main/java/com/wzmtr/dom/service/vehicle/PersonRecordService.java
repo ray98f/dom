@@ -17,12 +17,12 @@ public interface PersonRecordService {
 
     /**
      * 分页查询当日人员情况列表
-     * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param startDate 开始时间
+     * @param endDate 结束时间
      * @param pageReqDTO 分页参数
      * @return 当日人员情况列表
      */
-    Page<PersonRecordResDTO> page(String startTime, String endTime, PageReqDTO pageReqDTO);
+    Page<PersonRecordResDTO> page(String startDate, String endDate, PageReqDTO pageReqDTO);
 
     /**
      * 获取当日人员情况详情

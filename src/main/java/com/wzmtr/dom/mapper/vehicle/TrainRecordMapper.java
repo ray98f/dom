@@ -21,11 +21,11 @@ public interface TrainRecordMapper {
     /**
      * 分页查询班组培训情况列表
      * @param page 分页参数
-     * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param startDate 开始时间
+     * @param endDate 结束时间
      * @return 班组培训情况列表
      */
-    Page<TrainRecordResDTO> page(Page<TrainRecordResDTO> page, String startTime, String endTime);
+    Page<TrainRecordResDTO> page(Page<TrainRecordResDTO> page, String startDate, String endDate);
 
     /**
      * 获取班组培训情况详情

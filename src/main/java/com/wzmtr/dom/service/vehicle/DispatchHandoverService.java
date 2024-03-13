@@ -17,12 +17,12 @@ public interface DispatchHandoverService {
 
     /**
      * 分页查询车场调度员交接班情况列表
-     * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param startDate 开始时间
+     * @param endDate 结束时间
      * @param pageReqDTO 分页参数
      * @return 车场调度员交接班情况列表
      */
-    Page<DispatchHandoverResDTO> page(String startTime, String endTime, PageReqDTO pageReqDTO);
+    Page<DispatchHandoverResDTO> page(String startDate, String endDate, PageReqDTO pageReqDTO);
 
     /**
      * 获取车场调度员交接班情况详情

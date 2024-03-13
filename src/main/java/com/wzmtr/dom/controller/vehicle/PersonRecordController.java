@@ -33,17 +33,17 @@ public class PersonRecordController {
 
     /**
      * 分页查询当日人员情况列表
-     * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param startDate 开始时间
+     * @param endDate 结束时间
      * @param pageReqDTO 分页参数
      * @return 当日人员情况列表
      */
     @GetMapping("/page")
     @ApiOperation(value = "当日人员情况列表(分页)")
-    public PageResponse<PersonRecordResDTO> page(@RequestParam(required = false) String startTime,
-                                                 @RequestParam(required = false) String endTime,
+    public PageResponse<PersonRecordResDTO> page(@RequestParam(required = false) String startDate,
+                                                 @RequestParam(required = false) String endDate,
                                                  @Valid PageReqDTO pageReqDTO) {
-        return PageResponse.of(personRecordService.page(startTime, endTime, pageReqDTO));
+        return PageResponse.of(personRecordService.page(startDate, endDate, pageReqDTO));
     }
 
     /**

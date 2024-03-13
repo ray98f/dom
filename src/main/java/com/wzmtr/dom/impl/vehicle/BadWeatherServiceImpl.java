@@ -29,9 +29,9 @@ public class BadWeatherServiceImpl implements BadWeatherService {
     private BadWeatherMapper badWeatherMapper;
 
     @Override
-    public Page<BadWeatherResDTO> page(String startTime, String endTime, String dataType, PageReqDTO pageReqDTO) {
+    public Page<BadWeatherResDTO> page(String startDate, String endDate, String dataType, PageReqDTO pageReqDTO) {
         PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return badWeatherMapper.page(pageReqDTO.of(), startTime, endTime, dataType);
+        return badWeatherMapper.page(pageReqDTO.of(), startDate, endDate, dataType);
     }
 
     @Override

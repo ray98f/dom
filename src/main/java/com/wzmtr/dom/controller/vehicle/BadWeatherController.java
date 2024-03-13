@@ -33,19 +33,19 @@ public class BadWeatherController {
 
     /**
      * 分页查询恶劣天气组织列表
-     * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param startDate 开始时间
+     * @param endDate 结束时间
      * @param dataType 数据类型 1:日报 2:周报 3:月报
      * @param pageReqDTO 分页参数
      * @return 恶劣天气组织列表
      */
     @GetMapping("/page")
     @ApiOperation(value = "恶劣天气组织列表(分页)")
-    public PageResponse<BadWeatherResDTO> page(@RequestParam(required = false) String startTime,
-                                               @RequestParam(required = false) String endTime,
+    public PageResponse<BadWeatherResDTO> page(@RequestParam(required = false) String startDate,
+                                               @RequestParam(required = false) String endDate,
                                                @RequestParam String dataType,
                                                @Valid PageReqDTO pageReqDTO) {
-        return PageResponse.of(badWeatherService.page(startTime, endTime, dataType, pageReqDTO));
+        return PageResponse.of(badWeatherService.page(startDate, endDate, dataType, pageReqDTO));
     }
 
     /**

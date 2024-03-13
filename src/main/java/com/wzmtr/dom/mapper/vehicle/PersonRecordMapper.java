@@ -21,11 +21,11 @@ public interface PersonRecordMapper {
     /**
      * 分页查询当日人员情况列表
      * @param page 分页参数
-     * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param startDate 开始时间
+     * @param endDate 结束时间
      * @return 当日人员情况列表
      */
-    Page<PersonRecordResDTO> page(Page<PersonRecordResDTO> page, String startTime, String endTime);
+    Page<PersonRecordResDTO> page(Page<PersonRecordResDTO> page, String startDate, String endDate);
 
     /**
      * 获取当日人员情况详情

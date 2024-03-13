@@ -33,17 +33,17 @@ public class DrivingAttentionController {
 
     /**
      * 分页查询行车注意事项列表
-     * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param startDate 开始时间
+     * @param endDate 结束时间
      * @param pageReqDTO 分页参数
      * @return 行车注意事项列表
      */
     @GetMapping("/page")
     @ApiOperation(value = "行车注意事项列表(分页)")
-    public PageResponse<DrivingAttentionResDTO> page(@RequestParam(required = false) String startTime,
-                                                     @RequestParam(required = false) String endTime,
+    public PageResponse<DrivingAttentionResDTO> page(@RequestParam(required = false) String startDate,
+                                                     @RequestParam(required = false) String endDate,
                                                      @Valid PageReqDTO pageReqDTO) {
-        return PageResponse.of(drivingAttentionService.page(startTime, endTime, pageReqDTO));
+        return PageResponse.of(drivingAttentionService.page(startDate, endDate, pageReqDTO));
     }
 
     /**

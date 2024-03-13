@@ -29,9 +29,9 @@ public class OtherRecordServiceImpl implements OtherRecordService {
     private OtherRecordMapper otherRecordMapper;
 
     @Override
-    public Page<OtherRecordResDTO> page(String startTime, String endTime, String dataType, PageReqDTO pageReqDTO) {
+    public Page<OtherRecordResDTO> page(String startDate, String endDate, String dataType, PageReqDTO pageReqDTO) {
         PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return otherRecordMapper.page(pageReqDTO.of(), startTime, endTime, dataType);
+        return otherRecordMapper.page(pageReqDTO.of(), startDate, endDate, dataType);
     }
 
     @Override

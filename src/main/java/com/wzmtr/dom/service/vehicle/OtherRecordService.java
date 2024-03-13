@@ -17,13 +17,13 @@ public interface OtherRecordService {
 
     /**
      * 分页查询其他情况说明列表
-     * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param startDate 开始时间
+     * @param endDate 结束时间
      * @param dataType 数据类型 1:日报 2:周报 3:月报
      * @param pageReqDTO 分页参数
      * @return 其他情况说明列表
      */
-    Page<OtherRecordResDTO> page(String startTime, String endTime, String dataType, PageReqDTO pageReqDTO);
+    Page<OtherRecordResDTO> page(String startDate, String endDate, String dataType, PageReqDTO pageReqDTO);
 
     /**
      * 获取其他情况说明详情

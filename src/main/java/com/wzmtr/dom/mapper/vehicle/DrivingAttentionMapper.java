@@ -21,11 +21,11 @@ public interface DrivingAttentionMapper {
     /**
      * 分页查询行车注意事项列表
      * @param page 分页参数
-     * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param startDate 开始时间
+     * @param endDate 结束时间
      * @return 行车注意事项列表
      */
-    Page<DrivingAttentionResDTO> page(Page<DrivingAttentionResDTO> page, String startTime, String endTime);
+    Page<DrivingAttentionResDTO> page(Page<DrivingAttentionResDTO> page, String startDate, String endDate);
 
     /**
      * 获取行车注意事项详情

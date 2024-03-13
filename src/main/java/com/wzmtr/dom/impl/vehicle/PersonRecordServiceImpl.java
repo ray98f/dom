@@ -29,9 +29,9 @@ public class PersonRecordServiceImpl implements PersonRecordService {
     private PersonRecordMapper trainRecordMapper;
 
     @Override
-    public Page<PersonRecordResDTO> page(String startTime, String endTime, PageReqDTO pageReqDTO) {
+    public Page<PersonRecordResDTO> page(String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return trainRecordMapper.page(pageReqDTO.of(), startTime, endTime);
+        return trainRecordMapper.page(pageReqDTO.of(), startDate, endDate);
     }
 
     @Override

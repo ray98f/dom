@@ -17,12 +17,12 @@ public interface DrivingAttentionService {
 
     /**
      * 分页查询行车注意事项列表
-     * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param startDate 开始时间
+     * @param endDate 结束时间
      * @param pageReqDTO 分页参数
      * @return 行车注意事项列表
      */
-    Page<DrivingAttentionResDTO> page(String startTime, String endTime, PageReqDTO pageReqDTO);
+    Page<DrivingAttentionResDTO> page(String startDate, String endDate, PageReqDTO pageReqDTO);
 
     /**
      * 获取行车注意事项详情

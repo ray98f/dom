@@ -6,11 +6,11 @@
         SELECT ID, LINE_ATTENTION, DEPOT_ATTENTION, VERSION, BELONG_DATE
         FROM VEHICLE_DRIVING_ATTENTION
         WHERE DEL_FLAG='0'
-        <if test="startTime!=null and startTime!=''">
-            AND BELONG_DATE>=to_date(#{startTime},'YYYY-MM-DD')
+        <if test="startDate!=null and startDate!=''">
+            AND BELONG_DATE>=to_date(#{startDate},'YYYY-MM-DD')
         </if>
-        <if test="endTime!=null and endTime!=''">
-            AND to_date(#{endTime},'YYYY-MM-DD')>=BELONG_DATE
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'YYYY-MM-DD')>=BELONG_DATE
         </if>
         ORDER BY BELONG_DATE desc
     </select>

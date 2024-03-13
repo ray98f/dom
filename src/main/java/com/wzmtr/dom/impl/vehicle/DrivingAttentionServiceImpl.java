@@ -29,9 +29,9 @@ public class DrivingAttentionServiceImpl implements DrivingAttentionService {
     private DrivingAttentionMapper dispatchHandoverMapper;
 
     @Override
-    public Page<DrivingAttentionResDTO> page(String startTime, String endTime, PageReqDTO pageReqDTO) {
+    public Page<DrivingAttentionResDTO> page(String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return dispatchHandoverMapper.page(pageReqDTO.of(), startTime, endTime);
+        return dispatchHandoverMapper.page(pageReqDTO.of(), startDate, endDate);
     }
 
     @Override

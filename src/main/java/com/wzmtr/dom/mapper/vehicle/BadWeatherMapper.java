@@ -21,12 +21,12 @@ public interface BadWeatherMapper {
     /**
      * 分页查询恶劣天气组织列表
      * @param page 分页参数
-     * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param startDate 开始时间
+     * @param endDate 结束时间
      * @param dataType 数据类型 1:日报 2:周报 3:月报
      * @return 恶劣天气组织列表
      */
-    Page<BadWeatherResDTO> page(Page<BadWeatherResDTO> page, String startTime, String endTime, String dataType);
+    Page<BadWeatherResDTO> page(Page<BadWeatherResDTO> page, String startDate, String endDate, String dataType);
 
     /**
      * 获取恶劣天气组织详情
