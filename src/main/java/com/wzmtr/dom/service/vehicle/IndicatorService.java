@@ -6,6 +6,7 @@ import com.wzmtr.dom.dto.res.vehicle.IndicatorResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -20,12 +21,13 @@ public interface IndicatorService {
 
     /**
      * 重要指标-列表
+     * @param dataType 查询参数
      * @param startDate 查询参数
      * @param endDate 查询参数
      * @param pageReqDTO 分页参数
      * @return 重要指标列表
      */
-    Page<IndicatorResDTO> list(String startDate,String endDate,PageReqDTO pageReqDTO);
+    Page<IndicatorResDTO> list(String dataType,String startDate,String endDate,PageReqDTO pageReqDTO);
 
     /**
      * 重要指标-详情

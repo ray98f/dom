@@ -18,13 +18,26 @@ import javax.validation.constraints.NotNull;
 @Data
 public class IndicatorReqDTO extends BaseEntity {
 
-    @ApiModelProperty(value = "日期")
-    @NotNull(message = "32000006",groups = ValidationGroup.create.class)
-    private String day;
+    @ApiModelProperty(value = "数据类型:1日报 2月报 3周报")
+    private String dataType;
+
+    @ApiModelProperty(value = "收发车统计")
+    private Double trainCount;
+
+    @ApiModelProperty(value = " 施工统计")
+    private Double constructCount;
 
     @ApiModelProperty(value = "责任晚点统计")
-    @NotNull(message = "32000006",groups = ValidationGroup.modify.class)
     private Integer delayCount;
+
+    @ApiModelProperty(value = "数据所属日期")
+    private String dataDate;
+
+    @ApiModelProperty(value = "数据起始日期")
+    private String startDate;
+
+    @ApiModelProperty(value = "数据终止日期")
+    private String endDate;
 
     @ApiModelProperty(value = "版本号")
     private String version;

@@ -29,7 +29,7 @@ public interface DrivingService {
      * @param pageReqDTO 分页参数
      * @return 行车情况列表
      */
-    Page<DrivingRecordResDTO> list(String startDate,String endDate, PageReqDTO pageReqDTO);
+    Page<DrivingRecordResDTO> list(String dataType,String startDate,String endDate, PageReqDTO pageReqDTO);
 
     /**
      * 行车情况-车场

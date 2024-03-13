@@ -40,9 +40,9 @@ public class DrivingServiceImpl implements DrivingService {
 
 
     @Override
-    public Page<DrivingRecordResDTO> list(String startDate,String endDate, PageReqDTO pageReqDTO) {
+    public Page<DrivingRecordResDTO> list(String dataType,String startDate,String endDate, PageReqDTO pageReqDTO) {
         PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return drivingMapper.list(pageReqDTO.of(),startDate,endDate);
+        return drivingMapper.list(pageReqDTO.of(),dataType,startDate,endDate);
     }
 
     @Override
@@ -65,36 +65,63 @@ public class DrivingServiceImpl implements DrivingService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void add(CurrentLoginUser currentLoginUser, DrivingRecordReqDTO drivingRecordReqDTO) {
-
-        //只添加今天之前的数据
-        if(!(DateUtils.isValidDateFormat(drivingRecordReqDTO.getDay(), CommonConstants.DATE_FORMAT) &&
-                DateUtil.compare( new Date(),DateUtil.parseDate(drivingRecordReqDTO.getDay()),CommonConstants.DATE_FORMAT) > 0) ){
-            throw new CommonException(ErrorCode.DATE_ERROR);
+        int existFlag = drivingMapper.checkExist(drivingRecordReqDTO.getDataType(),
+                drivingRecordReqDTO.getStartDate(),drivingRecordReqDTO.getEndDate());
+        if(existFlag > 0){
+            throw new CommonException(ErrorCode.DATA_EXIST);
         }
+
+        switch (drivingRecordReqDTO.getDataType()){
+            case CommonConstants.DATA_TYPE_DAILY:
+                if(!drivingRecordReqDTO.getStartDate().equals(drivingRecordReqDTO.getEndDate())){
+                    throw new CommonException(ErrorCode.DATE_ERROR);
+                }
+                drivingRecordReqDTO.setDataDate(drivingRecordReqDTO.getStartDate());
+                break;
+            case CommonConstants.DATA_TYPE_WEEKLY:
+                // TODO 统计本周数据:
+                break;
+            case CommonConstants.DATA_TYPE_MONTHLY:
+                // TODO 统计本月数据:
+                break;
+            default:
+                break;
+        }
+        drivingRecordReqDTO.setCreateBy(currentLoginUser.getPersonId());
+        drivingRecordReqDTO.setUpdateBy(currentLoginUser.getPersonId());
+        drivingRecordReqDTO.setId(TokenUtils.getUuId());
         try{
-            drivingRecordReqDTO.setCreateBy(currentLoginUser.getPersonId());
-            drivingRecordReqDTO.setUpdateBy(currentLoginUser.getPersonId());
             int res = drivingMapper.add(drivingRecordReqDTO);
             if(res > 0){
                 DrivingInfoReqDTO infoReqDTO= new DrivingInfoReqDTO();
+                //TODO 统计本周数据:
+                //TODO 统计本月数据:
                 for(String i: CommonConstants.STATION_280_281){
                     DrivingDepotReqDTO reqDTO = new DrivingDepotReqDTO();
                     reqDTO.setId(TokenUtils.getUuId());
-                    reqDTO.setRecordId(drivingRecordReqDTO.getDay());
+                    reqDTO.setRecordId(drivingRecordReqDTO.getId());
+                    reqDTO.setDataType(drivingRecordReqDTO.getDataType());
+                    reqDTO.setStartDate(drivingRecordReqDTO.getStartDate());
+                    reqDTO.setEndDate(drivingRecordReqDTO.getEndDate());
                     reqDTO.setDepotCode(i);
                     reqDTO.setCreateBy(currentLoginUser.getPersonId());
                     reqDTO.setUpdateBy(currentLoginUser.getPersonId());
                     drivingMapper.createDepotData(reqDTO);
                 }
+                //TODO 统计本周数据:
+                //TODO 统计本月数据:
                 infoReqDTO.setCreateBy(currentLoginUser.getPersonId());
                 infoReqDTO.setUpdateBy(currentLoginUser.getPersonId());
                 infoReqDTO.setId(TokenUtils.getUuId());
-                infoReqDTO.setRecordId(drivingRecordReqDTO.getDay());
+                infoReqDTO.setRecordId(drivingRecordReqDTO.getId());
+                infoReqDTO.setDataType(drivingRecordReqDTO.getDataType());
+                infoReqDTO.setStartDate(drivingRecordReqDTO.getStartDate());
+                infoReqDTO.setEndDate(drivingRecordReqDTO.getEndDate());
 
                 drivingMapper.createInfoData(infoReqDTO);
             }
         }catch (Exception e){
-            throw new CommonException(ErrorCode.DATA_EXIST);
+            throw new CommonException(ErrorCode.INSERT_ERROR);
         }
     }
 
@@ -149,7 +176,7 @@ public class DrivingServiceImpl implements DrivingService {
 
             //获取前一天数据
             DrivingInfoResDTO preInfo = drivingMapper.driveInfo(DateUtil.formatDate(
-                    DateUtil.offsetDay(DateUtil.parseDate(drivingInfoReqDTO.getRecordId()), -1)));
+                    DateUtil.offsetDay(DateUtil.parseDate(drivingInfoReqDTO.getDataDate()), -1)));
             if(Objects.nonNull(preInfo)){
                 mileageTotal = preInfo.getMileageTotal() + drivingInfoReqDTO.getMileage();
                 drivingInfoReqDTO.setMileageTotal(mileageTotal);
@@ -160,6 +187,7 @@ public class DrivingServiceImpl implements DrivingService {
             if( res <= 0){
                 throw new CommonException(ErrorCode.UPDATE_ERROR);
             }else{
+
                 //更新记录中的统计数据 更新总里程  TODO async
                 DrivingCountReqDTO countReqDTO = new DrivingCountReqDTO();
                 countReqDTO.setId(drivingInfoReqDTO.getRecordId());
@@ -176,9 +204,9 @@ public class DrivingServiceImpl implements DrivingService {
 
     // TODO TEST
     private SyncOdmDepotResDTO syncOdmDepot(String recordId){
-        String startDate = recordId + CommonConstants.DEFAULT_TIME;
+        /*String startDate = recordId + CommonConstants.DEFAULT_TIME;
         String endDate = DateUtil.formatDate(DateUtil.offsetDay(DateUtil.parseDate(recordId), 1))
-                + CommonConstants.DEFAULT_TIME;
+                + CommonConstants.DEFAULT_TIME;*/
         SyncOdmDepotResDTO odmDepotResDTO = new SyncOdmDepotResDTO();
         odmDepotResDTO.setPlanDeparture(9);
         odmDepotResDTO.setPlanReceive(9);

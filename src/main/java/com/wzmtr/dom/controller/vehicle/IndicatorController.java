@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * 车辆部-重要指标
@@ -60,10 +62,11 @@ public class IndicatorController {
      */
     @GetMapping("/list")
     @ApiOperation(value = "重要指标-列表")
-    public PageResponse<IndicatorResDTO> page(@RequestParam String startDate,
+    public PageResponse<IndicatorResDTO> page(@RequestParam String dataType,
+                                              @RequestParam String startDate,
                                               @RequestParam String endDate,
                                                     @Valid PageReqDTO pageReqDTO) {
-        return PageResponse.of(indicatorService.list(startDate,endDate,pageReqDTO));
+        return PageResponse.of(indicatorService.list(dataType,startDate,endDate,pageReqDTO));
     }
 
     /**

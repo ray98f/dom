@@ -13,20 +13,26 @@ import java.util.Date;
  * 日数据结果类
  * @author  zhangxin
  * @version 1.0
- * @date 2024/3/8 16:25
+ * @date 2024/3/12 08:25
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class IndicatorResDTO extends BaseEntity {
+public class LineEventResDTO extends BaseEntity {
 
-    @ApiModelProperty(value = "收发车统计")
-    private Double trainCount;
+    @ApiModelProperty(value = "车辆类事件数")
+    private Integer type1Count;
 
-    @ApiModelProperty(value = " 施工统计")
-    private Double constructCount;
+    @ApiModelProperty(value = " 信号类事件数")
+    private Integer type2Count;
 
-    @ApiModelProperty(value = "责任晚点统计")
-    private Integer delayCount;
+    @ApiModelProperty(value = " 侵限类事件数")
+    private Integer type3Count;
+
+    @ApiModelProperty(value = " 设备类事件数")
+    private Integer type4Count;
+
+    @ApiModelProperty(value = " 其他类事件数")
+    private Integer type5Count;
 
     @ApiModelProperty(value = "版本号")
     private String version;
@@ -60,4 +66,5 @@ public class IndicatorResDTO extends BaseEntity {
             timezone = "GMT+8"
     )
     private Date endDate;
+
 }

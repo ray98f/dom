@@ -8,6 +8,7 @@ import com.wzmtr.dom.entity.CurrentLoginUser;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -24,11 +25,21 @@ public interface IndicatorMapper {
     /**
      * 列表
      * @param page 分页参数
+     * @param dataType 查询参数
      * @param startDate 查询参数
      * @param endDate 查询参数
      * @return 列表
      */
-    Page<IndicatorResDTO> list(Page<IndicatorResDTO> page,String startDate,String endDate);
+    Page<IndicatorResDTO> list(Page<IndicatorResDTO> page,String dataType,String startDate,String endDate);
+
+    /**
+     * 校验数据是否存在
+     * @param dataType 入参数
+     * @param startDate 入参数
+     * @param endDate 入参数
+     * @return IndicatorResDTO
+     */
+    int checkExist(String dataType,String startDate,String endDate);
 
     /**
      * 详情

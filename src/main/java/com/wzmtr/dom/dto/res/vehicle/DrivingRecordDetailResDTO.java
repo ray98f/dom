@@ -32,6 +32,9 @@ public class DrivingRecordDetailResDTO extends BaseEntity {
     @ApiModelProperty(value = "版本号")
     private String version;
 
+    @ApiModelProperty(value = "数据类型:1日报,2周报,3月报")
+    private String dataType;
+
     @ApiModelProperty(value = "数据所属日期")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(
@@ -39,4 +42,20 @@ public class DrivingRecordDetailResDTO extends BaseEntity {
             timezone = "GMT+8"
     )
     private Date dataDate;
+
+    @ApiModelProperty(value = "数据所属日期")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8"
+    )
+    private Date startDate;
+
+    @ApiModelProperty(value = "数据所属日期")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8"
+    )
+    private Date endDate;
 }

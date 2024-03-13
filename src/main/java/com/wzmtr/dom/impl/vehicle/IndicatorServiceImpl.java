@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -35,9 +36,9 @@ public class IndicatorServiceImpl implements IndicatorService {
     private IndicatorMapper indicatorMapper;
 
     @Override
-    public Page<IndicatorResDTO> list(String startDate,String endDate, PageReqDTO pageReqDTO) {
+    public Page<IndicatorResDTO> list(String dataType,String startDate,String endDate, PageReqDTO pageReqDTO) {
         PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return indicatorMapper.list(pageReqDTO.of(),startDate,endDate);
+        return indicatorMapper.list(pageReqDTO.of(),dataType,startDate,endDate);
     }
 
     @Override
@@ -47,18 +48,35 @@ public class IndicatorServiceImpl implements IndicatorService {
 
     @Override
     public void add(CurrentLoginUser currentLoginUser, IndicatorReqDTO indicatorReqDTO) {
-
-        //只添加今天之前的数据
-        if(!(DateUtils.isValidDateFormat(indicatorReqDTO.getDay(), CommonConstants.DATE_FORMAT) &&
-                DateUtil.compare( new Date(),DateUtil.parseDate(indicatorReqDTO.getDay()),CommonConstants.DATE_FORMAT) > 0) ){
-            throw new CommonException(ErrorCode.DATE_ERROR);
+        int existFlag = indicatorMapper.checkExist(indicatorReqDTO.getDataType(),
+                indicatorReqDTO.getStartDate(),indicatorReqDTO.getEndDate());
+        if(existFlag > 0){
+            throw new CommonException(ErrorCode.DATA_EXIST);
         }
+
+        switch (indicatorReqDTO.getDataType()){
+            case CommonConstants.DATA_TYPE_DAILY:
+                if(!indicatorReqDTO.getStartDate().equals(indicatorReqDTO.getEndDate())){
+                    throw new CommonException(ErrorCode.DATE_ERROR);
+                }
+                indicatorReqDTO.setDataDate(indicatorReqDTO.getStartDate());
+                break;
+            case CommonConstants.DATA_TYPE_WEEKLY:
+                // TODO 统计本周数据:接发车完成、施工完成
+                break;
+            case CommonConstants.DATA_TYPE_MONTHLY:
+                // TODO 统计本月数据:接发车完成、施工完成
+                break;
+            default:
+                break;
+        }
+        indicatorReqDTO.setCreateBy(currentLoginUser.getPersonId());
+        indicatorReqDTO.setUpdateBy(currentLoginUser.getPersonId());
+        indicatorReqDTO.setId(TokenUtils.getUuId());
         try{
-            indicatorReqDTO.setCreateBy(currentLoginUser.getPersonId());
-            indicatorReqDTO.setUpdateBy(currentLoginUser.getPersonId());
             indicatorMapper.add(indicatorReqDTO);
         }catch (Exception e){
-            throw new CommonException(ErrorCode.DATA_EXIST);
+            throw new CommonException(ErrorCode.INSERT_ERROR);
         }
     }
 
@@ -76,5 +94,15 @@ public class IndicatorServiceImpl implements IndicatorService {
         if (StringUtils.isNotEmpty(ids)) {
             indicatorMapper.delete(ids, TokenUtils.getCurrentPersonId());
         }
+    }
+
+    //TODO
+    private void checkDay(IndicatorReqDTO indicatorReqDTO){
+        //只添加今天之前的数据
+   /*     if(!(DateUtils.isValidDateFormat(indicatorReqDTO.getDay(), CommonConstants.DATE_FORMAT) &&
+                DateUtil.compare( new Date(),DateUtil.parseDate(indicatorReqDTO.getDay()),CommonConstants.DATE_FORMAT) > 0) ){
+            throw new CommonException(ErrorCode.DATE_ERROR);
+        }*/
+
     }
 }

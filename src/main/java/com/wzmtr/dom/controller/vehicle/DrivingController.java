@@ -5,24 +5,21 @@ import com.wzmtr.dom.constant.ValidationGroup;
 import com.wzmtr.dom.dto.req.vehicle.DrivingDepotReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.DrivingInfoReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.DrivingRecordReqDTO;
-import com.wzmtr.dom.dto.req.vehicle.IndicatorReqDTO;
-import com.wzmtr.dom.dto.res.vehicle.*;
+import com.wzmtr.dom.dto.res.vehicle.DrivingRecordDetailResDTO;
+import com.wzmtr.dom.dto.res.vehicle.DrivingRecordResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.entity.response.PageResponse;
 import com.wzmtr.dom.service.vehicle.DrivingService;
-import com.wzmtr.dom.service.vehicle.IndicatorService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import oracle.ucp.proxy.annotation.Post;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * 车辆部-行车情况
@@ -47,10 +44,11 @@ public class DrivingController {
      */
     @GetMapping("/list")
     @ApiOperation(value = "行车情况-列表")
-    public PageResponse<DrivingRecordResDTO> page(@RequestParam String startDate,
+    public PageResponse<DrivingRecordResDTO> page(@RequestParam String dataType,
+                                                  @RequestParam String startDate,
                                                   @RequestParam String endDate,
                                                   @Valid PageReqDTO pageReqDTO) {
-        return PageResponse.of(drivingService.list(startDate,endDate,pageReqDTO));
+        return PageResponse.of(drivingService.list(dataType,startDate,endDate,pageReqDTO));
     }
 
     /**

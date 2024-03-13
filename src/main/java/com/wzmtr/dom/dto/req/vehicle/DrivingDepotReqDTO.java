@@ -42,4 +42,12 @@ public class DrivingDepotReqDTO extends BaseEntity {
     @ApiModelProperty(value = "版本号")
     private String version;
 
+    @ApiModelProperty(value = "数据类型:1日报 2月报 3周报")
+    private String dataType;
+
+    @ApiModelProperty(value = "数据起始日期")
+    private String startDate;
+
+    @ApiModelProperty(value = "数据终止日期")
+    private String endDate;
 }

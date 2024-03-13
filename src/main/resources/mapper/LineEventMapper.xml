@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzmtr.dom.mapper.vehicle.LineEventMapper">
+
+    <select id="list" resultType="com.wzmtr.dom.dto.res.vehicle.LineEventResDTO">
+        SELECT ID, TYPE1_COUNT,TYPE2_COUNT,TYPE3_COUNT,TYPE4_COUNT,TYPE5_COUNT, VERSION, DATA_TYPE, DATA_DATE, START_DATE,END_DATE,CREATE_DATE, UPDATE_DATE
+        FROM VEHICLE_LINE_EVENT_RECORD
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE = #{dataType}
+        <if test="startDate != null">
+            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        </if>
+        ORDER BY CREATE_DATE desc
+    </select>
+
+    <select id="queryInfoById" resultType="com.wzmtr.dom.dto.res.vehicle.LineEventDetailResDTO">
+        SELECT ID, TYPE1_COUNT,TYPE2_COUNT,TYPE3_COUNT,TYPE4_COUNT,TYPE5_COUNT, VERSION, DATA_DATE,DATA_TYPE,START_DATE,END_DATE
+        FROM VEHICLE_LINE_EVENT_RECORD
+        WHERE ID=#{id} AND DEL_FLAG = '0'
+    </select>
+
+    <select id="checkExist" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM VEHICLE_LINE_EVENT_RECORD
+        WHERE DEL_FLAG = '0'
+        AND DATA_TYPE = #{dataType}
+        <if test="startDate != null">
+            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+    </select>
+
+    <insert id="add">
+        INSERT INTO VEHICLE_LINE_EVENT_RECORD (ID,DATA_TYPE,
+        <if test="type1Count != null">
+            TYPE1_COUNT,
+        </if>
+        <if test="type2Count != null">
+            TYPE2_COUNT,
+        </if>
+        <if test="type3Count != null">
+            TYPE3_COUNT,
+        </if>
+        <if test="type4Count != null">
+            TYPE4_COUNT,
+        </if>
+        <if test="type5Count != null">
+            TYPE5_COUNT,
+        </if>
+        <if test="dataDate != null">
+            DATA_DATE,
+        </if>
+        START_DATE,
+        END_DATE,
+        CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+        VALUES (#{id},#{dataType},
+        <if test="type1Count != null">
+            #{type1Count},
+        </if>
+        <if test="type2Count != null">
+            #{type2Count},
+        </if>
+        <if test="type3Count != null">
+            #{type3Count},
+        </if>
+        <if test="type4Count != null">
+            #{type4Count},
+        </if>
+        <if test="type5Count != null">
+            #{type5Count},
+        </if>
+        <if test="dataDate != null">
+            to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
+        to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
+        #{createBy}, sysdate,#{createBy}, sysdate)
+    </insert>
+
+    <select id="eventList" resultType="com.wzmtr.dom.dto.res.vehicle.LineEventInfoResDTO">
+        SELECT ID, RECORD_ID,EVENT_TYPE,EVENT_DESC,EVENT_ANALYZE,VERSION
+        FROM VEHICLE_LINE_EVENT_INFO
+        WHERE DEL_FLAG='0'
+        <if test="startDate != null">
+            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        </if>
+        ORDER BY CREATE_DATE desc
+    </select>
+
+    <insert id="createEvent">
+        INSERT INTO VEHICLE_LINE_EVENT_INFO (ID, RECORD_ID, EVENT_TYPE, EVENT_DESC, EVENT_ANALYZE,
+        DATA_TYPE,
+        <if test="dataDate != null">
+            DATA_DATE,
+        </if>
+        START_DATE,
+        END_DATE,
+        CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+        VALUES ( #{id},
+        #{recordId},
+        #{eventType},
+        #{eventDesc},
+        #{eventAnalyze},
+        #{dataType},
+        <if test="dataDate != null">
+            to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
+        to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
+        #{createBy}, sysdate,#{createBy}, sysdate)
+    </insert>
+
+    <update id="modifyEvent">
+        UPDATE VEHICLE_LINE_EVENT_INFO SET
+        <if test="eventType !=null">
+            EVENT_TYPE = #{eventType},
+        </if>
+        <if test="eventDesc !=null">
+            EVENT_DESC = #{eventDesc},
+        </if>
+        <if test="eventAnalyze !=null">
+            EVENT_ANALYZE = #{eventAnalyze},
+        </if>
+        VERSION = VERSION+1,
+        UPDATE_BY=#{updateBy},
+        UPDATE_DATE=sysdate
+        WHERE ID=#{id}
+        AND VERSION = #{version}
+    </update>
+
+    <delete id="deleteEvent">
+        DELETE FROM VEHICLE_LINE_EVENT_INFO
+        WHERE ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </delete>
+</mapper>

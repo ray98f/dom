@@ -8,6 +8,9 @@ package com.wzmtr.dom.constant;
  */
 public class CommonConstants {
 
+    public static String API_RES_DATA = "data";
+    public static String API_RES_LIST = "list";
+
     /**
      * id
      */
@@ -118,4 +121,20 @@ public class CommonConstants {
      * 指定数据获取时间
      */
     public static final String  DEFAULT_TIME = " 05:00:00";
+
+    /**
+     * 类型:日报
+     */
+    public static final String  DATA_TYPE_DAILY = "1";
+
+    /**
+     * 类型:周报
+     */
+    public static final String  DATA_TYPE_WEEKLY = "2";
+
+    /**
+     * 类型:月报
+     */
+    public static final String  DATA_TYPE_MONTHLY = "3";
+
 }

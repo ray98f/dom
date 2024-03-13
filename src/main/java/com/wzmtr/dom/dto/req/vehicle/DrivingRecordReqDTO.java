@@ -18,9 +18,29 @@ import javax.validation.constraints.NotNull;
 @Data
 public class DrivingRecordReqDTO extends BaseEntity {
 
-    @ApiModelProperty(value = "日期")
-    @NotNull(message = "32000006",groups = ValidationGroup.create.class)
-    private String day;
+    @ApiModelProperty(value = "数据类型:1日报 2月报 3周报")
+    private String dataType;
+
+    @ApiModelProperty(value = "数据所属日期")
+    private String dataDate;
+
+    @ApiModelProperty(value = "数据起始日期")
+    private String startDate;
+
+    @ApiModelProperty(value = "数据终止日期")
+    private String endDate;
+
+    @ApiModelProperty(value = "下塘停车场发车列数")
+    private Integer trainCount1;
+
+    @ApiModelProperty(value = "汀田车辆段发车列数")
+    private Integer trainCount2;
+
+    @ApiModelProperty(value = "司机总人数")
+    private Integer driverCount;
+
+    @ApiModelProperty(value = "驾驶总公里数")
+    private Double mileageTotal;
 
     @ApiModelProperty(value = "说明")
     private String remark;

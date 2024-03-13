@@ -3,16 +3,30 @@
 <mapper namespace="com.wzmtr.dom.mapper.vehicle.IndicatorMapper">
 
     <select id="list" resultType="com.wzmtr.dom.dto.res.vehicle.IndicatorResDTO">
-        SELECT ID, TRAIN_COUNT, CONSTRUCT_COUNT, DELAY_COUNT, VERSION, DATA_DATE, CREATE_DATE, UPDATE_DATE
+        SELECT ID, TRAIN_COUNT, CONSTRUCT_COUNT, DELAY_COUNT, VERSION, DATA_TYPE,DATA_DATE,START_DATE, CREATE_DATE,END_DATE, UPDATE_DATE
         FROM VEHICLE_IMPORTANT_INDICATOR
         WHERE DEL_FLAG='0'
+        AND DATA_TYPE = #{dataType}
         <if test="startDate != null">
-            AND DATA_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
         <if test="endDate != null">
-            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=DATA_DATE
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
         </if>
         ORDER BY CREATE_DATE desc
+    </select>
+
+    <select id="checkExist" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM VEHICLE_IMPORTANT_INDICATOR
+        WHERE DEL_FLAG = '0'
+        AND DATA_TYPE = #{dataType}
+        <if test="startDate != null">
+            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
     </select>
 
     <select id="queryInfoById" resultType="com.wzmtr.dom.dto.res.vehicle.IndicatorResDTO">
@@ -22,8 +36,39 @@
     </select>
 
     <insert id="add">
-        INSERT INTO VEHICLE_IMPORTANT_INDICATOR (ID, CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE,DATA_DATE)
-        VALUES (#{day}, #{createBy}, sysdate,#{createBy}, sysdate,to_date(#{day},'yyyy-mm-dd hh24:mi:ss'))
+        INSERT INTO VEHICLE_IMPORTANT_INDICATOR (ID,DATA_TYPE,
+        <if test="trainCount != null">
+            TRAIN_COUNT,
+        </if>
+        <if test="constructCount != null">
+            CONSTRUCT_COUNT,
+        </if>
+        <if test="delayCount != null">
+            DELAY_COUNT,
+        </if>
+        <if test="dataDate != null">
+            DATA_DATE,
+        </if>
+        START_DATE,
+        END_DATE,
+        CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+        VALUES
+        (#{id}, #{dataType},
+        <if test="trainCount != null">
+            #{trainCount},
+        </if>
+        <if test="constructCount != null">
+            #{constructCount},
+        </if>
+        <if test="delayCount != null">
+            #{delayCount},
+        </if>
+        <if test="dataDate != null">
+            to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
+        to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
+        #{createBy}, sysdate,#{createBy}, sysdate)
     </insert>
 
     <update id="modify">

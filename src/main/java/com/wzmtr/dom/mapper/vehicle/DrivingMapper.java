@@ -27,7 +27,7 @@ public interface DrivingMapper {
      * @param endDate 查询参数
      * @return 列表
      */
-    Page<DrivingRecordResDTO> list(Page<DrivingRecordResDTO> page, String startDate, String endDate);
+    Page<DrivingRecordResDTO> list(Page<DrivingRecordResDTO> page, String dataType,String startDate, String endDate);
 
     /**
      * 行车情况-详情
@@ -35,6 +35,15 @@ public interface DrivingMapper {
      * @return 行车情况-详情
      */
     DrivingRecordDetailResDTO queryInfoById(String id);
+
+    /**
+     * 校验数据是否存在
+     * @param dataType 入参数
+     * @param startDate 入参数
+     * @param endDate 入参数
+     * @return IndicatorResDTO
+     */
+    int checkExist(String dataType,String startDate,String endDate);
 
     /**
      * 新增

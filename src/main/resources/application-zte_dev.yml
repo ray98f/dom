@@ -83,5 +83,12 @@ minio:
   accessKey: miniominio
   secretKey: miniominio
 
+csm:
+  host: http://192.168.30.140:8005/
+
+open-api:
+  csm:
+    constructPlan: ${csm.host}/csm/plan/list
+
 pro:
   name: dom
