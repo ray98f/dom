@@ -55,7 +55,7 @@ public class CrewTrainController {
      */
     @GetMapping("/detail")
     @ApiOperation(value = "乘务中心班组培训情况详情")
-    public DataResponse<CrewTrainResDTO> detail(@RequestParam("id") String id) {
+    public DataResponse<CrewTrainResDTO> detail(@RequestParam String id) {
         return DataResponse.of(crewTrainService.detail(id));
     }
 

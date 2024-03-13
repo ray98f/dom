@@ -53,7 +53,7 @@ public class DispatchHandoverController {
      */
     @GetMapping("/detail")
     @ApiOperation(value = "车场调度员交接班情况详情")
-    public DataResponse<DispatchHandoverResDTO> detail(@RequestParam("id") String id) {
+    public DataResponse<DispatchHandoverResDTO> detail(@RequestParam String id) {
         return DataResponse.of(dispatchHandoverService.detail(id));
     }
 

@@ -55,7 +55,7 @@ public class BadWeatherController {
      */
     @GetMapping("/detail")
     @ApiOperation(value = "恶劣天气组织详情")
-    public DataResponse<BadWeatherResDTO> detail(@RequestParam("id") String id) {
+    public DataResponse<BadWeatherResDTO> detail(@RequestParam String id) {
         return DataResponse.of(badWeatherService.detail(id));
     }
 

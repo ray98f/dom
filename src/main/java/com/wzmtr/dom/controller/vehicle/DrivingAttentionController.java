@@ -53,7 +53,7 @@ public class DrivingAttentionController {
      */
     @GetMapping("/detail")
     @ApiOperation(value = "行车注意事项详情")
-    public DataResponse<DrivingAttentionResDTO> detail(@RequestParam("id") String id) {
+    public DataResponse<DrivingAttentionResDTO> detail(@RequestParam String id) {
         return DataResponse.of(drivingAttentionService.detail(id));
     }
 

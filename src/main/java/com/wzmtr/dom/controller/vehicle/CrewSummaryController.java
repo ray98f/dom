@@ -55,7 +55,7 @@ public class CrewSummaryController {
      */
     @GetMapping("/detail")
     @ApiOperation(value = "乘务中心情况总结详情")
-    public DataResponse<CrewSummaryResDTO> detail(@RequestParam("id") String id) {
+    public DataResponse<CrewSummaryResDTO> detail(@RequestParam String id) {
         return DataResponse.of(crewSummaryService.detail(id));
     }
 

@@ -55,7 +55,7 @@ public class OtherRecordController {
      */
     @GetMapping("/detail")
     @ApiOperation(value = "其他情况说明详情")
-    public DataResponse<OtherRecordResDTO> detail(@RequestParam("id") String id) {
+    public DataResponse<OtherRecordResDTO> detail(@RequestParam String id) {
         return DataResponse.of(otherRecordService.detail(id));
     }
 

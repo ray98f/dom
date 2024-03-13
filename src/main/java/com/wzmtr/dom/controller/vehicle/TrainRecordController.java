@@ -53,7 +53,7 @@ public class TrainRecordController {
      */
     @GetMapping("/detail")
     @ApiOperation(value = "班组培训情况详情")
-    public DataResponse<TrainRecordResDTO> detail(@RequestParam("id") String id) {
+    public DataResponse<TrainRecordResDTO> detail(@RequestParam String id) {
         return DataResponse.of(trainRecordService.detail(id));
     }
 

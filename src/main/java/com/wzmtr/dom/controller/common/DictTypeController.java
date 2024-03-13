@@ -52,7 +52,7 @@ public class DictTypeController {
      */
     @GetMapping("/detail")
     @ApiOperation(value = "字典类型详情")
-    public DataResponse<DictTypeResDTO> detail(@RequestParam("id") String id) {
+    public DataResponse<DictTypeResDTO> detail(@RequestParam String id) {
         return DataResponse.of(dictTypeService.detail(id));
     }
 

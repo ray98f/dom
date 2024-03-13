@@ -53,7 +53,7 @@ public class PersonRecordController {
      */
     @GetMapping("/detail")
     @ApiOperation(value = "当日人员情况详情")
-    public DataResponse<PersonRecordResDTO> detail(@RequestParam("id") String id) {
+    public DataResponse<PersonRecordResDTO> detail(@RequestParam String id) {
         return DataResponse.of(personRecordService.detail(id));
     }
 
