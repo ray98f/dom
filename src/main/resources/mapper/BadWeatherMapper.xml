@@ -6,7 +6,7 @@
         SELECT ID, WEATHER_INFO, VERSION, BELONG_DATE, DATA_TYPE, START_DATE, END_DATE
         FROM VEHICLE_BAD_WEATHER
         WHERE DEL_FLAG='0'
-        <if test="dataType=='1'">
+        <if test="dataType=='1'.toString()">
             <if test="startDate!=null and startDate!=''">
                 AND BELONG_DATE>=to_date(#{startDate},'YYYY-MM-DD')
             </if>
@@ -15,12 +15,12 @@
             </if>
             ORDER BY BELONG_DATE desc
         </if>
-        <if test="dataType!='1'">
+        <if test="dataType!='1'.toString()">
             <if test="startDate!=null and startDate!=''">
                 AND START_DATE>=to_date(#{startDate},'YYYY-MM-DD')
             </if>
-            <if test="endTime!=null and endTime!=''">
-                AND to_date(#{endTime},'YYYY-MM-DD')>=END_DATE
+            <if test="endDate!=null and endDate!=''">
+                AND to_date(#{endDate},'YYYY-MM-DD')>=END_DATE
             </if>
             ORDER BY START_DATE desc
         </if>
@@ -35,10 +35,10 @@
     <select id="selectIsExist" resultType="java.lang.Integer">
         select count(1) from VEHICLE_BAD_WEATHER
         WHERE
-        <if test="dataType=='1'">
+        <if test="dataType=='1'.toString()">
             BELONG_DATE=#{belongDate,jdbcType=TIMESTAMP}
         </if>
-        <if test="dataType!='1'">
+        <if test="dataType!='1'.toString()">
             START_DATE=#{startDate,jdbcType=TIMESTAMP} and END_DATE=#{endDate,jdbcType=TIMESTAMP}
         </if>
         <if test="version!=null and version!=''">
