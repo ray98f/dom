@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzmtr.dom.mapper.vehicle.ReportMapper">
+
+    <select id="pageDaily" resultType="com.wzmtr.dom.dto.res.vehicle.DailyReportResDTO">
+        SELECT dr.ID, dr.IF_IMPORTANT_INDICATOR, dr.IF_DRIVING_RECORD, dr.IF_LINE_EVENT, dr.IF_XT_CONSTRUCT,
+        dr.IF_TT_CONSTRUCT, dr.IF_TRAIN_RECORD, dr.IF_PERSON_RECORD, dr.IF_DISPATCH, dr.IF_DISPATCH_HANDOVER,
+        dr.IF_DRIVING_ATTENTION, dr.IF_OTHER_RECORD, dr.IF_BAD_WEATHER, dr.CURRENT_DISPATCHER, dr.NEXT_DISPATCHER,
+        dr.CURRENT_DCC, dr.NEXT_DCC, dr.CURRENT_DRIVER, dr.NEXT_DRIVER, dr.DAILY_DATE, dr.STATUS, dr.VERSION,
+        dr.CREATE_DATE, u.NAME AS CREATE_BY
+        FROM VEHICLE_DAILY_REPORT dr
+        LEFT JOIN SYS_USER u ON u.ID=dr.CREATE_BY
+        WHERE dr.DEL_FLAG='0'
+        <if test="startDate!=null and startDate!=''">
+            AND dr.DAILY_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'YYYY-MM-DD')>=dr.DAILY_DATE
+        </if>
+        ORDER BY dr.DAILY_DATE desc
+    </select>
+
+    <select id="detailDaily" resultType="com.wzmtr.dom.dto.res.vehicle.DailyReportResDTO">
+        SELECT dr.ID, dr.IF_IMPORTANT_INDICATOR, dr.IF_DRIVING_RECORD, dr.IF_LINE_EVENT, dr.IF_XT_CONSTRUCT,
+        dr.IF_TT_CONSTRUCT, dr.IF_TRAIN_RECORD, dr.IF_PERSON_RECORD, dr.IF_DISPATCH, dr.IF_DISPATCH_HANDOVER,
+        dr.IF_DRIVING_ATTENTION, dr.IF_OTHER_RECORD, dr.IF_BAD_WEATHER, dr.CURRENT_DISPATCHER, dr.NEXT_DISPATCHER,
+        dr.CURRENT_DCC, dr.NEXT_DCC, dr.CURRENT_DRIVER, dr.NEXT_DRIVER, dr.DAILY_DATE, dr.STATUS, dr.VERSION,
+        dr.CREATE_DATE, u.NAME AS CREATE_BY
+        FROM VEHICLE_DAILY_REPORT dr
+        LEFT JOIN SYS_USER u ON u.ID=dr.CREATE_BY
+        WHERE dr.DEL_FLAG='0' AND dr.ID=#{id}
+    </select>
+
+    <select id="selectDailyIsExist" resultType="java.lang.Integer">
+        select count(1) from VEHICLE_DAILY_REPORT
+        WHERE DAILY_DATE=#{dailyDate,jdbcType=TIMESTAMP}
+        <if test="version!=null and version!=''">
+            AND VERSION=#{version,jdbcType=VARCHAR}
+        </if>
+        AND DEL_FLAG='0' AND rownum=1
+    </select>
+
+    <insert id="addDaily">
+        INSERT INTO DOM.VEHICLE_DAILY_REPORT
+        (ID,
+        <if test="ifImportantIndicator!=null and ifImportantIndicator!=''">
+            IF_IMPORTANT_INDICATOR,
+        </if>
+        <if test="ifDrivingRecord!=null and ifDrivingRecord!=''">
+            IF_DRIVING_RECORD,
+        </if>
+        <if test="ifLineEvent!=null and ifLineEvent!=''">
+            IF_LINE_EVENT,
+        </if>
+        <if test="ifXtConstruct!=null and ifXtConstruct!=''">
+            IF_XT_CONSTRUCT,
+        </if>
+        <if test="ifTtConstruct!=null and ifTtConstruct!=''">
+            IF_TT_CONSTRUCT,
+        </if>
+        <if test="ifTrainRecord!=null and ifTrainRecord!=''">
+            IF_TRAIN_RECORD,
+        </if>
+        <if test="ifPersonRecord!=null and ifPersonRecord!=''">
+            IF_PERSON_RECORD,
+        </if>
+        <if test="ifDispatch!=null and ifDispatch!=''">
+            IF_DISPATCH,
+        </if>
+        <if test="ifDispatchHandover!=null and ifDispatchHandover!=''">
+            IF_DISPATCH_HANDOVER,
+        </if>
+        <if test="ifDrivingAttention!=null and ifDrivingAttention!=''">
+            IF_DRIVING_ATTENTION,
+        </if>
+        <if test="ifOtherRecord!=null and ifOtherRecord!=''">
+            IF_OTHER_RECORD,
+        </if>
+        <if test="ifBadWeather!=null and ifBadWeather!=''">
+            IF_BAD_WEATHER,
+        </if>
+        <if test="currentDispatcher!=null and currentDispatcher!=''">
+            CURRENT_DISPATCHER,
+        </if>
+        <if test="nextDispatcher!=null and nextDispatcher!=''">
+            NEXT_DISPATCHER,
+        </if>
+        <if test="currentDcc!=null and currentDcc!=''">
+            CURRENT_DCC,
+        </if>
+        <if test="nextDcc!=null and nextDcc!=''">
+            NEXT_DCC,
+        </if>
+        <if test="currentDriver!=null and currentDriver!=''">
+            CURRENT_DRIVER,
+        </if>
+        <if test="nextDriver!=null and nextDriver!=''">
+            NEXT_DRIVER,
+        </if>
+        STATUS, CREATE_BY, CREATE_DATE, DAILY_DATE)
+        VALUES (#{id},
+        <if test="ifImportantIndicator!=null and ifImportantIndicator!=''">
+            #{ifImportantIndicator},
+        </if>
+        <if test="ifDrivingRecord!=null and ifDrivingRecord!=''">
+            #{ifDrivingRecord},
+        </if>
+        <if test="ifLineEvent!=null and ifLineEvent!=''">
+            #{ifLineEvent},
+        </if>
+        <if test="ifXtConstruct!=null and ifXtConstruct!=''">
+            #{ifXtConstruct},
+        </if>
+        <if test="ifTtConstruct!=null and ifTtConstruct!=''">
+            #{ifTtConstruct},
+        </if>
+        <if test="ifTrainRecord!=null and ifTrainRecord!=''">
+            #{ifTrainRecord},
+        </if>
+        <if test="ifPersonRecord!=null and ifPersonRecord!=''">
+            #{ifPersonRecord},
+        </if>
+        <if test="ifDispatch!=null and ifDispatch!=''">
+            #{ifDispatch},
+        </if>
+        <if test="ifDispatchHandover!=null and ifDispatchHandover!=''">
+            #{ifDispatchHandover},
+        </if>
+        <if test="ifDrivingAttention!=null and ifDrivingAttention!=''">
+            #{ifDrivingAttention},
+        </if>
+        <if test="ifOtherRecord!=null and ifOtherRecord!=''">
+            #{ifOtherRecord},
+        </if>
+        <if test="ifBadWeather!=null and ifBadWeather!=''">
+            #{ifBadWeather},
+        </if>
+        <if test="currentDispatcher!=null and currentDispatcher!=''">
+            #{currentDispatcher},
+        </if>
+        <if test="nextDispatcher!=null and nextDispatcher!=''">
+            #{nextDispatcher},
+        </if>
+        <if test="currentDcc!=null and currentDcc!=''">
+            #{currentDcc},
+        </if>
+        <if test="nextDcc!=null and nextDcc!=''">
+            #{nextDcc},
+        </if>
+        <if test="currentDriver!=null and currentDriver!=''">
+            #{currentDriver},
+        </if>
+        <if test="nextDriver!=null and nextDriver!=''">
+            #{nextDriver},
+        </if>
+        #{status}, #{createBy}, sysdate, #{dailyDate})
+    </insert>
+
+    <update id="modifyDaily">
+        UPDATE VEHICLE_DAILY_REPORT SET
+        <if test="ifImportantIndicator!=null">
+            IF_IMPORTANT_INDICATOR=#{ifImportantIndicator},
+        </if>
+        <if test="ifDrivingRecord!=null">
+            IF_DRIVING_RECORD=#{ifDrivingRecord},
+        </if>
+        <if test="ifLineEvent!=null">
+            IF_LINE_EVENT=#{ifLineEvent},
+        </if>
+        <if test="ifXtConstruct!=null">
+            IF_XT_CONSTRUCT=#{ifXtConstruct},
+        </if>
+        <if test="ifTtConstruct!=null">
+            IF_TT_CONSTRUCT=#{ifTtConstruct},
+        </if>
+        <if test="ifTrainRecord!=null">
+            IF_TRAIN_RECORD=#{ifTrainRecord},
+        </if>
+        <if test="ifPersonRecord!=null">
+            IF_PERSON_RECORD=#{ifPersonRecord},
+        </if>
+        <if test="ifDispatch!=null">
+            IF_DISPATCH=#{ifDispatch},
+        </if>
+        <if test="ifDispatchHandover!=null">
+            IF_DISPATCH_HANDOVER=#{ifDispatchHandover},
+        </if>
+        <if test="ifDrivingAttention!=null">
+            IF_DRIVING_ATTENTION=#{ifDrivingAttention},
+        </if>
+        <if test="ifOtherRecord!=null">
+            IF_OTHER_RECORD=#{ifOtherRecord},
+        </if>
+        <if test="ifBadWeather!=null">
+            IF_BAD_WEATHER=#{ifBadWeather},
+        </if>
+        <if test="currentDispatcher!=null">
+            CURRENT_DISPATCHER=#{currentDispatcher},
+        </if>
+        <if test="nextDispatcher!=null">
+            NEXT_DISPATCHER=#{nextDispatcher},
+        </if>
+        <if test="currentDcc!=null">
+            CURRENT_DCC=#{currentDcc},
+        </if>
+        <if test="nextDcc!=null">
+            NEXT_DCC=#{nextDcc},
+        </if>
+        <if test="currentDriver!=null">
+            CURRENT_DRIVER=#{currentDriver},
+        </if>
+        <if test="nextDriver!=null">
+            NEXT_DRIVER=#{nextDriver},
+        </if>
+        <if test="status!=null">
+            STATUS=#{status},
+        </if>
+        VERSION=VERSION+1, UPDATE_BY=#{updateBy}, UPDATE_DATE=sysdate
+        WHERE ID=#{id} and VERSION=#{version}
+    </update>
+
+    <update id="deleteDaily">
+        UPDATE VEHICLE_DAILY_REPORT SET
+        DEL_FLAG='1', UPDATE_BY=#{userId}, UPDATE_DATE=sysdate
+        WHERE ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+
+</mapper>

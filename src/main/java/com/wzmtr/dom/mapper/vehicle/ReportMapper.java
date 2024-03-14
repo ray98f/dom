@@ -1,0 +1,62 @@
+package com.wzmtr.dom.mapper.vehicle;
+
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wzmtr.dom.dto.req.vehicle.DailyReportReqDTO;
+import com.wzmtr.dom.dto.res.vehicle.DailyReportResDTO;
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+/**
+ * 车辆部-车辆部报表
+ * @author  Ray
+ * @version 1.0
+ * @date 2024/03/14
+ */
+@Mapper
+@Repository
+public interface ReportMapper {
+
+    /**
+     * 分页查询日报列表
+     * @param page 分页参数
+     * @param startDate 开始时间
+     * @param endDate 结束时间
+     * @return 日报列表
+     */
+    Page<DailyReportResDTO> pageDaily(Page<DailyReportResDTO> page, String startDate, String endDate);
+
+    /**
+     * 获取日报详情
+     * @param id id
+     * @return 日报详情
+     */
+    DailyReportResDTO detailDaily(String id);
+
+    /**
+     * 查询当天日报是否已存在
+     * @param dailyReportReqDTO 日报参数
+     * @return 是否已存在
+     */
+    Integer selectDailyIsExist(DailyReportReqDTO dailyReportReqDTO);
+
+    /**
+     * 新增日报
+     * @param dailyReportReqDTO 日报参数
+     */
+    void addDaily(DailyReportReqDTO dailyReportReqDTO);
+
+    /**
+     * 编辑日报
+     * @param dailyReportReqDTO 日报参数
+     */
+    void modifyDaily(DailyReportReqDTO dailyReportReqDTO);
+
+    /**
+     * 删除日报
+     * @param ids ids
+     * @param userId 用户id
+     */
+    void deleteDaily(List<String> ids, String userId);
+}
