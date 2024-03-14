@@ -56,10 +56,16 @@
     </select>
 
     <select id="selectRecordIsExist" resultType="java.lang.Integer">
-        select count(1) from VEHICLE_DISPATCH_RECORD
-        where BELONG_DATE=#{belongDate}
-        <if test="record.version!=null and record.version!=''">
-            AND VERSION=#{version}
+        SELECT count(1) FROM VEHICLE_DISPATCH_RECORD
+        WHERE
+        <if test="dataType=='1'">
+            BELONG_DATE=#{belongDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="dataType!='1'">
+            START_DATE=#{startDate,jdbcType=TIMESTAMP} and END_DATE=#{endDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="version!=null and version!=''">
+            AND VERSION=#{version,jdbcType=VARCHAR}
         </if>
         AND DEL_FLAG='0' AND rownum=1
     </select>
