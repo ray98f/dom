@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.wzmtr.dom.mapper.vehicle.BadWeatherMapper">
+<mapper namespace="com.wzmtr.dom.mapper.vehicle.CrewTrainMapper">
 
-    <select id="page" resultType="com.wzmtr.dom.dto.res.vehicle.BadWeatherResDTO">
-        SELECT ID, WEATHER_INFO, VERSION, BELONG_DATE, DATA_TYPE, START_DATE, END_DATE
-        FROM VEHICLE_BAD_WEATHER
+    <select id="page" resultType="com.wzmtr.dom.dto.res.vehicle.CrewTrainResDTO">
+        SELECT ID, TRAIN_DESC, VERSION, BELONG_DATE, DATA_TYPE, START_DATE, END_DATE
+        FROM VEHICLE_CREW_TRAIN
         WHERE DEL_FLAG='0'
-        <if test="dataType=='1'">
+        <if test="dataType=='1'.toString()">
             <if test="startDate!=null and startDate!=''">
                 AND BELONG_DATE>=to_date(#{startDate},'YYYY-MM-DD')
             </if>
@@ -15,31 +15,31 @@
             </if>
             ORDER BY BELONG_DATE desc
         </if>
-        <if test="dataType!='1'">
+        <if test="dataType!='1'.toString()">
             <if test="startDate!=null and startDate!=''">
                 AND START_DATE>=to_date(#{startDate},'YYYY-MM-DD')
             </if>
-            <if test="endTime!=null and endTime!=''">
-                AND to_date(#{endTime},'YYYY-MM-DD')>=END_DATE
+            <if test="endDate!=null and endDate!=''">
+                AND to_date(#{endDate},'YYYY-MM-DD')>=END_DATE
             </if>
             ORDER BY START_DATE desc
         </if>
     </select>
 
-    <select id="detail" resultType="com.wzmtr.dom.dto.res.vehicle.BadWeatherResDTO">
-        SELECT ID, WEATHER_INFO, VERSION, BELONG_DATE, DATA_TYPE, START_DATE, END_DATE
-        FROM VEHICLE_BAD_WEATHER
+    <select id="detail" resultType="com.wzmtr.dom.dto.res.vehicle.CrewTrainResDTO">
+        SELECT ID, TRAIN_DESC, VERSION, BELONG_DATE, DATA_TYPE, START_DATE, END_DATE
+        FROM VEHICLE_CREW_TRAIN
         WHERE DEL_FLAG='0' AND ID=#{id}
     </select>
 
     <select id="selectIsExist" resultType="java.lang.Integer">
-        select count(1) from VEHICLE_BAD_WEATHER
+        SELECT count(1) FROM VEHICLE_CREW_TRAIN
         WHERE
-        <if test="dataType=='1'">
+        <if test="dataType=='1'.toString()">
             BELONG_DATE=#{belongDate,jdbcType=TIMESTAMP}
         </if>
-        <if test="dataType!='1'">
-            START_DATE=#{startDate,jdbcType=TIMESTAMP} and END_DATE=#{endDate,jdbcType=TIMESTAMP}
+        <if test="dataType!='1'.toString()">
+            START_DATE=#{startDate,jdbcType=TIMESTAMP} AND END_DATE=#{endDate,jdbcType=TIMESTAMP}
         </if>
         <if test="version!=null and version!=''">
             AND VERSION=#{version,jdbcType=VARCHAR}
@@ -48,10 +48,10 @@
     </select>
 
     <insert id="add">
-        INSERT INTO VEHICLE_BAD_WEATHER
+        INSERT INTO VEHICLE_CREW_TRAIN
         (ID,
-        <if test="weatherInfo!=null and weatherInfo!=''">
-            WEATHER_INFO,
+        <if test="trainDesc!=null and trainDesc!=''">
+            TRAIN_DESC,
         </if>
         <if test="dataType!=null and dataType!=''">
             DATA_TYPE,
@@ -64,8 +64,8 @@
         </if>
         CREATE_BY, CREATE_DATE, BELONG_DATE)
         VALUES (#{id},
-        <if test="weatherInfo!=null and weatherInfo!=''">
-            #{weatherInfo},
+        <if test="trainDesc!=null and trainDesc!=''">
+            #{trainDesc},
         </if>
         <if test="dataType!=null and dataType!=''">
             #{dataType},
@@ -80,9 +80,9 @@
     </insert>
 
     <update id="modify">
-        UPDATE VEHICLE_BAD_WEATHER SET
-        <if test="weatherInfo!=null">
-            WEATHER_INFO=#{weatherInfo},
+        UPDATE VEHICLE_CREW_TRAIN SET
+        <if test="trainDesc!=null">
+            TRAIN_DESC=#{trainDesc},
         </if>
         <if test="dataType!=null">
             DATA_TYPE=#{dataType},
@@ -98,7 +98,7 @@
     </update>
 
     <update id="delete">
-        UPDATE VEHICLE_BAD_WEATHER SET
+        UPDATE VEHICLE_CREW_TRAIN SET
         DEL_FLAG='1', UPDATE_BY=#{userId}, UPDATE_DATE=sysdate
         WHERE ID IN (
         <foreach collection="ids" index="index" item="id" separator=",">
