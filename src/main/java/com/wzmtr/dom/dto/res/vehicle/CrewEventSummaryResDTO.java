@@ -17,22 +17,54 @@ import java.util.Date;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class LineEventInfoResDTO extends BaseEntity {
+public class CrewEventSummaryResDTO extends BaseEntity {
 
-    @ApiModelProperty(value = "记录ID")
-    private String recordId;
+    /**
+     * 对标不准类事件数
+     * */
+    @ApiModelProperty(value = "对标不准类事件数")
+    private Integer type1Count;
 
-    @ApiModelProperty(value = " 事件类型1车辆类,2信号类,3侵限类,4设备类,5其他类")
-    private String eventType;
+    /**
+     * 误操作类事件数
+     * */
+    @ApiModelProperty(value = " 误操作类事件数")
+    private Integer type2Count;
 
-    @ApiModelProperty(value = " 事件概况")
-    private String eventDesc;
+    /**
+     * 作业标准类事件数
+     * */
+    @ApiModelProperty(value = " 作业标准类事件数")
+    private Integer type3Count;
 
-    @ApiModelProperty(value = " 事件分析")
-    private String eventAnalyze;
+    /**
+     * 其他非乘务原因类事件数
+     * */
+    @ApiModelProperty(value = " 其他非乘务原因类事件数")
+    private Integer type4Count;
 
+    /**
+     * 说明
+     * */
+    @ApiModelProperty(value = "说明")
+    private String remark;
+
+    /**
+     * 版本号
+     * */
     @ApiModelProperty(value = "版本号")
     private String version;
+
+    /**
+     * 数据所属日期
+     * */
+    @ApiModelProperty(value = "数据所属日期")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8"
+    )
+    private Date dataDate;
 
     /**
      * 数据类型:1:日报,2周报,3月报
@@ -61,4 +93,5 @@ public class LineEventInfoResDTO extends BaseEntity {
             timezone = "GMT+8"
     )
     private Date endDate;
+
 }

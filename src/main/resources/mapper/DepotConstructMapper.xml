@@ -4,7 +4,7 @@
 
     <select id="list" resultType="com.wzmtr.dom.dto.res.vehicle.DepotConstructRecordResDTO">
         SELECT ID, DEPOT_CODE,PLAN_CONSTRUCT,REAL_CONSTRUCT, VERSION, DATA_TYPE, DATA_DATE, START_DATE,END_DATE,CREATE_DATE, UPDATE_DATE
-        FROM VEHICLE_LINE_EVENT_RECORD
+        FROM VEHICLE_CONSTRUCT_RECORD
         WHERE DEL_FLAG='0'
         AND DEPOT_CODE = #{depotCode}
         AND DATA_TYPE = #{dataType}
@@ -17,7 +17,7 @@
         ORDER BY CREATE_DATE desc
     </select>
 
-    <select id="queryInfoById" resultType="com.wzmtr.dom.dto.res.vehicle.DrivingRecordDetailResDTO">
+    <select id="queryInfoById" resultType="com.wzmtr.dom.dto.res.vehicle.DepotConstructDetailResDTO">
         SELECT ID, DEPOT_CODE,PLAN_CONSTRUCT,REAL_CONSTRUCT,
         A1_PLAN,
         B_PLAN,
@@ -34,7 +34,7 @@
         IN_OUT_STORAGE,
         REMARK,
         VERSION, DATA_DATE,DATA_TYPE,START_DATE,END_DATE
-        FROM VEHICLE_LINE_EVENT_RECORD
+        FROM VEHICLE_CONSTRUCT_RECORD
         WHERE ID=#{id} AND DEL_FLAG = '0'
     </select>
 
@@ -222,6 +222,25 @@
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate
         WHERE ID=#{id} and VERSION = #{version}
+    </update>
+
+    <update id="modifyDepotCount">
+        UPDATE VEHICLE_CONSTRUCT_RECORD SET
+        (PLAN_DEPARTURE,PLAN_RECEIVE,REAL_DEPARTURE,REAL_RECEIVE,RAILCAR_DEPARTURE,RAILCAR_RECEIVE)
+        =
+        (SELECT SUM(PLAN_DEPARTURE) AS PLAN_DEPARTURE,
+        SUM(PLAN_RECEIVE) AS PLAN_RECEIVE,
+        SUM(REAL_DEPARTURE) AS PLAN_RECEIVE,
+        SUM(REAL_RECEIVE) AS PLAN_RECEIVE,
+        SUM(RAILCAR_DEPARTURE) AS PLAN_RECEIVE,
+        SUM(RAILCAR_RECEIVE) AS PLAN_RECEIVE
+        FROM VEHICLE_DRIVING_DEPOT
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE = '1'
+        AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        AND DEPOT_CODE = #{depotCode}
+        WHERE ID=#{id}
     </update>
 
     <select id="planList" resultType="com.wzmtr.dom.dto.res.vehicle.DepotConstructPlanResDTO">

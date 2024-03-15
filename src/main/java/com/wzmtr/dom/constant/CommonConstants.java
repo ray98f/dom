@@ -12,6 +12,13 @@ public class CommonConstants {
     public static String API_RES_LIST = "list";
 
     /**
+     * ADD UPDATE DELETE
+     */
+    public static String ADD = "ADD";
+    public static String UPDATE = "UPDATE";
+    public static String DELETE = "DELETE";
+
+    /**
      * id
      */
     public static final String ID = "id";
@@ -136,5 +143,14 @@ public class CommonConstants {
      * 类型:月报
      */
     public static final String  DATA_TYPE_MONTHLY = "3";
+
+    /**
+     * 事件类型
+     */
+    public static final String  EVENT_TYPE_1 = "1";
+    public static final String  EVENT_TYPE_2 = "2";
+    public static final String  EVENT_TYPE_3 = "3";
+    public static final String  EVENT_TYPE_4 = "4";
+    public static final String  EVENT_TYPE_5 = "5";
 
 }

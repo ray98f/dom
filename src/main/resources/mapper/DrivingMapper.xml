@@ -116,7 +116,7 @@
         WHERE ID=#{id} and VERSION = #{version}
     </update>
 
-    <update id="modifyCount">
+    <update id="modifyDayCount">
         UPDATE VEHICLE_DRIVING_RECORD SET
         <if test="trainCount1 != null ">
             TRAIN_COUNT1=#{trainCount1},
@@ -131,6 +131,18 @@
             MILEAGE_TOTAL=#{mileageTotal},
         </if>
         UPDATE_DATE=sysdate
+        WHERE ID=#{id}
+    </update>
+
+    <update id="modifyRecordCount">
+        UPDATE VEHICLE_DRIVING_RECORD SET
+        TRAIN_COUNT1 = (SELECT REAL_DEPARTURE FROM VEHICLE_DRIVING_DEPOT WHERE DEL_FLAG='0' AND DEPOT_CODE='280' AND RECORD_ID = #{id}),
+        TRAIN_COUNT2 = (SELECT REAL_DEPARTURE FROM VEHICLE_DRIVING_DEPOT WHERE DEL_FLAG='0' AND DEPOT_CODE='281' AND RECORD_ID = #{id}),
+        (DRIVER_COUNT,MILEAGE_TOTAL)
+        =
+        (SELECT DRIVER_COUNT,MILEAGE_TOTAL FROM VEHICLE_DRIVING_INFO
+        WHERE DEL_FLAG='0'
+        AND RECORD_ID = #{id})
         WHERE ID=#{id}
     </update>
 
@@ -218,6 +230,26 @@
         VERSION = VERSION+1,
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate
+        WHERE ID=#{id}
+        AND VERSION = #{version}
+    </update>
+
+    <update id="modifyDepotCount">
+        UPDATE VEHICLE_DRIVING_DEPOT SET
+        (PLAN_DEPARTURE,PLAN_RECEIVE,REAL_DEPARTURE,REAL_RECEIVE,RAILCAR_DEPARTURE,RAILCAR_RECEIVE)
+        =
+        (SELECT SUM(PLAN_DEPARTURE) AS PLAN_DEPARTURE,
+        SUM(PLAN_RECEIVE) AS PLAN_RECEIVE,
+        SUM(REAL_DEPARTURE) AS PLAN_RECEIVE,
+        SUM(REAL_RECEIVE) AS PLAN_RECEIVE,
+        SUM(RAILCAR_DEPARTURE) AS PLAN_RECEIVE,
+        SUM(RAILCAR_RECEIVE) AS PLAN_RECEIVE
+        FROM VEHICLE_DRIVING_DEPOT
+        WHERE DEL_FLAG='0'
+        AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        AND DEPOT_CODE = #{depotCode}
+        AND ID != #{id})
         WHERE ID=#{id}
         AND VERSION = #{version}
     </update>
@@ -315,5 +347,26 @@
         UPDATE_DATE=sysdate
         WHERE ID=#{id}
         AND VERSION = #{version}
+    </update>
+
+    <update id="modifyInfoCount">
+        UPDATE VEHICLE_DRIVING_INFO SET
+        (DRIVER_COUNT,MILEAGE_TOTAL,AVG_MILEAGE)
+        =
+        (SELECT DRIVER_COUNT,MILEAGE_TOTAL,AVG_MILEAGE FROM VEHICLE_DRIVING_INFO
+        WHERE DEL_FLAG='0'
+        AND START_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')),
+        (PLAN_ATTEND,REAL_ATTEND,SUPPORT_COUNT,MILEAGE,TEST_MILEAGE)
+        =
+        (
+        SELECT SUM(PLAN_ATTEND) AS PLAN_ATTEND,SUM(REAL_ATTEND) AS REAL_ATTEND,SUM(SUPPORT_COUNT) AS SUPPORT_COUNT,SUM(MILEAGE) AS MILEAGE,SUM(TEST_MILEAGE) AS TEST_MILEAGE
+        FROM VEHICLE_DRIVING_INFO
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE = '1'
+        AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        )
+        WHERE ID=#{id}
     </update>
 </mapper>

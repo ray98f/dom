@@ -13,7 +13,20 @@
         <if test="endDate != null">
             AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
         </if>
-        ORDER BY CREATE_DATE desc
+        ORDER BY START_DATE desc
+    </select>
+
+    <select id="listAll" resultType="com.wzmtr.dom.dto.res.vehicle.LineEventResDTO">
+        SELECT ID, TYPE1_COUNT,TYPE2_COUNT,TYPE3_COUNT,TYPE4_COUNT,TYPE5_COUNT, VERSION, DATA_TYPE, DATA_DATE, START_DATE,END_DATE,CREATE_DATE, UPDATE_DATE
+        FROM VEHICLE_LINE_EVENT_RECORD
+        WHERE DEL_FLAG='0'
+        <if test="startDate != null">
+            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        </if>
+        ORDER BY START_DATE desc
     </select>
 
     <select id="queryInfoById" resultType="com.wzmtr.dom.dto.res.vehicle.LineEventDetailResDTO">
@@ -82,6 +95,16 @@
         #{createBy}, sysdate,#{createBy}, sysdate)
     </insert>
 
+    <update id="modifyCount">
+        UPDATE VEHICLE_LINE_EVENT_RECORD SET
+        TYPE1_COUNT=(SELECT COUNT(1) FROM VEHICLE_LINE_EVENT_INFO WHERE DEL_FLAG='0' AND EVENT_TYPE = '1'  AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        TYPE2_COUNT=(SELECT COUNT(1) FROM VEHICLE_LINE_EVENT_INFO WHERE DEL_FLAG='0' AND EVENT_TYPE = '2'  AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        TYPE3_COUNT=(SELECT COUNT(1) FROM VEHICLE_LINE_EVENT_INFO WHERE DEL_FLAG='0' AND EVENT_TYPE = '3'  AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        TYPE4_COUNT=(SELECT COUNT(1) FROM VEHICLE_LINE_EVENT_INFO WHERE DEL_FLAG='0' AND EVENT_TYPE = '4'  AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        TYPE5_COUNT=(SELECT COUNT(1) FROM VEHICLE_LINE_EVENT_INFO WHERE DEL_FLAG='0' AND EVENT_TYPE = '5'  AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE)
+        WHERE ID=#{id}
+    </update>
+
     <select id="eventList" resultType="com.wzmtr.dom.dto.res.vehicle.LineEventInfoResDTO">
         SELECT ID, RECORD_ID,EVENT_TYPE,EVENT_DESC,EVENT_ANALYZE,VERSION
         FROM VEHICLE_LINE_EVENT_INFO
@@ -93,6 +116,16 @@
             AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
         </if>
         ORDER BY CREATE_DATE desc
+    </select>
+
+    <select id="queryDateRange" resultType="com.wzmtr.dom.dto.res.vehicle.LineEventInfoResDTO">
+        SELECT MIN(START_DATE) AS START_DATE,MAX(END_DATE) AS END_DATE
+        FROM VEHICLE_LINE_EVENT_INFO
+        WHERE ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
     </select>
 
     <insert id="createEvent">

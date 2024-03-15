@@ -71,22 +71,14 @@ public class DrivingServiceImpl implements DrivingService {
             throw new CommonException(ErrorCode.DATA_EXIST);
         }
 
-        switch (drivingRecordReqDTO.getDataType()){
-            case CommonConstants.DATA_TYPE_DAILY:
-                if(!drivingRecordReqDTO.getStartDate().equals(drivingRecordReqDTO.getEndDate())){
-                    throw new CommonException(ErrorCode.DATE_ERROR);
-                }
-                drivingRecordReqDTO.setDataDate(drivingRecordReqDTO.getStartDate());
-                break;
-            case CommonConstants.DATA_TYPE_WEEKLY:
-                // TODO 统计本周数据:
-                break;
-            case CommonConstants.DATA_TYPE_MONTHLY:
-                // TODO 统计本月数据:
-                break;
-            default:
-                break;
+        //日报类型数据
+        if(CommonConstants.DATA_TYPE_DAILY.equals(drivingRecordReqDTO.getDataType())){
+            if(!drivingRecordReqDTO.getStartDate().equals(drivingRecordReqDTO.getEndDate())){
+                throw new CommonException(ErrorCode.DATE_ERROR);
+            }
+            drivingRecordReqDTO.setDataDate(drivingRecordReqDTO.getStartDate());
         }
+
         drivingRecordReqDTO.setCreateBy(currentLoginUser.getPersonId());
         drivingRecordReqDTO.setUpdateBy(currentLoginUser.getPersonId());
         drivingRecordReqDTO.setId(TokenUtils.getUuId());
@@ -94,8 +86,6 @@ public class DrivingServiceImpl implements DrivingService {
             int res = drivingMapper.add(drivingRecordReqDTO);
             if(res > 0){
                 DrivingInfoReqDTO infoReqDTO= new DrivingInfoReqDTO();
-                //TODO 统计本周数据:
-                //TODO 统计本月数据:
                 for(String i: CommonConstants.STATION_280_281){
                     DrivingDepotReqDTO reqDTO = new DrivingDepotReqDTO();
                     reqDTO.setId(TokenUtils.getUuId());
@@ -107,9 +97,13 @@ public class DrivingServiceImpl implements DrivingService {
                     reqDTO.setCreateBy(currentLoginUser.getPersonId());
                     reqDTO.setUpdateBy(currentLoginUser.getPersonId());
                     drivingMapper.createDepotData(reqDTO);
+
+                    //统计本周/本月车场数据
+                    if (!CommonConstants.DATA_TYPE_DAILY.equals(drivingRecordReqDTO.getDataType())){
+                        updateDepotCount(reqDTO.getId(),reqDTO.getDepotCode(),reqDTO.getStartDate(),reqDTO.getEndDate());
+                    }
                 }
-                //TODO 统计本周数据:
-                //TODO 统计本月数据:
+
                 infoReqDTO.setCreateBy(currentLoginUser.getPersonId());
                 infoReqDTO.setUpdateBy(currentLoginUser.getPersonId());
                 infoReqDTO.setId(TokenUtils.getUuId());
@@ -117,11 +111,21 @@ public class DrivingServiceImpl implements DrivingService {
                 infoReqDTO.setDataType(drivingRecordReqDTO.getDataType());
                 infoReqDTO.setStartDate(drivingRecordReqDTO.getStartDate());
                 infoReqDTO.setEndDate(drivingRecordReqDTO.getEndDate());
-
                 drivingMapper.createInfoData(infoReqDTO);
+
+                //统计本周/本月司机驾驶数据
+                if (!CommonConstants.DATA_TYPE_DAILY.equals(drivingRecordReqDTO.getDataType())){
+                    updateDriverCount(infoReqDTO.getId(),infoReqDTO.getStartDate(),infoReqDTO.getEndDate());
+                }
             }
         }catch (Exception e){
             throw new CommonException(ErrorCode.INSERT_ERROR);
+        }
+
+        //周报、月报 更新记录统计数据
+        if(CommonConstants.DATA_TYPE_WEEKLY.equals(drivingRecordReqDTO.getDataType())
+                || CommonConstants.DATA_TYPE_MONTHLY.equals(drivingRecordReqDTO.getDataType())){
+            updateRecordCount(drivingRecordReqDTO.getId());
         }
     }
 
@@ -160,6 +164,7 @@ public class DrivingServiceImpl implements DrivingService {
     @Override
     public void depotModify(CurrentLoginUser currentLoginUser, DrivingDepotReqDTO drivingDepotReqDTO) {
         drivingDepotReqDTO.setUpdateBy(currentLoginUser.getPersonId());
+
         int res = drivingMapper.modifyDepotData(drivingDepotReqDTO);
         if( res <= 0){
             throw new CommonException(ErrorCode.UPDATE_ERROR);
@@ -194,7 +199,7 @@ public class DrivingServiceImpl implements DrivingService {
                 if(Objects.nonNull(drivingInfoReqDTO.getMileage())){
                     countReqDTO.setMileageTotal(mileageTotal);
                 }
-                drivingMapper.modifyCount(countReqDTO);
+                drivingMapper.modifyDayCount(countReqDTO);
             }
         }catch (Exception e){
             throw new CommonException(ErrorCode.UPDATE_ERROR);
@@ -213,5 +218,26 @@ public class DrivingServiceImpl implements DrivingService {
         odmDepotResDTO.setRealDeparture(9);
         odmDepotResDTO.setRealReceive(9);
         return odmDepotResDTO;
+    }
+
+    /**
+     * 周报、日报更新车场数据
+     */
+    private void updateDepotCount(String id,String depotCode,String startDate,String endDate){
+        drivingMapper.modifyDepotCount(id,depotCode,startDate,endDate);
+    }
+
+    /**
+     * 周报、日报更新司机数据
+     */
+    private void updateDriverCount(String id,String startDate,String endDate){
+        drivingMapper.modifyInfoCount(id,startDate,endDate);
+    }
+
+    /**
+     * 更新行车事件统计
+     */
+    private void updateRecordCount(String id){
+        drivingMapper.modifyRecordCount(id);
     }
 }

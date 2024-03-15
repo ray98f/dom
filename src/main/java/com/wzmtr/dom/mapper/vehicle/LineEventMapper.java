@@ -4,10 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.vehicle.IndicatorReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.LineEventInfoReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.LineEventRecordReqDTO;
-import com.wzmtr.dom.dto.res.vehicle.IndicatorResDTO;
-import com.wzmtr.dom.dto.res.vehicle.LineEventDetailResDTO;
-import com.wzmtr.dom.dto.res.vehicle.LineEventInfoResDTO;
-import com.wzmtr.dom.dto.res.vehicle.LineEventResDTO;
+import com.wzmtr.dom.dto.res.vehicle.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -35,6 +32,14 @@ public interface LineEventMapper {
     Page<LineEventResDTO> list(Page<LineEventResDTO> page,String dataType,String startDate,String endDate);
 
     /**
+     * 列表
+     * @param startDate 查询参数
+     * @param endDate 查询参数
+     * @return 列表
+     */
+    List<LineEventResDTO> listAll(String startDate, String endDate);
+
+    /**
      * 详情
      * @param id 入参数
      * @return LineEventResDTO
@@ -55,6 +60,21 @@ public interface LineEventMapper {
      * @param lineEventRecordReqDTO 入参数
      */
     void add(LineEventRecordReqDTO lineEventRecordReqDTO);
+
+    /**
+     * 编辑
+     * @param id 入参数
+     * @param startDate 入参数
+     * @param endDate 入参数
+     */
+    void modifyCount(String id,String startDate, String endDate);
+
+    /**
+     * 事件信息-日期范围
+     * @param ids 查询参数
+     * @return 事件信息
+     */
+    LineEventInfoResDTO queryDateRange(List<String> ids);
 
     /**
      * 事件信息-列表

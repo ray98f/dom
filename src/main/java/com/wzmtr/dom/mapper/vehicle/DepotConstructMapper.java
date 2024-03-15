@@ -61,6 +61,15 @@ public interface DepotConstructMapper {
     int modify(DepotConstructRecordReqDTO depotConstructRecordReqDTO);
 
     /**
+     * 周报/月报车场统计数据更新
+     * @param id 入参数
+     * @param depotCode 入参数
+     * @param startDate 入参数
+     * @param endDate 入参数
+     */
+    void modifyDepotCount(String id,String depotCode,String startDate,String endDate);
+
+    /**
      * 施工计划列表
      * @param page 分页参数
      * @param depotCode 查询参数

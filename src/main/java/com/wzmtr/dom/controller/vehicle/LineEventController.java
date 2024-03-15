@@ -96,7 +96,6 @@ public class LineEventController {
         return PageResponse.of(lineEventService.eventList(startDate,endDate,pageReqDTO));
     }
 
-
     /**
      * 事件信息-新增
      * @param lineEventInfoReqDTO 入参数

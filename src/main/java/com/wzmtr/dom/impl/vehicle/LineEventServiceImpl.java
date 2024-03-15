@@ -6,9 +6,7 @@ import com.github.pagehelper.page.PageMethod;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.vehicle.LineEventInfoReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.LineEventRecordReqDTO;
-import com.wzmtr.dom.dto.res.vehicle.LineEventDetailResDTO;
-import com.wzmtr.dom.dto.res.vehicle.LineEventInfoResDTO;
-import com.wzmtr.dom.dto.res.vehicle.LineEventResDTO;
+import com.wzmtr.dom.dto.res.vehicle.*;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.ErrorCode;
@@ -20,6 +18,7 @@ import com.wzmtr.dom.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -54,22 +53,14 @@ public class LineEventServiceImpl implements LineEventService {
             throw new CommonException(ErrorCode.DATA_EXIST);
         }
 
-        switch (lineEventRecordReqDTO.getDataType()){
-            case CommonConstants.DATA_TYPE_DAILY:
-                if(!lineEventRecordReqDTO.getStartDate().equals(lineEventRecordReqDTO.getEndDate())){
-                    throw new CommonException(ErrorCode.DATE_ERROR);
-                }
-                lineEventRecordReqDTO.setDataDate(lineEventRecordReqDTO.getStartDate());
-                break;
-            case CommonConstants.DATA_TYPE_WEEKLY:
-                // TODO 统计本周数据
-                break;
-            case CommonConstants.DATA_TYPE_MONTHLY:
-                // TODO 统计本月数据
-                break;
-            default:
-                break;
+        // 日报类型
+        if(CommonConstants.DATA_TYPE_DAILY.equals(lineEventRecordReqDTO.getDataType())){
+            if(!lineEventRecordReqDTO.getStartDate().equals(lineEventRecordReqDTO.getEndDate())){
+                throw new CommonException(ErrorCode.DATE_ERROR);
+            }
+            lineEventRecordReqDTO.setDataDate(lineEventRecordReqDTO.getStartDate());
         }
+
         lineEventRecordReqDTO.setCreateBy(currentLoginUser.getPersonId());
         lineEventRecordReqDTO.setUpdateBy(currentLoginUser.getPersonId());
         lineEventRecordReqDTO.setId(TokenUtils.getUuId());
@@ -77,6 +68,12 @@ public class LineEventServiceImpl implements LineEventService {
             lineEventMapper.add(lineEventRecordReqDTO);
         }catch (Exception e){
             throw new CommonException(ErrorCode.INSERT_ERROR);
+        }
+
+        //更新周、月统计数
+        if(CommonConstants.DATA_TYPE_MONTHLY.equals(lineEventRecordReqDTO.getDataType())
+                || CommonConstants.DATA_TYPE_WEEKLY.equals(lineEventRecordReqDTO.getDataType())){
+            lineEventMapper.modifyCount(lineEventRecordReqDTO.getId(),lineEventRecordReqDTO.getStartDate(),lineEventRecordReqDTO.getEndDate());
         }
     }
 
@@ -99,6 +96,9 @@ public class LineEventServiceImpl implements LineEventService {
         }catch (Exception e){
             throw new CommonException(ErrorCode.INSERT_ERROR);
         }
+
+        //更新事件统计
+        updateSummaryCount(lineEventInfoReqDTO.getStartDate(),lineEventInfoReqDTO.getEndDate());
     }
 
     @Override
@@ -108,12 +108,39 @@ public class LineEventServiceImpl implements LineEventService {
         if( res <= 0){
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
+
+        //更新事件统计
+        List<String> ids = new ArrayList<>();
+        ids.add(lineEventInfoReqDTO.getId());
+        LineEventInfoResDTO eventInfo = lineEventMapper.queryDateRange(ids);
+        updateSummaryCount(DateUtil.formatDate(eventInfo.getStartDate()),DateUtil.formatDate(eventInfo.getEndDate()));
+
     }
 
     @Override
     public void deleteEvent(List<String> ids) {
         if (StringUtils.isNotEmpty(ids)) {
-            lineEventMapper.deleteEvent(ids, TokenUtils.getCurrentPersonId());
+            LineEventInfoResDTO eventInfo = lineEventMapper.queryDateRange(ids);
+            try{
+                lineEventMapper.deleteEvent(ids, TokenUtils.getCurrentPersonId());
+            }catch (Exception e){
+                throw new CommonException(ErrorCode.DELETE_ERROR);
+            }
+
+            //更新事件统计
+            updateSummaryCount(DateUtil.formatDate(eventInfo.getStartDate()),DateUtil.formatDate(eventInfo.getEndDate()));
+        }
+    }
+
+    /**
+     * 事件统计更新
+     * */
+    private void updateSummaryCount(String startDate,String endDate){
+        List<LineEventResDTO> res =  lineEventMapper.listAll(startDate,endDate);
+        if(res != null && res.size() > 0){
+            for(LineEventResDTO item:res){
+                lineEventMapper.modifyCount(item.getId(),DateUtil.formatDate(item.getStartDate()),DateUtil.formatDate(item.getEndDate()));
+            }
         }
     }
 }

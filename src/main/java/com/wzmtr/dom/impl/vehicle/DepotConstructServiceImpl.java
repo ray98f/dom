@@ -109,8 +109,12 @@ public class DepotConstructServiceImpl implements DepotConstructService {
     @Override
     public void modify(CurrentLoginUser currentLoginUser, DepotConstructRecordReqDTO depotConstructRecordReqDTO) {
         depotConstructRecordReqDTO.setUpdateBy(currentLoginUser.getPersonId());
-        int res = depotConstructMapper.modify(depotConstructRecordReqDTO);
-        if( res <= 0){
+        try {
+            int res = depotConstructMapper.modify(depotConstructRecordReqDTO);
+            if( res <= 0){
+                throw new CommonException(ErrorCode.UPDATE_ERROR);
+            }
+        }catch (Exception e){
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
     }
@@ -196,6 +200,13 @@ public class DepotConstructServiceImpl implements DepotConstructService {
         if (StringUtils.isNotEmpty(ids)) {
             depotConstructMapper.deletePlan(ids);
         }
+    }
+
+    /**
+     * 周报、日报更新车场数据
+     */
+    private void updateDepotCount(String id,String depotCode,String startDate,String endDate){
+        //modifyDepotCount(id,depotCode,startDate,endDate);
     }
 
     /**

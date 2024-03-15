@@ -17,20 +17,41 @@ import java.util.Date;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class LineEventInfoResDTO extends BaseEntity {
+public class CrewEventInfoResDTO extends BaseEntity {
 
+    /**
+     * 记录ID
+     * */
     @ApiModelProperty(value = "记录ID")
     private String recordId;
 
-    @ApiModelProperty(value = " 事件类型1车辆类,2信号类,3侵限类,4设备类,5其他类")
+    /**
+     * 事件类型
+     * */
+    @ApiModelProperty(value = " 事件类型")
     private String eventType;
 
+    /**
+     * 事件概况
+     * */
     @ApiModelProperty(value = " 事件概况")
     private String eventDesc;
 
-    @ApiModelProperty(value = " 事件分析")
-    private String eventAnalyze;
+    /**
+     * 司机处理
+     * */
+    @ApiModelProperty(value = " 司机处理")
+    private String driverHandle;
 
+    /**
+     * 整改措施
+     * */
+    @ApiModelProperty(value = " 整改措施")
+    private String eventMeasure;
+
+    /**
+     * 版本号
+     * */
     @ApiModelProperty(value = "版本号")
     private String version;
 

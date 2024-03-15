@@ -64,7 +64,13 @@ public interface DrivingMapper {
      * @param drivingCountReqDTO 入参数
      * @return int
      */
-    int modifyCount(DrivingCountReqDTO drivingCountReqDTO);
+    int modifyDayCount(DrivingCountReqDTO drivingCountReqDTO);
+
+    /**
+     * 周报/月报统计数据更新
+     * @param id 入参数
+     */
+    void modifyRecordCount(String id);
 
     /**
      * 删除
@@ -72,6 +78,15 @@ public interface DrivingMapper {
      * @param userId 用户id
      */
     void delete(List<String> ids, String userId);
+
+    /**
+     * 周报/月报车场统计数据更新
+     * @param id 入参数
+     * @param depotCode 入参数
+     * @param startDate 入参数
+     * @param endDate 入参数
+     */
+    void modifyDepotCount(String id,String depotCode,String startDate,String endDate);
 
     /**
      * 新增车场行车情况
@@ -108,6 +123,14 @@ public interface DrivingMapper {
      */
     int modifyInfoData(DrivingInfoReqDTO drivingInfoReqDTO);
 
+
+    /**
+     * 周报/月报司机驾驶统计数据更新
+     * @param id 入参数
+     * @param startDate 入参数
+     * @param endDate 入参数
+     */
+    void modifyInfoCount(String id,String startDate,String endDate);
 
     /**
      * 司机驾驶情况
