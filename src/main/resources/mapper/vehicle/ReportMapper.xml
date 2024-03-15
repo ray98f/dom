@@ -41,7 +41,7 @@
     </select>
 
     <insert id="addDaily">
-        INSERT INTO DOM.VEHICLE_DAILY_REPORT
+        INSERT INTO VEHICLE_DAILY_REPORT
         (ID,
         <if test="ifImportantIndicator!=null and ifImportantIndicator!=''">
             IF_IMPORTANT_INDICATOR,
@@ -229,4 +229,183 @@
         )
     </update>
 
+    <select id="pageWeekly" resultType="com.wzmtr.dom.dto.res.vehicle.WeeklyReportResDTO">
+        SELECT wr.ID, wr.IF_IMPORTANT_INDICATOR, wr.IF_DRIVING_RECORD, wr.IF_LINE_EVENT, wr.IF_XT_CONSTRUCT,
+        wr.IF_TT_CONSTRUCT, wr.IF_CREW_EVENT_SUMMARY, wr.IF_CREW_TRAIN, wr.IF_DISPATCH, wr.IF_CREW_DRILL,
+        wr.IF_CREW_BUSINESS, wr.IF_OTHER_RECORD, wr.IF_BAD_WEATHER, wr.IF_CREW_SUMMARY,
+        wr.START_DATE, wr.END_DATE, wr.STATUS, wr.VERSION, wr.CREATE_DATE, u.NAME AS CREATE_BY
+        FROM VEHICLE_WEEKLY_REPORT wr
+        LEFT JOIN SYS_USER u ON u.ID=wr.CREATE_BY
+        WHERE wr.DEL_FLAG='0'
+        <if test="startDate!=null and startDate!=''">
+            AND wr.START_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'YYYY-MM-DD')>=wr.END_DATE
+        </if>
+        ORDER BY wr.DAILY_DATE desc
+    </select>
+
+    <select id="detailWeekly" resultType="com.wzmtr.dom.dto.res.vehicle.WeeklyReportResDTO">
+        SELECT wr.ID, wr.IF_IMPORTANT_INDICATOR, wr.IF_DRIVING_RECORD, wr.IF_LINE_EVENT, wr.IF_XT_CONSTRUCT,
+        wr.IF_TT_CONSTRUCT, wr.IF_CREW_EVENT_SUMMARY, wr.IF_CREW_TRAIN, wr.IF_DISPATCH, wr.IF_CREW_DRILL,
+        wr.IF_CREW_BUSINESS, wr.IF_OTHER_RECORD, wr.IF_BAD_WEATHER, wr.IF_CREW_SUMMARY,
+        wr.START_DATE, wr.END_DATE, wr.STATUS, wr.VERSION, wr.CREATE_DATE, u.NAME AS CREATE_BY
+        FROM VEHICLE_WEEKLY_REPORT wr
+        LEFT JOIN SYS_USER u ON u.ID=wr.CREATE_BY
+        WHERE wr.DEL_FLAG='0' AND wr.ID=#{id}
+    </select>
+
+    <select id="selectWeeklyIsExist" resultType="java.lang.Integer">
+        select count(1) from VEHICLE_WEEKLY_REPORT
+        WHERE DAILY_DATE=#{dailyDate,jdbcType=TIMESTAMP}
+        <if test="version!=null and version!=''">
+            AND VERSION=#{version,jdbcType=VARCHAR}
+        </if>
+        AND DEL_FLAG='0' AND rownum=1
+    </select>
+
+    <insert id="addWeekly">
+        INSERT INTO VEHICLE_WEEKLY_REPORT
+        (ID,
+        <if test="ifImportantIndicator!=null and ifImportantIndicator!=''">
+            IF_IMPORTANT_INDICATOR,
+        </if>
+        <if test="ifDrivingRecord!=null and ifDrivingRecord!=''">
+            IF_DRIVING_RECORD,
+        </if>
+        <if test="ifLineEvent!=null and ifLineEvent!=''">
+            IF_LINE_EVENT,
+        </if>
+        <if test="ifXtConstruct!=null and ifXtConstruct!=''">
+            IF_XT_CONSTRUCT,
+        </if>
+        <if test="ifTtConstruct!=null and ifTtConstruct!=''">
+            IF_TT_CONSTRUCT,
+        </if>
+        <if test="ifCrewEventSummary!=null and ifCrewEventSummary!=''">
+            IF_CREW_EVENT_SUMMARY,
+        </if>
+        <if test="ifCrewTrain!=null and ifCrewTrain!=''">
+            IF_CREW_TRAIN,
+        </if>
+        <if test="ifDispatch!=null and ifDispatch!=''">
+            IF_DISPATCH,
+        </if>
+        <if test="ifCrewDrill!=null and ifCrewDrill!=''">
+            IF_CREW_DRILL,
+        </if>
+        <if test="ifCrewBusiness!=null and ifCrewBusiness!=''">
+            IF_CREW_BUSINESS,
+        </if>
+        <if test="ifOtherRecord!=null and ifOtherRecord!=''">
+            IF_OTHER_RECORD,
+        </if>
+        <if test="ifBadWeather!=null and ifBadWeather!=''">
+            IF_BAD_WEATHER,
+        </if>
+        <if test="ifCrewSummary!=null and ifCrewSummary!=''">
+            IF_CREW_SUMMARY,
+        </if>
+        STATUS, CREATE_BY, CREATE_DATE, START_DATE, END_DATE)
+        VALUES (#{id},
+        <if test="ifImportantIndicator!=null and ifImportantIndicator!=''">
+            #{ifImportantIndicator},
+        </if>
+        <if test="ifDrivingRecord!=null and ifDrivingRecord!=''">
+            #{ifDrivingRecord},
+        </if>
+        <if test="ifLineEvent!=null and ifLineEvent!=''">
+            #{ifLineEvent},
+        </if>
+        <if test="ifXtConstruct!=null and ifXtConstruct!=''">
+            #{ifXtConstruct},
+        </if>
+        <if test="ifTtConstruct!=null and ifTtConstruct!=''">
+            #{ifTtConstruct},
+        </if>
+        <if test="ifCrewEventSummary!=null and ifCrewEventSummary!=''">
+            #{ifCrewEventSummary},
+        </if>
+        <if test="ifCrewTrain!=null and ifCrewTrain!=''">
+            #{ifCrewTrain},
+        </if>
+        <if test="ifDispatch!=null and ifDispatch!=''">
+            #{ifDispatch},
+        </if>
+        <if test="ifCrewDrill!=null and ifCrewDrill!=''">
+            #{ifCrewDrill},
+        </if>
+        <if test="ifCrewBusiness!=null and ifCrewBusiness!=''">
+            #{ifCrewBusiness},
+        </if>
+        <if test="ifOtherRecord!=null and ifOtherRecord!=''">
+            #{ifOtherRecord},
+        </if>
+        <if test="ifBadWeather!=null and ifBadWeather!=''">
+            #{ifBadWeather},
+        </if>
+        <if test="ifCrewSummary!=null and ifCrewSummary!=''">
+            #{ifCrewSummary},
+        </if>
+        #{status}, #{createBy}, sysdate, #{startDate}, #{endDate})
+    </insert>
+
+    <update id="modifyWeekly">
+        UPDATE VEHICLE_WEEKLY_REPORT SET
+        <if test="ifImportantIndicator!=null">
+            IF_IMPORTANT_INDICATOR=#{ifImportantIndicator},
+        </if>
+        <if test="ifDrivingRecord!=null">
+            IF_DRIVING_RECORD=#{ifDrivingRecord},
+        </if>
+        <if test="ifLineEvent!=null">
+            IF_LINE_EVENT=#{ifLineEvent},
+        </if>
+        <if test="ifXtConstruct!=null">
+            IF_XT_CONSTRUCT=#{ifXtConstruct},
+        </if>
+        <if test="ifTtConstruct!=null">
+            IF_TT_CONSTRUCT=#{ifTtConstruct},
+        </if>
+        <if test="ifCrewEventSummary!=null">
+            IF_CREW_EVENT_SUMMARY=#{ifCrewEventSummary},
+        </if>
+        <if test="ifCrewTrain!=null">
+            IF_CREW_TRAIN=#{ifCrewTrain},
+        </if>
+        <if test="ifDispatch!=null">
+            IF_DISPATCH=#{ifDispatch},
+        </if>
+        <if test="ifCrewDrill!=null">
+            IF_CREW_DRILL=#{ifCrewDrill},
+        </if>
+        <if test="ifCrewBusiness!=null">
+            IF_CREW_BUSINESS=#{ifCrewBusiness},
+        </if>
+        <if test="ifOtherRecord!=null">
+            IF_OTHER_RECORD=#{ifOtherRecord},
+        </if>
+        <if test="ifBadWeather!=null">
+            IF_BAD_WEATHER=#{ifBadWeather},
+        </if>
+        <if test="ifCrewSummary!=null">
+            IF_CREW_SUMMARY=#{ifCrewSummary},
+        </if>
+        <if test="status!=null">
+            STATUS=#{status},
+        </if>
+        VERSION=VERSION+1, UPDATE_BY=#{updateBy}, UPDATE_DATE=sysdate
+        WHERE ID=#{id} and VERSION=#{version}
+    </update>
+
+    <update id="deleteWeekly">
+        UPDATE VEHICLE_WEEKLY_REPORT SET
+        DEL_FLAG='1', UPDATE_BY=#{userId}, UPDATE_DATE=sysdate
+        WHERE ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
 </mapper>

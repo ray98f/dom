@@ -49,5 +49,5 @@ public class DrivingAttentionResDTO {
             pattern = "yyyy-MM-dd",
             timezone = "GMT+8"
     )
-    private Date belongDate;
+    private Date dataDate;
 }

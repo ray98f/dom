@@ -5,23 +5,23 @@
     <select id="page" resultType="com.wzmtr.dom.dto.res.vehicle.PersonRecordResDTO">
         SELECT ID, DISPATCH_XT_DAY, DISPATCH_XT_NIGHT, DISPATCH_TT_DAY, DISPATCH_TT_NIGHT,
         DCC_XT_DAY, DCC_XT_NIGHT, DCC_TT_DAY, DCC_TT_NIGHT, RELIEF, LEAVE_PERSONAL, LEAVE_SICK,
-        LEAVE_ANNUAL, LEAVE_OTHER, POST_WAITING, VERSION, BELONG_DATE,
+        LEAVE_ANNUAL, LEAVE_OTHER, POST_WAITING, VERSION, DATA_DATE,
         MAIN_DRIVER_DAY, MAIN_DRIVER_NIGHT, GUIDE_DRIVER_DAY, GUIDE_DRIVER_NIGHT
         FROM VEHICLE_PERSON_RECORD
         WHERE DEL_FLAG='0'
         <if test="startDate!=null and startDate!=''">
-            AND BELONG_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+            AND DATA_DATE>=to_date(#{startDate},'YYYY-MM-DD')
         </if>
         <if test="endDate!=null and endDate!=''">
-            AND to_date(#{endDate},'YYYY-MM-DD')>=BELONG_DATE
+            AND to_date(#{endDate},'YYYY-MM-DD')>=DATA_DATE
         </if>
-        ORDER BY BELONG_DATE desc
+        ORDER BY DATA_DATE desc
     </select>
 
     <select id="detail" resultType="com.wzmtr.dom.dto.res.vehicle.PersonRecordResDTO">
         SELECT ID, DISPATCH_XT_DAY, DISPATCH_XT_NIGHT, DISPATCH_TT_DAY, DISPATCH_TT_NIGHT,
         DCC_XT_DAY, DCC_XT_NIGHT, DCC_TT_DAY, DCC_TT_NIGHT, RELIEF, LEAVE_PERSONAL, LEAVE_SICK,
-        LEAVE_ANNUAL, LEAVE_OTHER, POST_WAITING, VERSION, BELONG_DATE,
+        LEAVE_ANNUAL, LEAVE_OTHER, POST_WAITING, VERSION, DATA_DATE,
         MAIN_DRIVER_DAY, MAIN_DRIVER_NIGHT, GUIDE_DRIVER_DAY, GUIDE_DRIVER_NIGHT
         FROM VEHICLE_PERSON_RECORD
         WHERE DEL_FLAG='0' AND ID=#{id}
@@ -29,14 +29,14 @@
 
     <select id="selectIsExist" resultType="java.lang.Integer">
         select count(1) from VEHICLE_PERSON_RECORD
-        where BELONG_DATE=#{belongDate}
+        where DATA_DATE=#{dataDate}
         <if test="version!=null and version!=''">
             AND VERSION=#{version}
         </if>
         AND DEL_FLAG='0' AND rownum=1
     </select>
 
-    <insert id="add" parameterType="com.wzmtr.dom.dto.req.vehicle.PersonRecordReqDTO">
+    <insert id="add">
         INSERT INTO VEHICLE_PERSON_RECORD
         (ID,
         <if test="dispatchXtDay!=null and dispatchXtDay!=''">
@@ -93,7 +93,7 @@
         <if test="postWaiting!=null and postWaiting!=''">
             POST_WAITING,
         </if>
-        CREATE_BY, CREATE_DATE, BELONG_DATE)
+        CREATE_BY, CREATE_DATE, DATA_DATE)
         VALUES (#{id},
         <if test="dispatchXtDay!=null and dispatchXtDay!=''">
             #{dispatchXtDay},
@@ -149,7 +149,7 @@
         <if test="postWaiting!=null and postWaiting!=''">
             #{postWaiting},
         </if>
-        #{createBy}, sysdate, #{belongDate})
+        #{createBy}, sysdate, #{dataDate})
     </insert>
 
     <update id="modify">
