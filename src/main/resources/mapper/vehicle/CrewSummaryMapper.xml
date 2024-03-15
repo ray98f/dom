@@ -62,7 +62,10 @@
         <if test="endDate!=null">
             END_DATE,
         </if>
-        CREATE_BY, CREATE_DATE, DATA_DATE)
+        <if test="dataDate!=null">
+            DATA_DATE,
+        </if>
+        CREATE_BY, CREATE_DATE)
         VALUES (#{id},
         <if test="summaryDesc!=null and summaryDesc!=''">
             #{summaryDesc},
@@ -76,7 +79,10 @@
         <if test="endDate!=null">
             #{endDate},
         </if>
-        #{createBy}, sysdate, #{dataDate})
+        <if test="dataDate!=null">
+            #{dataDate},
+        </if>
+        #{createBy}, sysdate)
     </insert>
 
     <update id="modify">

@@ -84,7 +84,6 @@
         <if test="orderNum!=null">
             ORDER_NUM,
         </if>
-        CREATE_BY, CREATE_DATE,
         <if test="dataType!=null and dataType!=''">
             DATA_TYPE,
         </if>
@@ -94,12 +93,14 @@
         <if test="endDate!=null">
             END_DATE,
         </if>
-        DATA_DATE)
+        <if test="dataDate!=null">
+            DATA_DATE,
+        </if>
+        CREATE_BY, CREATE_DATE)
         VALUES (#{id},
         <if test="orderNum!=null">
             #{orderNum},
         </if>
-        #{createBy}, sysdate,
         <if test="dataType!=null and dataType!=''">
             #{dataType},
         </if>
@@ -109,7 +110,10 @@
         <if test="endDate!=null">
             #{endDate},
         </if>
-        #{dataDate})
+        <if test="dataDate!=null">
+            #{dataDate},
+        </if>
+        #{createBy}, sysdate)
     </insert>
 
     <insert id="addOrder">
