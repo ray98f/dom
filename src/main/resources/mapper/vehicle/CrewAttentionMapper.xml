@@ -3,17 +3,17 @@
 <mapper namespace="com.wzmtr.dom.mapper.vehicle.CrewAttentionMapper">
 
     <select id="page" resultType="com.wzmtr.dom.dto.res.vehicle.CrewAttentionResDTO">
-        SELECT ID, ATTENTION_DESC, VERSION, BELONG_DATE, DATA_TYPE, START_DATE, END_DATE
+        SELECT ID, ATTENTION_DESC, VERSION, DATA_DATE, DATA_TYPE, START_DATE, END_DATE
         FROM VEHICLE_CREW_ATTENTION
         WHERE DEL_FLAG='0'
         <if test="dataType=='1'.toString()">
             <if test="startDate!=null and startDate!=''">
-                AND BELONG_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+                AND DATA_DATE>=to_date(#{startDate},'YYYY-MM-DD')
             </if>
             <if test="endDate!=null and endDate!=''">
-                AND to_date(#{endDate},'YYYY-MM-DD')>=BELONG_DATE
+                AND to_date(#{endDate},'YYYY-MM-DD')>=DATA_DATE
             </if>
-            ORDER BY BELONG_DATE desc
+            ORDER BY DATA_DATE desc
         </if>
         <if test="dataType!='1'.toString()">
             <if test="startDate!=null and startDate!=''">
@@ -27,7 +27,7 @@
     </select>
 
     <select id="detail" resultType="com.wzmtr.dom.dto.res.vehicle.CrewAttentionResDTO">
-        SELECT ID, ATTENTION_DESC, VERSION, BELONG_DATE, DATA_TYPE, START_DATE, END_DATE
+        SELECT ID, ATTENTION_DESC, VERSION, DATA_DATE, DATA_TYPE, START_DATE, END_DATE
         FROM VEHICLE_CREW_ATTENTION
         WHERE DEL_FLAG='0' AND ID=#{id}
     </select>
@@ -36,7 +36,7 @@
         SELECT count(1) FROM VEHICLE_CREW_ATTENTION
         WHERE
         <if test="dataType=='1'.toString()">
-            BELONG_DATE=#{belongDate,jdbcType=TIMESTAMP}
+            DATA_DATE=#{dataDate,jdbcType=TIMESTAMP}
         </if>
         <if test="dataType!='1'.toString()">
             START_DATE=#{startDate,jdbcType=TIMESTAMP} AND END_DATE=#{endDate,jdbcType=TIMESTAMP}
@@ -62,7 +62,7 @@
         <if test="endDate!=null">
             END_DATE,
         </if>
-        CREATE_BY, CREATE_DATE, BELONG_DATE)
+        CREATE_BY, CREATE_DATE, DATA_DATE)
         VALUES (#{id},
         <if test="attentionDesc!=null and attentionDesc!=''">
             #{attentionDesc},
@@ -76,7 +76,7 @@
         <if test="endDate!=null">
             #{endDate},
         </if>
-        #{createBy}, sysdate, #{belongDate})
+        #{createBy}, sysdate, #{dataDate})
     </insert>
 
     <update id="modify">

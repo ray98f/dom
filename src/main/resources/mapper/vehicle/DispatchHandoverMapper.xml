@@ -3,27 +3,27 @@
 <mapper namespace="com.wzmtr.dom.mapper.vehicle.DispatchHandoverMapper">
 
     <select id="page" resultType="com.wzmtr.dom.dto.res.vehicle.DispatchHandoverResDTO">
-        SELECT ID, FAULT_DESC, OTHER_DESC, VERSION, BELONG_DATE
+        SELECT ID, FAULT_DESC, OTHER_DESC, VERSION, DATA_DATE
         FROM VEHICLE_DISPATCH_HANDOVER
         WHERE DEL_FLAG='0'
         <if test="startDate!=null and startDate!=''">
-            AND BELONG_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+            AND DATA_DATE>=to_date(#{startDate},'YYYY-MM-DD')
         </if>
         <if test="endDate!=null and endDate!=''">
-            AND to_date(#{endDate},'YYYY-MM-DD')>=BELONG_DATE
+            AND to_date(#{endDate},'YYYY-MM-DD')>=DATA_DATE
         </if>
-        ORDER BY BELONG_DATE desc
+        ORDER BY DATA_DATE desc
     </select>
 
     <select id="detail" resultType="com.wzmtr.dom.dto.res.vehicle.DispatchHandoverResDTO">
-        SELECT ID, FAULT_DESC, OTHER_DESC, VERSION, BELONG_DATE
+        SELECT ID, FAULT_DESC, OTHER_DESC, VERSION, DATA_DATE
         FROM VEHICLE_DISPATCH_HANDOVER
         WHERE DEL_FLAG='0' AND ID=#{id}
     </select>
 
     <select id="selectIsExist" resultType="java.lang.Integer">
         select count(1) from VEHICLE_DISPATCH_HANDOVER
-        where BELONG_DATE=#{belongDate}
+        where DATA_DATE=#{dataDate}
         <if test="version!=null and version!=''">
             AND VERSION=#{version}
         </if>
@@ -39,7 +39,7 @@
         <if test="otherDesc!=null and otherDesc!=''">
             OTHER_DESC,
         </if>
-        CREATE_BY, CREATE_DATE, BELONG_DATE)
+        CREATE_BY, CREATE_DATE, DATA_DATE)
         VALUES (#{id},
         <if test="faultDesc!=null and faultDesc!=''">
             #{faultDesc},
@@ -47,7 +47,7 @@
         <if test="otherDesc!=null and otherDesc!=''">
             #{otherDesc},
         </if>
-        #{createBy}, sysdate, #{belongDate})
+        #{createBy}, sysdate, #{dataDate})
     </insert>
 
     <update id="modify">

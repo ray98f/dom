@@ -40,7 +40,7 @@ public class OtherRecordReqDTO extends BaseEntity {
             pattern = "yyyy-MM-dd",
             timezone = "GMT+8"
     )
-    private Date belongDate;
+    private Date dataDate;
 
     /**
      * 数据类型 1:日报 2:周报 3:月报

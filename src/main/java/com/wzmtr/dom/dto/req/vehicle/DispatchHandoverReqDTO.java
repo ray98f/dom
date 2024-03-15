@@ -46,5 +46,5 @@ public class DispatchHandoverReqDTO extends BaseEntity {
             pattern = "yyyy-MM-dd",
             timezone = "GMT+8"
     )
-    private Date belongDate;
+    private Date dataDate;
 }
