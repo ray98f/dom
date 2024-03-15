@@ -2,8 +2,10 @@ package com.wzmtr.dom.mapper.vehicle;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.vehicle.DailyReportReqDTO;
+import com.wzmtr.dom.dto.req.vehicle.MonthlyReportReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.WeeklyReportReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.DailyReportResDTO;
+import com.wzmtr.dom.dto.res.vehicle.MonthlyReportResDTO;
 import com.wzmtr.dom.dto.res.vehicle.WeeklyReportResDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -103,4 +105,46 @@ public interface ReportMapper {
      * @param userId 用户id
      */
     void deleteWeekly(List<String> ids, String userId);
+
+    /**
+     * 分页查询月报列表
+     * @param page 分页参数
+     * @param startDate 开始时间
+     * @param endDate 结束时间
+     * @return 月报列表
+     */
+    Page<MonthlyReportResDTO> pageMonthly(Page<MonthlyReportResDTO> page, String startDate, String endDate);
+
+    /**
+     * 获取月报详情
+     * @param id id
+     * @return 月报详情
+     */
+    MonthlyReportResDTO detailMonthly(String id);
+
+    /**
+     * 查询当天月报是否已存在
+     * @param monthlyReportReqDTO 月报参数
+     * @return 是否已存在
+     */
+    Integer selectMonthlyIsExist(MonthlyReportReqDTO monthlyReportReqDTO);
+
+    /**
+     * 新增月报
+     * @param monthlyReportReqDTO 月报参数
+     */
+    void addMonthly(MonthlyReportReqDTO monthlyReportReqDTO);
+
+    /**
+     * 编辑月报
+     * @param monthlyReportReqDTO 月报参数
+     */
+    void modifyMonthly(MonthlyReportReqDTO monthlyReportReqDTO);
+
+    /**
+     * 删除月报
+     * @param ids ids
+     * @param userId 用户id
+     */
+    void deleteMonthly(List<String> ids, String userId);
 }

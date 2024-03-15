@@ -79,7 +79,7 @@
     </select>
 
     <insert id="addRecord">
-        INSERT INTO VEHICLE_TRAIN_RECORD
+        INSERT INTO VEHICLE_DISPATCH_RECORD
         (ID,
         <if test="orderNum!=null">
             ORDER_NUM,
