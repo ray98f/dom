@@ -36,7 +36,7 @@
         AND DEL_FLAG='0' AND rownum=1
     </select>
 
-    <insert id="add" parameterType="com.wzmtr.dom.dto.req.vehicle.PersonRecordReqDTO">
+    <insert id="add">
         INSERT INTO VEHICLE_PERSON_RECORD
         (ID,
         <if test="dispatchXtDay!=null and dispatchXtDay!=''">

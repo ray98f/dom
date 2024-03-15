@@ -56,10 +56,10 @@
         <if test="dataType!=null and dataType!=''">
             DATA_TYPE,
         </if>
-        <if test="startDate!=null and startDate!=''">
+        <if test="startDate!=null">
             START_DATE,
         </if>
-        <if test="endDate!=null and endDate!=''">
+        <if test="endDate!=null">
             END_DATE,
         </if>
         CREATE_BY, CREATE_DATE, BELONG_DATE)
@@ -70,10 +70,10 @@
         <if test="dataType!=null and dataType!=''">
             #{dataType},
         </if>
-        <if test="startDate!=null and startDate!=''">
+        <if test="startDate!=null">
             #{startDate},
         </if>
-        <if test="endDate!=null and endDate!=''">
+        <if test="endDate!=null">
             #{endDate},
         </if>
         #{createBy}, sysdate, #{belongDate})
