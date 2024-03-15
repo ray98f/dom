@@ -61,6 +61,21 @@ public interface IndicatorMapper {
     int modify(IndicatorReqDTO indicatorReqDTO);
 
     /**
+     * 日报-更新统计数据
+     * @param startDate 入参数
+     * @param endDate 入参数
+     */
+    void modifyDayCount(String startDate,String endDate);
+
+    /**
+     * 周报/月报-更新统计数据
+     * @param id 入参数
+     * @param startDate 入参数
+     * @param endDate 入参数
+     */
+    void modifyCount(String id,String startDate,String endDate);
+
+    /**
      * 删除
      * @param ids ids
      * @param userId 用户id

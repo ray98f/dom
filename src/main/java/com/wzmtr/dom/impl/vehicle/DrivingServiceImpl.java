@@ -14,6 +14,7 @@ import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
 import com.wzmtr.dom.mapper.vehicle.DrivingMapper;
+import com.wzmtr.dom.mapper.vehicle.IndicatorMapper;
 import com.wzmtr.dom.service.vehicle.DrivingService;
 import com.wzmtr.dom.utils.DateUtils;
 import com.wzmtr.dom.utils.TokenUtils;
@@ -38,6 +39,8 @@ public class DrivingServiceImpl implements DrivingService {
     @Autowired
     private DrivingMapper drivingMapper;
 
+    @Autowired
+    private IndicatorMapper indicatorMapper;
 
     @Override
     public Page<DrivingRecordResDTO> list(String dataType,String startDate,String endDate, PageReqDTO pageReqDTO) {
@@ -140,6 +143,8 @@ public class DrivingServiceImpl implements DrivingService {
 
     @Override
     public void syncData(CurrentLoginUser currentLoginUser,String recordId) {
+        DrivingRecordDetailResDTO  detail = drivingMapper.queryInfoById(recordId);
+
         //TODO 行车调度 乘务系统 数据接口
         SyncOdmDepotResDTO syncOdmDepotResDTO = syncOdmDepot(recordId);
         // modify depot data
@@ -154,6 +159,10 @@ public class DrivingServiceImpl implements DrivingService {
         countReqDTO.setTrainCount1(0);
         countReqDTO.setTrainCount2(0);
         //TODO
+
+
+        //更新重要指标统计
+        indicatorMapper.modifyDayCount(DateUtil.formatDate(detail.getStartDate()),DateUtil.formatDate(detail.getEndDate()));
     }
 
     @Override

@@ -1,8 +1,6 @@
 package com.wzmtr.dom.impl.vehicle;
 
-import cn.hutool.http.HttpUtil;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
+import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
@@ -19,6 +17,7 @@ import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
 import com.wzmtr.dom.mapper.vehicle.DepotConstructMapper;
+import com.wzmtr.dom.mapper.vehicle.IndicatorMapper;
 import com.wzmtr.dom.service.vehicle.DepotConstructService;
 import com.wzmtr.dom.utils.HttpUtils;
 import com.wzmtr.dom.utils.StringUtils;
@@ -32,6 +31,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +56,8 @@ public class DepotConstructServiceImpl implements DepotConstructService {
     @Autowired
     private DepotConstructMapper depotConstructMapper;
 
+    @Autowired
+    private IndicatorMapper indicatorMapper;
 
     @Override
     public Page<DepotConstructRecordResDTO> list(String depotCode,String dataType, String startDate, String endDate, PageReqDTO pageReqDTO) {
@@ -69,6 +71,7 @@ public class DepotConstructServiceImpl implements DepotConstructService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void add(CurrentLoginUser currentLoginUser, DepotConstructRecordReqDTO depotConstructRecordReqDTO) {
         int existFlag = depotConstructMapper.checkExist(depotConstructRecordReqDTO.getDepotCode(),depotConstructRecordReqDTO.getDataType(),
                 depotConstructRecordReqDTO.getStartDate(),depotConstructRecordReqDTO.getEndDate());
@@ -76,26 +79,17 @@ public class DepotConstructServiceImpl implements DepotConstructService {
             throw new CommonException(ErrorCode.DATA_EXIST);
         }
 
-        switch (depotConstructRecordReqDTO.getDataType()){
-            case CommonConstants.DATA_TYPE_DAILY:
+        // 日报类型
+        if(CommonConstants.DATA_TYPE_DAILY.equals(depotConstructRecordReqDTO.getDataType())){
+            //日报起始和终止日期需相等
+            if(!depotConstructRecordReqDTO.getStartDate().equals(depotConstructRecordReqDTO.getEndDate())){
+                throw new CommonException(ErrorCode.DATE_ERROR);
+            }
 
-                //日报起始和终止日期需相等
-                if(!depotConstructRecordReqDTO.getStartDate().equals(depotConstructRecordReqDTO.getEndDate())){
-                    throw new CommonException(ErrorCode.DATE_ERROR);
-                }
-
-                //日报-数据所属日期
-                depotConstructRecordReqDTO.setDataDate(depotConstructRecordReqDTO.getStartDate());
-                break;
-            case CommonConstants.DATA_TYPE_WEEKLY:
-                // TODO 统计本周数据
-                break;
-            case CommonConstants.DATA_TYPE_MONTHLY:
-                // TODO 统计本月数据
-                break;
-            default:
-                break;
+            //日报-数据所属日期
+            depotConstructRecordReqDTO.setDataDate(depotConstructRecordReqDTO.getStartDate());
         }
+
         depotConstructRecordReqDTO.setCreateBy(currentLoginUser.getPersonId());
         depotConstructRecordReqDTO.setUpdateBy(currentLoginUser.getPersonId());
         depotConstructRecordReqDTO.setId(TokenUtils.getUuId());
@@ -103,6 +97,15 @@ public class DepotConstructServiceImpl implements DepotConstructService {
             depotConstructMapper.add(depotConstructRecordReqDTO);
         }catch (Exception e){
             throw new CommonException(ErrorCode.INSERT_ERROR);
+        }
+
+        //周报/月报类型，需要做数据统计
+        if(CommonConstants.DATA_TYPE_WEEKLY.equals(depotConstructRecordReqDTO.getDataType())
+                || CommonConstants.DATA_TYPE_MONTHLY.equals(depotConstructRecordReqDTO.getDataType())){
+            updateDepotCount(depotConstructRecordReqDTO.getId(),
+                             depotConstructRecordReqDTO.getDepotCode(),
+                             depotConstructRecordReqDTO.getStartDate(),
+                             depotConstructRecordReqDTO.getEndDate());
         }
     }
 
@@ -121,13 +124,34 @@ public class DepotConstructServiceImpl implements DepotConstructService {
 
     @Override
     public void syncData(CurrentLoginUser currentLoginUser, String recordId) {
-        //TODO
+        DepotConstructDetailResDTO resDTO = depotConstructMapper.queryInfoById(recordId);
+        //TODO 调取数据 施工计划统计 行车调度统计
 
+        //TODO TEST
+        DepotConstructRecordReqDTO recordReqDTO = new DepotConstructRecordReqDTO();
+        recordReqDTO.setId(recordId);
+        recordReqDTO.setA1Plan(1);
+        recordReqDTO.setBPlan(2);
+        recordReqDTO.setDaySupPlan(3);
+        recordReqDTO.setTempPlan(4);
+        recordReqDTO.setA1Complete(5);
+        recordReqDTO.setBPlan(6);
+        recordReqDTO.setDaySupComplete(7);
+        recordReqDTO.setTempComplete(8);
+        recordReqDTO.setPlanConstruct(1+2+3+4);
+        recordReqDTO.setRealConstruct(5+6+7+8);
+        recordReqDTO.setPowerSupply(1);
+        recordReqDTO.setShuntCount(2);
+        recordReqDTO.setShuntHook(3);
+        recordReqDTO.setShuntTime(20);
+        //TODO 更新日统计数据 重要指标
+        depotConstructMapper.modifyCount(recordReqDTO);
+        indicatorMapper.modifyDayCount(DateUtil.formatDate(resDTO.getStartDate()),DateUtil.formatDate(resDTO.getEndDate()));
     }
 
     @Override
     public Page<DepotConstructPlanResDTO> getCsmConstructPlan(String depotCode, String startDate, String endDate, PageReqDTO pageReqDTO) {
-        //TODO
+        //TODO 调取施工调度计划
         //JSONObject.toJSONString(convertDto(req));
         String reqData = "{}";
         JSONObject res = JSONObject.parseObject(HttpUtils.doPost(constructPlanApi, reqData, null), JSONObject.class);
@@ -203,10 +227,10 @@ public class DepotConstructServiceImpl implements DepotConstructService {
     }
 
     /**
-     * 周报、日报更新车场数据
+     * 周报、月报更新车场数据
      */
     private void updateDepotCount(String id,String depotCode,String startDate,String endDate){
-        //modifyDepotCount(id,depotCode,startDate,endDate);
+        depotConstructMapper.modifyDepotCount(id,depotCode,startDate,endDate);
     }
 
     /**

@@ -54,22 +54,16 @@ public class IndicatorServiceImpl implements IndicatorService {
             throw new CommonException(ErrorCode.DATA_EXIST);
         }
 
-        switch (indicatorReqDTO.getDataType()){
-            case CommonConstants.DATA_TYPE_DAILY:
-                if(!indicatorReqDTO.getStartDate().equals(indicatorReqDTO.getEndDate())){
-                    throw new CommonException(ErrorCode.DATE_ERROR);
-                }
-                indicatorReqDTO.setDataDate(indicatorReqDTO.getStartDate());
-                break;
-            case CommonConstants.DATA_TYPE_WEEKLY:
-                // TODO 统计本周数据:接发车完成、施工完成
-                break;
-            case CommonConstants.DATA_TYPE_MONTHLY:
-                // TODO 统计本月数据:接发车完成、施工完成
-                break;
-            default:
-                break;
+        //日报类型
+        if(CommonConstants.DATA_TYPE_DAILY.equals(indicatorReqDTO.getDataType())){
+
+            //日期校验
+            if(!indicatorReqDTO.getStartDate().equals(indicatorReqDTO.getEndDate())){
+                throw new CommonException(ErrorCode.DATE_ERROR);
+            }
+            indicatorReqDTO.setDataDate(indicatorReqDTO.getStartDate());
         }
+
         indicatorReqDTO.setCreateBy(currentLoginUser.getPersonId());
         indicatorReqDTO.setUpdateBy(currentLoginUser.getPersonId());
         indicatorReqDTO.setId(TokenUtils.getUuId());
@@ -77,6 +71,12 @@ public class IndicatorServiceImpl implements IndicatorService {
             indicatorMapper.add(indicatorReqDTO);
         }catch (Exception e){
             throw new CommonException(ErrorCode.INSERT_ERROR);
+        }
+
+        //周报/月报数据统计
+        if(CommonConstants.DATA_TYPE_WEEKLY.equals(indicatorReqDTO.getDataType())
+                || CommonConstants.DATA_TYPE_MONTHLY.equals(indicatorReqDTO.getDataType())){
+            updateRecordCount(indicatorReqDTO.getId(),indicatorReqDTO.getStartDate(),indicatorReqDTO.getEndDate());
         }
     }
 
@@ -96,13 +96,10 @@ public class IndicatorServiceImpl implements IndicatorService {
         }
     }
 
-    //TODO
-    private void checkDay(IndicatorReqDTO indicatorReqDTO){
-        //只添加今天之前的数据
-   /*     if(!(DateUtils.isValidDateFormat(indicatorReqDTO.getDay(), CommonConstants.DATE_FORMAT) &&
-                DateUtil.compare( new Date(),DateUtil.parseDate(indicatorReqDTO.getDay()),CommonConstants.DATE_FORMAT) > 0) ){
-            throw new CommonException(ErrorCode.DATE_ERROR);
-        }*/
-
+    /**
+     * 周报、月报更新统计数据
+     */
+    private void updateRecordCount(String id,String startDate,String endDate){
+        indicatorMapper.modifyCount(id,startDate,endDate);
     }
 }

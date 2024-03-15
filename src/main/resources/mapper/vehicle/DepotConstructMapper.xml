@@ -224,22 +224,80 @@
         WHERE ID=#{id} and VERSION = #{version}
     </update>
 
+    <update id="modifyCount">
+        UPDATE VEHICLE_CONSTRUCT_RECORD SET
+        <if test="planConstruct != null">
+            PLAN_CONSTRUCT=#{planConstruct},
+        </if>
+        <if test="realConstruct != null">
+            REAL_CONSTRUCT=#{realConstruct},
+        </if>
+        <if test="a1Plan != null">
+            A1_PLAN=#{a1Plan},
+        </if>
+        <if test="bPlan != null">
+            B_PLAN=#{bPlan},
+        </if>
+        <if test="daySupPlan != null">
+            DAY_SUP_PLAN=#{daySupPlan},
+        </if>
+        <if test="tempPlan != null">
+            TEMP_PLAN=#{tempPlan},
+        </if>
+        <if test="a1Complete != null">
+            A1_COMPLETE=#{a1Complete},
+        </if>
+        <if test="bComplete != null">
+            B_COMPLETE=#{bComplete},
+        </if>
+        <if test="daySupComplete != null">
+            DAY_SUP_COMPLETE=#{daySupComplete},
+        </if>
+        <if test="tempComplete != null">
+            TEMP_COMPLETE=#{tempComplete},
+        </if>
+        <if test="powerSupply != null">
+            POWER_SUPPLY=#{powerSupply},
+        </if>
+        <if test="shuntCount != null">
+            SHUNT_COUNT=#{shuntCount},
+        </if>
+        <if test="shuntHook != null">
+            SHUNT_HOOK=#{shuntHook},
+        </if>
+        <if test="shuntTime != null">
+            SHUNT_TIME=#{shuntTime},
+        </if>
+        <if test="inOutStorage != null">
+            IN_OUT_STORAGE=#{inOutStorage},
+        </if>
+        WHERE ID=#{id}
+    </update>
+
     <update id="modifyDepotCount">
         UPDATE VEHICLE_CONSTRUCT_RECORD SET
-        (PLAN_DEPARTURE,PLAN_RECEIVE,REAL_DEPARTURE,REAL_RECEIVE,RAILCAR_DEPARTURE,RAILCAR_RECEIVE)
+        (PLAN_CONSTRUCT,REAL_CONSTRUCT,A1_PLAN,B_PLAN,DAY_SUP_PLAN,TEMP_PLAN,A1_COMPLETE,B_COMPLETE,DAY_SUP_COMPLETE,TEMP_COMPLETE,POWER_SUPPLY,SHUNT_COUNT,SHUNT_HOOK,SHUNT_TIME,IN_OUT_STORAGE)
         =
-        (SELECT SUM(PLAN_DEPARTURE) AS PLAN_DEPARTURE,
-        SUM(PLAN_RECEIVE) AS PLAN_RECEIVE,
-        SUM(REAL_DEPARTURE) AS PLAN_RECEIVE,
-        SUM(REAL_RECEIVE) AS PLAN_RECEIVE,
-        SUM(RAILCAR_DEPARTURE) AS PLAN_RECEIVE,
-        SUM(RAILCAR_RECEIVE) AS PLAN_RECEIVE
-        FROM VEHICLE_DRIVING_DEPOT
+        (SELECT SUM(A1_PLAN+B_PLAN+DAY_SUP_PLAN+TEMP_PLAN) AS PLAN_CONSTRUCT,
+        SUM(A1_COMPLETE+B_COMPLETE+DAY_SUP_COMPLETE+TEMP_COMPLETE) AS PLAN_CONSTRUCT,
+        SUM(A1_PLAN),
+        SUM(B_PLAN),
+        SUM(DAY_SUP_PLAN),
+        SUM(A1_COMPLETE),
+        SUM(B_COMPLETE),
+        SUM(DAY_SUP_COMPLETE),
+        SUM(TEMP_COMPLETE),
+        SUM(POWER_SUPPLY),
+        SUM(SHUNT_COUNT),
+        SUM(SHUNT_HOOK),
+        SUM(SHUNT_TIME),
+        SUM(IN_OUT_STORAGE)
+        FROM VEHICLE_CONSTRUCT_RECORD
         WHERE DEL_FLAG='0'
         AND DATA_TYPE = '1'
         AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
-        AND DEPOT_CODE = #{depotCode}
+        AND DEPOT_CODE = #{depotCode})
         WHERE ID=#{id}
     </update>
 

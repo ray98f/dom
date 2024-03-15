@@ -246,6 +246,7 @@
         SUM(RAILCAR_RECEIVE) AS PLAN_RECEIVE
         FROM VEHICLE_DRIVING_DEPOT
         WHERE DEL_FLAG='0'
+        AND DATA_TYPE = '1'
         AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
         AND DEPOT_CODE = #{depotCode}
