@@ -1,7 +1,9 @@
 package com.wzmtr.dom.controller.vehicle;
 
 import com.wzmtr.dom.dto.req.vehicle.DailyReportReqDTO;
+import com.wzmtr.dom.dto.req.vehicle.WeeklyReportReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.DailyReportResDTO;
+import com.wzmtr.dom.dto.res.vehicle.WeeklyReportResDTO;
 import com.wzmtr.dom.entity.BaseIdsEntity;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
@@ -90,6 +92,68 @@ public class ReportController {
     @ApiOperation(value = "删除-日报(单删+批量删除)")
     public DataResponse<T> deleteDaily(@RequestBody BaseIdsEntity baseIdsEntity) {
         reportService.deleteDaily(baseIdsEntity.getIds());
+        return DataResponse.success();
+    }
+
+    /**
+     * 分页查询周报列表
+     * @param startDate 开始时间
+     * @param endDate 结束时间
+     * @param pageReqDTO 分页参数
+     * @return 周报列表
+     */
+    @GetMapping("/weekly/page")
+    @ApiOperation(value = "周报列表(分页)")
+    public PageResponse<WeeklyReportResDTO> pageWeekly(@RequestParam(required = false) String startDate,
+                                                       @RequestParam(required = false) String endDate,
+                                                       @Valid PageReqDTO pageReqDTO) {
+        return PageResponse.of(reportService.pageWeekly(startDate, endDate, pageReqDTO));
+    }
+
+    /**
+     * 获取周报详情
+     * @param id id
+     * @return 周报详情
+     */
+    @GetMapping("/weekly/detail")
+    @ApiOperation(value = "周报详情")
+    public DataResponse<WeeklyReportResDTO> detailWeekly(@RequestParam String id) {
+        return DataResponse.of(reportService.detailWeekly(id));
+    }
+
+    /**
+     * 新增周报
+     * @param weeklyReportReqDTO 周报参数
+     * @return 成功
+     */
+    @PostMapping("/weekly/add")
+    @ApiOperation(value = "新增-周报")
+    public DataResponse<T> addWeekly(@RequestBody WeeklyReportReqDTO weeklyReportReqDTO) {
+        reportService.addWeekly(weeklyReportReqDTO);
+        return DataResponse.success();
+    }
+
+    /**
+     * 编辑周报
+     * @param weeklyReportReqDTO 周报参数
+     * @return 成功
+     */
+    @PostMapping("/weekly/modify")
+    @ApiOperation(value = "编辑-周报")
+    public DataResponse<T> modifyWeekly(@RequestBody WeeklyReportReqDTO weeklyReportReqDTO) {
+        reportService.modifyWeekly(weeklyReportReqDTO);
+        return DataResponse.success();
+    }
+
+    /**
+     * 删除周报
+     * @param baseIdsEntity ids
+     * @return 成功
+     */
+    @PostMapping("/weekly/delete")
+    @ApiOperation(value = "删除-周报(单删+批量删除)")
+    public DataResponse<T> deleteWeekly(@RequestBody BaseIdsEntity baseIdsEntity) {
+        reportService.deleteWeekly(baseIdsEntity.getIds());
         return DataResponse.success();
     }
 }
