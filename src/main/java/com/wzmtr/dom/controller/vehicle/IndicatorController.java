@@ -12,6 +12,7 @@ import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.entity.response.PageResponse;
 import com.wzmtr.dom.service.vehicle.IndicatorService;
+import com.wzmtr.dom.utils.TokenUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.poi.ss.formula.functions.T;
@@ -41,16 +42,20 @@ public class IndicatorController {
     private IndicatorService indicatorService;
 
     public static void main(String[] args){
+        int a=101;
+        int b=10000;
+        Double c = new Double(Math.round(a*10000/b)/10000.0);
+        System.out.println(c);
         /*CurrentLoginUser user = new CurrentLoginUser("admin", "admin", "系统管理员", "A","","", "A02","","","","","","");
         String jwtToken = TokenUtils.createSimpleToken(user);
-        System.out.println(jwtToken);*/
+        System.out.println(jwtToken);
 
         // 获取前一天的日期
         java.util.Date yesterday = DateUtil.yesterday();
         // 打印结果
         System.out.println("昨天的日期是：" + DateUtil.formatDate( DateUtil.yesterday()));
 
-        System.out.println(DateUtil.formatDate(DateUtil.offsetDay(DateUtil.parseDate("2024-03-11"), 1)));
+        System.out.println(DateUtil.formatDate(DateUtil.offsetDay(DateUtil.parseDate("2024-03-11"), 1)));*/
 
     }
 

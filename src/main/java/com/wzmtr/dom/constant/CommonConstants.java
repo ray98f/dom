@@ -91,6 +91,8 @@ public class CommonConstants {
     public static final int TEN = 10;
     public static final int TWENTY = 20;
     public static final int THIRTY = 30;
+    public static final int TEN_THOUSAND = 10000;
+    public static final double TEN_THOUSAND_DOUBLE = 10000.0;
 
     /**
      * 流程相关

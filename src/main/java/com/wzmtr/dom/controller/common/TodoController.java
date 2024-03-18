@@ -1,4 +1,4 @@
-package com.wzmtr.dom.controller.vehicle;
+package com.wzmtr.dom.controller.common;
 
 /**
  *  任务督办
