@@ -1,8 +1,10 @@
 package com.wzmtr.dom.controller.vehicle;
 
 import com.wzmtr.dom.dto.req.vehicle.DailyReportReqDTO;
+import com.wzmtr.dom.dto.req.vehicle.MonthlyReportReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.WeeklyReportReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.DailyReportResDTO;
+import com.wzmtr.dom.dto.res.vehicle.MonthlyReportResDTO;
 import com.wzmtr.dom.dto.res.vehicle.WeeklyReportResDTO;
 import com.wzmtr.dom.entity.BaseIdsEntity;
 import com.wzmtr.dom.entity.PageReqDTO;
@@ -57,6 +59,17 @@ public class ReportController {
     @ApiOperation(value = "日报详情")
     public DataResponse<DailyReportResDTO> detailDaily(@RequestParam String id) {
         return DataResponse.of(reportService.detailDaily(id));
+    }
+
+    /**
+     * 获取乘务系统当天人员
+     * @param date 日期
+     * @return 乘务系统当天人员
+     */
+    @GetMapping("/daily/user/ocm")
+    @ApiOperation(value = "获取乘务系统当天人员")
+    public DataResponse<DailyReportResDTO> ocmUserDaily(@RequestParam String date) {
+        return DataResponse.of(reportService.ocmUserDaily(date));
     }
 
     /**
@@ -154,6 +167,68 @@ public class ReportController {
     @ApiOperation(value = "删除-周报(单删+批量删除)")
     public DataResponse<T> deleteWeekly(@RequestBody BaseIdsEntity baseIdsEntity) {
         reportService.deleteWeekly(baseIdsEntity.getIds());
+        return DataResponse.success();
+    }
+
+    /**
+     * 分页查询月报列表
+     * @param startDate 开始时间
+     * @param endDate 结束时间
+     * @param pageReqDTO 分页参数
+     * @return 月报列表
+     */
+    @GetMapping("/monthly/page")
+    @ApiOperation(value = "月报列表(分页)")
+    public PageResponse<MonthlyReportResDTO> pageMonthly(@RequestParam(required = false) String startDate,
+                                                         @RequestParam(required = false) String endDate,
+                                                         @Valid PageReqDTO pageReqDTO) {
+        return PageResponse.of(reportService.pageMonthly(startDate, endDate, pageReqDTO));
+    }
+
+    /**
+     * 获取月报详情
+     * @param id id
+     * @return 周报详情
+     */
+    @GetMapping("/monthly/detail")
+    @ApiOperation(value = "月报详情")
+    public DataResponse<MonthlyReportResDTO> detailMonthly(@RequestParam String id) {
+        return DataResponse.of(reportService.detailMonthly(id));
+    }
+
+    /**
+     * 新增月报
+     * @param monthlyReportReqDTO 周报参数
+     * @return 成功
+     */
+    @PostMapping("/monthly/add")
+    @ApiOperation(value = "新增-月报")
+    public DataResponse<T> addMonthly(@RequestBody MonthlyReportReqDTO monthlyReportReqDTO) {
+        reportService.addMonthly(monthlyReportReqDTO);
+        return DataResponse.success();
+    }
+
+    /**
+     * 编辑月报
+     * @param monthlyReportReqDTO 月报参数
+     * @return 成功
+     */
+    @PostMapping("/monthly/modify")
+    @ApiOperation(value = "编辑-月报")
+    public DataResponse<T> modifyMonthly(@RequestBody MonthlyReportReqDTO monthlyReportReqDTO) {
+        reportService.modifyMonthly(monthlyReportReqDTO);
+        return DataResponse.success();
+    }
+
+    /**
+     * 删除月报
+     * @param baseIdsEntity ids
+     * @return 成功
+     */
+    @PostMapping("/monthly/delete")
+    @ApiOperation(value = "删除-月报(单删+批量删除)")
+    public DataResponse<T> deleteMonthly(@RequestBody BaseIdsEntity baseIdsEntity) {
+        reportService.deleteMonthly(baseIdsEntity.getIds());
         return DataResponse.success();
     }
 }
