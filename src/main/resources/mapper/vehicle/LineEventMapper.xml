@@ -94,7 +94,7 @@
         to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
         #{createBy}, sysdate,#{createBy}, sysdate)
     </insert>
-
+    
     <update id="modifyCount">
         UPDATE VEHICLE_LINE_EVENT_RECORD SET
         TYPE1_COUNT=(SELECT COUNT(1) FROM VEHICLE_LINE_EVENT_INFO WHERE DEL_FLAG='0' AND EVENT_TYPE = '1'  AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
