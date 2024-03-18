@@ -8,6 +8,16 @@ package com.wzmtr.dom.constant;
  */
 public class CommonConstants {
 
+    public static String API_RES_DATA = "data";
+    public static String API_RES_LIST = "list";
+
+    /**
+     * ADD UPDATE DELETE
+     */
+    public static String ADD = "ADD";
+    public static String UPDATE = "UPDATE";
+    public static String DELETE = "DELETE";
+
     /**
      * id
      */
@@ -81,6 +91,8 @@ public class CommonConstants {
     public static final int TEN = 10;
     public static final int TWENTY = 20;
     public static final int THIRTY = 30;
+    public static final int TEN_THOUSAND = 10000;
+    public static final double TEN_THOUSAND_DOUBLE = 10000.0;
 
     /**
      * 流程相关
@@ -93,5 +105,54 @@ public class CommonConstants {
      */
     public static final String LINE_CODE_ONE = "01";
     public static final String LINE_CODE_TWO = "02";
+
+    /**
+     * 下塘停车场
+     */
+    public static final String  STATION_280 = "280";
+
+    /**
+     * 汀田车辆段
+     */
+    public static final String  STATION_281 = "281";
+
+    /**
+     * 汀田车辆段
+     */
+    public static final String[]  STATION_280_281 = {"280","281"};
+
+    /**
+     * 指定的日期格式
+     */
+    public static final String  DATE_FORMAT = "yyyy-MM-dd";
+
+    /**
+     * 指定数据获取时间
+     */
+    public static final String  DEFAULT_TIME = " 05:00:00";
+
+    /**
+     * 类型:日报
+     */
+    public static final String  DATA_TYPE_DAILY = "1";
+
+    /**
+     * 类型:周报
+     */
+    public static final String  DATA_TYPE_WEEKLY = "2";
+
+    /**
+     * 类型:月报
+     */
+    public static final String  DATA_TYPE_MONTHLY = "3";
+
+    /**
+     * 事件类型
+     */
+    public static final String  EVENT_TYPE_1 = "1";
+    public static final String  EVENT_TYPE_2 = "2";
+    public static final String  EVENT_TYPE_3 = "3";
+    public static final String  EVENT_TYPE_4 = "4";
+    public static final String  EVENT_TYPE_5 = "5";
 
 }

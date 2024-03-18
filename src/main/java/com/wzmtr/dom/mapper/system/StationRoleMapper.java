@@ -30,7 +30,7 @@ public interface StationRoleMapper {
      * @param id id
      * @return 审核站权限详情
      */
-    StationRoleResDTO detail(Integer id);
+    StationRoleResDTO detail(String id);
 
     /**
      * 新增审核站权限

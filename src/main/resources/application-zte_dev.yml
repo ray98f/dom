@@ -83,5 +83,15 @@ minio:
   accessKey: miniominio
   secretKey: miniominio
 
+csm:
+  host: http://192.168.30.140:8005/
+
+open-api:
+  csm:
+    constructPlan: ${csm.host}/csm/plan/list
+  acc:
+    api-app-key: "EvbhN1NZFmsuFM0j1T3Fi3tKQAxpd52r"
+    person-count: "http://dxp.wzmtr.com:9080/v2/ACC/ACC13"
+
 pro:
   name: dom

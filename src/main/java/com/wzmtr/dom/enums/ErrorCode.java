@@ -117,6 +117,7 @@ public enum ErrorCode {
     EXAMINE_NOT_DONE(32000048, "examine.not.done"),
     REJECT_ERROR(32000049, "reject.error"),
     NOT_REVIEWER(32000051, "not.reviewer"),
+    DATE_ERROR(32000052, "date.format.error"),
     /**
      * 导出失败
      */

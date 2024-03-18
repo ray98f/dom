@@ -20,12 +20,6 @@ import java.util.Date;
 public class DailyStatisticsReqDTO extends BaseEntity {
 
     /**
-     * id
-     */
-    @ApiModelProperty(value = "id")
-    private String id;
-
-    /**
      * 开始时间
      */
     @ApiModelProperty(value = "开始时间")

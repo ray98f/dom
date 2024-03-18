@@ -30,7 +30,7 @@ public interface DailyStatisticsMapper {
      * @param id id
      * @return 日报统计参数设置详情
      */
-    DailyStatisticsResDTO detail(Integer id);
+    DailyStatisticsResDTO detail(String id);
 
     /**
      * 新增日报统计参数设置

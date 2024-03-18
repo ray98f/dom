@@ -49,7 +49,7 @@ public class DailyStatisticsController {
      */
     @GetMapping("/detail")
     @ApiOperation(value = "日报统计参数设置详情")
-    public DataResponse<DailyStatisticsResDTO> detail(@RequestParam("id") Integer id) {
+    public DataResponse<DailyStatisticsResDTO> detail(@RequestParam String id) {
         return DataResponse.of(dailyStatisticsService.detail(id));
     }
 
