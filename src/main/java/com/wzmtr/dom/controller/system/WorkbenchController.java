@@ -1,5 +1,6 @@
 package com.wzmtr.dom.controller.system;
 
+import com.wzmtr.dom.dto.req.system.TodoReqDTO;
 import com.wzmtr.dom.dto.res.system.TodoResDTO;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
@@ -7,12 +8,10 @@ import com.wzmtr.dom.entity.response.PageResponse;
 import com.wzmtr.dom.service.system.WorkbenchService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -33,13 +32,14 @@ public class WorkbenchController {
 
     /**
      * 分页查询工作台任务督办列表
+     * @param type 类型 1待办,2待阅,3已办,4已阅
      * @param pageReqDTO 分页参数
      * @return 工作台任务督办列表
      */
     @GetMapping("/todo/page")
     @ApiOperation(value = "工作台任务督办列表(分页)")
-    public PageResponse<TodoResDTO> todoPage(@Valid PageReqDTO pageReqDTO) {
-        return PageResponse.of(workbenchService.todoPage(pageReqDTO));
+    public PageResponse<TodoResDTO> todoPage(@RequestParam String type, @Valid PageReqDTO pageReqDTO) {
+        return PageResponse.of(workbenchService.todoPage(type, pageReqDTO));
     }
 
     /**
@@ -51,5 +51,17 @@ public class WorkbenchController {
     @ApiOperation(value = "工作台任务督办详情")
     public DataResponse<TodoResDTO> todoDetail(@RequestParam String id) {
         return DataResponse.of(workbenchService.todoDetail(id));
+    }
+
+    /**
+     * 工作台任务督办审批
+     * @param todoReqDTO 督办审批参数
+     * @return 工作台任务督办审批
+     */
+    @PostMapping("/todo/approval")
+    @ApiOperation(value = "工作台任务督办审批")
+    public DataResponse<T> todoApproval(@RequestBody TodoReqDTO todoReqDTO) {
+        workbenchService.todoApproval(todoReqDTO);
+        return DataResponse.success();
     }
 }

@@ -2,14 +2,18 @@ package com.wzmtr.dom.impl.system;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.page.PageMethod;
-import com.wzmtr.dom.dto.res.system.DailyStatisticsResDTO;
+import com.wzmtr.dom.dto.req.system.TodoReqDTO;
 import com.wzmtr.dom.dto.res.system.TodoResDTO;
 import com.wzmtr.dom.entity.PageReqDTO;
+import com.wzmtr.dom.enums.ErrorCode;
+import com.wzmtr.dom.exception.CommonException;
 import com.wzmtr.dom.mapper.system.WorkbenchMapper;
 import com.wzmtr.dom.service.system.WorkbenchService;
 import com.wzmtr.dom.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 /**
  * 系统-工作台
@@ -24,14 +28,26 @@ public class WorkbenchServiceImpl implements WorkbenchService {
     private WorkbenchMapper workbenchMapper;
 
     @Override
-    public Page<TodoResDTO> todoPage(PageReqDTO pageReqDTO) {
+    public Page<TodoResDTO> todoPage(String type, PageReqDTO pageReqDTO) {
         PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return workbenchMapper.todoPage(pageReqDTO.of(), TokenUtils.getCurrentPersonId());
+        return workbenchMapper.todoPage(pageReqDTO.of(), type, TokenUtils.getCurrentPersonId());
     }
 
     @Override
     public TodoResDTO todoDetail(String id) {
         return workbenchMapper.todoDetail(id);
+    }
+
+    @Override
+    public void todoApproval(TodoReqDTO todoReqDTO) {
+        TodoResDTO res = workbenchMapper.todoDetail(todoReqDTO.getId());
+        if (Objects.isNull(res)) {
+            throw new CommonException(ErrorCode.RESOURCE_NOT_EXIST);
+        }
+        todoReqDTO.setUpdateBy(TokenUtils.getCurrentPersonId());
+        workbenchMapper.todoApproval(todoReqDTO);
+        // todo 根据流程配置进行下一步审核
+
     }
 
 }
