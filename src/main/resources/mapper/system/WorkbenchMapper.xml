@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzmtr.dom.mapper.system.WorkbenchMapper">
+
+    <select id="todoPage" resultType="com.wzmtr.dom.dto.res.system.TodoResDTO">
+        SELECT ah.ID, ah.PROCESS_KEY, ah.PARENT_PROCESS_KEY, ah.TODO_TYPE, ah.STATUS, ah.DATA_TYPE,
+        ah.REPORT_ID, ah.REPORT_TABLE, ah.APPROVAL_USER, ah.APPROVAL_RESULT, ah.APPROVAL_STATUS,
+        ah.VERSION, ah.CREATE_DATE, u.NAME AS CREATE_BY, ah.CURRENT_NODE
+        FROM DOM_APPROVAL_HISTORY ah
+        LEFT JOIN SYS_USER u on u.ID=ah.CREATE_BY
+        WHERE ah.DEL_FLAG='0' and APPROVAL_USER=#{userId}
+        ORDER BY ah.CREATE_DATE desc
+    </select>
+
+    <select id="todoDetail" resultType="com.wzmtr.dom.dto.res.system.TodoResDTO">
+        SELECT ah.ID, ah.PROCESS_KEY, ah.PARENT_PROCESS_KEY, ah.TODO_TYPE, ah.STATUS, ah.DATA_TYPE,
+        ah.REPORT_ID, ah.REPORT_TABLE, ah.APPROVAL_USER, ah.APPROVAL_RESULT, ah.APPROVAL_STATUS,
+        ah.VERSION, ah.CREATE_DATE, u.NAME AS CREATE_BY, ah.CURRENT_NODE
+        FROM DOM_APPROVAL_HISTORY ah
+        LEFT JOIN SYS_USER u on u.ID=ah.CREATE_BY
+        WHERE ah.DEL_FLAG='0' AND ah.ID=#{id}
+    </select>
+
+</mapper>
