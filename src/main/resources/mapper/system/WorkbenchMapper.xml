@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzmtr.dom.mapper.system.WorkbenchMapper">
+
+    <select id="todoPage" resultType="com.wzmtr.dom.dto.res.system.TodoResDTO">
+        SELECT ah.ID, ah.PROCESS_KEY, ah.PARENT_PROCESS_KEY, ah.TODO_TYPE, ah.STATUS, ah.DATA_TYPE,
+        ah.REPORT_ID, ah.REPORT_TABLE, ah.APPROVAL_USER, ah.APPROVAL_RESULT, ah.APPROVAL_STATUS,
+        ah.VERSION, ah.CREATE_DATE, u.NAME AS CREATE_BY, ah.CURRENT_NODE
+        FROM DOM_APPROVAL_HISTORY ah
+        LEFT JOIN SYS_USER u on u.ID=ah.CREATE_BY
+        WHERE ah.DEL_FLAG='0' and ah.APPROVAL_USER=#{userId}
+        <if test="type=='1'.toString()">
+            and ah.TODO_TYPE='1' and ah.STATUS='0'
+        </if>
+        <if test="type=='2'.toString()">
+            and ah.TODO_TYPE='2' and ah.STATUS='0'
+        </if>
+        <if test="type=='3'.toString()">
+            and ah.TODO_TYPE='1' and ah.STATUS='1'
+        </if>
+        <if test="type=='4'.toString()">
+            and ah.TODO_TYPE='2' and ah.STATUS='1'
+        </if>
+        ORDER BY ah.CREATE_DATE desc
+    </select>
+
+    <select id="todoDetail" resultType="com.wzmtr.dom.dto.res.system.TodoResDTO">
+        SELECT ah.ID, ah.PROCESS_KEY, ah.PARENT_PROCESS_KEY, ah.TODO_TYPE, ah.STATUS, ah.DATA_TYPE,
+        ah.REPORT_ID, ah.REPORT_TABLE, ah.APPROVAL_USER, ah.APPROVAL_RESULT, ah.APPROVAL_STATUS,
+        ah.VERSION, ah.CREATE_DATE, u.NAME AS CREATE_BY, ah.CURRENT_NODE
+        FROM DOM_APPROVAL_HISTORY ah
+        LEFT JOIN SYS_USER u on u.ID=ah.CREATE_BY
+        WHERE ah.DEL_FLAG='0' AND ah.ID=#{id}
+    </select>
+
+    <update id="todoApproval">
+        UPDATE DOM_APPROVAL_HISTORY SET
+        <if test="approvalResult!=null">
+            APPROVAL_RESULT=#{approvalResult},
+        </if>
+        <if test="approvalStatus!=null">
+            APPROVAL_STATUS=#{approvalStatus},
+        </if>
+        STATUS='1', UPDATE_BY=#{updateBy}, UPDATE_DATE=sysdate
+        where ID=#{id}
+    </update>
+
+</mapper>
