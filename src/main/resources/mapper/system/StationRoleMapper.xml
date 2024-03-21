@@ -17,6 +17,14 @@
         WHERE sr.DEL_FLAG='0' AND sr.ID=#{id}
     </select>
 
+    <select id="getCurrentStation" resultType="com.wzmtr.dom.dto.res.system.StationRoleResDTO">
+        SELECT *
+        FROM SYS_STATION_ROLE
+        WHERE DEL_FLAG='0'
+        AND sysdate >= START_TIME
+        AND END_DATE >= sysdate
+    </select>
+
     <insert id="add">
         INSERT INTO SYS_STATION_ROLE (ID, STATION_CODE, STATION_NAME,
         START_TIME, END_TIME, CREATE_BY, CREATE_DATE)

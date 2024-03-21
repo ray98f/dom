@@ -6,32 +6,45 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 日数据请求类
- * @author  zhangxin
+ * description:
+ *
+ * @author zhangxin
  * @version 1.0
- * @date 2024/3/8 16:25
+ * @date 2024/3/18 15:11
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class PassengerInfoReqDTO extends BaseEntity {
+public class ProductionApprovalReqDTO extends BaseEntity {
 
     /**
-     * 记录ID
+     * 安全生产记录ID
      * */
-    @ApiModelProperty(value = "记录ID")
+    @ApiModelProperty(value = "安全生产记录ID")
     private String recordId;
 
     /**
-     * S2出站量
+     * 审核操作:1驳回,2通过
      * */
-    @ApiModelProperty(value = "站点编码")
-    private String stationCode;
+    @ApiModelProperty(value = "审核操作:1驳回,2通过")
+    private String approvalStatus;
 
     /**
-     * 车站客流量
+     * 已提交站点
      * */
-    @ApiModelProperty(value = "车站客流量")
-    private Double passenger;
+    @ApiModelProperty(value = "已提交站点")
+    private String submitStation;
+
+    /**
+     * 标题
+     * */
+    @ApiModelProperty(value = "标题")
+    private String title;
+
+    /**
+     * 审核站
+     * */
+    @ApiModelProperty(value = "审核站")
+    private String approvalStation;
 
     /**
      * 数据类型:1日报 2月报 3周报
@@ -62,5 +75,4 @@ public class PassengerInfoReqDTO extends BaseEntity {
      * */
     @ApiModelProperty(value = "版本号")
     private String version;
-
 }

@@ -5,6 +5,7 @@ import com.wzmtr.dom.dto.req.traffic.PassengerInfoReqDTO;
 import com.wzmtr.dom.dto.req.traffic.PassengerRecordReqDTO;
 import com.wzmtr.dom.dto.res.traffic.PassengerDetailResDTO;
 import com.wzmtr.dom.dto.res.traffic.PassengerInfoResDTO;
+import com.wzmtr.dom.dto.res.traffic.PassengerResDTO;
 import com.wzmtr.dom.dto.res.vehicle.IndicatorResDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -30,7 +31,7 @@ public interface PassengerMapper {
      * @param endDate 查询参数
      * @return 列表
      */
-    Page<IndicatorResDTO> list(Page<IndicatorResDTO> page,String dataType,String startDate,String endDate);
+    Page<PassengerResDTO> list(Page<PassengerResDTO> page, String dataType, String startDate, String endDate);
 
     /**
      * 校验数据是否存在

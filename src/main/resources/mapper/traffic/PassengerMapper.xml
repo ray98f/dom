@@ -7,10 +7,10 @@
         FROM TRAFFIC_PASSENGER_RECORD
         WHERE DEL_FLAG='0'
         AND DATA_TYPE = #{dataType}
-        <if test="startDate != null">
+        <if test="startDate != null and startDate!=''">
             AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
-        <if test="endDate != null">
+        <if test="endDate != null and endDate!=''">
             AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
         </if>
         ORDER BY CREATE_DATE desc
@@ -64,6 +64,9 @@
         <if test="wiringMonthPassenger != null">
             WIRING_MONTH_PASSENGER=#{wiringMonthPassenger},
         </if>
+        <if test="wiringYearPassenger != null">
+            WIRING_YEAR_PASSENGER=#{wiringYearPassenger},
+        </if>
         <if test="transferCount != null">
             TRANSFER_COUNT=#{transferCount},
         </if>
@@ -111,7 +114,10 @@
         SELECT t1.ID,t1.RECORD_ID,t1.STATION_CODE,t1.PASSENGER,VERSION,t2.STATION_NAME
         FROM TRAFFIC_PASSENGER_INFO t1
         LEFT JOIN SYS_STATION t2 on t1.STATION_CODE = t2.STATION_CODE
-        WHERE ID=#{id} AND DEL_FLAG = '0'
+        WHERE  DEL_FLAG = '0'
+        AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        ORDER BY t1.PASSENGER DESC
     </select>
 
     <insert id="createStationPassenger">

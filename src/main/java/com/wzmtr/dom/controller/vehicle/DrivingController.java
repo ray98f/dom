@@ -45,8 +45,8 @@ public class DrivingController {
     @GetMapping("/list")
     @ApiOperation(value = "行车情况-列表")
     public PageResponse<DrivingRecordResDTO> page(@RequestParam String dataType,
-                                                  @RequestParam String startDate,
-                                                  @RequestParam String endDate,
+                                                  @RequestParam(required = false) String startDate,
+                                                  @RequestParam(required = false) String endDate,
                                                   @Valid PageReqDTO pageReqDTO) {
         return PageResponse.of(drivingService.list(dataType,startDate,endDate,pageReqDTO));
     }

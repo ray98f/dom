@@ -46,8 +46,8 @@ public class PassengerController {
     @GetMapping("/list")
     @ApiOperation(value = "客流总体情况-列表")
     public PageResponse<PassengerResDTO> page(@RequestParam String dataType,
-                                              @RequestParam String startDate,
-                                              @RequestParam String endDate,
+                                              @RequestParam(required = false) String startDate,
+                                              @RequestParam(required = false) String endDate,
                                               @Valid PageReqDTO pageReqDTO) {
         return PageResponse.of(trafficService.list(dataType,startDate,endDate,pageReqDTO));
     }

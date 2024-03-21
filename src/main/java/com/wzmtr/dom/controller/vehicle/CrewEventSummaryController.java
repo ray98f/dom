@@ -47,9 +47,9 @@ public class CrewEventSummaryController {
      */
     @GetMapping("/list")
     @ApiOperation(value = "乘务中心行车事件总结-列表")
-    public PageResponse<CrewEventSummaryResDTO> page(@RequestParam  String dataType,
-                                              @RequestParam String startDate,
-                                              @RequestParam String endDate,
+    public PageResponse<CrewEventSummaryResDTO> list(@RequestParam  String dataType,
+                                              @RequestParam(required = false) String startDate,
+                                              @RequestParam(required = false) String endDate,
                                               @Valid PageReqDTO pageReqDTO) {
         return PageResponse.of(crewEventService.list(dataType,startDate,endDate,pageReqDTO));
     }
@@ -102,7 +102,7 @@ public class CrewEventSummaryController {
      */
     @GetMapping("/eventList")
     @ApiOperation(value = "正线/车场事件信息-列表")
-    public PageResponse<CrewEventInfoResDTO> page(@RequestParam String startDate,
+    public PageResponse<CrewEventInfoResDTO> eventList(@RequestParam String startDate,
                                                   @RequestParam String endDate,
                                                   @Valid PageReqDTO pageReqDTO) {
         return PageResponse.of(crewEventService.eventList(startDate,endDate,pageReqDTO));

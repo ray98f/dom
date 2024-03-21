@@ -48,8 +48,8 @@ public class SecurityController {
     @GetMapping("/list")
     @ApiOperation(value = "安全运营-列表")
     public PageResponse<SecurityResDTO> page(@RequestParam String dataType,
-                                             @RequestParam String startDate,
-                                             @RequestParam String endDate,
+                                             @RequestParam(required = false) String startDate,
+                                             @RequestParam(required = false) String endDate,
                                              @Valid PageReqDTO pageReqDTO) {
         return PageResponse.of(securityService.list(dataType,startDate,endDate,pageReqDTO));
     }

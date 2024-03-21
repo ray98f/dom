@@ -35,5 +35,10 @@ public class CurrentLoginUser implements Serializable {
 
     private String names;
 
+    /**
+     * 所属车站编码
+     * */
+    private String stationCode;
+
     public CurrentLoginUser() {}
 }

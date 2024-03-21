@@ -1,37 +1,36 @@
 package com.wzmtr.dom.dto.req.traffic;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wzmtr.dom.entity.BaseEntity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
 
 /**
- * 日数据请求类
- * @author  zhangxin
+ * description:
+ *
+ * @author zhangxin
  * @version 1.0
- * @date 2024/3/8 16:25
+ * @date 2024/3/18 15:11
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class PassengerInfoReqDTO extends BaseEntity {
+public class ProductionRecordReqDTO extends BaseEntity {
 
     /**
-     * 记录ID
+     * 车站编码
      * */
-    @ApiModelProperty(value = "记录ID")
-    private String recordId;
-
-    /**
-     * S2出站量
-     * */
-    @ApiModelProperty(value = "站点编码")
+    @ApiModelProperty(value = "车站编码")
     private String stationCode;
 
     /**
-     * 车站客流量
+     * 状态
      * */
-    @ApiModelProperty(value = "车站客流量")
-    private Double passenger;
+    @ApiModelProperty(value = "状态")
+    private String status;
 
     /**
      * 数据类型:1日报 2月报 3周报
@@ -62,5 +61,4 @@ public class PassengerInfoReqDTO extends BaseEntity {
      * */
     @ApiModelProperty(value = "版本号")
     private String version;
-
 }

@@ -121,7 +121,8 @@ public enum ErrorCode {
     /**
      * 导出失败
      */
-    EXPORT_ERROR(32100053, "export.error");
+    EXPORT_ERROR(32100053, "export.error"),
+    USER_NOT_BIND_STATION(32000054, "user.not.bind.station");
 
     private Integer code;
 

@@ -42,14 +42,14 @@ public class IndicatorController {
     private IndicatorService indicatorService;
 
     public static void main(String[] args){
-        int a=101;
+     /*   int a=101;
         int b=10000;
         Double c = new Double(Math.round(a*10000/b)/10000.0);
-        System.out.println(c);
-        /*CurrentLoginUser user = new CurrentLoginUser("admin", "admin", "系统管理员", "A","","", "A02","","","","","","");
+        System.out.println(c);*/
+        CurrentLoginUser user = new CurrentLoginUser("admin", "admin", "系统管理员", "A","","", "A02","","","","","","","241");
         String jwtToken = TokenUtils.createSimpleToken(user);
         System.out.println(jwtToken);
-
+/*
         // 获取前一天的日期
         java.util.Date yesterday = DateUtil.yesterday();
         // 打印结果
@@ -68,8 +68,8 @@ public class IndicatorController {
     @GetMapping("/list")
     @ApiOperation(value = "重要指标-列表")
     public PageResponse<IndicatorResDTO> page(@RequestParam String dataType,
-                                              @RequestParam String startDate,
-                                              @RequestParam String endDate,
+                                              @RequestParam(required = false) String startDate,
+                                              @RequestParam(required = false) String endDate,
                                                     @Valid PageReqDTO pageReqDTO) {
         return PageResponse.of(indicatorService.list(dataType,startDate,endDate,pageReqDTO));
     }

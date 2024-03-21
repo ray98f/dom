@@ -49,8 +49,8 @@ public class DepotConstructController {
     @ApiOperation(value = "车场施工情况记录-列表")
     public PageResponse<DepotConstructRecordResDTO> page(@RequestParam  String depotCode,
                                                          @RequestParam  String dataType,
-                                                         @RequestParam String startDate,
-                                                         @RequestParam String endDate,
+                                                         @RequestParam(required = false) String startDate,
+                                                         @RequestParam(required = false) String endDate,
                                                          @Valid PageReqDTO pageReqDTO) {
         return PageResponse.of(depotConstructService.list(depotCode,dataType,startDate,endDate,pageReqDTO));
     }

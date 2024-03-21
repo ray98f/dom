@@ -1,4 +1,4 @@
-package com.wzmtr.dom.dto.req.traffic;
+package com.wzmtr.dom.dto.res.traffic;
 
 import com.wzmtr.dom.entity.BaseEntity;
 import io.swagger.annotations.ApiModelProperty;
@@ -6,32 +6,33 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 日数据请求类
- * @author  zhangxin
+ * description:
+ *
+ * @author zhangxin
  * @version 1.0
- * @date 2024/3/8 16:25
+ * @date 2024/3/18 15:11
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class PassengerInfoReqDTO extends BaseEntity {
+public class ProductionApprovalResDTO extends BaseEntity {
 
     /**
-     * 记录ID
+     * 标题
      * */
-    @ApiModelProperty(value = "记录ID")
-    private String recordId;
+    @ApiModelProperty(value = "标题")
+    private String title;
 
     /**
-     * S2出站量
+     * 审核站
      * */
-    @ApiModelProperty(value = "站点编码")
-    private String stationCode;
+    @ApiModelProperty(value = "审核站")
+    private String approvalStation;
 
     /**
-     * 车站客流量
+     * 已提交审核站
      * */
-    @ApiModelProperty(value = "车站客流量")
-    private Double passenger;
+    @ApiModelProperty(value = "已提交审核站")
+    private String submitStation;
 
     /**
      * 数据类型:1日报 2月报 3周报
@@ -62,5 +63,4 @@ public class PassengerInfoReqDTO extends BaseEntity {
      * */
     @ApiModelProperty(value = "版本号")
     private String version;
-
 }

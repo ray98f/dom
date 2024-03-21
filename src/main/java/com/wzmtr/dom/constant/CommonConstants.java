@@ -155,4 +155,6 @@ public class CommonConstants {
     public static final String  EVENT_TYPE_4 = "4";
     public static final String  EVENT_TYPE_5 = "5";
 
+    public static final String DEFAULT_PRODUCTION_TITLE = "安全生产情况";
+    public static final String[]  S2_STATION_ARRAY = {"5"};
 }
