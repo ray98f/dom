@@ -62,7 +62,12 @@ public interface ProductionMapper {
      */
     ProductionDetailResDTO queryInfoById(String id);
 
-
+    /**
+     * 详情
+     * @return ProductionDetailResDTO
+     */
+    ProductionDetailResDTO queryInfoByStation(String dataType,String stationCode, String startDate,
+                                              String endDate);
     /**
      * 详情
      * @param dataType 入参数
@@ -146,8 +151,9 @@ public interface ProductionMapper {
      * @param id 入参数
      * @param approvalId 入参数
      * @param recordId 入参数
+     * @param createBy 入参数
      */
-    void createProductionApprovalRelation(String id,String approvalId,String recordId);
+    void createProductionApprovalRelation(String id,String approvalId,String recordId,String createBy);
 
     /**
      *  更新安全生产情况审核记录s

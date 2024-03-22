@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzmtr.dom.mapper.traffic.MaintenanceMapper">
+
+    <select id="list" resultType="com.wzmtr.dom.dto.res.traffic.MaintenanceRecordResDTO">
+        SELECT *
+        FROM TRAFFIC_MAINTENANCE_RECORD
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE = #{dataType}
+        <if test="startDate != null and startDate!=''">
+            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null and endDate!=''">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        </if>
+        ORDER BY START_DATE desc
+    </select>
+
+    <select id="listAll" resultType="com.wzmtr.dom.dto.res.traffic.MaintenanceRecordResDTO">
+        SELECT *
+        FROM TRAFFIC_MAINTENANCE_RECORD
+        WHERE DEL_FLAG='0'
+        <if test="startDate != null">
+            AND to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') >= START_DATE
+        </if>
+        <if test="endDate != null">
+            AND END_DATE >= to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        ORDER BY START_DATE desc
+    </select>
+
+    <select id="queryInfoById" resultType="com.wzmtr.dom.dto.res.traffic.MaintenanceRecordResDTO">
+        SELECT *
+        FROM TRAFFIC_MAINTENANCE_RECORD
+        WHERE ID=#{id} AND DEL_FLAG = '0'
+    </select>
+
+    <select id="checkExist" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM TRAFFIC_MAINTENANCE_RECORD
+        WHERE DEL_FLAG = '0'
+        AND DATA_TYPE = #{dataType}
+        <if test="startDate != null">
+            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+    </select>
+
+    <insert id="add">
+        INSERT INTO TRAFFIC_MAINTENANCE_RECORD (ID,DATA_TYPE,
+        <if test="dataDate != null">
+            DATA_DATE,
+        </if>
+        START_DATE,
+        END_DATE,
+        CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+        VALUES (#{id},#{dataType},
+        <if test="dataDate != null">
+            to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
+        to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
+        #{createBy}, sysdate,#{createBy}, sysdate)
+    </insert>
+
+    <update id="modifyCount">
+        UPDATE TRAFFIC_MAINTENANCE_RECORD SET
+        FAULT_COUNT=(SELECT COUNT(1) FROM VEHICLE_LINE_EVENT_INFO WHERE DEL_FLAG='0' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE)
+        WHERE ID=#{id}
+    </update>
+
+    <select id="eventList" resultType="com.wzmtr.dom.dto.res.traffic.MaintenanceInfoResDTO">
+        SELECT ID, RECORD_ID,STATION_NAME,FAULT_DESC,KEYWORD,FAULT_AFFECT,REPAIR_DESC,VERSION
+        FROM TRAFFIC_MAINTENANCE_INFO
+        WHERE DEL_FLAG='0'
+        <if test="startDate != null">
+            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        </if>
+        ORDER BY CREATE_DATE desc
+    </select>
+
+    <select id="queryDateRange" resultType="com.wzmtr.dom.dto.res.traffic.MaintenanceInfoResDTO">
+        SELECT MIN(START_DATE) AS START_DATE,MAX(END_DATE) AS END_DATE
+        FROM TRAFFIC_MAINTENANCE_INFO
+        WHERE ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </select>
+
+    <insert id="createEvent">
+        INSERT INTO TRAFFIC_MAINTENANCE_INFO (ID, RECORD_ID,
+        <if test="stationName != null and stationName!=''">
+            STATION_NAME,
+        </if>
+        <if test="faultDesc != null and faultDesc!=''">
+            FAULT_DESC,
+        </if>
+        <if test="keyword != null and keyword!=''">
+            KEYWORD,
+        </if>
+        <if test="faultAffect != null and faultAffect!=''">
+            FAULT_AFFECT,
+        </if>
+        <if test="repairDesc != null and repairDesc!=''">
+            REPAIR_DESC,
+        </if>
+        DATA_TYPE,
+        <if test="dataDate != null">
+            DATA_DATE,
+        </if>
+        START_DATE,
+        END_DATE,
+        CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+        VALUES ( #{id}, #{recordId},
+        <if test="stationName != null and stationName!=''">
+            #{stationName},
+        </if>
+        <if test="faultDesc != null and faultDesc!=''">
+            #{faultDesc},
+        </if>
+        <if test="keyword != null and keyword!=''">
+            #{keyword},
+        </if>
+        <if test="faultAffect != null and faultAffect!=''">
+            #{faultAffect},
+        </if>
+        <if test="repairDesc != null and repairDesc!=''">
+            #{repairDesc},
+        </if>
+        #{dataType},
+        <if test="dataDate != null">
+            to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
+        to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
+        #{createBy}, sysdate,#{createBy}, sysdate)
+    </insert>
+
+    <update id="modifyEvent">
+        UPDATE TRAFFIC_MAINTENANCE_INFO SET
+        <if test="stationName != null and stationName!=''">
+            STATION_NAME=#{stationName},
+        </if>
+        <if test="faultDesc != null and faultDesc!=''">
+            FAULT_DESC=#{faultDesc},
+        </if>
+        <if test="keyword != null and keyword!=''">
+            KEYWORD=#{keyword},
+        </if>
+        <if test="faultAffect != null and faultAffect!=''">
+            FAULT_AFFECT=#{faultAffect},
+        </if>
+        <if test="repairDesc != null and repairDesc!=''">
+            REPAIR_DESC=#{repairDesc},
+        </if>
+        VERSION = VERSION+1,
+        UPDATE_BY=#{updateBy},
+        UPDATE_DATE=sysdate
+        WHERE ID=#{id}
+        AND VERSION = #{version}
+    </update>
+
+    <delete id="deleteEvent">
+        DELETE FROM VEHICLE_LINE_EVENT_INFO
+        WHERE ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </delete>
+</mapper>

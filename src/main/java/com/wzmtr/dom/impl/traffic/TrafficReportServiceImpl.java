@@ -53,6 +53,14 @@ public class TrafficReportServiceImpl implements TrafficReportService {
         //主报表信息
         DailyReportResDTO detail = reportMapper.dailyDetail(id);
 
+        //先假设主报表默认可提交审核,根据报表状态更新
+        detail.setSubmitFlag(CommonConstants.ONE_STRING);
+
+        //主报表若存在审核中 或者已审核
+        if(CommonConstants.ZERO_STRING.equals(detail.getStatus())){
+            detail.setSubmitFlag(CommonConstants.ZERO_STRING);
+        }
+
         //子报表信息
         List<DailyReportResDTO> subDailyReportNew = new ArrayList<>();
         List<DailyReportResDTO> subDailyReport = reportMapper.queryDailyByParent(id);
@@ -71,12 +79,15 @@ public class TrafficReportServiceImpl implements TrafficReportService {
                     item.setVisibleRoles(TrafficReportRole.REPORT_TYPE_0.roles());
                     break;
             }
-            //子报表默认可提交审批
-            item.setSubmitFlag(CommonConstants.ONE_STRING);
+            //子报表为草稿状态 可提交审批
+            item.setSubmitFlag(CommonConstants.ZERO_STRING);
+            if(CommonConstants.ZERO_STRING.equals(item.getStatus())){
+                item.setSubmitFlag(CommonConstants.ONE_STRING);
+            }
             subDailyReportNew.add(item);
 
-            //子报表有草稿状态,主报表不可提交审批
-            if(CommonConstants.ZERO_STRING.equals(item.getStatus())){
+            //子报表有草稿或审核中状态,主报表不可提交审批
+            if((CommonConstants.ZERO_STRING.equals(item.getStatus()) || CommonConstants.ONE_STRING.equals(item.getStatus()))){
                 detail.setSubmitFlag(CommonConstants.ZERO_STRING);
             }
         }
@@ -133,10 +144,14 @@ public class TrafficReportServiceImpl implements TrafficReportService {
 
     @Override
     public void commitDaily(CurrentLoginUser currentLoginUser, DailyReportReqDTO dailyReportReqDTO) {
+
+        //报表审核参数
         ApprovalReqDTO approvalReqDTO = new ApprovalReqDTO();
+        approvalReqDTO.setId(TokenUtils.getUuId());
         approvalReqDTO.setApprovalResult(dailyReportReqDTO.getId());
         approvalReqDTO.setReportTable(CommonConstants.TRAFFIC_DAILY_REPORT);
-
+        approvalReqDTO.setTodoType(CommonConstants.ONE_STRING);
+        approvalReqDTO.setDataType(CommonConstants.DATA_TYPE_DAILY);
         switch (dailyReportReqDTO.getReportType()){
             case CommonConstants.ONE_STRING:
                 approvalReqDTO.setProcessKey(BpmnFlowEnum.traffic_daily_sub1.value());
@@ -155,7 +170,7 @@ public class TrafficReportServiceImpl implements TrafficReportService {
                 break;
         }
 
-        //TODO
+        //提交流程
         workbenchService.commitApproval(approvalReqDTO);
     }
 

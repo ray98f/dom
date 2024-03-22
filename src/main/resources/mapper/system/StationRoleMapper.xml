@@ -22,7 +22,7 @@
         FROM SYS_STATION_ROLE
         WHERE DEL_FLAG='0'
         AND sysdate >= START_TIME
-        AND END_DATE >= sysdate
+        AND END_TIME >= sysdate
     </select>
 
     <insert id="add">

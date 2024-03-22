@@ -10,6 +10,7 @@ import com.wzmtr.dom.dto.res.traffic.ProductionInfoResDTO;
 import com.wzmtr.dom.dto.res.traffic.ProductionRecordResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -39,6 +40,13 @@ public interface ProductionService {
      * @return 客流总体情况-详情
      */
     ProductionDetailResDTO detail(String id);
+
+    /**
+     * 安全生产情况汇总-详情
+     * @return 客流总体情况-详情
+     */
+    ProductionDetailResDTO queryInfo(String dataType,String stationCode, String startDate,
+                                     String endDate);
 
     /**
      * 安全生产情况汇总-新增
