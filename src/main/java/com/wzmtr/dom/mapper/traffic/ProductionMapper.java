@@ -6,10 +6,7 @@ import com.wzmtr.dom.dto.req.traffic.ProductionInfoReqDTO;
 import com.wzmtr.dom.dto.req.traffic.ProductionRecordReqDTO;
 import com.wzmtr.dom.dto.req.traffic.ProductionSummaryRecordReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.LineEventInfoReqDTO;
-import com.wzmtr.dom.dto.res.traffic.ProductionApprovalResDTO;
-import com.wzmtr.dom.dto.res.traffic.ProductionDetailResDTO;
-import com.wzmtr.dom.dto.res.traffic.ProductionInfoResDTO;
-import com.wzmtr.dom.dto.res.traffic.ProductionRecordResDTO;
+import com.wzmtr.dom.dto.res.traffic.*;
 import com.wzmtr.dom.dto.res.vehicle.LineEventInfoResDTO;
 import com.wzmtr.dom.dto.res.vehicle.LineEventResDTO;
 import org.apache.ibatis.annotations.Mapper;
@@ -98,14 +95,22 @@ public interface ProductionMapper {
 
     /**
      * 编辑
-     * @param id 入参数
+     * @param recordId 入参数
      * @param dataType 入参数
      * @param stationCode 入参数
      * @param startDate 入参数
      * @param endDate 入参数
      */
-    void modifySummaryCount(String id,String dataType,String stationCode,String startDate, String endDate);
+    void modifySummaryCount(String recordId,String dataType,String stationCode,String startDate, String endDate);
 
+    /**
+     * 待审列表
+     * @param page 分页参数
+     * @param startDate 查询参数
+     * @param endDate 查询参数
+     * @return 列表
+     */
+    Page<ProductionApprovalResDTO> queryApproval(Page<ProductionRecordResDTO> page, String startDate, String endDate);
 
     /**
      * 详情
@@ -115,6 +120,14 @@ public interface ProductionMapper {
      * @return ProductionApprovalResDTO
      */
     ProductionApprovalResDTO queryApprovalByDate(String dataType,String startDate, String endDate);
+
+    /**
+     * 详情
+     * @param approvalId 入参数
+     * @param recordId 入参数
+     * @return ProductionApprovalResDTO
+     */
+    ProductionApprovalRelationResDTO queryApprovalRelationById(String approvalId, String recordId);
 
     /**
      *  创建安全生产情况审核记录
@@ -148,14 +161,13 @@ public interface ProductionMapper {
     /**
      * 事件信息-列表
      * @param page 分页参数
+     * @param productionType 查询参数
      * @param stationCode 查询参数
      * @param startDate 查询参数
      * @param endDate 查询参数
      * @return 列表
      */
-    Page<ProductionInfoResDTO> eventList(Page<ProductionInfoResDTO> page, String stationCode,String startDate, String endDate);
-
-
+    Page<ProductionInfoResDTO> eventList(Page<ProductionInfoResDTO> page, String stationCode,String productionType,String startDate, String endDate);
 
     /**
      * 事件信息-日期范围
@@ -183,6 +195,5 @@ public interface ProductionMapper {
      * @param userId 用户id
      */
     void deleteEvent(List<String> ids, String userId);
-
 
 }

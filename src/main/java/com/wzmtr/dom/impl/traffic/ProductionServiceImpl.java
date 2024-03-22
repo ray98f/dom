@@ -25,7 +25,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 客运部-安全生产情况
@@ -139,6 +142,7 @@ public class ProductionServiceImpl implements ProductionService {
             ProductionApprovalResDTO approvalRes = productionMapper.queryApprovalByDate(productionRecordReqDTO.getDataType(),
                     productionRecordReqDTO.getStartDate(),productionRecordReqDTO.getEndDate());
             String approvalId="";
+
             if(approvalRes == null){
 
                 //获取当前审核站
@@ -156,13 +160,21 @@ public class ProductionServiceImpl implements ProductionService {
                 approvalReq.setSubmitStation(productionRecordReqDTO.getStationCode());
                 productionMapper.createProductionApproval(approvalReq);
                 approvalId = approvalReq.getId();
+
             }else{
                 approvalId = approvalRes.getId();
-                String submitStation =
+
+                // 已提交车站
+                String submitStation = approvalRes.getSubmitStation();
+                List<String> stationList = Arrays.asList(submitStation.split(CommonConstants.COMMA));
+                if(!stationList.contains(productionRecordReqDTO.getStationCode())){
+                    stationList.add(productionRecordReqDTO.getStationCode());
+                    submitStation = stationList.stream().collect(Collectors.joining(CommonConstants.COMMA));
+                }
                 ProductionApprovalReqDTO approvalReq = new ProductionApprovalReqDTO();
                 approvalReq.setId(approvalId);
-                approvalReq.setSubmitStation();
-                productionMapper.modifyProductionApproval();
+                approvalReq.setSubmitStation(submitStation);
+                productionMapper.modifyProductionApproval(approvalReq);
             }
 
             productionMapper.createProductionApprovalRelation(TokenUtils.getUuId(),productionRecordReqDTO.getId(),approvalId);
@@ -182,14 +194,36 @@ public class ProductionServiceImpl implements ProductionService {
     public void productionApproval(CurrentLoginUser currentLoginUser, ProductionApprovalReqDTO productionApprovalReqDTO) {
 
         try {
-
-
             ProductionRecordReqDTO productionRecordReqDTO = new ProductionRecordReqDTO();
             productionRecordReqDTO.setId(productionApprovalReqDTO.getRecordId());
 
             // 驳回操作
             if(CommonConstants.ONE_STRING.equals(productionApprovalReqDTO.getApprovalStatus())){
                 productionRecordReqDTO.setStatus(CommonConstants.ZERO_STRING);
+
+                //更新已提交车站
+                ProductionApprovalRelationResDTO approvalRelationRes = productionMapper.queryApprovalRelationById(productionApprovalReqDTO.getId(),
+                        productionApprovalReqDTO.getRecordId());
+                String submitStation = approvalRelationRes.getSubmitStation();
+
+                if(StringUtils.isNotEmpty(submitStation)){
+                    List<String> submitStationList = Arrays.asList(submitStation.split(CommonConstants.COMMA));
+
+                    // 已提交车站中删除该车站
+                    Iterator<String> iterator = submitStationList.iterator();
+                    while (iterator.hasNext()) {
+                        String item = iterator.next();
+                        if (item.equals(approvalRelationRes.getSubmitStation())) {
+                            iterator.remove();
+                        }
+                    }
+                    submitStation = submitStationList.stream().collect(Collectors.joining(CommonConstants.COMMA));
+                }
+
+                ProductionApprovalReqDTO approvalReq = new ProductionApprovalReqDTO();
+                approvalReq.setId(productionApprovalReqDTO.getId());
+                approvalReq.setSubmitStation(submitStation);
+                productionMapper.modifyProductionApproval(approvalReq);
 
             //通过
             }else{
@@ -213,9 +247,9 @@ public class ProductionServiceImpl implements ProductionService {
     }
 
     @Override
-    public Page<ProductionInfoResDTO> eventList(String stationCode, String startDate, String endDate, PageReqDTO pageReqDTO) {
+    public Page<ProductionInfoResDTO> eventList(String stationCode,String productionType, String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return productionMapper.eventList(pageReqDTO.of(),stationCode,startDate,endDate);
+        return productionMapper.eventList(pageReqDTO.of(),stationCode,productionType,startDate,endDate);
     }
 
     @Override
@@ -267,6 +301,12 @@ public class ProductionServiceImpl implements ProductionService {
             updateSummaryCount(eventInfo.getStationCode(),
                     DateUtil.formatDate(eventInfo.getStartDate()),DateUtil.formatDate(eventInfo.getEndDate()));
         }
+    }
+
+    @Override
+    public Page<ProductionApprovalResDTO> queryApproval(CurrentLoginUser currentLoginUser, String startDate, String endDate, PageReqDTO pageReqDTO) {
+        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        return productionMapper.queryApproval(pageReqDTO.of(),startDate,endDate);
     }
 
     /**

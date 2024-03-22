@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.traffic.ProductionApprovalReqDTO;
 import com.wzmtr.dom.dto.req.traffic.ProductionInfoReqDTO;
 import com.wzmtr.dom.dto.req.traffic.ProductionRecordReqDTO;
+import com.wzmtr.dom.dto.res.traffic.ProductionApprovalResDTO;
 import com.wzmtr.dom.dto.res.traffic.ProductionDetailResDTO;
 import com.wzmtr.dom.dto.res.traffic.ProductionInfoResDTO;
 import com.wzmtr.dom.dto.res.traffic.ProductionRecordResDTO;
@@ -28,7 +29,7 @@ public interface ProductionService {
      * @param startDate 查询参数
      * @param endDate 查询参数
      * @param pageReqDTO 分页参数
-     * @return 客流总体情况列表
+     * @return 安全生产情况汇总-列表
      */
     Page<ProductionRecordResDTO> list(String dataType, String stationCode, String startDate, String endDate, PageReqDTO pageReqDTO);
 
@@ -63,12 +64,13 @@ public interface ProductionService {
     /**
      * 事件信息-列表
      * @param stationCode 查询参数
+     * @param productionType 查询参数
      * @param startDate 查询参数
      * @param endDate 查询参数
      * @param pageReqDTO 分页参数
      * @return 事件信息列表
      */
-    Page<ProductionInfoResDTO> eventList(String stationCode,String startDate, String endDate, PageReqDTO pageReqDTO);
+    Page<ProductionInfoResDTO> eventList(String stationCode,String productionType,String startDate, String endDate, PageReqDTO pageReqDTO);
 
     /**
      * 事件信息-新增
@@ -90,6 +92,14 @@ public interface ProductionService {
      */
     void deleteEvent(List<String> ids);
 
+    /**
+     * 安全生产情况待审列表
+     * @param startDate 查询参数
+     * @param endDate 查询参数
+     * @param pageReqDTO 分页参数
+     * @return 安全生产情况待审列表
+     */
+    Page<ProductionApprovalResDTO> queryApproval(CurrentLoginUser currentLoginUser, String startDate, String endDate, PageReqDTO pageReqDTO);
 
 
 }

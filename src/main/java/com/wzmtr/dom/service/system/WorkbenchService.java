@@ -1,6 +1,7 @@
 package com.wzmtr.dom.service.system;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wzmtr.dom.dto.req.system.ApprovalReqDTO;
 import com.wzmtr.dom.dto.req.system.TodoReqDTO;
 import com.wzmtr.dom.dto.res.system.TodoResDTO;
 import com.wzmtr.dom.entity.PageReqDTO;
@@ -33,4 +34,10 @@ public interface WorkbenchService {
      * @param todoReqDTO 督办审批参数
      */
     void todoApproval(TodoReqDTO todoReqDTO);
+
+    /**
+     * 提交审批
+     * @param approvalReqDTO 督办审批参数
+     */
+    void commitApproval(ApprovalReqDTO approvalReqDTO);
 }

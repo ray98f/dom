@@ -14,7 +14,25 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class ProductionApprovalResDTO extends BaseEntity {
+public class ProductionApprovalRelationResDTO extends BaseEntity {
+
+    /**
+     * 审核ID
+     * */
+    @ApiModelProperty(value = "审核ID")
+    private String approvalId;
+
+    /**
+     * 记录ID
+     * */
+    @ApiModelProperty(value = "记录ID")
+    private String recordId;
+
+    /**
+     * 车站编码
+     * */
+    @ApiModelProperty(value = "车站编码")
+    private String stationCode;
 
     /**
      * 标题
@@ -27,12 +45,6 @@ public class ProductionApprovalResDTO extends BaseEntity {
      * */
     @ApiModelProperty(value = "审核站")
     private String approvalStation;
-
-    /**
-     * 审核站名
-     * */
-    @ApiModelProperty(value = "审核站名")
-    private String approvalStationName;
 
     /**
      * 已提交审核站

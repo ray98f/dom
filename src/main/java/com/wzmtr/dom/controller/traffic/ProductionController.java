@@ -5,20 +5,16 @@ import com.wzmtr.dom.constant.ValidationGroup;
 import com.wzmtr.dom.dto.req.traffic.ProductionApprovalReqDTO;
 import com.wzmtr.dom.dto.req.traffic.ProductionInfoReqDTO;
 import com.wzmtr.dom.dto.req.traffic.ProductionRecordReqDTO;
-import com.wzmtr.dom.dto.req.traffic.ProductionSummaryRecordReqDTO;
-import com.wzmtr.dom.dto.req.vehicle.LineEventInfoReqDTO;
+import com.wzmtr.dom.dto.res.traffic.ProductionApprovalResDTO;
 import com.wzmtr.dom.dto.res.traffic.ProductionDetailResDTO;
 import com.wzmtr.dom.dto.res.traffic.ProductionInfoResDTO;
 import com.wzmtr.dom.dto.res.traffic.ProductionRecordResDTO;
-import com.wzmtr.dom.dto.res.traffic.ProductionSummaryResDTO;
-import com.wzmtr.dom.dto.res.vehicle.LineEventInfoResDTO;
 import com.wzmtr.dom.entity.BaseIdsEntity;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.entity.response.PageResponse;
 import com.wzmtr.dom.service.traffic.ProductionService;
-import com.wzmtr.dom.service.traffic.ProductionSummaryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.poi.ss.formula.functions.T;
@@ -54,7 +50,7 @@ public class ProductionController {
      */
     @GetMapping("/list")
     @ApiOperation(value = "安全生产情况记录-列表")
-    public PageResponse<ProductionRecordResDTO> page(@CurrUser CurrentLoginUser currentLoginUser,
+    public PageResponse<ProductionRecordResDTO> list(@CurrUser CurrentLoginUser currentLoginUser,
                                                      @RequestParam(required = false) String startDate,
                                                      @RequestParam(required = false) String endDate,
                                                      @RequestParam String dataType,
@@ -88,6 +84,7 @@ public class ProductionController {
     /**
      * 安全生产事件-列表
      * @param stationCode 车站编码
+     * @param productionType 事件类型
      * @param startDate 起始日期
      * @param endDate 终止日期
      * @param pageReqDTO 分页参数
@@ -96,10 +93,11 @@ public class ProductionController {
     @GetMapping("/eventList")
     @ApiOperation(value = "正线/车场事件信息-列表")
     public PageResponse<ProductionInfoResDTO> eventList(@RequestParam String stationCode,
+                                                        @RequestParam(required = false) String productionType,
                                                         @RequestParam String startDate,
                                                         @RequestParam String endDate,
                                                         @Valid PageReqDTO pageReqDTO) {
-        return PageResponse.of(productionService.eventList(stationCode,startDate,endDate,pageReqDTO));
+        return PageResponse.of(productionService.eventList(stationCode,productionType,startDate,endDate,pageReqDTO));
     }
 
     /**
@@ -140,6 +138,22 @@ public class ProductionController {
     public DataResponse<T> deleteEvent(@RequestBody BaseIdsEntity baseIdsEntity) {
         productionService.deleteEvent(baseIdsEntity.getIds());
         return DataResponse.success();
+    }
+
+    /**
+     * 安全生产情况待审列表
+     * @param startDate 开始时间
+     * @param endDate 结束时间
+     * @param pageReqDTO 分页参数
+     * @return 成功
+     */
+    @PostMapping("/queryApproval")
+    @ApiOperation(value = "安全生产情况待审列表")
+    public PageResponse<ProductionApprovalResDTO> queryApproval(@CurrUser CurrentLoginUser currentLoginUser,
+                                                                @RequestParam(required = false) String startDate,
+                                                                @RequestParam(required = false) String endDate,
+                                                                @Valid PageReqDTO pageReqDTO) {
+        return PageResponse.of(productionService.queryApproval(currentLoginUser,startDate, endDate, pageReqDTO));
     }
 
     /**

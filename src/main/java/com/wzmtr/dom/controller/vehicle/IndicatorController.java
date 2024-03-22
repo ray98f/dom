@@ -12,6 +12,7 @@ import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.entity.response.PageResponse;
 import com.wzmtr.dom.service.vehicle.IndicatorService;
+import com.wzmtr.dom.utils.StringUtils;
 import com.wzmtr.dom.utils.TokenUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,9 +22,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 车辆部-重要指标
@@ -42,6 +42,32 @@ public class IndicatorController {
     private IndicatorService indicatorService;
 
     public static void main(String[] args){
+        List<String> station = new ArrayList<>();
+        station.add("1");
+        station.add("2");
+        station.add("3");
+
+        String s =station.stream()
+                .collect(Collectors.joining(","));;
+        System.out.println(s);
+
+        List<String> list = new ArrayList<>();
+        list.add("Apple");
+        list.add("Banana");
+        list.add("Cherry");
+        list.add("Date");
+
+        // 使用Iterator来遍历并删除元素
+        Iterator<String> iterator = list.iterator();
+        while (iterator.hasNext()) {
+            String item = iterator.next();
+            if (item.equals("Banana")) {
+                iterator.remove(); // 删除元素
+            }
+        }
+
+        // 打印结果，检查元素是否已被删除
+        System.out.println(list);
      /*   int a=101;
         int b=10000;
         Double c = new Double(Math.round(a*10000/b)/10000.0);

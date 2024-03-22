@@ -2,6 +2,7 @@ package com.wzmtr.dom.impl.system;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.page.PageMethod;
+import com.wzmtr.dom.dto.req.system.ApprovalReqDTO;
 import com.wzmtr.dom.dto.req.system.TodoReqDTO;
 import com.wzmtr.dom.dto.res.system.TodoResDTO;
 import com.wzmtr.dom.entity.PageReqDTO;
@@ -47,6 +48,11 @@ public class WorkbenchServiceImpl implements WorkbenchService {
         todoReqDTO.setUpdateBy(TokenUtils.getCurrentPersonId());
         workbenchMapper.todoApproval(todoReqDTO);
         // todo 根据流程配置进行下一步审核
+
+    }
+
+    @Override
+    public void commitApproval(ApprovalReqDTO approvalReqDTO) {
 
     }
 
