@@ -1,4 +1,4 @@
-package com.wzmtr.dom.dto.res.traffic.income;
+package com.wzmtr.dom.dto.res.traffic.hotline;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
@@ -9,19 +9,28 @@ import java.util.Date;
 
 /**
  * @Author: Li.Wang
- * Date: 2024/3/21 10:34
+ * Date: 2024/3/22 16:58
  */
 @Data
-public class IncomeListResDTO {
+public class HotLineSummaryListResDTO {
+    @ApiModelProperty("ID")
+    private String id;
+    /**
+     * 总投诉
+     */
+    @ApiModelProperty("总投诉")
+    private Long complaintTotal;
+    /**
+     * 总表扬
+     */
+    @ApiModelProperty("总表扬")
+    private Long praiseTotal;
 
-    @ApiModelProperty(value = "本日总收益")
-    private Double dayIncome;
-
-    @ApiModelProperty(value = "本月累计收益")
-    private Double monthIncome;
-
-    @ApiModelProperty(value = "本年累计收益")
-    private Double yearIncome;
+    /**
+     * 锦旗
+     */
+    @ApiModelProperty("锦旗")
+    private Long pennant;
 
 
     @ApiModelProperty(value = "数据所属日期")
