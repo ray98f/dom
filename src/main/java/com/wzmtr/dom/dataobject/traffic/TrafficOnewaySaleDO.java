@@ -1,5 +1,6 @@
 package com.wzmtr.dom.dataobject.traffic;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -19,6 +20,7 @@ public class TrafficOnewaySaleDO implements Serializable {
     * ID
     */
     @ApiModelProperty("ID")
+    @TableId
     private String id;
     /**
     * 现金购票

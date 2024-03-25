@@ -25,6 +25,7 @@ public class OnewaySaleDetailResDTO {
      */
     @ApiModelProperty("现金购票占比")
     private Double cashRatio;
+    @ApiModelProperty("现金购票环比")
     private Double cashRatioQoqRatio;
     /**
      * 银联卡
@@ -36,6 +37,7 @@ public class OnewaySaleDetailResDTO {
      */
     @ApiModelProperty("银联卡占比")
     private Double unionCardRatio;
+    @ApiModelProperty("银联卡环比")
     private Double unionCardRatioQoqRatio;
     /**
      * TVM聚合码
@@ -47,6 +49,7 @@ public class OnewaySaleDetailResDTO {
      */
     @ApiModelProperty("TVM聚合码占比")
     private Double tvmCodeRatio;
+    @ApiModelProperty("TVM聚合码环比")
     private Double tvmCodeRatioQoqRatio;
     /**
      * ITVM聚合码
@@ -58,6 +61,7 @@ public class OnewaySaleDetailResDTO {
      */
     @ApiModelProperty("ITVM聚合码占比")
     private Double itvmCodeRatio;
+    @ApiModelProperty("ITVM聚合码环比")
     private Double itvmCodeRatioQoqRatio;
     /**
      * BOM聚合码
@@ -69,6 +73,7 @@ public class OnewaySaleDetailResDTO {
      */
     @ApiModelProperty("BOM聚合码占比")
     private Double bomCodeRatio;
+    @ApiModelProperty("BOM聚合码环比")
     private Double bomCodeRatioQoqRatio;
     /**
      * IBOM聚合码
@@ -80,6 +85,7 @@ public class OnewaySaleDetailResDTO {
      */
     @ApiModelProperty("IBOM聚合码占比")
     private Double ibomCodeRatio;
+    @ApiModelProperty("IBOM聚合码环比")
     private Double ibomCodeRatioQoqRatio;
     /**
      * 免费福利票
@@ -91,6 +97,7 @@ public class OnewaySaleDetailResDTO {
      */
     @ApiModelProperty("免费福利票占比")
     private Double freeTicketRatio;
+    @ApiModelProperty("免费福利票环比")
     private Double freeTicketRatioQoqRatio;
     /**
      * 8折福利票
@@ -102,6 +109,7 @@ public class OnewaySaleDetailResDTO {
      */
     @ApiModelProperty("8折福利票占比")
     private Double off20TicketRatio;
+    @ApiModelProperty("8折福利票环比")
     private Double off20TicketRatioQoqRatio;
     /**
      * 付费出站票
@@ -113,6 +121,7 @@ public class OnewaySaleDetailResDTO {
      */
     @ApiModelProperty("付费出站占比")
     private Double payExitRatio;
+    @ApiModelProperty("付费出站环比")
     private Double payExitRatioQoqRatio;
     /**
      * 免费出站票
@@ -124,6 +133,7 @@ public class OnewaySaleDetailResDTO {
      */
     @ApiModelProperty("免费出站占比")
     private Double freeExitRatio;
+    @ApiModelProperty("免费出站环比")
     private Double freeExitRatioQoqRatio;
     /**
      * 预赋值票
@@ -135,6 +145,7 @@ public class OnewaySaleDetailResDTO {
      */
     @ApiModelProperty("预赋值票占比")
     private Double preAssignRatio;
+    @ApiModelProperty("预赋值票环比")
     private Double preAssignRatioQoqRatio;
     /**
      * 数据所属日期
@@ -158,6 +169,9 @@ public class OnewaySaleDetailResDTO {
     private Date endDate;
 
     public static OnewaySaleDetailResDTO buildRes(TrafficOnewaySaleDO trafficOnewaySaleDO) {
-        return BeanUtils.convert(trafficOnewaySaleDO, OnewaySaleDetailResDTO.class);
+        // todo 环比计算
+        OnewaySaleDetailResDTO res = BeanUtils.convert(trafficOnewaySaleDO, OnewaySaleDetailResDTO.class);
+        // res.setCashRatioQoqRatio((res.getCash() - res.getCashRatio()) / res.() * 100);
+        return res;
     }
 }

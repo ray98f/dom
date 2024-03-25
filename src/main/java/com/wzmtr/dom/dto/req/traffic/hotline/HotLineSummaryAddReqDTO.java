@@ -1,19 +1,20 @@
-package com.wzmtr.dom.dataobject.traffic;
+package com.wzmtr.dom.dto.req.traffic.hotline;
 
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.wzmtr.dom.dataobject.traffic.TrafficHotlineSummaryDO;
+import com.wzmtr.dom.dataobject.traffic.TrafficOnewaySaleDO;
+import com.wzmtr.dom.utils.BeanUtils;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 客运部-服务热线汇总
- *
- * @TableName TRAFFIC_HOTLINE_SUMMARY
+ * @Author: Li.Wang
+ * Date: 2024/3/22 15:03
  */
 @Data
-public class TrafficHotlineSummaryDO implements Serializable {
+public class HotLineSummaryAddReqDTO {
 
     /**
      * id
@@ -25,11 +26,6 @@ public class TrafficHotlineSummaryDO implements Serializable {
      */
     @ApiModelProperty("总投诉")
     private Long complaintTotal;
-    /**
-     * 建议
-     */
-    @ApiModelProperty("建议")
-    private Long suggest;
     /**
      * 总表扬
      */
@@ -147,4 +143,7 @@ public class TrafficHotlineSummaryDO implements Serializable {
     private String remark;
 
 
+    public TrafficHotlineSummaryDO toDO(HotLineSummaryAddReqDTO req) {
+        return BeanUtils.convert(req, TrafficHotlineSummaryDO.class);
+    }
 }

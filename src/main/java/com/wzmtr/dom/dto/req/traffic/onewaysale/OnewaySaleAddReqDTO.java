@@ -144,6 +144,9 @@ public class OnewaySaleAddReqDTO {
     @ApiModelProperty("数据结束日期")
     private Date endDate;
 
+    @ApiModelProperty("id")
+    private String id;
+
 
     public TrafficOnewaySaleDO toDO(OnewaySaleAddReqDTO req) {
         return BeanUtils.convert(req, TrafficOnewaySaleDO.class);

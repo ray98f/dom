@@ -6,12 +6,12 @@
         SELECT *
         FROM TRAFFIC_INCOME_RECORD
         WHERE DEL_FLAG='0'
-        AND DATA_TYPE = #{dataType}
-        <if test="startDate != null and startDate!=''">
-            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND DATA_TYPE = #{req.dataType}
+        <if test="req.startDate != null and req.startDate!=''">
+            AND START_DATE >= to_date(#{req.startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
-        <if test="endDate != null and endDate!=''">
-            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        <if test="req.endDate != null and req.endDate!=''">
+            AND to_date(#{req.endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
         </if>
         ORDER BY CREATE_DATE desc
     </select>

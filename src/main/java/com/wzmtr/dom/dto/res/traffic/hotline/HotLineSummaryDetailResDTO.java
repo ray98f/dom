@@ -1,50 +1,27 @@
-package com.wzmtr.dom.dataobject.traffic;
+package com.wzmtr.dom.dto.res.traffic.hotline;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 客运部-服务热线汇总
- *
- * @TableName TRAFFIC_HOTLINE_SUMMARY
+ * @Author: Li.Wang
+ * Date: 2024/3/22 16:58
  */
 @Data
-public class TrafficHotlineSummaryDO implements Serializable {
-
+public class HotLineSummaryDetailResDTO {
     /**
      * id
      */
     @TableId("ID")
     private String id;
     /**
-     * 总投诉
-     */
-    @ApiModelProperty("总投诉")
-    private Long complaintTotal;
-    /**
-     * 建议
-     */
-    @ApiModelProperty("建议")
-    private Long suggest;
-    /**
-     * 总表扬
-     */
-    @ApiModelProperty("总表扬")
-    private Long praiseTotal;
-    /**
      * 接听总量
      */
     @ApiModelProperty("接听总量")
     private Long answerTotal;
-    /**
-     * app回复
-     */
-    @ApiModelProperty("app回复")
-    private Long appAnswer;
     /**
      * 咨询
      */
@@ -56,6 +33,18 @@ public class TrafficHotlineSummaryDO implements Serializable {
     @ApiModelProperty("求助")
     private Long resort;
     /**
+     * 建议
+     */
+    @ApiModelProperty("建议")
+    private Long suggest;
+
+    /**
+     * app回复
+     */
+    @ApiModelProperty("app回复")
+    private Long appAnswer;
+
+    /**
      * 有责投诉
      */
     @ApiModelProperty("有责投诉")
@@ -65,6 +54,11 @@ public class TrafficHotlineSummaryDO implements Serializable {
      */
     @ApiModelProperty("无责投诉")
     private Long type2Complaint;
+    /**
+     * 总投诉
+     */
+    @ApiModelProperty("总投诉")
+    private Long complaintTotal;
     /**
      * 热线表扬
      */
@@ -76,6 +70,11 @@ public class TrafficHotlineSummaryDO implements Serializable {
     @ApiModelProperty("车站表扬")
     private Long type2Praise;
     /**
+     * 总表扬
+     */
+    @ApiModelProperty("总表扬")
+    private Long praiseTotal;
+    /**
      * 锦旗
      */
     @ApiModelProperty("锦旗")
@@ -85,6 +84,7 @@ public class TrafficHotlineSummaryDO implements Serializable {
      */
     @ApiModelProperty("S1转接")
     private Long s1Switch;
+
     /**
      * 其他
      */
@@ -100,9 +100,18 @@ public class TrafficHotlineSummaryDO implements Serializable {
      */
     @ApiModelProperty("数据类型 1日报 2周报 3月报")
     private String dataType;
+
     /**
-     * 数据起始日期
+     * 版本号(乐观锁)
      */
+    @ApiModelProperty("版本号(乐观锁)")
+    private String version;
+    /**
+     * 说明
+     */
+    @ApiModelProperty("说明")
+    private String remark;
+
     @ApiModelProperty("数据起始日期")
     private Date startDate;
     /**
@@ -110,41 +119,4 @@ public class TrafficHotlineSummaryDO implements Serializable {
      */
     @ApiModelProperty("数据结束日期")
     private Date endDate;
-    /**
-     * 删除标识
-     */
-    @ApiModelProperty("删除标识")
-    private String delFlag;
-    /**
-     * 版本号(乐观锁)
-     */
-    @ApiModelProperty("版本号(乐观锁)")
-    private String version;
-    /**
-     * 创建日期
-     */
-    @ApiModelProperty("创建日期")
-    private Date createDate;
-    /**
-     * 创建者
-     */
-    @ApiModelProperty("创建者")
-    private String createBy;
-    /**
-     * 更新日期
-     */
-    @ApiModelProperty("更新日期")
-    private Date updateDate;
-    /**
-     * 更新者
-     */
-    @ApiModelProperty("更新者")
-    private String updateBy;
-    /**
-     * 说明
-     */
-    @ApiModelProperty("说明")
-    private String remark;
-
-
 }

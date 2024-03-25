@@ -2,8 +2,11 @@ package com.wzmtr.dom.service.traffic;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.common.SidReqDTO;
+import com.wzmtr.dom.dto.req.traffic.hotline.HotLineSummaryAddReqDTO;
+import com.wzmtr.dom.dto.req.traffic.hotline.HotLineSummaryListReqDTO;
 import com.wzmtr.dom.dto.req.traffic.onewaysale.OnewaySaleAddReqDTO;
 import com.wzmtr.dom.dto.req.traffic.onewaysale.OnewaySaleListReqDTO;
+import com.wzmtr.dom.dto.res.traffic.hotline.HotLineSummaryDetailResDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineSummaryListResDTO;
 import com.wzmtr.dom.dto.res.traffic.oneway.OnewaySaleDetailResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
@@ -14,11 +17,13 @@ import com.wzmtr.dom.entity.CurrentLoginUser;
  */
 public interface HotLineSummaryService {
 
-    OnewaySaleDetailResDTO detail(SidReqDTO reqDTO);
+    HotLineSummaryDetailResDTO detail(SidReqDTO reqDTO);
 
-    void add(OnewaySaleAddReqDTO reqDTO);
+    void add(HotLineSummaryAddReqDTO reqDTO);
 
-    void modify(CurrentLoginUser currentLoginUser, OnewaySaleAddReqDTO passengerRecordReqDTO);
+    void modify(CurrentLoginUser currentLoginUser, HotLineSummaryAddReqDTO passengerRecordReqDTO);
 
-    Page<HotLineSummaryListResDTO> list(OnewaySaleListReqDTO reqDTO);
+    Page<HotLineSummaryListResDTO> list(HotLineSummaryListReqDTO reqDTO);
+
+    HotLineSummaryDetailResDTO acc(SidReqDTO reqDTO);
 }
