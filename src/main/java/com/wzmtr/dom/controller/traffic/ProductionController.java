@@ -59,6 +59,24 @@ public class ProductionController {
     }
 
     /**
+     * 安全生产情况记录-列表2
+     * @param startDate 开始时间
+     * @param endDate 结束时间
+     * @param dataType 数据类型 1:日报 2:周报 3:月报
+     * @param pageReqDTO 分页参数
+     * @return 安全生产情况记录-列表2
+     */
+    @GetMapping("/listByStation")
+    @ApiOperation(value = "安全生产情况记录-列表2")
+    public PageResponse<ProductionRecordResDTO> listByStation(@RequestParam String stationCode,
+                                                     @RequestParam(required = false) String startDate,
+                                                     @RequestParam(required = false) String endDate,
+                                                     @RequestParam String dataType,
+                                                     @Valid PageReqDTO pageReqDTO) {
+        return PageResponse.of(productionService.list(dataType,stationCode,startDate, endDate, pageReqDTO));
+    }
+
+    /**
      * 安全生产情况-详情
      * @param id id
      * @return 安全生产情况-详情
@@ -67,6 +85,20 @@ public class ProductionController {
     @ApiOperation(value = "安全生产情况-详情")
     public DataResponse<ProductionDetailResDTO> detail(@RequestParam String id) {
         return DataResponse.of(productionService.detail(id));
+    }
+
+    /**
+     * 安全生产情况-详情2
+     * @param startDate 开始时间
+     * @param endDate 结束时间
+     * @param dataType 数据类型 1:日报 2:周报 3:月报
+     * @return 安全生产情况-详情2
+     */
+    @GetMapping("/queryInfo")
+    @ApiOperation(value = "安全生产情况-详情")
+    public DataResponse<ProductionDetailResDTO> queryInfo(@RequestParam String dataType,@RequestParam String stationCode,@RequestParam String startDate,
+                                                          @RequestParam String endDate) {
+        return DataResponse.of(productionService.queryInfo(dataType,stationCode,startDate,endDate));
     }
 
     /**
@@ -147,7 +179,7 @@ public class ProductionController {
      * @param pageReqDTO 分页参数
      * @return 成功
      */
-    @PostMapping("/queryApproval")
+    @GetMapping("/queryApproval")
     @ApiOperation(value = "安全生产情况待审列表")
     public PageResponse<ProductionApprovalResDTO> queryApproval(@CurrUser CurrentLoginUser currentLoginUser,
                                                                 @RequestParam(required = false) String startDate,

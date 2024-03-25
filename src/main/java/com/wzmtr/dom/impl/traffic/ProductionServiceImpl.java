@@ -87,6 +87,39 @@ public class ProductionServiceImpl implements ProductionService {
     }
 
     @Override
+    public ProductionDetailResDTO queryInfo(String dataType,String stationCode, String startDate,
+                                            String endDate) {
+        ProductionDetailResDTO detail = productionMapper.queryInfoByStation(dataType,stationCode,startDate,endDate);
+        if(detail != null){
+            ProductionSummaryResDTO summaryRes = productionSummaryMapper.queryInfoByDate(detail.getStationCode(),detail.getDataType(),
+                    DateUtil.formatDate(detail.getStartDate()),DateUtil.formatDate(detail.getEndDate()));
+
+            if(summaryRes != null){
+                detail.setType1Desc(summaryRes.getType1Desc());
+                detail.setType2Desc(summaryRes.getType2Desc());
+                detail.setType3Desc(summaryRes.getType3Desc());
+                detail.setType4Desc(summaryRes.getType4Desc());
+                detail.setType5Desc(summaryRes.getType5Desc());
+                detail.setType6Desc(summaryRes.getType6Desc());
+            }
+
+            //获取前一日/周/月数据
+            ProductionSummaryResDTO preSummaryRes = productionSummaryMapper.queryPreInfoByDate(detail.getStationCode(),detail.getDataType(),
+                    DateUtil.formatDate(detail.getStartDate()),DateUtil.formatDate(detail.getEndDate()));
+            if(preSummaryRes != null){
+                detail.setType1PreCount(preSummaryRes.getType1Count());
+                detail.setType2PreCount(preSummaryRes.getType2Count());
+                detail.setType3PreCount(preSummaryRes.getType3Count());
+                detail.setType4PreCount(preSummaryRes.getType4Count());
+                detail.setType5PreCount(preSummaryRes.getType5Count());
+                detail.setType6PreCount(preSummaryRes.getType6Count());
+            }
+        }
+
+        return detail;
+    }
+
+    @Override
     public void add(CurrentLoginUser currentLoginUser, ProductionRecordReqDTO productionRecordReqDTO) {
         if(currentLoginUser.getStationCode() == null){
             throw new CommonException(ErrorCode.USER_NOT_BIND_STATION);
@@ -158,6 +191,7 @@ public class ProductionServiceImpl implements ProductionService {
                 approvalReq.setEndDate(productionRecordReqDTO.getEndDate());
                 approvalReq.setApprovalStation(stationRoleRes.getStationCode());
                 approvalReq.setSubmitStation(productionRecordReqDTO.getStationCode());
+                approvalReq.setCreateBy(currentLoginUser.getPersonId());
                 productionMapper.createProductionApproval(approvalReq);
                 approvalId = approvalReq.getId();
 
@@ -177,7 +211,7 @@ public class ProductionServiceImpl implements ProductionService {
                 productionMapper.modifyProductionApproval(approvalReq);
             }
 
-            productionMapper.createProductionApprovalRelation(TokenUtils.getUuId(),productionRecordReqDTO.getId(),approvalId);
+            productionMapper.createProductionApprovalRelation(TokenUtils.getUuId(),productionRecordReqDTO.getId(),approvalId,currentLoginUser.getPersonId());
             int res = productionMapper.modify(productionRecordReqDTO);
             if( res <= 0){
                 throw new CommonException(ErrorCode.UPDATE_ERROR);
