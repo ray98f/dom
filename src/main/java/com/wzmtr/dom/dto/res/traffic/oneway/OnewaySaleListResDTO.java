@@ -1,4 +1,4 @@
-package com.wzmtr.dom.dto.res.traffic.income;
+package com.wzmtr.dom.dto.res.traffic.oneway;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
@@ -9,20 +9,16 @@ import java.util.Date;
 
 /**
  * @Author: Li.Wang
- * Date: 2024/3/21 10:34
+ * Date: 2024/3/22 14:42
  */
 @Data
-public class IncomeListResDTO {
-
-    @ApiModelProperty(value = "本日总收益")
-    private Double dayIncome;
-
-    @ApiModelProperty(value = "本月累计收益")
-    private Double monthIncome;
-
-    @ApiModelProperty(value = "本年累计收益")
-    private Double yearIncome;
-
+public class OnewaySaleListResDTO {
+    @ApiModelProperty("现金购票")
+    private Long cash;
+    @ApiModelProperty("银联卡")
+    private Long unionCard;
+    @ApiModelProperty("免费福利票")
+    private Long freeTicket;
 
     @ApiModelProperty(value = "数据所属日期")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

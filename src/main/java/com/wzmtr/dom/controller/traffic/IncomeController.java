@@ -47,7 +47,7 @@ public class IncomeController {
     /**
      * 收益总体情况-详情
      */
-    @GetMapping("/detail")
+    @PostMapping("/detail")
     @ApiOperation(value = "收益总体情况")
     public DataResponse<IncomeDetailResDTO> add(@RequestBody SidReqDTO reqDTO) {
         return DataResponse.of(incomeService.detail(reqDTO));

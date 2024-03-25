@@ -61,6 +61,19 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
         return dateTimeNow(YYYYMMDDHHMMSS);
     }
 
+    public static Date currentDate() {
+        Date now = new Date();
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        // 将字符串解析为Date对象
+        try {
+            String format = dateFormatter.format(now);
+            // 输出Date对象
+            return dateFormatter.parse(format);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public static String dateTimeNow(final String format) {
         return parseDateToStr(format, new Date());
     }
@@ -100,12 +113,12 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
     /**
      * 日期型字符串转化为日期 格式
      */
-    public static Date parseDate(Object str) {
+    public static Date parseDate(String str) {
         if (str == null) {
             return null;
         }
         try {
-            return parseDate(str.toString(), PARSE_PATTERNS);
+            return parseDate(str, PARSE_PATTERNS);
         } catch (ParseException e) {
             return null;
         }
