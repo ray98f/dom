@@ -53,6 +53,10 @@ public class WorkbenchServiceImpl implements WorkbenchService {
 
     @Override
     public void commitApproval(ApprovalReqDTO approvalReqDTO) {
+        //TODO
+        //根据节点获取审批人员
+        //currentNode
+
 
     }
 
