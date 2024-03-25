@@ -168,7 +168,7 @@
     </update>
 
     <delete id="deleteEvent">
-        DELETE FROM VEHICLE_LINE_EVENT_INFO
+        DELETE FROM TRAFFIC_MAINTENANCE_INFO
         WHERE ID IN (
         <foreach collection="ids" index="index" item="id" separator=",">
             #{id}
