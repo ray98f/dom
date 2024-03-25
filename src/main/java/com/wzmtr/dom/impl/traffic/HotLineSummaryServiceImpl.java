@@ -4,25 +4,17 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Assert;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
-import com.wzmtr.dom.dataobject.traffic.IncomeRecordDO;
 import com.wzmtr.dom.dataobject.traffic.TrafficHotlineSummaryDO;
 import com.wzmtr.dom.dto.req.common.SidReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineSummaryAddReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineSummaryListReqDTO;
-import com.wzmtr.dom.dto.req.traffic.income.IncomeAddReqDTO;
-import com.wzmtr.dom.dto.req.traffic.income.IncomeListReqDTO;
-import com.wzmtr.dom.dto.req.traffic.onewaysale.OnewaySaleAddReqDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineSummaryDetailResDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineSummaryListResDTO;
-import com.wzmtr.dom.dto.res.traffic.income.IncomeDetailResDTO;
-import com.wzmtr.dom.dto.res.traffic.income.IncomeListResDTO;
-import com.wzmtr.dom.dto.res.traffic.oneway.OnewaySaleDetailResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.mapper.traffic.HotLineSummaryMapper;
-import com.wzmtr.dom.mapper.traffic.IncomeRecordMapper;
 import com.wzmtr.dom.service.traffic.HotLineSummaryService;
-import com.wzmtr.dom.service.traffic.IncomeService;
 import com.wzmtr.dom.utils.BeanUtils;
+import com.wzmtr.dom.utils.DateUtils;
 import com.wzmtr.dom.utils.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +41,8 @@ public class HotLineSummaryServiceImpl implements HotLineSummaryService {
         TrafficHotlineSummaryDO trafficHotlineSummaryDO = reqDTO.toDO(reqDTO);
         trafficHotlineSummaryDO.setCreateBy(TokenUtils.getCurrentPersonId());
         trafficHotlineSummaryDO.setUpdateBy(TokenUtils.getCurrentPersonId());
+        trafficHotlineSummaryDO.setCreateDate(DateUtils.currentDate());
+        trafficHotlineSummaryDO.setUpdateDate(DateUtils.currentDate());
         hotLineSummaryMapper.insert(trafficHotlineSummaryDO);
     }
 
