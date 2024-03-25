@@ -5,10 +5,8 @@ import com.wzmtr.dom.constant.ValidationGroup;
 import com.wzmtr.dom.dto.req.common.SidReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineHandoverAddReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineHandoverListReqDTO;
-import com.wzmtr.dom.dto.req.traffic.hotline.HotLineImportantAddReqDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineHandoverDetailResDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineHandoverListResDTO;
-import com.wzmtr.dom.dto.res.traffic.hotline.HotLineImportantDetailResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.entity.response.PageResponse;
@@ -36,50 +34,50 @@ public class HotLineHandoverController {
     private HotLineHandoverService hotLineHandoverService;
 
     /**
-     * 重要热线内容-列表
+     * 需转交其他部门做处理事项-列表
      *
-     * @return 重要热线内容
+     * @return 需转交其他部门做处理事项
      */
     @PostMapping("/list")
-    @ApiOperation(value = "重要热线内容-列表")
+    @ApiOperation(value = "需转交其他部门做处理事项-列表")
     public PageResponse<HotLineHandoverListResDTO> page(@RequestBody HotLineHandoverListReqDTO reqDTO) {
         return PageResponse.of(hotLineHandoverService.list(reqDTO));
     }
 
     /**
-     * 重要热线内容-详情
+     * 需转交其他部门做处理事项-详情
      *
-     * @return 重要热线内容
+     * @return 需转交其他部门做处理事项
      */
     @PostMapping("/detail")
-    @ApiOperation(value = "重要热线内容")
+    @ApiOperation(value = "需转交其他部门做处理事项")
     public DataResponse<HotLineHandoverDetailResDTO> detail(@RequestBody SidReqDTO reqDTO) {
         return DataResponse.of(hotLineHandoverService.detail(reqDTO));
     }
 
     @PostMapping("/acc")
-    @ApiOperation(value = "重要热线内容")
+    @ApiOperation(value = "需转交其他部门做处理事项")
     public DataResponse<HotLineHandoverDetailResDTO> acc(@RequestBody SidReqDTO reqDTO) {
         return DataResponse.of(hotLineHandoverService.acc(reqDTO));
     }
 
     /**
-     * 重要热线内容-新增
+     * 需转交其他部门做处理事项-新增
      */
     @PostMapping("/add")
-    @ApiOperation(value = "重要热线内容-新增")
+    @ApiOperation(value = "需转交其他部门做处理事项-新增")
     public DataResponse<T> add(@RequestBody HotLineHandoverAddReqDTO reqDTO) {
         hotLineHandoverService.add(reqDTO);
         return DataResponse.success();
     }
 
     /**
-     * 重要热线内容-编辑
+     * 需转交其他部门做处理事项-编辑
      *
      * @return 成功
      */
     @PostMapping("/modify")
-    @ApiOperation(value = "重要热线内容-编辑")
+    @ApiOperation(value = "需转交其他部门做处理事项-编辑")
     public DataResponse<T> modify(@CurrUser CurrentLoginUser currentLoginUser,
                                   @Validated({ValidationGroup.modify.class})
                                   @RequestBody HotLineHandoverAddReqDTO req) {
