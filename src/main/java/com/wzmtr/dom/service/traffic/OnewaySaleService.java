@@ -23,4 +23,6 @@ public interface OnewaySaleService {
     void modify(CurrentLoginUser currentLoginUser, OnewaySaleAddReqDTO passengerRecordReqDTO);
 
     Page<OnewaySaleListResDTO> list(OnewaySaleListReqDTO reqDTO);
+
+    OnewaySaleDetailResDTO acc(String date);
 }

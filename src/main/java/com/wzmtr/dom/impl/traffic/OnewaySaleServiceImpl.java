@@ -1,6 +1,8 @@
 package com.wzmtr.dom.impl.traffic;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.dataobject.traffic.TrafficOnewaySaleDO;
@@ -35,7 +37,6 @@ public class OnewaySaleServiceImpl implements OnewaySaleService {
     public OnewaySaleDetailResDTO detail(SidReqDTO reqDTO) {
         String id = reqDTO.getId();
         TrafficOnewaySaleDO trafficOnewaySaleDO = onewaySaleMapper.selectById(id);
-        // todo 环比计算
         return OnewaySaleDetailResDTO.buildRes(trafficOnewaySaleDO);
     }
 
@@ -50,8 +51,8 @@ public class OnewaySaleServiceImpl implements OnewaySaleService {
 
     @Override
     public void modify(CurrentLoginUser currentLoginUser, OnewaySaleAddReqDTO passengerRecordReqDTO) {
-        TrafficOnewaySaleDO convert = BeanUtils.convert(passengerRecordReqDTO, TrafficOnewaySaleDO.class);
-        onewaySaleMapper.updateById(convert);
+        TrafficOnewaySaleDO onewaySaleDO = passengerRecordReqDTO.toDO(passengerRecordReqDTO);
+        onewaySaleMapper.update(onewaySaleDO,new UpdateWrapper<TrafficOnewaySaleDO>().eq("id",onewaySaleDO.getId()));
     }
 
     @Override
@@ -68,5 +69,11 @@ public class OnewaySaleServiceImpl implements OnewaySaleService {
         page.setRecords(result);
         page.setSize(list.getSize());
         return page;
+    }
+
+    @Override
+    public OnewaySaleDetailResDTO acc(String date) {
+        // todo acc
+        return null;
     }
 }

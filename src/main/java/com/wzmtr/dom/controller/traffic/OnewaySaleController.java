@@ -16,10 +16,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 客运部-单程票发售情况
@@ -53,6 +50,11 @@ public class OnewaySaleController {
         return DataResponse.of(onewaySaleService.detail(reqDTO));
     }
 
+    @GetMapping("/acc")
+    @ApiOperation(value = "获取ACC数据")
+    public DataResponse<OnewaySaleDetailResDTO> acc(@RequestParam String date) {
+        return DataResponse.of(onewaySaleService.acc(date));
+    }
     /**
      * 单程票发售情况-新增
      */

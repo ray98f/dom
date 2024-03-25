@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dataobject.traffic.TrafficOnewaySaleDO;
 import com.wzmtr.dom.dto.req.traffic.onewaysale.OnewaySaleListReqDTO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -14,5 +15,5 @@ import org.springframework.stereotype.Repository;
 @Mapper
 @Repository
 public interface OnewaySaleMapper extends BaseMapper<TrafficOnewaySaleDO>{
-    Page<TrafficOnewaySaleDO> list(Page<Object> of, OnewaySaleListReqDTO reqDTO);
+    Page<TrafficOnewaySaleDO> list(Page<Object> of, @Param("req") OnewaySaleListReqDTO reqDTO);
 }

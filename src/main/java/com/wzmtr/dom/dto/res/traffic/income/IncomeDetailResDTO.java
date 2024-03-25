@@ -6,6 +6,9 @@ import com.wzmtr.dom.dataobject.traffic.IncomeRecordDO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.util.Date;
+
 /**
  * description:
  *
@@ -36,8 +39,14 @@ public class IncomeDetailResDTO extends BaseEntity {
     private Double s2AvgFare;
     @ApiModelProperty(value = "平均票价现网")
     private Double wiringAvgFare;
+    @ApiModelProperty(value = "开始")
+    private Date startDate;
+    @ApiModelProperty(value = "结束")
+    private Date endDate;
+    @ApiModelProperty(value = "版本号")
+    private String version;
 
-    public static IncomeDetailResDTO buildRes(IncomeRecordDO incomeRecordDO){
+    public static IncomeDetailResDTO buildRes(IncomeRecordDO incomeRecordDO) {
         IncomeDetailResDTO convert = BeanUtils.convert(incomeRecordDO, IncomeDetailResDTO.class);
         IncomeListResDTO incomeListResDTO = new IncomeListResDTO();
         incomeListResDTO.setDayIncome(incomeRecordDO.getDayIncome());

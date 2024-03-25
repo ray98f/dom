@@ -13,6 +13,8 @@ import java.util.Date;
  */
 @Data
 public class IncomeListResDTO {
+    @ApiModelProperty(value = "id")
+    private String id;
 
     @ApiModelProperty(value = "本日总收益")
     private Double dayIncome;
@@ -31,5 +33,9 @@ public class IncomeListResDTO {
             timezone = "GMT+8"
     )
     private Date dataDate;
+    @ApiModelProperty(value = "数据起始日期")
+    private String startDate;
+    @ApiModelProperty(value = "数据终止日期")
+    private String endDate;
 
 }
