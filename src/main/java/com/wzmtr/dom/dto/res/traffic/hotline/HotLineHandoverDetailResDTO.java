@@ -1,7 +1,5 @@
-package com.wzmtr.dom.dto.req.traffic.hotline;
+package com.wzmtr.dom.dto.res.traffic.hotline;
 
-import com.wzmtr.dom.dataobject.traffic.TrafficHotlineImportantDO;
-import com.wzmtr.dom.utils.BeanUtils;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -9,14 +7,11 @@ import java.util.Date;
 
 /**
  * @Author: Li.Wang
- * Date: 2024/3/22 15:03
+ * Date: 2024/3/22 16:58
  */
 @Data
-public class HotLineImportantAddReqDTO {
+public class HotLineHandoverDetailResDTO {
 
-    /**
-     * ID
-     */
     @ApiModelProperty("ID")
     private String id;
     /**
@@ -65,9 +60,11 @@ public class HotLineImportantAddReqDTO {
     @ApiModelProperty("数据结束日期")
     private Date endDate;
 
+    /**
+     * 版本号(乐观锁)
+     */
+    @ApiModelProperty("版本号(乐观锁)")
+    private String version;
 
 
-    public TrafficHotlineImportantDO toDO(HotLineImportantAddReqDTO req) {
-        return BeanUtils.convert(req, TrafficHotlineImportantDO.class);
-    }
 }
