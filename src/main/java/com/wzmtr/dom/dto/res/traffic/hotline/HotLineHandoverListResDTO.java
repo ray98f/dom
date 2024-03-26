@@ -19,11 +19,6 @@ public class HotLineHandoverListResDTO {
      */
     @ApiModelProperty("数量")
     private Long count;
-    /**
-     * 主要内容
-     */
-    @ApiModelProperty("主要内容")
-    private String mainContent;
 
     /**
      * 数据所属日期

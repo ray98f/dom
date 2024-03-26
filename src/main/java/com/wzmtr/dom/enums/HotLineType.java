@@ -9,14 +9,14 @@ import lombok.Getter;
  */
 @Getter
 public enum HotLineType {
-    COMPLAIN(0, "投诉"),
-    PRAISE(0, "表扬"),
-    SUGGEST(0, "建议"),
-    CONSULT(0, "咨询"),
-    HELP(0, "求助"),
-    TRANSFER(0, "转接S1"),
-    ELSE(0, "其他"),
-    APP(0, "温州轨道APP");
+    COMPLAIN(1, "投诉"),
+    PRAISE(2, "表扬"),
+    SUGGEST(3, "建议"),
+    CONSULT(4, "咨询"),
+    HELP(5, "求助"),
+    TRANSFER(6, "转接S1"),
+    ELSE(7, "其他"),
+    APP(8, "温州轨道APP");
 
     private final Integer code;
     private final String desc;

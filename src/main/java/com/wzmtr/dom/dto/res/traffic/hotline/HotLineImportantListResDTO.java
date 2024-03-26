@@ -27,10 +27,10 @@ public class HotLineImportantListResDTO {
     private Long praiseTotal;
 
     /**
-     * 锦旗
+     * 咨询
      */
-    @ApiModelProperty("锦旗")
-    private Long pennant;
+    @ApiModelProperty("咨询")
+    private Long consult;
 
 
     @ApiModelProperty(value = "数据所属日期")

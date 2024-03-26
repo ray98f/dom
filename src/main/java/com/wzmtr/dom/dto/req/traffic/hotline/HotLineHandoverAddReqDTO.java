@@ -16,10 +16,15 @@ import java.util.Date;
 @Data
 public class HotLineHandoverAddReqDTO {
     /**
-     *
+     * id
      */
     @TableId("ID")
     private String id;
+    /**
+     * 热线类型:1投诉,2表扬,3建议4咨询5求助6转接S1,7APP,8锦旗,9其他
+     */
+    @ApiModelProperty("热线类型:1投诉,2表扬,3建议4咨询5求助6转接S1,7APP,8锦旗,9其他")
+    private String hotlineType;
     /**
      * 主要内容
      */
@@ -55,6 +60,11 @@ public class HotLineHandoverAddReqDTO {
      */
     @ApiModelProperty("数据结束日期")
     private Date endDate;
+    /**
+     * 版本号(乐观锁)
+     */
+    @ApiModelProperty("版本号(乐观锁)")
+    private String version;
 
     public TrafficHotlineHandoverDO toDO(HotLineHandoverAddReqDTO req) {
         return BeanUtils.convert(req, TrafficHotlineHandoverDO.class);

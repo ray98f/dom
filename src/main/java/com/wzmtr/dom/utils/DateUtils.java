@@ -74,6 +74,10 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
             throw new RuntimeException(e);
         }
     }
+
+    public static void main(String[] args) {
+        System.out.println(DateUtils.currentDate());
+    }
     public static String dateTimeNow(final String format) {
         return parseDateToStr(format, new Date());
     }

@@ -1,45 +1,23 @@
-package com.wzmtr.dom.dataobject.traffic;
+package com.wzmtr.dom.dto.res.operate.passengerflow;
 
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
-import java.io.Serializable;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 /**
- * @TableName TRAFFIC_HOTLINE_HANDOVER
+ * @Author: Li.Wang
+ * Date: 2024/3/26 17:37
  */
-@TableName("TRAFFIC_HOTLINE_HANDOVER")
 @Data
-public class TrafficHotlineHandoverDO implements Serializable {
-
+public class PassengerFlowListResDTO {
     /**
-     *
+     * ID
      */
-    @TableId("ID")
+    @ApiModelProperty("ID")
     private String id;
-    /**
-     * 主要内容
-     */
-    @ApiModelProperty("主要内容")
-    private String mainContent;
-    /**
-     * 来源
-     */
-    @ApiModelProperty("来源")
-    private String source;
-    /**
-     * 处理结果
-     */
-    @ApiModelProperty("处理结果")
-    private String result;
-    /**
-     * 数量
-     */
-    @ApiModelProperty("数量")
-    private Long count;
     /**
      * 数据所属日期
      */
@@ -78,7 +56,9 @@ public class TrafficHotlineHandoverDO implements Serializable {
     /**
      * 创建者
      */
+    @Size(max = 255, message = "编码长度不能超过255")
     @ApiModelProperty("创建者")
+    @Length(max = 255, message = "编码长度不能超过255")
     private String createBy;
     /**
      * 更新日期
@@ -91,5 +71,25 @@ public class TrafficHotlineHandoverDO implements Serializable {
     @ApiModelProperty("更新者")
     private String updateBy;
 
+    /**
+     * 月累计客运量
+     */
+    @ApiModelProperty("月累计客运量")
+    private Integer monthPass;
+
+    /**
+     * 本月日均客运量
+     */
+    @ApiModelProperty("本月日均客运量")
+    private Integer dayAvgThisMonth;
+
+    /**
+     * 本日进站
+     */
+    private Integer todayInCount;
+    /**
+     * 本日出站
+     */
+    private Integer todayOutCount;
 
 }
