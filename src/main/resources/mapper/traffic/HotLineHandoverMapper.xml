@@ -61,8 +61,6 @@
         select *
         from TRAFFIC_HOTLINE_HANDOVER
         WHERE DATA_DATE = TO_DATE(#{date}, 'YYYY-MM-DD HH24:MI:SS')
-        <if test="dataType != null and dataType=''">
             AND DATA_TYPE = #{dataType}
-        </if>
     </select>
 </mapper>

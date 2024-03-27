@@ -41,9 +41,7 @@
         select *
         from TRAFFIC_HOTLINE_IMPORTANT
         where DATA_DATE =
-        to_date(#{date}, 'yyyy-mm-dd hh24:mi:ss')
-        <if test="dataType != null and dataType=''">
-            AND DATA_TYPE = #{dataType}
-        </if>
+              to_date(#{date}, 'yyyy-mm-dd hh24:mi:ss')
+          AND DATA_TYPE = #{dataType}
     </select>
 </mapper>
