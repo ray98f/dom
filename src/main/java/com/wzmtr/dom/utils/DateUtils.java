@@ -49,6 +49,14 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
         return dateTimeNow(YYYY_MM_DD_HH_MM_SS);
     }
 
+
+    public static Date getPreviousDay(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        return calendar.getTime();
+    }
+
     /**
      * 返回当前时间的格式为YYYYMMDD
      * @return 当前时间
@@ -75,8 +83,22 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
         }
     }
 
+    public static Date formatDateYYYY_MM_DD_HH_MM_SS(Date date) {
+        // 创建一个新的Calendar实例
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        // 设置默认时间为00:00:00
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+        // 使用新的Calendar实例创建一个新的Date对象
+        return calendar.getTime();
+    }
+
     public static void main(String[] args) {
-        System.out.println(DateUtils.currentDate());
+        System.out.println(formatDateYYYY_MM_DD_HH_MM_SS(new Date()));
     }
     public static String dateTimeNow(final String format) {
         return parseDateToStr(format, new Date());

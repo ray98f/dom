@@ -42,6 +42,7 @@ public class HotLineSummaryController {
     public PageResponse<HotLineSummaryListResDTO> page(@RequestBody HotLineSummaryListReqDTO reqDTO) {
         return PageResponse.of(hotLineSummaryService.list(reqDTO));
     }
+
     /**
      * 服务热线汇总-详情
      * @return 服务热线汇总

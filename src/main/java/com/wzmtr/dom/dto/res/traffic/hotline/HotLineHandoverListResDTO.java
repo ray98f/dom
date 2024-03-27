@@ -1,7 +1,9 @@
 package com.wzmtr.dom.dto.res.traffic.hotline;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -18,11 +20,16 @@ public class HotLineHandoverListResDTO {
      * 数量
      */
     @ApiModelProperty("数量")
-    private Long count;
+    private Integer needHandOverCount;
 
     /**
      * 数据所属日期
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8"
+    )
     @ApiModelProperty("数据所属日期")
     private Date dataDate;
     /**
@@ -33,11 +40,21 @@ public class HotLineHandoverListResDTO {
     /**
      * 数据起始日期
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8"
+    )
     @ApiModelProperty("数据起始日期")
     private Date startDate;
     /**
      * 数据结束日期
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8"
+    )
     @ApiModelProperty("数据结束日期")
     private Date endDate;
 

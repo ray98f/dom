@@ -8,9 +8,11 @@ import com.wzmtr.dom.dataobject.traffic.TrafficHotlineSummaryDO;
 import com.wzmtr.dom.dto.req.common.SidReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineSummaryAddReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineSummaryListReqDTO;
+import com.wzmtr.dom.dto.res.traffic.hotline.HotLineImportantListResDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineSummaryDetailResDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineSummaryListResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
+import com.wzmtr.dom.mapper.traffic.HotLineImportantMapper;
 import com.wzmtr.dom.mapper.traffic.HotLineSummaryMapper;
 import com.wzmtr.dom.service.traffic.HotLineSummaryService;
 import com.wzmtr.dom.utils.BeanUtils;
@@ -19,6 +21,8 @@ import com.wzmtr.dom.utils.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @Author: Li.Wang
@@ -29,7 +33,8 @@ import org.springframework.stereotype.Service;
 public class HotLineSummaryServiceImpl implements HotLineSummaryService {
     @Autowired
     private HotLineSummaryMapper hotLineSummaryMapper;
-
+    @Autowired
+    private HotLineImportantMapper hotLineImportantMapper;
     @Override
     public HotLineSummaryDetailResDTO detail(SidReqDTO reqDTO) {
         TrafficHotlineSummaryDO trafficHotlineSummaryDO = hotLineSummaryMapper.selectById(reqDTO.getId());
@@ -40,9 +45,11 @@ public class HotLineSummaryServiceImpl implements HotLineSummaryService {
     public void add(HotLineSummaryAddReqDTO reqDTO) {
         TrafficHotlineSummaryDO trafficHotlineSummaryDO = reqDTO.toDO(reqDTO);
         trafficHotlineSummaryDO.setCreateBy(TokenUtils.getCurrentPersonId());
-        trafficHotlineSummaryDO.setUpdateBy(TokenUtils.getCurrentPersonId());
+        trafficHotlineSummaryDO.setId(TokenUtils.getUuId());
+        trafficHotlineSummaryDO.setDelFlag("0");
         trafficHotlineSummaryDO.setCreateDate(DateUtils.currentDate());
-        trafficHotlineSummaryDO.setUpdateDate(DateUtils.currentDate());
+        trafficHotlineSummaryDO.setCreateBy(TokenUtils.getCurrentPersonId());
+        trafficHotlineSummaryDO.setVersion("0");
         hotLineSummaryMapper.insert(trafficHotlineSummaryDO);
     }
 
@@ -60,9 +67,21 @@ public class HotLineSummaryServiceImpl implements HotLineSummaryService {
     public Page<HotLineSummaryListResDTO> list(HotLineSummaryListReqDTO reqDTO) {
         PageHelper.startPage(reqDTO.getPageNo(),reqDTO.getPageSize());
         Page<HotLineSummaryListResDTO> list = hotLineSummaryMapper.list(reqDTO.of(), reqDTO);
-        if (CollectionUtil.isEmpty(list.getRecords())){
+        List<HotLineSummaryListResDTO> records = list.getRecords();
+        if (CollectionUtil.isEmpty(records)){
             return new Page<>();
         }
+        records.forEach(a->{
+            HotLineSummaryListReqDTO req = new HotLineSummaryListReqDTO();
+            req.setStartDate(DateUtils.dateTime(a.getStartDate()));
+            req.setEndDate(DateUtils.dateTime(a.getEndDate()));
+            req.setDataType(a.getDataType());
+            List<HotLineImportantListResDTO> list1 = hotLineImportantMapper.list(req);
+            //查日期内是否存在重要内容数据
+            if (CollectionUtil.isNotEmpty(list1)){
+                a.setHotLineImportant(list1);
+            }
+        });
         return list;
     }
 

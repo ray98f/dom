@@ -30,8 +30,8 @@ public class OnewaySaleListResDTO {
     )
     private Date dataDate;
     @ApiModelProperty(value = "数据起始日期")
-    private String startDate;
+    private Date startDate;
     @ApiModelProperty(value = "数据终止日期")
-    private String endDate;
+    private Date endDate;
 
 }

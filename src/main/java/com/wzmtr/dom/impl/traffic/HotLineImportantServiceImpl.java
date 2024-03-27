@@ -1,23 +1,16 @@
 package com.wzmtr.dom.impl.traffic;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.lang.Assert;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
 import com.wzmtr.dom.dataobject.traffic.TrafficHotlineImportantDO;
 import com.wzmtr.dom.dto.req.common.SidReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineImportantAddDataReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineImportantAddReqDTO;
-import com.wzmtr.dom.dto.req.traffic.hotline.HotLineImportantListReqDTO;
-import com.wzmtr.dom.dto.req.traffic.hotline.HotLineSummaryListReqDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineImportantDetailResDTO;
-import com.wzmtr.dom.dto.res.traffic.hotline.HotLineImportantListResDTO;
-import com.wzmtr.dom.dto.res.traffic.hotline.HotLineSummaryListResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.mapper.traffic.HotLineImportantMapper;
-import com.wzmtr.dom.mapper.traffic.HotLineSummaryMapper;
 import com.wzmtr.dom.service.traffic.HotLineImportantService;
+import com.wzmtr.dom.utils.Assert;
 import com.wzmtr.dom.utils.BeanUtils;
 import com.wzmtr.dom.utils.DateUtils;
 import com.wzmtr.dom.utils.TokenUtils;
@@ -36,13 +29,11 @@ import java.util.List;
 public class HotLineImportantServiceImpl implements HotLineImportantService {
     @Autowired
     private HotLineImportantMapper hotLineImportantMapper;
-    @Autowired
-    private HotLineSummaryMapper hotLineSummaryMapper;
 
     @Override
-    public HotLineImportantDetailResDTO detail(SidReqDTO reqDTO) {
-        TrafficHotlineImportantDO trafficHotlineImportantDO = hotLineImportantMapper.selectById(reqDTO.getId());
-        return BeanUtils.convert(trafficHotlineImportantDO, HotLineImportantDetailResDTO.class);
+    public List<HotLineImportantDetailResDTO> detail(String date) {
+        Assert.notNull(date, "参数缺失");
+        return hotLineImportantMapper.selectByDate(date);
     }
 
     @Override
@@ -79,20 +70,9 @@ public class HotLineImportantServiceImpl implements HotLineImportantService {
         });
     }
 
-    @Override
-    public Page<HotLineSummaryListResDTO> list(HotLineSummaryListReqDTO reqDTO) {
-        PageHelper.startPage(reqDTO.getPageNo(), reqDTO.getPageSize());
-        Page<HotLineSummaryListResDTO> list = hotLineSummaryMapper.list(reqDTO.of(), reqDTO);
-        List<HotLineSummaryListResDTO> records = list.getRecords();
-        if (CollectionUtil.isEmpty(records)) {
-            return new Page<>();
-        }
-        return list;
-    }
-
 
     @Override
-    public HotLineImportantDetailResDTO acc(SidReqDTO reqDTO) {
+    public List<HotLineImportantDetailResDTO> acc(SidReqDTO reqDTO) {
         return null;
     }
 }

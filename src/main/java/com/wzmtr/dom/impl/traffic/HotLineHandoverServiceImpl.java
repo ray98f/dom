@@ -1,10 +1,12 @@
 package com.wzmtr.dom.impl.traffic;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.lang.Assert;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.common.collect.Lists;
 import com.wzmtr.dom.dataobject.traffic.TrafficHotlineHandoverDO;
 import com.wzmtr.dom.dto.req.common.SidReqDTO;
+import com.wzmtr.dom.dto.req.traffic.hotline.HandoverAddData;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineHandoverAddReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineHandoverListReqDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineHandoverDetailResDTO;
@@ -14,12 +16,13 @@ import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
 import com.wzmtr.dom.mapper.traffic.HotLineHandoverMapper;
 import com.wzmtr.dom.service.traffic.HotLineHandoverService;
-import com.wzmtr.dom.utils.BeanUtils;
-import com.wzmtr.dom.utils.DateUtils;
-import com.wzmtr.dom.utils.TokenUtils;
+import com.wzmtr.dom.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * @Author: Li.Wang
@@ -41,9 +44,10 @@ public class HotLineHandoverServiceImpl implements HotLineHandoverService {
     }
 
     @Override
-    public HotLineHandoverDetailResDTO detail(SidReqDTO reqDTO) {
-        TrafficHotlineHandoverDO trafficHotlineHandoverDO = hotLineHandoverMapper.selectById(reqDTO.getId());
-        return BeanUtils.convert(trafficHotlineHandoverDO, HotLineHandoverDetailResDTO.class);
+    public List<HotLineHandoverDetailResDTO> detail(String date) {
+        // 查日期内所有数据
+        Assert.notNull(date, "参数缺失");
+        return hotLineHandoverMapper.selectListByDate(date);
     }
 
     @Override
@@ -54,13 +58,23 @@ public class HotLineHandoverServiceImpl implements HotLineHandoverService {
     @Override
     public void add(HotLineHandoverAddReqDTO reqDTO) {
         Assert.isFalse(hotLineHandoverMapper.selectIsExist(reqDTO) > 0, "所属日期数据已存在，无法重复新增");
-        TrafficHotlineHandoverDO trafficHotlineHandoverDO = reqDTO.toDO(reqDTO);
-        trafficHotlineHandoverDO.setId(TokenUtils.getUuId());
-        trafficHotlineHandoverDO.setCreateBy(TokenUtils.getCurrentPersonId());
-        trafficHotlineHandoverDO.setCreateDate(DateUtils.currentDate());
-        trafficHotlineHandoverDO.setDelFlag("0");
-        trafficHotlineHandoverDO.setVersion("0");
-        hotLineHandoverMapper.insert(trafficHotlineHandoverDO);
+        List<HandoverAddData> addData = Assert.notNull(reqDTO.getDataList(), "参数缺失");
+        List<TrafficHotlineHandoverDO> list = Lists.newArrayList();
+        addData.forEach(x -> {
+            TrafficHotlineHandoverDO convert = BeanUtils.convert(x, TrafficHotlineHandoverDO.class);
+            convert.setId(TokenUtils.getUuId());
+            convert.setDelFlag("0");
+            convert.setCreateDate(DateUtils.currentDate());
+            convert.setDataDate(DateUtils.formatDateYYYY_MM_DD_HH_MM_SS(reqDTO.getDataDate()));
+            convert.setStartDate(DateUtils.formatDateYYYY_MM_DD_HH_MM_SS(reqDTO.getStartDate()));
+            convert.setEndDate(DateUtils.formatDateYYYY_MM_DD_HH_MM_SS(reqDTO.getEndDate()));
+            convert.setCreateBy(TokenUtils.getCurrentPersonId());
+            convert.setVersion("0");
+            list.add(convert);
+        });
+        if (CollectionUtil.isNotEmpty(list)) {
+            hotLineHandoverMapper.insertList(list);
+        }
     }
 
     @Override
@@ -69,9 +83,28 @@ public class HotLineHandoverServiceImpl implements HotLineHandoverService {
         if (result == 0) {
             throw new CommonException(ErrorCode.NORMAL_ERROR, "当前数据已被编辑，请刷新列表并重新编辑数据");
         }
-        TrafficHotlineHandoverDO trafficHotlineHandoverDO = req.toDO(req);
-        trafficHotlineHandoverDO.setUpdateBy(TokenUtils.getCurrentPersonId());
-        trafficHotlineHandoverDO.setUpdateDate(DateUtils.currentDate());
-        hotLineHandoverMapper.updateById(trafficHotlineHandoverDO);
+        List<HandoverAddData> addData = Assert.notNull(req.getDataList(), "参数缺失");
+        addData.forEach(x -> {
+            TrafficHotlineHandoverDO convert = BeanUtils.convert(x, TrafficHotlineHandoverDO.class);
+            if (StringUtils.isNotEmpty(convert.getId())) {
+                convert.setUpdateBy(TokenUtils.getCurrentPersonId());
+                convert.setUpdateDate(DateUtils.currentDate());
+                convert.setDataDate(DateUtils.formatDateYYYY_MM_DD_HH_MM_SS(convert.getDataDate()));
+                convert.setStartDate(DateUtils.formatDateYYYY_MM_DD_HH_MM_SS(convert.getStartDate()));
+                convert.setEndDate(DateUtils.formatDateYYYY_MM_DD_HH_MM_SS(convert.getEndDate()));
+                convert.setVersion(StringUtils.incrementToString(convert.getVersion()));
+                hotLineHandoverMapper.updateById(convert);
+            } else {
+                convert.setId(TokenUtils.getUuId());
+                convert.setDelFlag("0");
+                convert.setCreateDate(DateUtils.currentDate());
+                convert.setDataDate(DateUtils.formatDateYYYY_MM_DD_HH_MM_SS(convert.getDataDate()));
+                convert.setStartDate(DateUtils.formatDateYYYY_MM_DD_HH_MM_SS(convert.getStartDate()));
+                convert.setEndDate(DateUtils.formatDateYYYY_MM_DD_HH_MM_SS(convert.getEndDate()));
+                convert.setCreateBy(TokenUtils.getCurrentPersonId());
+                convert.setVersion("0");
+                hotLineHandoverMapper.insert(convert);
+            }
+        });
     }
 }

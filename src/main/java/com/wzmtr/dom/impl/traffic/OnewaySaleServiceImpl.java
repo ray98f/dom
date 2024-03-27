@@ -18,6 +18,7 @@ import com.wzmtr.dom.utils.BeanUtils;
 import com.wzmtr.dom.utils.StreamUtil;
 import com.wzmtr.dom.utils.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.apache.bcel.generic.RET;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +46,6 @@ public class OnewaySaleServiceImpl implements OnewaySaleService {
         TrafficOnewaySaleDO onewaySaleDO = reqDTO.toDO(reqDTO);
         onewaySaleDO.setId(TokenUtils.getUuId());
         onewaySaleDO.setCreateBy(TokenUtils.getCurrentPersonId());
-        onewaySaleDO.setUpdateBy(TokenUtils.getCurrentPersonId());
         onewaySaleMapper.insert(onewaySaleDO);
     }
 
@@ -58,17 +58,12 @@ public class OnewaySaleServiceImpl implements OnewaySaleService {
     @Override
     public Page<OnewaySaleListResDTO> list(OnewaySaleListReqDTO reqDTO) {
         PageHelper.startPage(reqDTO.getPageNo(), reqDTO.getPageSize());
-        Page<TrafficOnewaySaleDO> list = onewaySaleMapper.list(reqDTO.of(), reqDTO);
-        List<TrafficOnewaySaleDO> records = list.getRecords();
+        Page<OnewaySaleListResDTO> list = onewaySaleMapper.list(reqDTO.of(), reqDTO);
+        List<OnewaySaleListResDTO> records = list.getRecords();
         if (CollectionUtil.isEmpty(records)) {
             return new Page<>();
         }
-        List<OnewaySaleListResDTO> result = StreamUtil.map(records, trafficOnewaySaleDO -> BeanUtils.convert(trafficOnewaySaleDO, OnewaySaleListResDTO.class));
-        Page<OnewaySaleListResDTO> page = new Page<>();
-        page.setTotal(list.getTotal());
-        page.setRecords(result);
-        page.setSize(list.getSize());
-        return page;
+        return list;
     }
 
     @Override

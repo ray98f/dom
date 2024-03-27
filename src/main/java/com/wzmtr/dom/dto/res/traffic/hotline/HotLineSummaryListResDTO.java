@@ -6,6 +6,7 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author: Li.Wang
@@ -49,5 +50,12 @@ public class HotLineSummaryListResDTO {
     private Date startDate;
     @ApiModelProperty(value = "数据终止日期")
     private Date endDate;
-
+    /**
+     * 热线重要内容列表
+     */
+    private List<HotLineImportantListResDTO> hotLineImportant;
+    /**
+     * 数据类型
+     */
+    private String dataType;
 }

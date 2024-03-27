@@ -16,10 +16,10 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * 客运部-需转交其他部门做处理事项
@@ -50,10 +50,10 @@ public class HotLineHandoverController {
      *
      * @return 需转交其他部门做处理事项
      */
-    @PostMapping("/detail")
-    @ApiOperation(value = "需转交其他部门做处理事项")
-    public DataResponse<HotLineHandoverDetailResDTO> detail(@RequestBody SidReqDTO reqDTO) {
-        return DataResponse.of(hotLineHandoverService.detail(reqDTO));
+    @GetMapping("/detail")
+    @ApiOperation(value = "需转交其他部门做处理事项详情")
+    public DataResponse<List<HotLineHandoverDetailResDTO>> detail(@RequestParam String date) {
+        return DataResponse.of(hotLineHandoverService.detail(date));
     }
 
     @PostMapping("/acc")

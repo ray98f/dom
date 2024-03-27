@@ -1,10 +1,10 @@
 package com.wzmtr.dom.mapper.traffic;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dataobject.traffic.TrafficHotlineImportantDO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineImportantAddReqDTO;
-import com.wzmtr.dom.dto.req.traffic.hotline.HotLineImportantListReqDTO;
+import com.wzmtr.dom.dto.req.traffic.hotline.HotLineSummaryListReqDTO;
+import com.wzmtr.dom.dto.res.traffic.hotline.HotLineImportantDetailResDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineImportantListResDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -25,5 +25,7 @@ public interface HotLineImportantMapper extends BaseMapper<TrafficHotlineImporta
 
     // void updateMany(List<TrafficHotlineImportantDO> list);
 
-    Page<HotLineImportantListResDTO> list(Page<Object> of, HotLineImportantListReqDTO reqDTO);
+    List<HotLineImportantListResDTO> list (@Param("req") HotLineSummaryListReqDTO reqDTO);
+
+    List<HotLineImportantDetailResDTO> selectByDate(String date);
 }

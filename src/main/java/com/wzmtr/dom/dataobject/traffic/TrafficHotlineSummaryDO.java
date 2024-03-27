@@ -1,6 +1,7 @@
 package com.wzmtr.dom.dataobject.traffic;
 
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -13,6 +14,7 @@ import java.util.Date;
  * @TableName TRAFFIC_HOTLINE_SUMMARY
  */
 @Data
+@TableName("TRAFFIC_HOTLINE_SUMMARY")
 public class TrafficHotlineSummaryDO implements Serializable {
 
     /**

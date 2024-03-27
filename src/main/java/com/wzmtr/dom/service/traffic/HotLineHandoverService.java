@@ -12,6 +12,9 @@ import com.wzmtr.dom.dto.res.traffic.hotline.HotLineImportantDetailResDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineImportantListResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 
+import java.util.Date;
+import java.util.List;
+
 /**
  * @Author: Li.Wang
  * Date: 2024/3/22 14:21
@@ -21,7 +24,7 @@ public interface HotLineHandoverService {
 
     Page<HotLineHandoverListResDTO> list(HotLineHandoverListReqDTO reqDTO);
 
-    HotLineHandoverDetailResDTO detail(SidReqDTO reqDTO);
+    List<HotLineHandoverDetailResDTO> detail(String date);
 
     HotLineHandoverDetailResDTO acc(SidReqDTO reqDTO);
 

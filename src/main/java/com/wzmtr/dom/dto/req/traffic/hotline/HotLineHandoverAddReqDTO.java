@@ -1,12 +1,11 @@
 package com.wzmtr.dom.dto.req.traffic.hotline;
 
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.wzmtr.dom.dataobject.traffic.TrafficHotlineHandoverDO;
-import com.wzmtr.dom.utils.BeanUtils;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author: Li.Wang
@@ -16,30 +15,9 @@ import java.util.Date;
 @Data
 public class HotLineHandoverAddReqDTO {
     /**
-     * id
+     * 详细数据列表
      */
-    @TableId("ID")
-    private String id;
-    /**
-     * 热线类型:1投诉,2表扬,3建议4咨询5求助6转接S1,7APP,8锦旗,9其他
-     */
-    @ApiModelProperty("热线类型:1投诉,2表扬,3建议4咨询5求助6转接S1,7APP,8锦旗,9其他")
-    private String hotlineType;
-    /**
-     * 主要内容
-     */
-    @ApiModelProperty("主要内容")
-    private String mainContent;
-    /**
-     * 来源
-     */
-    @ApiModelProperty("来源")
-    private String source;
-    /**
-     * 数量
-     */
-    @ApiModelProperty("数量")
-    private Long count;
+    private List<HandoverAddData> dataList;
     /**
      * 数据所属日期
      */
@@ -66,7 +44,4 @@ public class HotLineHandoverAddReqDTO {
     @ApiModelProperty("版本号(乐观锁)")
     private String version;
 
-    public TrafficHotlineHandoverDO toDO(HotLineHandoverAddReqDTO req) {
-        return BeanUtils.convert(req, TrafficHotlineHandoverDO.class);
-    }
 }

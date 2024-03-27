@@ -7,7 +7,9 @@ import com.wzmtr.dom.dto.res.operate.passengerflow.PassengerFlowListResDTO;
 import com.wzmtr.dom.dto.res.operate.passengerflow.PassengerFlowTopThreeListResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
+import com.wzmtr.dom.mapper.operate.OperatePassengerFlowDetailMapper;
 import com.wzmtr.dom.service.operate.OperatePassengerFlowService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +23,9 @@ import java.util.List;
  */
 @Service
 public class OperatePassengerFlowServiceImpl implements OperatePassengerFlowService {
+    @Autowired
+    private OperatePassengerFlowDetailMapper passengerFlowDetailMapper;
+
 
     @Override
     public Page<PassengerFlowListResDTO> list(String dataType, String startDate, String endDate, PageReqDTO pageReqDTO) {

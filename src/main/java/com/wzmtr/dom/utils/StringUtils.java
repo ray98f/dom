@@ -46,7 +46,9 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     {
         return isNull(coll) || coll.isEmpty();
     }
-
+    public static String incrementToString(String var1) {
+        return StringUtils.isEmpty(var1) ? CommonConstants.ZERO_STRING : String.valueOf(Integer.parseInt(var1) + 1);
+    }
     /**
      * * 判断一个Collection是否非空，包含List，Set，Queue
      * 

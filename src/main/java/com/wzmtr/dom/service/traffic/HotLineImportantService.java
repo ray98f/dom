@@ -12,19 +12,19 @@ import com.wzmtr.dom.dto.res.traffic.hotline.HotLineSummaryDetailResDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineSummaryListResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 
+import java.util.List;
+
 /**
  * @Author: Li.Wang
  * Date: 2024/3/22 14:21
  */
 public interface HotLineImportantService {
 
-    HotLineImportantDetailResDTO detail(SidReqDTO reqDTO);
+    List<HotLineImportantDetailResDTO> detail(String date);
 
     void add(HotLineImportantAddReqDTO reqDTO);
 
     void modify(CurrentLoginUser currentLoginUser, HotLineImportantAddReqDTO passengerRecordReqDTO);
 
-    Page<HotLineSummaryListResDTO> list(HotLineSummaryListReqDTO reqDTO);
-
-    HotLineImportantDetailResDTO acc(SidReqDTO reqDTO);
+    List<HotLineImportantDetailResDTO> acc(SidReqDTO reqDTO);
 }

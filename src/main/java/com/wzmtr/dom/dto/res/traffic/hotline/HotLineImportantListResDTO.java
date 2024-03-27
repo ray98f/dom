@@ -15,23 +15,32 @@ import java.util.Date;
 public class HotLineImportantListResDTO {
     @ApiModelProperty("ID")
     private String id;
-    /**
-     * 总投诉
-     */
-    @ApiModelProperty("总投诉")
-    private Long complaintTotal;
-    /**
-     * 总表扬
-     */
-    @ApiModelProperty("总表扬")
-    private Long praiseTotal;
 
     /**
-     * 咨询
+     * 数量
      */
-    @ApiModelProperty("咨询")
-    private Long consult;
-
+    @ApiModelProperty("数量")
+    private Long count;
+    /**
+     * 主要内容
+     */
+    @ApiModelProperty("主要内容")
+    private String content;
+    /**
+     * 处理结果
+     */
+    @ApiModelProperty("处理结果")
+    private String result;
+    /**
+     * 关键词
+     */
+    @ApiModelProperty("关键词")
+    private String keyword;
+    /**
+     * 热线类型:1投诉,2表扬,3建议4咨询5求助6转接S1,7APP,8锦旗,9其他
+     */
+    @ApiModelProperty("热线类型:1投诉,2表扬,3建议4咨询5求助6转接S1,7APP,8锦旗,9其他")
+    private String hotlineType;
 
     @ApiModelProperty(value = "数据所属日期")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

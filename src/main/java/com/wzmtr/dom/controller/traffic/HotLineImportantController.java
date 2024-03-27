@@ -13,10 +13,9 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 客运部-重要热线内容
@@ -48,15 +47,15 @@ public class HotLineImportantController {
      *
      * @return 重要热线内容
      */
-    @PostMapping("/detail")
+    @GetMapping("/detail")
     @ApiOperation(value = "重要热线内容")
-    public DataResponse<HotLineImportantDetailResDTO> detail(@RequestBody SidReqDTO reqDTO) {
-        return DataResponse.of(hotLineImportantService.detail(reqDTO));
+    public DataResponse<List<HotLineImportantDetailResDTO>> detail(@RequestParam String date) {
+        return DataResponse.of(hotLineImportantService.detail(date));
     }
 
     @PostMapping("/acc")
     @ApiOperation(value = "重要热线内容")
-    public DataResponse<HotLineImportantDetailResDTO> acc(@RequestBody SidReqDTO reqDTO) {
+    public DataResponse<List<HotLineImportantDetailResDTO>> acc(@RequestBody SidReqDTO reqDTO) {
         return DataResponse.of(hotLineImportantService.acc(reqDTO));
     }
 

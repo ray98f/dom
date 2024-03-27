@@ -36,9 +36,9 @@ public class TrafficHotlineHandoverDO implements Serializable {
     @ApiModelProperty("处理结果")
     private String result;
     /**
-     * 数量
+     * 累计数量
      */
-    @ApiModelProperty("数量")
+    @ApiModelProperty("累计数量")
     private Long count;
     /**
      * 数据所属日期
