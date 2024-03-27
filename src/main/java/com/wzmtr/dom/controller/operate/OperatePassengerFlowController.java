@@ -85,21 +85,17 @@ public class OperatePassengerFlowController {
     /**
      * 客流前三车站列表
      *
-     * @param startDate 起始日期
-     * @param endDate   终止日期
      */
     @GetMapping("/top/three")
     @ApiOperation(value = "客流信息-客流前三车站列表")
-    public DataResponse<List<PassengerFlowTopThreeListResDTO>> topThree(@RequestParam String startDate,
-                                                                        @RequestParam String endDate) {
-        return DataResponse.of(operatePassengerFlowService.topThree(startDate, endDate));
+    public DataResponse<List<PassengerFlowTopThreeListResDTO>> topThree(@RequestParam String date,@RequestParam String dataType) {
+        return DataResponse.of(operatePassengerFlowService.topThree(date,dataType));
     }
 
     @GetMapping("/each/station")
     @ApiOperation(value = "客流信息-各车站客流量列表")
-    public DataResponse<List<PassengerFlowTopThreeListResDTO>> eachStation(@RequestParam String startDate,
-                                                                           @RequestParam String endDate) {
-        return DataResponse.of(operatePassengerFlowService.eachStation(startDate, endDate));
+    public DataResponse<List<PassengerFlowTopThreeListResDTO>> eachStation(@RequestParam String date,@RequestParam String dataType) {
+        return DataResponse.of(operatePassengerFlowService.eachStation(date, dataType));
     }
 
     /**

@@ -52,8 +52,8 @@ public class HotLineHandoverController {
      */
     @GetMapping("/detail")
     @ApiOperation(value = "需转交其他部门做处理事项详情")
-    public DataResponse<List<HotLineHandoverDetailResDTO>> detail(@RequestParam String date) {
-        return DataResponse.of(hotLineHandoverService.detail(date));
+    public DataResponse<List<HotLineHandoverDetailResDTO>> detail(@RequestParam String date,@RequestParam String dataType) {
+        return DataResponse.of(hotLineHandoverService.detail(date,dataType));
     }
 
     @PostMapping("/acc")

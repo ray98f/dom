@@ -31,9 +31,9 @@ public class HotLineImportantServiceImpl implements HotLineImportantService {
     private HotLineImportantMapper hotLineImportantMapper;
 
     @Override
-    public List<HotLineImportantDetailResDTO> detail(String date) {
+    public List<HotLineImportantDetailResDTO> detail(String date,String dataType) {
         Assert.notNull(date, "参数缺失");
-        return hotLineImportantMapper.selectByDate(date);
+        return hotLineImportantMapper.selectByDate(date,dataType);
     }
 
     @Override

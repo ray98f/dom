@@ -24,7 +24,7 @@ public interface HotLineHandoverService {
 
     Page<HotLineHandoverListResDTO> list(HotLineHandoverListReqDTO reqDTO);
 
-    List<HotLineHandoverDetailResDTO> detail(String date);
+    List<HotLineHandoverDetailResDTO> detail(String date,String dataType);
 
     HotLineHandoverDetailResDTO acc(SidReqDTO reqDTO);
 

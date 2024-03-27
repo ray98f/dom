@@ -44,10 +44,10 @@ public class HotLineHandoverServiceImpl implements HotLineHandoverService {
     }
 
     @Override
-    public List<HotLineHandoverDetailResDTO> detail(String date) {
+    public List<HotLineHandoverDetailResDTO> detail(String date,String dataType) {
         // 查日期内所有数据
         Assert.notNull(date, "参数缺失");
-        return hotLineHandoverMapper.selectListByDate(date);
+        return hotLineHandoverMapper.selectListByDate(date,dataType);
     }
 
     @Override

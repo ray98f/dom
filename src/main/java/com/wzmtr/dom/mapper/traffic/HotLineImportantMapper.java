@@ -27,5 +27,5 @@ public interface HotLineImportantMapper extends BaseMapper<TrafficHotlineImporta
 
     List<HotLineImportantListResDTO> list (@Param("req") HotLineSummaryListReqDTO reqDTO);
 
-    List<HotLineImportantDetailResDTO> selectByDate(String date);
+    List<HotLineImportantDetailResDTO> selectByDate(String date,String dataType);
 }

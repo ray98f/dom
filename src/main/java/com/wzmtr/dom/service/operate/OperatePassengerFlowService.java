@@ -55,7 +55,7 @@ public interface OperatePassengerFlowService {
      */
     void delete(List<String> ids);
 
-    List<PassengerFlowTopThreeListResDTO> topThree(String startDate, String endDate);
+    List<PassengerFlowTopThreeListResDTO> topThree(String date,String dataType);
 
-    List<PassengerFlowTopThreeListResDTO> eachStation(String startDate, String endDate);
+    List<PassengerFlowTopThreeListResDTO> eachStation(String date,String dataType);
 }

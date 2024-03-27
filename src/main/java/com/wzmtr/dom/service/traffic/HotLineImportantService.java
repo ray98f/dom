@@ -20,7 +20,7 @@ import java.util.List;
  */
 public interface HotLineImportantService {
 
-    List<HotLineImportantDetailResDTO> detail(String date);
+    List<HotLineImportantDetailResDTO> detail(String date, String dataType);
 
     void add(HotLineImportantAddReqDTO reqDTO);
 

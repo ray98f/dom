@@ -49,8 +49,8 @@ public class HotLineImportantController {
      */
     @GetMapping("/detail")
     @ApiOperation(value = "重要热线内容")
-    public DataResponse<List<HotLineImportantDetailResDTO>> detail(@RequestParam String date) {
-        return DataResponse.of(hotLineImportantService.detail(date));
+    public DataResponse<List<HotLineImportantDetailResDTO>> detail(@RequestParam String date,@RequestParam String dataType) {
+        return DataResponse.of(hotLineImportantService.detail(date,dataType));
     }
 
     @PostMapping("/acc")
