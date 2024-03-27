@@ -29,30 +29,15 @@ public class OperateEventReqDTO extends BaseEntity {
     private String editFlag;
 
     @ApiModelProperty(value = "数据所属日期")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(
-            pattern = "yyyy-MM-dd HH:mm:ss",
-            timezone = "GMT+8"
-    )
-    private Date dataDate;
+    private String dataDate;
 
     @ApiModelProperty(value = "数据类型:1:日报,2周报,3月报")
     private String dataType;
 
     @ApiModelProperty(value = "数据起始日期")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(
-            pattern = "yyyy-MM-dd HH:mm:ss",
-            timezone = "GMT+8"
-    )
-    private Date startDate;
+    private String startDate;
 
     @ApiModelProperty(value = "数据终止日期")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(
-            pattern = "yyyy-MM-dd HH:mm:ss",
-            timezone = "GMT+8"
-    )
-    private Date endDate;
+    private String endDate;
 
 }

@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wzmtr.dom.mapper.operate.OperateEventMapper">
 
-    <select id="list" resultType="com.wzmtr.dom.dto.res.vehicle.LineEventResDTO">
-        SELECT ID, TYPE1_COUNT,TYPE2_COUNT,TYPE3_COUNT,TYPE4_COUNT,TYPE5_COUNT, VERSION, DATA_TYPE, DATA_DATE, START_DATE,END_DATE,CREATE_DATE, UPDATE_DATE
-        FROM VEHICLE_LINE_EVENT_RECORD
+    <select id="list" resultType="com.wzmtr.dom.dto.res.operate.OperateEventResDTO">
+        SELECT *
+        FROM OPERATE_EVENT_RECORD
         WHERE DEL_FLAG='0'
         AND DATA_TYPE = #{dataType}
         <if test="startDate != null and startDate!=''">
@@ -16,9 +16,9 @@
         ORDER BY START_DATE desc
     </select>
 
-    <select id="listAll" resultType="com.wzmtr.dom.dto.res.vehicle.LineEventResDTO">
-        SELECT ID, TYPE1_COUNT,TYPE2_COUNT,TYPE3_COUNT,TYPE4_COUNT,TYPE5_COUNT, VERSION, DATA_TYPE, DATA_DATE, START_DATE,END_DATE,CREATE_DATE, UPDATE_DATE
-        FROM VEHICLE_LINE_EVENT_RECORD
+    <select id="listAll" resultType="com.wzmtr.dom.dto.res.operate.OperateEventResDTO">
+        SELECT *
+        FROM OPERATE_EVENT_RECORD
         WHERE DEL_FLAG='0'
         <if test="startDate != null">
             AND to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') >= START_DATE
@@ -29,15 +29,15 @@
         ORDER BY START_DATE desc
     </select>
 
-    <select id="queryInfoById" resultType="com.wzmtr.dom.dto.res.vehicle.LineEventDetailResDTO">
-        SELECT ID, TYPE1_COUNT,TYPE2_COUNT,TYPE3_COUNT,TYPE4_COUNT,TYPE5_COUNT, VERSION, DATA_DATE,DATA_TYPE,START_DATE,END_DATE
-        FROM VEHICLE_LINE_EVENT_RECORD
+    <select id="queryInfoById" resultType="com.wzmtr.dom.dto.res.operate.OperateEventResDTO">
+        SELECT *
+        FROM OPERATE_EVENT_RECORD
         WHERE ID=#{id} AND DEL_FLAG = '0'
     </select>
 
     <select id="checkExist" resultType="java.lang.Integer">
         SELECT COUNT(*)
-        FROM VEHICLE_LINE_EVENT_RECORD
+        FROM OPERATE_EVENT_RECORD
         WHERE DEL_FLAG = '0'
         AND DATA_TYPE = #{dataType}
         <if test="startDate != null">
@@ -49,21 +49,9 @@
     </select>
 
     <insert id="add">
-        INSERT INTO VEHICLE_LINE_EVENT_RECORD (ID,DATA_TYPE,
-        <if test="type1Count != null">
-            TYPE1_COUNT,
-        </if>
-        <if test="type2Count != null">
-            TYPE2_COUNT,
-        </if>
-        <if test="type3Count != null">
-            TYPE3_COUNT,
-        </if>
-        <if test="type4Count != null">
-            TYPE4_COUNT,
-        </if>
-        <if test="type5Count != null">
-            TYPE5_COUNT,
+        INSERT INTO OPERATE_EVENT_RECORD (ID,DATA_TYPE,
+        <if test="eventCount != null">
+            EVENT_COUNT,
         </if>
         <if test="dataDate != null">
             DATA_DATE,
@@ -72,20 +60,8 @@
         END_DATE,
         CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
         VALUES (#{id},#{dataType},
-        <if test="type1Count != null">
-            #{type1Count},
-        </if>
-        <if test="type2Count != null">
-            #{type2Count},
-        </if>
-        <if test="type3Count != null">
-            #{type3Count},
-        </if>
-        <if test="type4Count != null">
-            #{type4Count},
-        </if>
-        <if test="type5Count != null">
-            #{type5Count},
+        <if test="eventCount != null">
+            #{eventCount},
         </if>
         <if test="dataDate != null">
             to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
@@ -96,18 +72,14 @@
     </insert>
 
     <update id="modifyCount">
-        UPDATE VEHICLE_LINE_EVENT_RECORD SET
-        TYPE1_COUNT=(SELECT COUNT(1) FROM VEHICLE_LINE_EVENT_INFO WHERE DEL_FLAG='0' AND EVENT_TYPE = '1'  AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
-        TYPE2_COUNT=(SELECT COUNT(1) FROM VEHICLE_LINE_EVENT_INFO WHERE DEL_FLAG='0' AND EVENT_TYPE = '2'  AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
-        TYPE3_COUNT=(SELECT COUNT(1) FROM VEHICLE_LINE_EVENT_INFO WHERE DEL_FLAG='0' AND EVENT_TYPE = '3'  AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
-        TYPE4_COUNT=(SELECT COUNT(1) FROM VEHICLE_LINE_EVENT_INFO WHERE DEL_FLAG='0' AND EVENT_TYPE = '4'  AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
-        TYPE5_COUNT=(SELECT COUNT(1) FROM VEHICLE_LINE_EVENT_INFO WHERE DEL_FLAG='0' AND EVENT_TYPE = '5'  AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE)
+        UPDATE OPERATE_EVENT_RECORD SET
+        EVENT_COUNT=(SELECT COUNT(1) FROM OPERATE_EVENT_INFO WHERE DEL_FLAG='0' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE)
         WHERE ID=#{id}
     </update>
 
-    <select id="eventList" resultType="com.wzmtr.dom.dto.res.vehicle.LineEventInfoResDTO">
-        SELECT ID, RECORD_ID,EVENT_TYPE,EVENT_DESC,EVENT_ANALYZE,VERSION
-        FROM VEHICLE_LINE_EVENT_INFO
+    <select id="eventList" resultType="com.wzmtr.dom.dto.res.operate.OperateEventInfoResDTO">
+        SELECT *
+        FROM OPERATE_EVENT_INFO
         WHERE DEL_FLAG='0'
         <if test="startDate != null">
             AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
@@ -118,9 +90,9 @@
         ORDER BY CREATE_DATE desc
     </select>
 
-    <select id="queryDateRange" resultType="com.wzmtr.dom.dto.res.vehicle.LineEventInfoResDTO">
+    <select id="queryDateRange" resultType="com.wzmtr.dom.dto.res.operate.OperateEventInfoResDTO">
         SELECT MIN(START_DATE) AS START_DATE,MAX(END_DATE) AS END_DATE
-        FROM VEHICLE_LINE_EVENT_INFO
+        FROM OPERATE_EVENT_INFO
         WHERE ID IN (
         <foreach collection="ids" index="index" item="id" separator=",">
             #{id}
@@ -129,7 +101,65 @@
     </select>
 
     <insert id="createEvent">
-        INSERT INTO VEHICLE_LINE_EVENT_INFO (ID, RECORD_ID, EVENT_TYPE, EVENT_DESC, EVENT_ANALYZE,
+        INSERT INTO OPERATE_EVENT_INFO (ID, RECORD_ID,
+        <if test="majorType != null and majorType!=''">
+            MAJOR_TYPE,
+        </if>
+        <if test="title != null and title!=''">
+            TITLE,
+        </if>
+        <if test="offLineCount != null">
+            OFF_LINE_COUNT,
+        </if>
+        <if test="rescueCount != null">
+            RESCUE_COUNT,
+        </if>
+        <if test="rutineGuestCount != null">
+            RUTINE_GUEST_COUNT,
+        </if>
+        <if test="addCount != null">
+            ADD_COUNT,
+        </if>
+        <if test="delay1Count != null">
+            DELAY1_COUNT,
+        </if>
+        <if test="delay2Count != null">
+            DELAY2_COUNT,
+        </if>
+        <if test="stopCount != null">
+            STOP_COUNT,
+        </if>
+        <if test="delay1EventCount != null">
+            DELAY1_EVENT_COUNT,
+        </if>
+        <if test="delay1VehicleCount != null">
+            DELAY1_VEHICLE_COUNT,
+        </if>
+        <if test="delay2EventCount != null">
+            DELAY2_EVENT_COUNT,
+        </if>
+        <if test="delay1VehicleCount != null">
+            DELAY2_VEHICLE_COUNT,
+        </if>
+        <if test="gateFaultCount != null">
+            GATE_FAULT_COUNT,
+        </if>
+        <if test="lineFaultCount != null">
+            LINE_FAULT_COUNT,
+        </if>
+        <if test="vehicleFaultCount != null">
+            VEHICLE_FAULT_COUNT,
+        </if>
+        <if test="signalFaultCount != null">
+            SIGNAL_FAULT_COUNT,
+        </if>
+        <if test="powerFaultCount != null">
+            POWER_FAULT_COUNT,
+        </if>
+        <if test="isClose != null">
+            IS_CLOSE,
+        </if>
+
         DATA_TYPE,
         <if test="dataDate != null">
             DATA_DATE,
@@ -139,9 +169,64 @@
         CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
         VALUES ( #{id},
         #{recordId},
-        #{eventType},
-        #{eventDesc},
-        #{eventAnalyze},
+        <if test="majorType != null and majorType!=''">
+            #{majorType},
+        </if>
+        <if test="title != null and title!=''">
+            #{title},
+        </if>
+        <if test="offLineCount != null">
+            #{offLineCount},
+        </if>
+        <if test="rescueCount != null">
+            #{rescueCount},
+        </if>
+        <if test="rutineGuestCount != null">
+            #{rutineGuestCount},
+        </if>
+        <if test="addCount != null">
+            #{addCount},
+        </if>
+        <if test="delay1Count != null">
+            #{delay1Count},
+        </if>
+        <if test="delay2Count != null">
+            #{delay2Count},
+        </if>
+        <if test="stopCount != null">
+            #{stopCount},
+        </if>
+        <if test="delay1EventCount != null">
+            #{delay1EventCount},
+        </if>
+        <if test="delay1VehicleCount != null">
+            #{delay1VehicleCount},
+        </if>
+        <if test="delay2EventCount != null">
+            #{delay2EventCount},
+        </if>
+        <if test="delay2VehicleCount != null">
+            #{delay2VehicleCount},
+        </if>
+        <if test="gateFaultCount != null">
+            #{gateFaultCount},
+        </if>
+        <if test="lineFaultCount != null">
+            #{lineFaultCount},
+        </if>
+        <if test="vehicleFaultCount != null">
+            #{vehicleFaultCount},
+        </if>
+        <if test="signalFaultCount != null">
+            #{signalFaultCount},
+        </if>
+        <if test="powerFaultCount != null">
+            #{powerFaultCount},
+        </if>
+        <if test="isClose != null">
+            #{isClose},
+        </if>
+
         #{dataType},
         <if test="dataDate != null">
             to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
@@ -152,15 +237,63 @@
     </insert>
 
     <update id="modifyEvent">
-        UPDATE VEHICLE_LINE_EVENT_INFO SET
-        <if test="eventType !=null">
-            EVENT_TYPE = #{eventType},
+        UPDATE OPERATE_EVENT_INFO SET
+        <if test="majorType != null and majorType!=''">
+            MAJOR_TYPE=#{majorType},
         </if>
-        <if test="eventDesc !=null">
-            EVENT_DESC = #{eventDesc},
+        <if test="title != null and title!=''">
+            TITLE=#{title},
         </if>
-        <if test="eventAnalyze !=null">
-            EVENT_ANALYZE = #{eventAnalyze},
+        <if test="offLineCount != null">
+            OFF_LINE_COUNT=#{offLineCount},
+        </if>
+        <if test="rescueCount != null">
+            RESCUE_COUNT=#{rescueCount},
+        </if>
+        <if test="rutineGuestCount != null">
+            RUTINE_GUEST_COUNT=#{rutineGuestCount},
+        </if>
+        <if test="addCount != null">
+            ADD_COUNT=#{addCount},
+        </if>
+        <if test="delay1Count != null">
+            DELAY1_COUNT=#{delay1Count},
+        </if>
+        <if test="delay2Count != null">
+            DELAY2_COUNT=#{delay2Count},
+        </if>
+        <if test="stopCount != null">
+            STOP_COUNT=#{stopCount},
+        </if>
+        <if test="delay1EventCount != null">
+            DELAY1_EVENT_COUNT=#{delay1EventCount},
+        </if>
+        <if test="delay1VehicleCount != null">
+            DELAY1_VEHICLE_COUNT=#{delay1VehicleCount},
+        </if>
+        <if test="delay2EventCount != null">
+            DELAY2_EVENT_COUNT=#{delay2EventCount},
+        </if>
+        <if test="delay1VehicleCount != null">
+            DELAY2_VEHICLE_COUNT=#{delay1VehicleCount},
+        </if>
+        <if test="gateFaultCount != null">
+            GATE_FAULT_COUNT=#{gateFaultCount},
+        </if>
+        <if test="lineFaultCount != null">
+            LINE_FAULT_COUNT=#{lineFaultCount},
+        </if>
+        <if test="vehicleFaultCount != null">
+            VEHICLE_FAULT_COUNT=#{vehicleFaultCount},
+        </if>
+        <if test="signalFaultCount != null">
+            SIGNAL_FAULT_COUNT=#{signalFaultCount},
+        </if>
+        <if test="powerFaultCount != null">
+            POWER_FAULT_COUNT=#{powerFaultCount},
+        </if>
+        <if test="isClose != null">
+            IS_CLOSE=#{isClose},
         </if>
         VERSION = VERSION+1,
         UPDATE_BY=#{updateBy},
@@ -170,7 +303,7 @@
     </update>
 
     <delete id="deleteEvent">
-        DELETE FROM VEHICLE_LINE_EVENT_INFO
+        DELETE FROM OPERATE_EVENT_INFO
         WHERE ID IN (
         <foreach collection="ids" index="index" item="id" separator=",">
             #{id}
