@@ -1,45 +1,37 @@
-package com.wzmtr.dom.dataobject.traffic;
+package com.wzmtr.dom.dto.res.operate.passengerflow;
 
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @TableName TRAFFIC_HOTLINE_HANDOVER
+ * @Author: Li.Wang
+ * Date: 2024/3/26 17:37
  */
-@TableName("TRAFFIC_HOTLINE_HANDOVER")
 @Data
-public class TrafficHotlineHandoverDO implements Serializable {
-
+public class PassengerFlowTopThreeListResDTO {
     /**
-     *
+     * ID
      */
-    @TableId("ID")
+    @ApiModelProperty("ID")
     private String id;
     /**
-     * 主要内容
+     * 站点编码
      */
-    @ApiModelProperty("主要内容")
-    private String mainContent;
+    @ApiModelProperty("站点编码")
+    private String stationCode;
     /**
-     * 来源
+     * 车站名称
      */
-    @ApiModelProperty("来源")
-    private String source;
+    @ApiModelProperty(value = "车站名称")
+    private String stationName;
     /**
-     * 处理结果
+     * 车站客流量
      */
-    @ApiModelProperty("处理结果")
-    private String result;
-    /**
-     * 数量
-     */
-    @ApiModelProperty("数量")
-    private Long count;
+    @ApiModelProperty("车站客流量")
+    private Long passenger;
+
     /**
      * 数据所属日期
      */

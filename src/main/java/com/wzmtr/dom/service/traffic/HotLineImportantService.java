@@ -3,6 +3,7 @@ package com.wzmtr.dom.service.traffic;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.common.SidReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineImportantAddReqDTO;
+import com.wzmtr.dom.dto.req.traffic.hotline.HotLineImportantListReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineSummaryAddReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineSummaryListReqDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineImportantDetailResDTO;
@@ -23,7 +24,7 @@ public interface HotLineImportantService {
 
     void modify(CurrentLoginUser currentLoginUser, HotLineImportantAddReqDTO passengerRecordReqDTO);
 
-    Page<HotLineImportantListResDTO> list(HotLineSummaryListReqDTO reqDTO);
+    Page<HotLineSummaryListResDTO> list(HotLineSummaryListReqDTO reqDTO);
 
     HotLineImportantDetailResDTO acc(SidReqDTO reqDTO);
 }

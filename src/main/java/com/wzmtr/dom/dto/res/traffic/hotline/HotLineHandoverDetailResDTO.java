@@ -1,5 +1,6 @@
 package com.wzmtr.dom.dto.res.traffic.hotline;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -12,33 +13,28 @@ import java.util.Date;
 @Data
 public class HotLineHandoverDetailResDTO {
 
-    @ApiModelProperty("ID")
+    @TableId("ID")
     private String id;
-    /**
-     * 数量
-     */
-    @ApiModelProperty("数量")
-    private Long count;
     /**
      * 主要内容
      */
     @ApiModelProperty("主要内容")
-    private String content;
+    private String mainContent;
+    /**
+     * 来源
+     */
+    @ApiModelProperty("来源")
+    private String source;
     /**
      * 处理结果
      */
     @ApiModelProperty("处理结果")
     private String result;
     /**
-     * 关键词
+     * 数量
      */
-    @ApiModelProperty("关键词")
-    private String keyword;
-    /**
-     * 热线类型:1投诉,2表扬,3建议4咨询5求助6转接S1,7APP,8锦旗,9其他
-     */
-    @ApiModelProperty("热线类型:1投诉,2表扬,3建议4咨询5求助6转接S1,7APP,8锦旗,9其他")
-    private String hotlineType;
+    @ApiModelProperty("数量")
+    private Long count;
     /**
      * 数据所属日期
      */
@@ -59,12 +55,36 @@ public class HotLineHandoverDetailResDTO {
      */
     @ApiModelProperty("数据结束日期")
     private Date endDate;
-
+    /**
+     * 删除标识
+     */
+    @ApiModelProperty("删除标识")
+    private String delFlag;
     /**
      * 版本号(乐观锁)
      */
     @ApiModelProperty("版本号(乐观锁)")
     private String version;
+    /**
+     * 创建日期
+     */
+    @ApiModelProperty("创建日期")
+    private Date createDate;
+    /**
+     * 创建者
+     */
+    @ApiModelProperty("创建者")
+    private String createBy;
+    /**
+     * 更新日期
+     */
+    @ApiModelProperty("更新日期")
+    private Date updateDate;
+    /**
+     * 更新者
+     */
+    @ApiModelProperty("更新者")
+    private String updateBy;
 
 
 }

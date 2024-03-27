@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 客运部-重要热线内容
+ *
  * @Author: Li.Wang
  * Date: 2024/3/22 16:41
  */
@@ -31,14 +32,14 @@ public class HotLineImportantController {
     @Autowired
     private HotLineImportantService hotLineImportantService;
 
-    // /**
+    // /** 直接调HotLineSummary 的list
     //  * 重要热线内容-列表
     //  *
     //  * @return 重要热线内容
     //  */
     // @PostMapping("/list")
     // @ApiOperation(value = "重要热线内容-列表")
-    // public PageResponse<HotLineSummaryListResDTO> page(@RequestBody HotLineImportantListReqDTO reqDTO) {
+    // public PageResponse<HotLineSummaryListResDTO> page(@RequestBody HotLineSummaryListReqDTO reqDTO) {
     //     return PageResponse.of(hotLineImportantService.list(reqDTO));
     // }
 
