@@ -3,13 +3,8 @@ package com.wzmtr.dom.service.operate;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.operate.OperateEventInfoReqDTO;
 import com.wzmtr.dom.dto.req.operate.OperateEventReqDTO;
-import com.wzmtr.dom.dto.req.vehicle.LineEventInfoReqDTO;
-import com.wzmtr.dom.dto.req.vehicle.LineEventRecordReqDTO;
 import com.wzmtr.dom.dto.res.operate.OperateEventInfoResDTO;
 import com.wzmtr.dom.dto.res.operate.OperateEventResDTO;
-import com.wzmtr.dom.dto.res.vehicle.LineEventDetailResDTO;
-import com.wzmtr.dom.dto.res.vehicle.LineEventInfoResDTO;
-import com.wzmtr.dom.dto.res.vehicle.LineEventResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 

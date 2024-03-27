@@ -143,15 +143,15 @@ public class OperateEventInfoReqDTO extends BaseEntity {
     private String version;
 
     @ApiModelProperty(value = "数据所属日期")
-    private Date dataDate;
+    private String dataDate;
 
     @ApiModelProperty(value = "数据类型:1:日报,2周报,3月报")
     private String dataType;
 
     @ApiModelProperty(value = "数据起始日期")
-    private Date startDate;
+    private String startDate;
 
     @ApiModelProperty(value = "数据终止日期")
-    private Date endDate;
+    private String endDate;
 
 }

@@ -1,8 +1,12 @@
 package com.wzmtr.dom.mapper.operate;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wzmtr.dom.dto.req.operate.OperateEventInfoReqDTO;
+import com.wzmtr.dom.dto.req.operate.OperateEventReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.LineEventInfoReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.LineEventRecordReqDTO;
+import com.wzmtr.dom.dto.res.operate.OperateEventInfoResDTO;
+import com.wzmtr.dom.dto.res.operate.OperateEventResDTO;
 import com.wzmtr.dom.dto.res.vehicle.LineEventDetailResDTO;
 import com.wzmtr.dom.dto.res.vehicle.LineEventInfoResDTO;
 import com.wzmtr.dom.dto.res.vehicle.LineEventResDTO;
@@ -30,7 +34,7 @@ public interface OperateEventMapper {
      * @param endDate 查询参数
      * @return 列表
      */
-    Page<LineEventResDTO> list(Page<LineEventResDTO> page,String dataType,String startDate,String endDate);
+    Page<OperateEventResDTO> list(Page<OperateEventResDTO> page, String dataType, String startDate, String endDate);
 
     /**
      * 列表
@@ -38,14 +42,14 @@ public interface OperateEventMapper {
      * @param endDate 查询参数
      * @return 列表
      */
-    List<LineEventResDTO> listAll(String startDate, String endDate);
+    List<OperateEventResDTO> listAll(String startDate, String endDate);
 
     /**
      * 详情
      * @param id 入参数
      * @return LineEventResDTO
      */
-    LineEventDetailResDTO queryInfoById(String id);
+    OperateEventResDTO queryInfoById(String id);
 
     /**
      * 校验数据是否存在
@@ -58,9 +62,9 @@ public interface OperateEventMapper {
 
     /**
      * 新增
-     * @param lineEventRecordReqDTO 入参数
+     * @param operateEventReqDTO 入参数
      */
-    void add(LineEventRecordReqDTO lineEventRecordReqDTO);
+    void add(OperateEventReqDTO operateEventReqDTO);
 
     /**
      * 编辑
@@ -75,7 +79,7 @@ public interface OperateEventMapper {
      * @param ids 查询参数
      * @return 事件信息
      */
-    LineEventInfoResDTO queryDateRange(List<String> ids);
+    OperateEventInfoResDTO queryDateRange(List<String> ids);
 
     /**
      * 事件信息-列表
@@ -84,20 +88,20 @@ public interface OperateEventMapper {
      * @param endDate 查询参数
      * @return 列表
      */
-    Page<LineEventInfoResDTO> eventList(Page<LineEventResDTO> page,String startDate,String endDate);
+    Page<OperateEventInfoResDTO> eventList(Page<OperateEventInfoResDTO> page,String startDate,String endDate);
 
     /**
      * 事件信息-新增
-     * @param lineEventInfoReqDTO 入参数
+     * @param operateEventInfoReqDTO 入参数
      */
-    void createEvent(LineEventInfoReqDTO lineEventInfoReqDTO);
+    void createEvent(OperateEventInfoReqDTO operateEventInfoReqDTO);
 
     /**
      * 事件信息-编辑
-     * @param lineEventInfoReqDTO 入参数
+     * @param operateEventInfoReqDTO 入参数
      * @return 更新结果
      */
-    int modifyEvent(LineEventInfoReqDTO lineEventInfoReqDTO);
+    int modifyEvent(OperateEventInfoReqDTO operateEventInfoReqDTO);
 
     /**
      * 事件信息-删除
