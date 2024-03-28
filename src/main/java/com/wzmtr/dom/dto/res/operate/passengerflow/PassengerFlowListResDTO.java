@@ -1,8 +1,10 @@
 package com.wzmtr.dom.dto.res.operate.passengerflow;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Size;
 import java.util.Date;
@@ -21,6 +23,11 @@ public class PassengerFlowListResDTO {
     /**
      * 数据所属日期
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8"
+    )
     @ApiModelProperty("数据所属日期")
     private Date dataDate;
     /**
@@ -31,11 +38,21 @@ public class PassengerFlowListResDTO {
     /**
      * 数据起始日期
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8"
+    )
     @ApiModelProperty("数据起始日期")
     private Date startDate;
     /**
      * 数据结束日期
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8"
+    )
     @ApiModelProperty("数据结束日期")
     private Date endDate;
     /**
@@ -51,18 +68,26 @@ public class PassengerFlowListResDTO {
     /**
      * 创建日期
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8"
+    )
     @ApiModelProperty("创建日期")
     private Date createDate;
     /**
      * 创建者
      */
-    @Size(max = 255, message = "编码长度不能超过255")
     @ApiModelProperty("创建者")
-    @Length(max = 255, message = "编码长度不能超过255")
     private String createBy;
     /**
      * 更新日期
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8"
+    )
     @ApiModelProperty("更新日期")
     private Date updateDate;
     /**

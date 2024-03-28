@@ -58,20 +58,34 @@ public class HotLineHandoverServiceImpl implements HotLineHandoverService {
     @Override
     public void add(HotLineHandoverAddReqDTO reqDTO) {
         Assert.isFalse(hotLineHandoverMapper.selectIsExist(reqDTO) > 0, "所属日期数据已存在，无法重复新增");
-        List<HandoverAddData> addData = Assert.notNull(reqDTO.getDataList(), "参数缺失");
+        List<HandoverAddData> addData = reqDTO.getDataList();
         List<TrafficHotlineHandoverDO> list = Lists.newArrayList();
-        addData.forEach(x -> {
-            TrafficHotlineHandoverDO convert = BeanUtils.convert(x, TrafficHotlineHandoverDO.class);
+        if (CollectionUtil.isEmpty(addData)) {
+            // 新建一条当天的数据
+            TrafficHotlineHandoverDO convert = BeanUtils.convert(reqDTO, TrafficHotlineHandoverDO.class);
             convert.setId(TokenUtils.getUuId());
             convert.setDelFlag("0");
             convert.setCreateDate(DateUtils.currentDate());
-            convert.setDataDate(DateUtils.formatDateYYYY_MM_DD_HH_MM_SS(reqDTO.getDataDate()));
+            convert.setDataDate(DateUtils.formatDateYYYY_MM_DD_HH_MM_SS(reqDTO.getStartDate()));
             convert.setStartDate(DateUtils.formatDateYYYY_MM_DD_HH_MM_SS(reqDTO.getStartDate()));
             convert.setEndDate(DateUtils.formatDateYYYY_MM_DD_HH_MM_SS(reqDTO.getEndDate()));
             convert.setCreateBy(TokenUtils.getCurrentPersonId());
             convert.setVersion("0");
             list.add(convert);
-        });
+        } else {
+            addData.forEach(x -> {
+                TrafficHotlineHandoverDO convert = BeanUtils.convert(x, TrafficHotlineHandoverDO.class);
+                convert.setId(TokenUtils.getUuId());
+                convert.setDelFlag("0");
+                convert.setCreateDate(DateUtils.currentDate());
+                convert.setDataDate(DateUtils.formatDateYYYY_MM_DD_HH_MM_SS(reqDTO.getDataDate()));
+                convert.setStartDate(DateUtils.formatDateYYYY_MM_DD_HH_MM_SS(reqDTO.getStartDate()));
+                convert.setEndDate(DateUtils.formatDateYYYY_MM_DD_HH_MM_SS(reqDTO.getEndDate()));
+                convert.setCreateBy(TokenUtils.getCurrentPersonId());
+                convert.setVersion("0");
+                list.add(convert);
+            });
+        }
         if (CollectionUtil.isNotEmpty(list)) {
             hotLineHandoverMapper.insertList(list);
         }
@@ -89,7 +103,7 @@ public class HotLineHandoverServiceImpl implements HotLineHandoverService {
             if (StringUtils.isNotEmpty(convert.getId())) {
                 convert.setUpdateBy(TokenUtils.getCurrentPersonId());
                 convert.setUpdateDate(DateUtils.currentDate());
-                convert.setDataDate(DateUtils.formatDateYYYY_MM_DD_HH_MM_SS(convert.getDataDate()));
+                convert.setDataDate(DateUtils.formatDateYYYY_MM_DD_HH_MM_SS(convert.getStartDate()));
                 convert.setStartDate(DateUtils.formatDateYYYY_MM_DD_HH_MM_SS(convert.getStartDate()));
                 convert.setEndDate(DateUtils.formatDateYYYY_MM_DD_HH_MM_SS(convert.getEndDate()));
                 convert.setVersion(StringUtils.incrementToString(convert.getVersion()));
@@ -98,7 +112,7 @@ public class HotLineHandoverServiceImpl implements HotLineHandoverService {
                 convert.setId(TokenUtils.getUuId());
                 convert.setDelFlag("0");
                 convert.setCreateDate(DateUtils.currentDate());
-                convert.setDataDate(DateUtils.formatDateYYYY_MM_DD_HH_MM_SS(convert.getDataDate()));
+                convert.setDataDate(DateUtils.formatDateYYYY_MM_DD_HH_MM_SS(convert.getStartDate()));
                 convert.setStartDate(DateUtils.formatDateYYYY_MM_DD_HH_MM_SS(convert.getStartDate()));
                 convert.setEndDate(DateUtils.formatDateYYYY_MM_DD_HH_MM_SS(convert.getEndDate()));
                 convert.setCreateBy(TokenUtils.getCurrentPersonId());

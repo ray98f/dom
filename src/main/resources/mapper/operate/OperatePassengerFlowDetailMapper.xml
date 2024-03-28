@@ -1,10 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wzmtr.dom.mapper.operate.OperatePassengerFlowDetailMapper">
+    <insert id="add">
+        INSERT INTO OPERATE_PASSENGER_FLOW_DETAIL (ID,DATA_TYPE,
+        <if test="dataDate != null">
+            DATA_DATE,
+        </if>
+        START_DATE,
+        END_DATE,
+        CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+        VALUES
+        (#{id}, #{dataType},
+        <if test="dataDate != null">
+            to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
+        to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
+        #{createBy}, sysdate,#{createBy}, sysdate)
+    </insert>
+    <update id="modify">
+        UPDATE OPERATE_PASSENGER_FLOW_DETAIL SET
+        <if test="todayInCount != null">
+            TODAY_IN_COUNT=#{todayInCount},
+        </if>
+        <if test="normEntrance != null">
+            NORM_ENTRANCE=#{normEntrance},
+        </if>
+        <if test="workEntrance != null">
+            WORK_ENTRANCE=#{workEntrance},
+        </if>
+        <if test="todayOutCount != null">
+            TODAY_OUT_COUNT=#{todayOutCount},
+        </if>
+        <if test="normExit != null">
+            NORM_EXIT=#{normExit},
+        </if>
+        <if test="workExit != null">
+            WORK_EXIT=#{workExit},
+        </if>
+        <if test="s1S2Transfer != null">
+            S1_S2_TRANSFER=#{s1S2Transfer},
+        </if>
+        <if test="dailyPass != null">
+            DAILY_PASS=#{dailyPass},
+        </if>
+        <if test="monthPass != null">
+            MONTH_PASS=#{monthPass},
+        </if>
+        <if test="yearPass != null">
+            YEAR_PASS=#{yearPass},
+        </if>
+        <if test="totalPass != null">
+            TOTAL_PASS=#{totalPass},
+        </if>
+        <if test="dayAvgThisMonth != null">
+            DAY_AVG_THIS_MONTH=#{dayAvgThisMonth},
+        </if>
+        <if test="dayAvgYear != null">
+            DAY_AVG_YEAR=#{dayAvgYear},
+        </if>
+        <if test="dayAvgTotal != null">
+            DAY_AVG_TOTAL=#{dayAvgTotal},
+        </if>
+        <if test="hourMaxPosition != null">
+            HOUR_MAX_POSITION=#{hourMaxPosition},
+        </if>
+        <if test="hourMaxPass != null">
+            HOUR_MAX_PASS=#{hourMaxPass},
+        </if>
+        VERSION = VERSION+1,
+        UPDATE_BY=#{updateBy},
+        UPDATE_DATE=sysdate
+        WHERE ID=#{id} and VERSION = #{version}
+    </update>
+    <update id="modifyCount">
+        UPDATE OPERATE_PASSENGER_FLOW_DETAIL
+        SET DAILY_PASS=(SELECT SUM(PASSENGER) AS PASSENGER_SUM
+                        FROM TRAFFIC_PASSENGER_INFO
+                        WHERE START_DATE = to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss')
+                          AND END_DATE = to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss')),
+            MONTH_PASS=(SELECT SUM(PASSENGER) AS PASSENGER_SUM
+                        FROM TRAFFIC_PASSENGER_INFO
+                        WHERE TO_CHAR(START_DATE, 'YYYY-MM') =
+                              TO_CHAR(to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss'), 'YYYY-MM')),
+            YEAR_PASS=(SELECT SUM(PASSENGER) AS PASSENGER_SUM
+                       FROM TRAFFIC_PASSENGER_INFO
+                       WHERE TO_CHAR(START_DATE, 'YYYY') =
+                             TO_CHAR(to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss'), 'YYYY')),
+            UPDATE_DATE=sysdate
+        WHERE ID = #{id}
+    </update>
 
     <select id="list" resultType="com.wzmtr.dom.dto.res.operate.passengerflow.PassengerFlowListResDTO">
         SELECT *
-        FROM OPERATE_EVENT_RECORD
+        FROM OPERATE_PASSENGER_FLOW_DETAIL
         WHERE DEL_FLAG='0'
         AND DATA_TYPE = #{dataType}
         <if test="startDate != null and startDate!=''">

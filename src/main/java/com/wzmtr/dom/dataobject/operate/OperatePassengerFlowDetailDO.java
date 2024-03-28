@@ -153,5 +153,13 @@ public class OperatePassengerFlowDetailDO implements Serializable {
      * 本日出站
      */
     private Integer todayOutCount;
+    /**
+     * 小时单向最大断面位置
+     */
+    private String hourMaxPosition;
+    /**
+     * 小时单向最大断面客流量
+     */
+    private Integer hourMaxPass;
 
 }

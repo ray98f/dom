@@ -3,10 +3,9 @@ package com.wzmtr.dom.controller.operate;
 import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.constant.ValidationGroup;
 import com.wzmtr.dom.dto.req.operate.passengerflow.PassengerFlowAddReqDTO;
+import com.wzmtr.dom.dto.req.traffic.PassengerInfoReqDTO;
 import com.wzmtr.dom.dto.res.operate.passengerflow.PassengerFlowDetailResDTO;
 import com.wzmtr.dom.dto.res.operate.passengerflow.PassengerFlowListResDTO;
-import com.wzmtr.dom.dto.res.operate.passengerflow.PassengerFlowTopThreeListResDTO;
-import com.wzmtr.dom.entity.BaseIdsEntity;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
@@ -20,7 +19,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * 运营日报-客流
@@ -83,32 +81,28 @@ public class OperatePassengerFlowController {
     }
 
     /**
-     * 客流前三车站列表
+     * 车站客流-编辑
      *
+     * @return 成功
      */
-    @GetMapping("/top/three")
-    @ApiOperation(value = "客流信息-客流前三车站列表")
-    public DataResponse<List<PassengerFlowTopThreeListResDTO>> topThree(@RequestParam String date,@RequestParam String dataType) {
-        return DataResponse.of(operatePassengerFlowService.topThree(date,dataType));
-    }
-
-    @GetMapping("/each/station")
-    @ApiOperation(value = "客流信息-各车站客流量列表")
-    public DataResponse<List<PassengerFlowTopThreeListResDTO>> eachStation(@RequestParam String date,@RequestParam String dataType) {
-        return DataResponse.of(operatePassengerFlowService.eachStation(date, dataType));
+    @PostMapping("/modifyStationPassenger")
+    @ApiOperation(value = "车站客流-编辑")
+    public DataResponse<T> modifyStationPassenger(@RequestBody PassengerInfoReqDTO req) {
+        operatePassengerFlowService.modifyStationPassenger(req);
+        return DataResponse.success();
     }
 
     /**
-     * -删除
+     * 客流信息-编辑
      *
-     * @param baseIdsEntity 入参数
      * @return 成功
      */
-    @PostMapping("/delete")
-    @ApiOperation(value = "-删除)")
-    public DataResponse<T> delete(@RequestBody BaseIdsEntity baseIdsEntity) {
-        operatePassengerFlowService.delete(baseIdsEntity.getIds());
+    @PostMapping("/modify")
+    @ApiOperation(value = "客流信息-编辑")
+    public DataResponse<T> modify(@RequestBody PassengerFlowAddReqDTO req) {
+        operatePassengerFlowService.modify(req);
         return DataResponse.success();
     }
+
 
 }

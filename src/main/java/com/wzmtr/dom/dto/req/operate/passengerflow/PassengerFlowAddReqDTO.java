@@ -1,5 +1,6 @@
 package com.wzmtr.dom.dto.req.operate.passengerflow;
 
+import com.wzmtr.dom.entity.BaseEntity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -11,19 +12,13 @@ import java.util.List;
  * Date: 2024/3/26 18:19
  */
 @Data
-public class PassengerFlowAddReqDTO {
-    /**
-     * 各车站客流
-     */
-    @ApiModelProperty("各车站客流")
-    private List<StationAddData> stationData;
-    @ApiModelProperty("ID")
-    private String id;
+public class PassengerFlowAddReqDTO extends BaseEntity {
+
     /**
      * 数据所属日期
      */
     @ApiModelProperty("数据所属日期")
-    private Date dataDate;
+    private String dataDate;
     /**
      * 数据类型 1日报 2周报 3月报
      */
@@ -33,42 +28,24 @@ public class PassengerFlowAddReqDTO {
      * 数据起始日期
      */
     @ApiModelProperty("数据起始日期")
-    private Date startDate;
+    private String startDate;
     /**
      * 数据结束日期
      */
     @ApiModelProperty("数据结束日期")
-    private Date endDate;
-    /**
-     * 删除标识
-     */
-    @ApiModelProperty("删除标识")
-    private String delFlag;
+    private String endDate;
+
     /**
      * 版本号(乐观锁)
      */
     @ApiModelProperty("版本号(乐观锁)")
     private String version;
     /**
-     * 创建日期
+     * 本日进站
      */
-    @ApiModelProperty("创建日期")
-    private Date createDate;
-    /**
-     * 创建者
-     */
-    @ApiModelProperty("创建者")
-    private String createBy;
-    /**
-     * 更新日期
-     */
-    @ApiModelProperty("更新日期")
-    private Date updateDate;
-    /**
-     * 更新者
-     */
-    @ApiModelProperty("更新者")
-    private String updateBy;
+    @ApiModelProperty("本日进站")
+    private Integer todayInCount;
+
     /**
      * 正常进站客流
      */
@@ -79,6 +56,11 @@ public class PassengerFlowAddReqDTO {
      */
     @ApiModelProperty("工作卡进站客流")
     private Integer workEntrance;
+    /**
+     * 本日出站
+     */
+    @ApiModelProperty("本日出站")
+    private Integer todayOutCount;
     /**
      * 正常出站客流
      */
@@ -130,13 +112,11 @@ public class PassengerFlowAddReqDTO {
     @ApiModelProperty("开通至今累计日均客运量")
     private Integer dayAvgTotal;
     /**
-     * 本日进站
+     * 小时单向最大断面位置
      */
-    @ApiModelProperty("本日进站")
-    private Integer todayInCount;
+    private String hourMaxPosition;
     /**
-     * 本日出站
+     * 小时单向最大断面客流量
      */
-    @ApiModelProperty("本日出站")
-    private Integer todayOutCount;
+    private Integer hourMaxPass;
 }

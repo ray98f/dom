@@ -1,9 +1,13 @@
 package com.wzmtr.dom.dto.res.operate.passengerflow;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.wzmtr.dom.dto.res.traffic.PassengerInfoResDTO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author: Li.Wang
@@ -11,6 +15,14 @@ import java.util.Date;
  */
 @Data
 public class PassengerFlowDetailResDTO {
+
+    /**
+     * 车站客流列表
+     * */
+    @ApiModelProperty(value = "车站客流列表")
+    private List<PassengerInfoResDTO> stationPassengerList;
+
+
     /**
      * ID
      */
@@ -19,6 +31,11 @@ public class PassengerFlowDetailResDTO {
     /**
      * 数据所属日期
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8"
+    )
     @ApiModelProperty("数据所属日期")
     private Date dataDate;
     /**
@@ -29,11 +46,21 @@ public class PassengerFlowDetailResDTO {
     /**
      * 数据起始日期
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8"
+    )
     @ApiModelProperty("数据起始日期")
     private Date startDate;
     /**
      * 数据结束日期
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8"
+    )
     @ApiModelProperty("数据结束日期")
     private Date endDate;
     /**
@@ -49,6 +76,11 @@ public class PassengerFlowDetailResDTO {
     /**
      * 创建日期
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8"
+    )
     @ApiModelProperty("创建日期")
     private Date createDate;
     /**
@@ -59,6 +91,11 @@ public class PassengerFlowDetailResDTO {
     /**
      * 更新日期
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8"
+    )
     @ApiModelProperty("更新日期")
     private Date updateDate;
     /**
@@ -135,4 +172,12 @@ public class PassengerFlowDetailResDTO {
      */
     private Integer todayOutCount;
 
+    /**
+     * 小时单向最大断面位置
+     */
+    private String hourMaxPosition;
+    /**
+     * 小时单向最大断面客流量
+     */
+    private Integer hourMaxPass;
 }
