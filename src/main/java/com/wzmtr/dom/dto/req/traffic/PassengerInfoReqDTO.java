@@ -33,18 +33,33 @@ public class PassengerInfoReqDTO extends BaseEntity {
     @ApiModelProperty(value = "车站客流量")
     private Double passenger;
 
+    /**
+     * 数据类型:1日报 2月报 3周报
+     * */
     @ApiModelProperty(value = "数据类型:1日报 2月报 3周报")
     private String dataType;
 
+    /**
+     * 数据所属日期
+     * */
     @ApiModelProperty(value = "数据所属日期")
     private String dataDate;
 
+    /**
+     * 数据起始日期
+     * */
     @ApiModelProperty(value = "数据起始日期")
     private String startDate;
 
+    /**
+     * 数据终止日期
+     * */
     @ApiModelProperty(value = "数据终止日期")
     private String endDate;
 
+    /**
+     * 版本号
+     * */
     @ApiModelProperty(value = "版本号")
     private String version;
 

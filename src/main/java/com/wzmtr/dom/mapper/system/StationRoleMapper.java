@@ -33,6 +33,12 @@ public interface StationRoleMapper {
     StationRoleResDTO detail(String id);
 
     /**
+     * 获取当前有效的审核站详情
+     * @return 审核站权限详情
+     */
+    StationRoleResDTO getCurrentStation();
+
+    /**
      * 新增审核站权限
      * @param stationRoleReqDTO 审核站权限参数
      */

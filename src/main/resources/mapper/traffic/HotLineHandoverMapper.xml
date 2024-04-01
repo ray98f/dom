@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzmtr.dom.mapper.traffic.HotLineHandoverMapper">
+    <insert id="insertList" parameterType="java.util.List">
+        INSERT INTO "DOM"."TRAFFIC_HOTLINE_HANDOVER" (
+        "ID", "MAIN_CONTENT", "SOURCE", "COUNT", "DATA_DATE", "DATA_TYPE",
+        "START_DATE", "END_DATE", "DEL_FLAG", "VERSION", "CREATE_DATE",
+        "CREATE_BY", "UPDATE_DATE", "UPDATE_BY", "RESULT"
+        ) VALUES
+        <foreach collection="list" item="handover" separator=",">
+            (#{handover.id,jdbcType=VARCHAR}, #{handover.mainContent,jdbcType=VARCHAR},
+            #{handover.source,jdbcType=VARCHAR}, #{handover.count,jdbcType=NUMERIC}, #{handover.dataDate,jdbcType=DATE},
+            #{handover.dataType, jdbcType=VARCHAR}, #{handover.startDate,jdbcType=DATE},
+            #{handover.endDate,jdbcType=DATE}, #{handover.delFlag, jdbcType=VARCHAR}, #{handover.version, jdbcType=VARCHAR},
+            #{handover.createDate,jdbcType=DATE}, #{handover.createBy, jdbcType=VARCHAR}, #{handover.updateDate,jdbcType=DATE},
+            #{handover.updateBy, jdbcType=VARCHAR},
+            #{handover.result, jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+
+
+    <select id="list" resultType="com.wzmtr.dom.dto.res.traffic.hotline.HotLineHandoverListResDTO">
+        SELECT t1.*,
+        (SELECT COUNT(*) FROM TRAFFIC_HOTLINE_HANDOVER t2
+        WHERE t2.DEL_FLAG = '0'
+        AND t2.DATA_TYPE = #{req.dataType}
+        <if test="req.startDate != null and req.startDate != ''">
+            AND t2.START_DATE &gt;= TO_DATE(#{req.startDate}, 'YYYY-MM-DD HH24:MI:SS')
+        </if>
+        <if test="req.endDate != null and req.endDate != ''">
+            AND TO_DATE(#{req.endDate}, 'YYYY-MM-DD HH24:MI:SS') &gt;= t2.END_DATE
+        </if>
+        ) AS needHandOverCount
+        FROM TRAFFIC_HOTLINE_HANDOVER t1
+        WHERE t1.DEL_FLAG = '0'
+        AND t1.DATA_TYPE = #{req.dataType}
+        <if test="req.startDate != null and req.startDate != ''">
+            AND t1.START_DATE &gt;= TO_DATE(#{req.startDate}, 'YYYY-MM-DD HH24:MI:SS')
+        </if>
+        <if test="req.endDate != null and req.endDate != ''">
+            AND TO_DATE(#{req.endDate}, 'YYYY-MM-DD HH24:MI:SS') &gt;= t1.END_DATE
+        </if>
+        ORDER BY t1.CREATE_DATE DESC
+    </select>
+    <select id="selectIsExist" resultType="java.lang.Integer">
+        select count(1) from TRAFFIC_HOTLINE_HANDOVER
+        WHERE
+        <if test="dataType=='1'.toString()">
+            DATA_DATE=#{dataDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="dataType!='1'.toString()">
+            START_DATE=#{startDate,jdbcType=TIMESTAMP} and END_DATE=#{endDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="version!=null and version!=''">
+            AND VERSION=#{version,jdbcType=VARCHAR}
+        </if>
+        AND DEL_FLAG='0' AND rownum=1
+    </select>
+    <select id="selectListByDate"
+            resultType="com.wzmtr.dom.dto.res.traffic.hotline.HotLineHandoverDetailResDTO">
+        select *
+        from TRAFFIC_HOTLINE_HANDOVER
+        WHERE DATA_DATE = TO_DATE(#{date}, 'YYYY-MM-DD HH24:MI:SS')
+            AND DATA_TYPE = #{dataType}
+    </select>
+</mapper>

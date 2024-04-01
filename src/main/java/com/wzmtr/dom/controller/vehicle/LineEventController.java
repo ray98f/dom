@@ -50,8 +50,8 @@ public class LineEventController {
     @GetMapping("/list")
     @ApiOperation(value = "正线/车场事件-列表")
     public PageResponse<LineEventResDTO> page(@RequestParam  String dataType,
-                                              @RequestParam String startDate,
-                                              @RequestParam String endDate,
+                                              @RequestParam(required = false) String startDate,
+                                              @RequestParam(required = false) String endDate,
                                               @Valid PageReqDTO pageReqDTO) {
         return PageResponse.of(lineEventService.list(dataType,startDate,endDate,pageReqDTO));
     }
@@ -90,7 +90,7 @@ public class LineEventController {
      */
     @GetMapping("/eventList")
     @ApiOperation(value = "正线/车场事件信息-列表")
-    public PageResponse<LineEventInfoResDTO> page(@RequestParam String startDate,
+    public PageResponse<LineEventInfoResDTO> eventList(@RequestParam String startDate,
                                                   @RequestParam String endDate,
                                                   @Valid PageReqDTO pageReqDTO) {
         return PageResponse.of(lineEventService.eventList(startDate,endDate,pageReqDTO));

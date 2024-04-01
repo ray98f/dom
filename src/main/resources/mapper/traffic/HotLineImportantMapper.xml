@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzmtr.dom.mapper.traffic.HotLineImportantMapper">
+
+    <insert id="insertList">
+        INSERT INTO "DOM"."TRAFFIC_HOTLINE_IMPORTANT" ("ID", "COUNT", "CONTENT", "RESULT", "KEYWORD", "HOTLINE_TYPE",
+        "DATA_DATE", "DATA_TYPE", "START_DATE", "END_DATE", "DEL_FLAG", "VERSION", "CREATE_DATE", "CREATE_BY",
+        "UPDATE_DATE", "UPDATE_BY") VALUES
+        <foreach collection="list" item="it" separator=",">
+            (#{it.id,jdbcType=VARCHAR}, #{it.count,jdbcType=NUMERIC}, #{it.content,jdbcType=VARCHAR}, #{it.result,jdbcType=VARCHAR}, #{it.keyword,jdbcType=VARCHAR},
+            #{it.hotlineType,jdbcType=VARCHAR}, #{it.dataDate,jdbcType=DATE}, #{it.dataType,jdbcType=VARCHAR}, #{it.startDate,jdbcType=DATE},
+            #{it.endDate,jdbcType=DATE}, #{it.delFlag,jdbcType=VARCHAR}, #{it.version,jdbcType=VARCHAR}, #{it.createDate,jdbcType=DATE},
+            #{it.createBy,jdbcType=VARCHAR}, #{it.updateDate,jdbcType=DATE}, #{it.updateBy, jdbcType=VARCHAR, jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+
+    <select id="list" resultType="com.wzmtr.dom.dto.res.traffic.hotline.HotLineImportantListResDTO">
+        SELECT *
+        FROM TRAFFIC_HOTLINE_IMPORTANT
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE = #{req.dataType}
+        <if test="req.startDate != null and req.startDate!=''">
+            AND START_DATE >= to_date(#{req.startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="req.endDate != null and req.endDate!=''">
+            AND to_date(#{req.endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        </if>
+    </select>
+    <select id="selectIsExist" resultType="java.lang.Integer">
+        SELECT count(1) FROM TRAFFIC_HOTLINE_IMPORTANT
+        WHERE
+        <if test="dataType=='1'.toString()">
+            DATA_DATE=#{dataDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="dataType!='1'.toString()">
+            START_DATE=#{startDate,jdbcType=TIMESTAMP} AND END_DATE=#{endDate,jdbcType=TIMESTAMP}
+        </if>
+        AND DEL_FLAG='0' AND rownum=1
+    </select>
+    <select id="selectByDate" resultType="com.wzmtr.dom.dto.res.traffic.hotline.HotLineImportantDetailResDTO">
+        select *
+        from TRAFFIC_HOTLINE_IMPORTANT
+        where DATA_DATE =
+              to_date(#{date}, 'yyyy-mm-dd hh24:mi:ss')
+          AND DATA_TYPE = #{dataType}
+    </select>
+</mapper>

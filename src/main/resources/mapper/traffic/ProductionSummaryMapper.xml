@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzmtr.dom.mapper.traffic.ProductionSummaryMapper">
+
+    <select id="list" resultType="com.wzmtr.dom.dto.res.traffic.ProductionSummaryResDTO">
+        SELECT *
+        FROM TRAFFIC_PRODUCTION_SUMMARY
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE = #{dataType}
+        AND STATION_CODE = #{stationCode}
+        <if test="startDate != null and startDate!=''">
+            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null and endDate!=''">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        </if>
+        ORDER BY CREATE_DATE desc
+    </select>
+
+    <select id="checkExist" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM TRAFFIC_PRODUCTION_SUMMARY
+        WHERE DEL_FLAG = '0'
+        AND DATA_TYPE = #{dataType}
+        AND STATION_CODE = #{stationCode}
+        <if test="startDate != null">
+            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+    </select>
+
+    <select id="queryInfoById" resultType="com.wzmtr.dom.dto.res.traffic.ProductionSummaryResDTO">
+        SELECT t1.*, t2.STATION_NAME
+        FROM TRAFFIC_PRODUCTION_SUMMARY t1
+        LEFT JOIN SYS_STATION t2 on t1.STATION_CODE = t2.STATION_CODE
+        WHERE t1.ID=#{id} AND t1.DEL_FLAG = '0'
+    </select>
+
+    <select id="queryInfoByDate" resultType="com.wzmtr.dom.dto.res.traffic.ProductionSummaryResDTO">
+        SELECT *
+        FROM TRAFFIC_PRODUCTION_SUMMARY
+        WHERE DATA_TYPE=#{dataType}
+        AND STATION_CODE = #{stationCode}
+        AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        AND DEL_FLAG = '0'
+    </select>
+
+    <select id="queryPreInfoByDate" resultType="com.wzmtr.dom.dto.res.traffic.ProductionSummaryResDTO">
+        SELECT *
+        FROM TRAFFIC_PRODUCTION_SUMMARY
+        WHERE DATA_TYPE=#{dataType}
+        AND STATION_CODE = #{stationCode}
+        <if test='dataType == "1"'>
+            AND START_DATE = TRUNC(to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')-1)
+        </if>
+        <if test='dataType == "2"'>
+            AND START_DATE = (TRUNC(to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),'iw') - 7)
+            AND END_DATE =   (TRUNC(to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),'iw') - 1)
+        </if>
+        <if test='dataType == "3"'>
+            AND START_DATE = (TRUNC(ADD_MONTHS(to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'), -1), 'MONTH'))
+            AND END_DATE =   (LAST_DAY(ADD_MONTHS(TRUNC(to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'), 'MONTH'), -1)))
+        </if>
+        AND DEL_FLAG = '0'
+    </select>
+
+    <insert id="add">
+        INSERT INTO TRAFFIC_PRODUCTION_SUMMARY (ID,
+        TYPE1_COUNT,
+        TYPE2_COUNT,
+        TYPE3_COUNT,
+        TYPE4_COUNT,
+        TYPE5_COUNT,
+        TYPE6_COUNT,
+        STATION_CODE,
+        DATA_TYPE,
+        <if test="dataDate != null">
+            DATA_DATE,
+        </if>
+        START_DATE,
+        END_DATE,
+        CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+        VALUES
+        (#{id},
+        (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND STATION_CODE=#{stationCode} AND PRODUCTION_TYPE = '1' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND STATION_CODE=#{stationCode} AND PRODUCTION_TYPE = '2' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND STATION_CODE=#{stationCode} AND PRODUCTION_TYPE = '3' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND STATION_CODE=#{stationCode} AND PRODUCTION_TYPE = '4' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND STATION_CODE=#{stationCode} AND PRODUCTION_TYPE = '5' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND STATION_CODE=#{stationCode} AND PRODUCTION_TYPE = '6' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        #{stationCode},#{dataType},
+        <if test="dataDate != null">
+            to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
+        to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
+        #{createBy}, sysdate,#{createBy}, sysdate)
+    </insert>
+
+    <update id="modify">
+        UPDATE TRAFFIC_PRODUCTION_SUMMARY SET
+        <if test="type1Desc != null">
+            TYPE1_DESC=#{type1Desc},
+        </if>
+        <if test="type2Desc != null">
+            TYPE2_DESC=#{type2Desc},
+        </if>
+        <if test="type3Desc != null">
+            TYPE3_DESC=#{type3Desc},
+        </if>
+        <if test="type4Desc != null">
+            TYPE4_DESC=#{type4Desc},
+        </if>
+        <if test="type5Desc != null">
+            TYPE5_DESC=#{type5Desc},
+        </if>
+        <if test="type6Desc != null">
+            TYPE6_DESC=#{type6Desc},
+        </if>
+        <if test="remark != null">
+            REMARK=#{remark},
+        </if>
+            VERSION = VERSION+1,
+            UPDATE_BY=#{updateBy},
+            UPDATE_DATE=sysdate
+        WHERE ID=#{id} and VERSION = #{version}
+    </update>
+
+
+</mapper>

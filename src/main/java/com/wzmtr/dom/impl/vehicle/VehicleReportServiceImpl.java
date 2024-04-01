@@ -11,8 +11,8 @@ import com.wzmtr.dom.dto.res.vehicle.WeeklyReportResDTO;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
-import com.wzmtr.dom.mapper.vehicle.ReportMapper;
-import com.wzmtr.dom.service.vehicle.ReportService;
+import com.wzmtr.dom.mapper.vehicle.VehicleReportMapper;
+import com.wzmtr.dom.service.vehicle.VehicleReportService;
 import com.wzmtr.dom.utils.StringUtils;
 import com.wzmtr.dom.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,20 +27,20 @@ import java.util.List;
  * @date 2024/03/14
  */
 @Service
-public class ReportServiceImpl implements ReportService {
+public class VehicleReportServiceImpl implements VehicleReportService {
 
     @Autowired
-    private ReportMapper reportMapper;
+    private VehicleReportMapper vehicleReportMapper;
 
     @Override
     public Page<DailyReportResDTO> pageDaily(String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return reportMapper.pageDaily(pageReqDTO.of(), startDate, endDate);
+        return vehicleReportMapper.pageDaily(pageReqDTO.of(), startDate, endDate);
     }
 
     @Override
     public DailyReportResDTO detailDaily(String id) {
-        return reportMapper.detailDaily(id);
+        return vehicleReportMapper.detailDaily(id);
     }
 
     @Override
@@ -52,112 +52,112 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public void addDaily(DailyReportReqDTO dailyReportReqDTO) {
         // 判断新增数据所属时间是否已存在数据
-        Integer result = reportMapper.selectDailyIsExist(dailyReportReqDTO);
+        Integer result = vehicleReportMapper.selectDailyIsExist(dailyReportReqDTO);
         if (result > 0) {
             throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期车辆部日报数据已存在，无法重复新增");
         }
         dailyReportReqDTO.setId(TokenUtils.getUuId());
         dailyReportReqDTO.setCreateBy(TokenUtils.getCurrentPersonId());
-        reportMapper.addDaily(dailyReportReqDTO);
+        vehicleReportMapper.addDaily(dailyReportReqDTO);
     }
 
     @Override
     public void modifyDaily(DailyReportReqDTO dailyReportReqDTO) {
         // 判断修改数据版本号是否一致
-        Integer result = reportMapper.selectDailyIsExist(dailyReportReqDTO);
+        Integer result = vehicleReportMapper.selectDailyIsExist(dailyReportReqDTO);
         if (result == 0) {
             throw new CommonException(ErrorCode.NORMAL_ERROR, "当前数据已被编辑，请刷新列表并重新编辑数据");
         }
         dailyReportReqDTO.setUpdateBy(TokenUtils.getCurrentPersonId());
-        reportMapper.modifyDaily(dailyReportReqDTO);
+        vehicleReportMapper.modifyDaily(dailyReportReqDTO);
     }
 
     @Override
     public void deleteDaily(List<String> ids) {
         if (StringUtils.isNotEmpty(ids)) {
-            reportMapper.deleteDaily(ids, TokenUtils.getCurrentPersonId());
+            vehicleReportMapper.deleteDaily(ids, TokenUtils.getCurrentPersonId());
         }
     }
 
     @Override
     public Page<WeeklyReportResDTO> pageWeekly(String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return reportMapper.pageWeekly(pageReqDTO.of(), startDate, endDate);
+        return vehicleReportMapper.pageWeekly(pageReqDTO.of(), startDate, endDate);
     }
 
     @Override
     public WeeklyReportResDTO detailWeekly(String id) {
-        return reportMapper.detailWeekly(id);
+        return vehicleReportMapper.detailWeekly(id);
     }
 
     @Override
     public void addWeekly(WeeklyReportReqDTO weeklyReportReqDTO) {
         // 判断新增数据所属时间是否已存在数据
-        Integer result = reportMapper.selectWeeklyIsExist(weeklyReportReqDTO);
+        Integer result = vehicleReportMapper.selectWeeklyIsExist(weeklyReportReqDTO);
         if (result > 0) {
             throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期车辆部周报数据已存在，无法重复新增");
         }
         weeklyReportReqDTO.setId(TokenUtils.getUuId());
         weeklyReportReqDTO.setCreateBy(TokenUtils.getCurrentPersonId());
-        reportMapper.addWeekly(weeklyReportReqDTO);
+        vehicleReportMapper.addWeekly(weeklyReportReqDTO);
     }
 
     @Override
     public void modifyWeekly(WeeklyReportReqDTO weeklyReportReqDTO) {
         // 判断修改数据版本号是否一致
-        Integer result = reportMapper.selectWeeklyIsExist(weeklyReportReqDTO);
+        Integer result = vehicleReportMapper.selectWeeklyIsExist(weeklyReportReqDTO);
         if (result == 0) {
             throw new CommonException(ErrorCode.NORMAL_ERROR, "当前数据已被编辑，请刷新列表并重新编辑数据");
         }
         weeklyReportReqDTO.setUpdateBy(TokenUtils.getCurrentPersonId());
-        reportMapper.modifyWeekly(weeklyReportReqDTO);
+        vehicleReportMapper.modifyWeekly(weeklyReportReqDTO);
     }
 
     @Override
     public void deleteWeekly(List<String> ids) {
         if (StringUtils.isNotEmpty(ids)) {
-            reportMapper.deleteWeekly(ids, TokenUtils.getCurrentPersonId());
+            vehicleReportMapper.deleteWeekly(ids, TokenUtils.getCurrentPersonId());
         }
     }
 
     @Override
     public Page<MonthlyReportResDTO> pageMonthly(String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return reportMapper.pageMonthly(pageReqDTO.of(), startDate, endDate);
+        return vehicleReportMapper.pageMonthly(pageReqDTO.of(), startDate, endDate);
     }
 
     @Override
     public MonthlyReportResDTO detailMonthly(String id) {
-        return reportMapper.detailMonthly(id);
+        return vehicleReportMapper.detailMonthly(id);
     }
 
     @Override
     public void addMonthly(MonthlyReportReqDTO monthlyReportReqDTO) {
         // 判断新增数据所属时间是否已存在数据
-        Integer result = reportMapper.selectMonthlyIsExist(monthlyReportReqDTO);
+        Integer result = vehicleReportMapper.selectMonthlyIsExist(monthlyReportReqDTO);
         if (result > 0) {
             throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期车辆部月报数据已存在，无法重复新增");
         }
         monthlyReportReqDTO.setId(TokenUtils.getUuId());
         monthlyReportReqDTO.setCreateBy(TokenUtils.getCurrentPersonId());
-        reportMapper.addMonthly(monthlyReportReqDTO);
+        vehicleReportMapper.addMonthly(monthlyReportReqDTO);
     }
 
     @Override
     public void modifyMonthly(MonthlyReportReqDTO monthlyReportReqDTO) {
         // 判断修改数据版本号是否一致
-        Integer result = reportMapper.selectMonthlyIsExist(monthlyReportReqDTO);
+        Integer result = vehicleReportMapper.selectMonthlyIsExist(monthlyReportReqDTO);
         if (result == 0) {
             throw new CommonException(ErrorCode.NORMAL_ERROR, "当前数据已被编辑，请刷新列表并重新编辑数据");
         }
         monthlyReportReqDTO.setUpdateBy(TokenUtils.getCurrentPersonId());
-        reportMapper.modifyMonthly(monthlyReportReqDTO);
+        vehicleReportMapper.modifyMonthly(monthlyReportReqDTO);
     }
 
     @Override
     public void deleteMonthly(List<String> ids) {
         if (StringUtils.isNotEmpty(ids)) {
-            reportMapper.deleteMonthly(ids, TokenUtils.getCurrentPersonId());
+            vehicleReportMapper.deleteMonthly(ids, TokenUtils.getCurrentPersonId());
         }
     }
 

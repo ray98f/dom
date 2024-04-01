@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzmtr.dom.mapper.traffic.ProductionMapper">
+
+    <select id="list" resultType="com.wzmtr.dom.dto.res.traffic.ProductionRecordResDTO">
+        SELECT *
+        FROM TRAFFIC_PRODUCTION_RECORD
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE = #{dataType}
+        AND STATION_CODE = #{stationCode}
+        <if test="startDate != null and startDate!=''">
+            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null and endDate!=''">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        </if>
+        ORDER BY CREATE_DATE desc
+    </select>
+
+    <select id="listAll" resultType="com.wzmtr.dom.dto.res.traffic.ProductionRecordResDTO">
+        SELECT *
+        FROM TRAFFIC_PRODUCTION_RECORD
+        WHERE DEL_FLAG='0'
+        AND STATION_CODE = #{stationCode}
+        <if test="startDate != null">
+            AND to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') >= START_DATE
+        </if>
+        <if test="endDate != null">
+            AND END_DATE >= to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        ORDER BY START_DATE desc
+    </select>
+
+    <select id="checkExist" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM TRAFFIC_PRODUCTION_RECORD
+        WHERE DEL_FLAG = '0'
+        AND DATA_TYPE = #{dataType}
+        AND STATION_CODE = #{stationCode}
+        <if test="startDate != null">
+            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+    </select>
+
+    <select id="queryInfoById" resultType="com.wzmtr.dom.dto.res.traffic.ProductionDetailResDTO">
+        SELECT t1.*, t2.STATION_NAME
+        FROM TRAFFIC_PRODUCTION_RECORD t1
+        LEFT JOIN SYS_STATION t2 on t1.STATION_CODE = t2.STATION_CODE
+        WHERE t1.ID=#{id} AND t1.DEL_FLAG = '0'
+    </select>
+
+    <select id="queryInfoByStation" resultType="com.wzmtr.dom.dto.res.traffic.ProductionDetailResDTO">
+        SELECT t1.*, t2.STATION_NAME
+        FROM TRAFFIC_PRODUCTION_RECORD t1
+        LEFT JOIN SYS_STATION t2 on t1.STATION_CODE = t2.STATION_CODE
+        WHERE t1.DEL_FLAG = '0'
+        AND t1.STATION_CODE = #{stationCode}
+        AND t1.DATA_TYPE = #{dataType}
+        <if test="startDate != null and startDate!=''">
+            AND t1.START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null and endDate!=''">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=t1.END_DATE
+        </if>
+    </select>
+
+    <select id="queryApproval" resultType="com.wzmtr.dom.dto.res.traffic.ProductionApprovalResDTO">
+        SELECT t1.*,t2.STATION_NAME AS approvalStationName
+        FROM TRAFFIC_PRODUCTION_APPROVAL t1
+        LEFT JOIN SYS_STATION t2 on t1.APPROVAL_STATION = t2.STATION_CODE
+        WHERE DEL_FLAG='0'
+        <if test="startDate != null and startDate!=''">
+            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null and endDate!=''">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        </if>
+        ORDER BY START_DATE desc
+    </select>
+
+    <select id="queryApprovalByDate" resultType="com.wzmtr.dom.dto.res.traffic.ProductionApprovalResDTO">
+        SELECT *
+        FROM TRAFFIC_PRODUCTION_APPROVAL
+        WHERE DEL_FLAG = '0'
+        AND DATA_TYPE = #{dataType}
+        AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+    </select>
+
+    <select id="queryApprovalRelationById" resultType="com.wzmtr.dom.dto.res.traffic.ProductionApprovalRelationResDTO">
+        SELECT t2.SUBMIT_STATION,t3.STATION_CODE
+        FROM TRAFFIC_PRODUCTION_RELATION t1
+        LEFT JOIN TRAFFIC_PRODUCTION_APPROVAL t2 on t1.APPROVAL_ID = t2.ID
+        LEFT JOIN TRAFFIC_PRODUCTION_RECORD t3 on t1.RECORD_ID = t3.ID
+        WHERE t1.DEL_FLAG = '0'
+        AND t1.APPROVAL_STATUS = '0'
+        AND t1.APPROVAL_ID=#{approvalId}
+        AND t1.RECORD_ID=#{recordId}
+    </select>
+
+    <insert id="add">
+        INSERT INTO TRAFFIC_PRODUCTION_RECORD (ID,
+        STATION_CODE,
+        DATA_TYPE,
+        <if test="dataDate != null">
+            DATA_DATE,
+        </if>
+        START_DATE,
+        END_DATE,
+        CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+        VALUES
+        (#{id},
+        #{stationCode},#{dataType},
+        <if test="dataDate != null">
+            to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
+        to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
+        #{createBy}, sysdate,#{createBy}, sysdate)
+    </insert>
+
+    <update id="modify">
+        UPDATE TRAFFIC_PRODUCTION_RECORD SET
+        STATUS=#{status},
+        UPDATE_DATE=sysdate
+        WHERE ID=#{id}
+    </update>
+
+    <update id="modifyRecordCount">
+        UPDATE TRAFFIC_PRODUCTION_RECORD SET
+        TYPE1_COUNT=(SELECT COUNT(1) FROM TRAFFIC_PRODUCTION_INFO WHERE DEL_FLAG='0' AND PRODUCTION_TYPE = '1' AND STATION_CODE = #{stationCode} AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        TYPE2_COUNT=(SELECT COUNT(1) FROM TRAFFIC_PRODUCTION_INFO WHERE DEL_FLAG='0' AND PRODUCTION_TYPE = '2' AND STATION_CODE = #{stationCode} AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        TYPE3_COUNT=(SELECT COUNT(1) FROM TRAFFIC_PRODUCTION_INFO WHERE DEL_FLAG='0' AND PRODUCTION_TYPE = '3' AND STATION_CODE = #{stationCode} AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        TYPE4_COUNT=(SELECT COUNT(1) FROM TRAFFIC_PRODUCTION_INFO WHERE DEL_FLAG='0' AND PRODUCTION_TYPE = '4' AND STATION_CODE = #{stationCode} AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        TYPE5_COUNT=(SELECT COUNT(1) FROM TRAFFIC_PRODUCTION_INFO WHERE DEL_FLAG='0' AND PRODUCTION_TYPE = '5' AND STATION_CODE = #{stationCode} AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        TYPE6_COUNT=(SELECT COUNT(1) FROM TRAFFIC_PRODUCTION_INFO WHERE DEL_FLAG='0' AND PRODUCTION_TYPE = '6' AND STATION_CODE = #{stationCode} AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE)
+        WHERE ID=#{id}
+    </update>
+
+    <update id="modifySummaryCount">
+        UPDATE TRAFFIC_PRODUCTION_SUMMARY SET
+        (TYPE1_COUNT,TYPE2_COUNT,TYPE3_COUNT,TYPE4_COUNT,TYPE5_COUNT,TYPE6_COUNT)
+        =
+        (
+        SELECT TYPE1_COUNT,TYPE2_COUNT,TYPE3_COUNT,TYPE4_COUNT,TYPE5_COUNT,TYPE6_COUNT
+        FROM TRAFFIC_PRODUCTION_RECORD
+        WHERE ID=#{recordId}
+        )
+        WHERE STATION_CODE = #{stationCode}
+        AND DATA_TYPE=#{dataType}
+        AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND END_DATE   = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+    </update>
+
+    <insert id="createProductionApproval">
+        INSERT INTO TRAFFIC_PRODUCTION_APPROVAL (ID,
+        APPROVAL_STATION,TITLE,SUBMIT_STATION,
+        DATA_TYPE,
+        <if test="dataDate != null">
+            DATA_DATE,
+        </if>
+        START_DATE,
+        END_DATE,
+        CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+        VALUES
+        (#{id}, #{approvalStation},#{title},#{submitStation},
+        #{dataType},
+        <if test="dataDate != null">
+            to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
+        to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
+        #{createBy}, sysdate,#{createBy}, sysdate)
+    </insert>
+
+    <update id="modifyProductionApproval">
+        UPDATE TRAFFIC_PRODUCTION_APPROVAL SET
+        <if test="dataDate != null">
+            SUBMIT_STATION=#{submitStation},
+        </if>
+        UPDATE_DATE=sysdate
+        WHERE ID = #{id}
+    </update>
+
+    <insert id="createProductionApprovalRelation">
+        INSERT INTO TRAFFIC_PRODUCTION_RELATION (ID,
+        APPROVAL_ID,RECORD_ID,
+        CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+        VALUES
+        (#{id}, #{approvalId},#{recordId},
+        #{createBy}, sysdate,#{createBy}, sysdate)
+    </insert>
+
+    <update id="modifyProductionApprovalRelation">
+        UPDATE TRAFFIC_PRODUCTION_RELATION SET
+        APPROVAL_STATUS=#{status},
+        UPDATE_BY=#{updateBy},
+        UPDATE_DATE=sysdate
+        WHERE APPROVAL_ID = #{approvalId}
+        AND RECORD_ID=#{recordId}
+        AND APPROVAL_STATUS = '0'
+    </update>
+
+    <select id="eventList" resultType="com.wzmtr.dom.dto.res.traffic.ProductionInfoResDTO">
+        SELECT ID, RECORD_ID,STATION_CODE,PRODUCTION_TYPE,TITLE,WORK_TIME,WORK_DEPT,WORK_CONTENT,
+        EVENT_TIME,EVENT_DESC,EVENT_AFFECT,EVENT_HANDLE,PIC_URL,IS_CLOSE,
+        DATA_TYPE,VERSION
+        FROM TRAFFIC_PRODUCTION_INFO
+        WHERE DEL_FLAG='0'
+        AND STATION_CODE =#{stationCode}
+        <if test="productionType != null and productionType!=''">
+            AND PRODUCTION_TYPE=#{productionType}
+        </if>
+        <if test="startDate != null">
+            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        </if>
+        ORDER BY CREATE_DATE desc
+    </select>
+
+    <select id="queryDateRange" resultType="com.wzmtr.dom.dto.res.traffic.ProductionInfoResDTO">
+        SELECT MIN(START_DATE) AS START_DATE,MAX(END_DATE) AS END_DATE,MAX(STATION_CODE) AS STATION_CODE
+        FROM TRAFFIC_PRODUCTION_INFO
+        WHERE ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </select>
+
+    <insert id="createEvent">
+        INSERT INTO TRAFFIC_PRODUCTION_INFO (ID, RECORD_ID, STATION_CODE,PRODUCTION_TYPE,
+        <if test="title != null and title!=''">
+            TITLE,
+        </if>
+        <if test="workTime != null and workTime!=''">
+            WORK_TIME,
+        </if>
+        <if test="workDept != null and workDept!=''">
+            WORK_DEPT,
+        </if>
+        <if test="workContent != null and workContent!=''">
+            WORK_CONTENT,
+        </if>
+        <if test="eventTime != null and eventTime!=''">
+            EVENT_TIME,
+        </if>
+        <if test="eventDesc != null and eventDesc!=''">
+            EVENT_DESC,
+        </if>
+        <if test="eventAffect != null and eventAffect!=''">
+            EVENT_AFFECT,
+        </if>
+        <if test="eventHandle != null and eventHandle!=''">
+            EVENT_HANDLE,
+        </if>
+        <if test="picUrl != null and picUrl!=''">
+            PIC_URL,
+        </if>
+        <if test="isClose != null and isClose!=''">
+            IS_CLOSE,
+        </if>
+        DATA_TYPE,
+        <if test="dataDate != null">
+            DATA_DATE,
+        </if>
+        START_DATE,
+        END_DATE,
+        CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+        VALUES ( #{id}, #{recordId},#{stationCode},#{productionType},
+        <if test="title != null and title!=''">
+            #{title},
+        </if>
+        <if test="workTime != null and workTime!=''">
+            to_date(#{workTime},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        <if test="workDept != null and workDept!=''">
+            #{workDept},
+        </if>
+        <if test="workContent != null and workContent!=''">
+            #{workContent},
+        </if>
+        <if test="eventTime != null and eventTime!=''">
+            to_date(#{eventTime},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        <if test="eventDesc != null and eventDesc!=''">
+            #{eventDesc},
+        </if>
+        <if test="eventAffect != null and eventAffect!=''">
+            #{eventAffect},
+        </if>
+        <if test="eventHandle != null and eventHandle!=''">
+            #{eventHandle},
+        </if>
+        <if test="picUrl != null and picUrl!=''">
+            #{picUrl},
+        </if>
+        <if test="isClose != null and isClose!=''">
+            #{isClose},
+        </if>
+        #{dataType},
+        <if test="dataDate != null">
+            to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
+        to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
+        #{createBy}, sysdate,#{createBy}, sysdate)
+    </insert>
+
+    <update id="modifyEvent">
+        UPDATE TRAFFIC_PRODUCTION_INFO SET
+        <if test="productionType != null and productionType!=''">
+            PRODUCTION_TYPE=#{productionType},
+        </if>
+        <if test="title != null and title!=''">
+            TITLE=#{title},
+        </if>
+        <if test="workTime != null and workTime!=''">
+            WORK_TIME=to_date(#{workTime},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        <if test="workDept != null and workDept!=''">
+            WORK_DEPT=#{workDept},
+        </if>
+        <if test="workContent != null and workContent!=''">
+            WORK_CONTENT=#{workContent},
+        </if>
+        <if test="eventTime != null and eventTime!=''">
+            EVENT_TIME=to_date(#{eventTime},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        <if test="eventDesc != null and eventDesc!=''">
+            EVENT_DESC=#{eventDesc},
+        </if>
+        <if test="eventAffect != null and eventAffect!=''">
+            EVENT_AFFECT=#{eventAffect},
+        </if>
+        <if test="eventHandle != null and eventHandle!=''">
+            EVENT_HANDLE=#{eventHandle},
+        </if>
+        <if test="picUrl != null and picUrl!=''">
+            PIC_URL=#{picUrl},
+        </if>
+        <if test="isClose != null and isClose!=''">
+            IS_CLOSE=#{isClose},
+        </if>
+        VERSION = VERSION+1,
+        UPDATE_BY=#{updateBy},
+        UPDATE_DATE=sysdate
+        WHERE ID=#{id}
+        AND VERSION = #{version}
+    </update>
+
+    <delete id="deleteEvent">
+        DELETE FROM TRAFFIC_PRODUCTION_INFO
+        WHERE ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </delete>
+</mapper>

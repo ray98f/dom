@@ -37,6 +37,12 @@ public class PassengerResDTO extends BaseEntity {
     @ApiModelProperty(value = "本日客流量(S2)")
     private Double monthPassenger;
 
+    /**
+     * 本年客流量(S2)
+     * */
+    @ApiModelProperty(value = "本年客流量(S2)")
+    private Double yearPassenger;
+
     @ApiModelProperty(value = "版本号")
     private String version;
 

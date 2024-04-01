@@ -36,14 +36,20 @@ public class PassengerDetailResDTO extends BaseEntity {
     /**
      * 本日客流量(S2)
      * */
-    @ApiModelProperty(value = "本日客流量(S2)")
+    @ApiModelProperty(value = "本周客流量(S2)")
     private Double weekPassenger;
 
     /**
      * 本日客流量(S2)
      * */
-    @ApiModelProperty(value = "本日客流量(S2)")
+    @ApiModelProperty(value = "本月客流量(S2)")
     private Double monthPassenger;
+
+    /**
+     * 本日客流量(S2)
+     * */
+    @ApiModelProperty(value = "本年客流量(S2)")
+    private Double yearPassenger;
 
     /**
      * 本日客流量(线网)/万人
@@ -62,6 +68,12 @@ public class PassengerDetailResDTO extends BaseEntity {
      * */
     @ApiModelProperty(value = "本月客流量(线网)/万人")
     private Double wiringMonthPassenger;
+
+    /**
+     * 本年客流量(线网)/万人
+     * */
+    @ApiModelProperty(value = "本年客流量(线网)/万人")
+    private Double wiringYearPassenger;
 
     /**
      * 换乘客运量

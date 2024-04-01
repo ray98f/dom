@@ -5,6 +5,7 @@ import cn.hutool.core.util.HexUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.pagehelper.page.PageMethod;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.traffic.PassengerInfoReqDTO;
 import com.wzmtr.dom.dto.req.traffic.PassengerRecordReqDTO;
@@ -31,7 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -60,7 +60,8 @@ public class PassengerServiceImpl implements PassengerService {
 
     @Override
     public Page<PassengerResDTO> list(String dataType, String startDate, String endDate, PageReqDTO pageReqDTO) {
-        return null;
+        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        return passengerMapper.list(pageReqDTO.of(),dataType,startDate,endDate);
     }
 
     @Override
@@ -94,7 +95,6 @@ public class PassengerServiceImpl implements PassengerService {
             }
             passengerRecordReqDTO.setDataDate(passengerRecordReqDTO.getStartDate());
         }
-
         passengerRecordReqDTO.setCreateBy(currentLoginUser.getPersonId());
         passengerRecordReqDTO.setUpdateBy(currentLoginUser.getPersonId());
         passengerRecordReqDTO.setId(TokenUtils.getUuId());
