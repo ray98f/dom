@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.wzmtr.dom.mapper.vehicle.ReportMapper">
+<mapper namespace="com.wzmtr.dom.mapper.vehicle.VehicleReportMapper">
 
     <select id="pageDaily" resultType="com.wzmtr.dom.dto.res.vehicle.DailyReportResDTO">
         SELECT dr.ID, dr.IF_IMPORTANT_INDICATOR, dr.IF_DRIVING_RECORD, dr.IF_LINE_EVENT, dr.IF_XT_CONSTRUCT,

@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Mapper
 @Repository
-public interface ReportMapper {
+public interface VehicleReportMapper {
 
     /**
      * 分页查询日报列表

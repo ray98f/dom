@@ -17,7 +17,7 @@ import java.util.List;
  * @version 1.0
  * @date 2024/03/14
  */
-public interface ReportService {
+public interface VehicleReportService {
 
     /**
      * 分页查询日报列表
