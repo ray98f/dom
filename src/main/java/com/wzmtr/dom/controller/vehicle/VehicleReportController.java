@@ -10,7 +10,7 @@ import com.wzmtr.dom.entity.BaseIdsEntity;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.entity.response.PageResponse;
-import com.wzmtr.dom.service.vehicle.ReportService;
+import com.wzmtr.dom.service.vehicle.VehicleReportService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.poi.ss.formula.functions.T;
@@ -30,10 +30,10 @@ import javax.validation.Valid;
 @RequestMapping("/vehicle/report")
 @Api(tags = "车辆部-车辆部报表")
 @Validated
-public class ReportController {
+public class VehicleReportController {
 
     @Autowired
-    private ReportService reportService;
+    private VehicleReportService vehicleReportService;
 
     /**
      * 分页查询日报列表
@@ -47,7 +47,7 @@ public class ReportController {
     public PageResponse<DailyReportResDTO> pageDaily(@RequestParam(required = false) String startDate,
                                                      @RequestParam(required = false) String endDate,
                                                      @Valid PageReqDTO pageReqDTO) {
-        return PageResponse.of(reportService.pageDaily(startDate, endDate, pageReqDTO));
+        return PageResponse.of(vehicleReportService.pageDaily(startDate, endDate, pageReqDTO));
     }
 
     /**
@@ -58,7 +58,7 @@ public class ReportController {
     @GetMapping("/daily/detail")
     @ApiOperation(value = "日报详情")
     public DataResponse<DailyReportResDTO> detailDaily(@RequestParam String id) {
-        return DataResponse.of(reportService.detailDaily(id));
+        return DataResponse.of(vehicleReportService.detailDaily(id));
     }
 
     /**
@@ -69,7 +69,7 @@ public class ReportController {
     @GetMapping("/daily/user/ocm")
     @ApiOperation(value = "获取乘务系统当天人员")
     public DataResponse<DailyReportResDTO> ocmUserDaily(@RequestParam String date) {
-        return DataResponse.of(reportService.ocmUserDaily(date));
+        return DataResponse.of(vehicleReportService.ocmUserDaily(date));
     }
 
     /**
@@ -80,7 +80,7 @@ public class ReportController {
     @PostMapping("/daily/add")
     @ApiOperation(value = "新增-日报")
     public DataResponse<T> addDaily(@RequestBody DailyReportReqDTO dailyReportReqDTO) {
-        reportService.addDaily(dailyReportReqDTO);
+        vehicleReportService.addDaily(dailyReportReqDTO);
         return DataResponse.success();
     }
 
@@ -92,7 +92,7 @@ public class ReportController {
     @PostMapping("/daily/modify")
     @ApiOperation(value = "编辑-日报")
     public DataResponse<T> modifyDaily(@RequestBody DailyReportReqDTO dailyReportReqDTO) {
-        reportService.modifyDaily(dailyReportReqDTO);
+        vehicleReportService.modifyDaily(dailyReportReqDTO);
         return DataResponse.success();
     }
 
@@ -104,7 +104,7 @@ public class ReportController {
     @PostMapping("/daily/delete")
     @ApiOperation(value = "删除-日报(单删+批量删除)")
     public DataResponse<T> deleteDaily(@RequestBody BaseIdsEntity baseIdsEntity) {
-        reportService.deleteDaily(baseIdsEntity.getIds());
+        vehicleReportService.deleteDaily(baseIdsEntity.getIds());
         return DataResponse.success();
     }
 
@@ -120,7 +120,7 @@ public class ReportController {
     public PageResponse<WeeklyReportResDTO> pageWeekly(@RequestParam(required = false) String startDate,
                                                        @RequestParam(required = false) String endDate,
                                                        @Valid PageReqDTO pageReqDTO) {
-        return PageResponse.of(reportService.pageWeekly(startDate, endDate, pageReqDTO));
+        return PageResponse.of(vehicleReportService.pageWeekly(startDate, endDate, pageReqDTO));
     }
 
     /**
@@ -131,7 +131,7 @@ public class ReportController {
     @GetMapping("/weekly/detail")
     @ApiOperation(value = "周报详情")
     public DataResponse<WeeklyReportResDTO> detailWeekly(@RequestParam String id) {
-        return DataResponse.of(reportService.detailWeekly(id));
+        return DataResponse.of(vehicleReportService.detailWeekly(id));
     }
 
     /**
@@ -142,7 +142,7 @@ public class ReportController {
     @PostMapping("/weekly/add")
     @ApiOperation(value = "新增-周报")
     public DataResponse<T> addWeekly(@RequestBody WeeklyReportReqDTO weeklyReportReqDTO) {
-        reportService.addWeekly(weeklyReportReqDTO);
+        vehicleReportService.addWeekly(weeklyReportReqDTO);
         return DataResponse.success();
     }
 
@@ -154,7 +154,7 @@ public class ReportController {
     @PostMapping("/weekly/modify")
     @ApiOperation(value = "编辑-周报")
     public DataResponse<T> modifyWeekly(@RequestBody WeeklyReportReqDTO weeklyReportReqDTO) {
-        reportService.modifyWeekly(weeklyReportReqDTO);
+        vehicleReportService.modifyWeekly(weeklyReportReqDTO);
         return DataResponse.success();
     }
 
@@ -166,7 +166,7 @@ public class ReportController {
     @PostMapping("/weekly/delete")
     @ApiOperation(value = "删除-周报(单删+批量删除)")
     public DataResponse<T> deleteWeekly(@RequestBody BaseIdsEntity baseIdsEntity) {
-        reportService.deleteWeekly(baseIdsEntity.getIds());
+        vehicleReportService.deleteWeekly(baseIdsEntity.getIds());
         return DataResponse.success();
     }
 
@@ -182,7 +182,7 @@ public class ReportController {
     public PageResponse<MonthlyReportResDTO> pageMonthly(@RequestParam(required = false) String startDate,
                                                          @RequestParam(required = false) String endDate,
                                                          @Valid PageReqDTO pageReqDTO) {
-        return PageResponse.of(reportService.pageMonthly(startDate, endDate, pageReqDTO));
+        return PageResponse.of(vehicleReportService.pageMonthly(startDate, endDate, pageReqDTO));
     }
 
     /**
@@ -193,7 +193,7 @@ public class ReportController {
     @GetMapping("/monthly/detail")
     @ApiOperation(value = "月报详情")
     public DataResponse<MonthlyReportResDTO> detailMonthly(@RequestParam String id) {
-        return DataResponse.of(reportService.detailMonthly(id));
+        return DataResponse.of(vehicleReportService.detailMonthly(id));
     }
 
     /**
@@ -204,7 +204,7 @@ public class ReportController {
     @PostMapping("/monthly/add")
     @ApiOperation(value = "新增-月报")
     public DataResponse<T> addMonthly(@RequestBody MonthlyReportReqDTO monthlyReportReqDTO) {
-        reportService.addMonthly(monthlyReportReqDTO);
+        vehicleReportService.addMonthly(monthlyReportReqDTO);
         return DataResponse.success();
     }
 
@@ -216,7 +216,7 @@ public class ReportController {
     @PostMapping("/monthly/modify")
     @ApiOperation(value = "编辑-月报")
     public DataResponse<T> modifyMonthly(@RequestBody MonthlyReportReqDTO monthlyReportReqDTO) {
-        reportService.modifyMonthly(monthlyReportReqDTO);
+        vehicleReportService.modifyMonthly(monthlyReportReqDTO);
         return DataResponse.success();
     }
 
@@ -228,7 +228,7 @@ public class ReportController {
     @PostMapping("/monthly/delete")
     @ApiOperation(value = "删除-月报(单删+批量删除)")
     public DataResponse<T> deleteMonthly(@RequestBody BaseIdsEntity baseIdsEntity) {
-        reportService.deleteMonthly(baseIdsEntity.getIds());
+        vehicleReportService.deleteMonthly(baseIdsEntity.getIds());
         return DataResponse.success();
     }
 }
