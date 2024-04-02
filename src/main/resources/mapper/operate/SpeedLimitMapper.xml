@@ -3,7 +3,7 @@
 <mapper namespace="com.wzmtr.dom.mapper.operate.SpeedLimitMapper">
 
     <select id="recordPage" resultType="com.wzmtr.dom.dto.res.operate.SpeedLimitRecordResDTO">
-        SELECT ID, LIMIT_NUM, VERSION, DATA_DATE, START_DATE, END_DATE, VERSION
+        SELECT ID, LIMIT_NUM, VERSION, DATA_DATE
         FROM OPERATE_SPEED_LIMIT_RECORD
         WHERE DEL_FLAG='0'
         <if test="startDate!=null and startDate!=''">
@@ -38,12 +38,6 @@
         <if test="limitNum!=null">
             LIMIT_NUM,
         </if>
-        <if test="startDate!=null">
-            START_DATE,
-        </if>
-        <if test="endDate!=null">
-            END_DATE,
-        </if>
         <if test="dataDate!=null">
             DATA_DATE,
         </if>
@@ -51,12 +45,6 @@
         VALUES (#{id},
         <if test="limitNum!=null">
             #{limitNum},
-        </if>
-        <if test="startDate!=null">
-            #{startDate},
-        </if>
-        <if test="endDate!=null">
-            #{endDate},
         </if>
         <if test="dataDate!=null">
             #{dataDate},
@@ -136,12 +124,6 @@
         UPDATE OPERATE_SPEED_LIMIT_RECORD SET
         <if test="limitNum!=null">
             LIMIT_NUM=#{limitNum},
-        </if>
-        <if test="startDate!=null">
-            START_DATE=#{startDate},
-        </if>
-        <if test="endDate!=null">
-            END_DATE=#{endDate},
         </if>
         VERSION=VERSION+1, UPDATE_BY=#{updateBy}, UPDATE_DATE=sysdate
         WHERE ID=#{id} and VERSION=#{version}

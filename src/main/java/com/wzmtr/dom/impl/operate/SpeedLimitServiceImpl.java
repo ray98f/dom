@@ -28,68 +28,68 @@ import java.util.List;
 public class SpeedLimitServiceImpl implements SpeedLimitService {
 
     @Autowired
-    private SpeedLimitMapper crewDrillMapper;
+    private SpeedLimitMapper speedLimitMapper;
 
     @Override
     public Page<SpeedLimitRecordResDTO> recordPage(String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return crewDrillMapper.recordPage(pageReqDTO.of(), startDate, endDate);
+        return speedLimitMapper.recordPage(pageReqDTO.of(), startDate, endDate);
     }
 
     @Override
     public Page<SpeedLimitInfoResDTO> infoPage(String id, PageReqDTO pageReqDTO) {
         PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return crewDrillMapper.infoPage(pageReqDTO.of(), id);
+        return speedLimitMapper.infoPage(pageReqDTO.of(), id);
     }
 
     @Override
     public void addRecord(SpeedLimitRecordReqDTO speedLimitRecordReqDTO) {
         // 判断新增数据所属时间是否已存在数据
-        Integer result = crewDrillMapper.selectRecordIsExist(speedLimitRecordReqDTO);
+        Integer result = speedLimitMapper.selectRecordIsExist(speedLimitRecordReqDTO);
         if (result > 0) {
             throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期线路限速情况记录数据已存在，无法重复新增");
         }
         speedLimitRecordReqDTO.setId(TokenUtils.getUuId());
         speedLimitRecordReqDTO.setCreateBy(TokenUtils.getCurrentPersonId());
-        crewDrillMapper.addRecord(speedLimitRecordReqDTO);
+        speedLimitMapper.addRecord(speedLimitRecordReqDTO);
     }
 
     @Override
     public void addInfo(SpeedLimitInfoReqDTO speedLimitInfoReqDTO) {
         speedLimitInfoReqDTO.setId(TokenUtils.getUuId());
         speedLimitInfoReqDTO.setCreateBy(TokenUtils.getCurrentPersonId());
-        crewDrillMapper.addInfo(speedLimitInfoReqDTO);
+        speedLimitMapper.addInfo(speedLimitInfoReqDTO);
     }
 
     @Override
     public void modifyRecord(SpeedLimitRecordReqDTO speedLimitRecordReqDTO) {
         // 判断修改数据版本号是否一致
-        Integer result = crewDrillMapper.selectRecordIsExist(speedLimitRecordReqDTO);
+        Integer result = speedLimitMapper.selectRecordIsExist(speedLimitRecordReqDTO);
         if (result == 0) {
             throw new CommonException(ErrorCode.NORMAL_ERROR, "当前数据已被编辑，请刷新列表并重新编辑数据");
         }
         speedLimitRecordReqDTO.setUpdateBy(TokenUtils.getCurrentPersonId());
-        crewDrillMapper.modifyRecord(speedLimitRecordReqDTO);
+        speedLimitMapper.modifyRecord(speedLimitRecordReqDTO);
     }
 
     @Override
     public void modifyInfo(SpeedLimitInfoReqDTO speedLimitInfoReqDTO) {
         speedLimitInfoReqDTO.setUpdateBy(TokenUtils.getCurrentPersonId());
-        crewDrillMapper.modifyInfo(speedLimitInfoReqDTO);
+        speedLimitMapper.modifyInfo(speedLimitInfoReqDTO);
     }
 
     @Override
     public void deleteRecord(List<String> ids) {
         if (StringUtils.isNotEmpty(ids)) {
-            crewDrillMapper.deleteRecord(ids, TokenUtils.getCurrentPersonId());
-            crewDrillMapper.deleteInfo(ids, null, TokenUtils.getCurrentPersonId());
+            speedLimitMapper.deleteRecord(ids, TokenUtils.getCurrentPersonId());
+            speedLimitMapper.deleteInfo(ids, null, TokenUtils.getCurrentPersonId());
         }
     }
 
     @Override
     public void deleteInfo(List<String> ids) {
         if (StringUtils.isNotEmpty(ids)) {
-            crewDrillMapper.deleteInfo(null, ids, TokenUtils.getCurrentPersonId());
+            speedLimitMapper.deleteInfo(null, ids, TokenUtils.getCurrentPersonId());
         }
     }
 

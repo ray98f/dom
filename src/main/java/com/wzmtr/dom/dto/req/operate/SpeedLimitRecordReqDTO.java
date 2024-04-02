@@ -41,26 +41,4 @@ public class SpeedLimitRecordReqDTO extends BaseEntity {
             timezone = "GMT+8"
     )
     private Date dataDate;
-
-    /**
-     * 数据起始日期
-     */
-    @ApiModelProperty(value = "数据起始日期")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonFormat(
-            pattern = "yyyy-MM-dd",
-            timezone = "GMT+8"
-    )
-    private Date startDate;
-
-    /**
-     * 数据结束日期
-     */
-    @ApiModelProperty(value = "数据结束日期")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonFormat(
-            pattern = "yyyy-MM-dd",
-            timezone = "GMT+8"
-    )
-    private Date endDate;
 }
