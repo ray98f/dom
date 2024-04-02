@@ -20,47 +20,78 @@ import java.util.Date;
 public class SpeedLimitInfoReqDTO extends BaseEntity {
 
     /**
-     * 限速数量
+     * 限速记录id
      */
-    @ApiModelProperty(value = "限速数量")
-    private Integer limitNum;
+    @ApiModelProperty(value = "限速记录id")
+    private String recordId;
+
+    /**
+     * 序号
+     */
+    @ApiModelProperty(value = "序号")
+    private Integer serialNo;
+
+    /**
+     * 限速原因
+     */
+    @ApiModelProperty(value = "限速原因")
+    private String reason;
+
+    /**
+     * 限速开始时间
+     */
+    @ApiModelProperty(value = "限速开始时间")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8"
+    )
+    private Date limitStartTime;
+
+    /**
+     * 限速结束时间
+     */
+    @ApiModelProperty(value = "限速结束时间")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8"
+    )
+    private Date limitEndTime;
+
+    /**
+     * 限速区段
+     */
+    @ApiModelProperty(value = "限速区段")
+    private String limitSection;
+
+    /**
+     * 限速值
+     */
+    @ApiModelProperty(value = "限速值")
+    private String limitValue;
+
+    /**
+     * 申请单位id
+     */
+    @ApiModelProperty(value = "申请单位id")
+    private String applicationDept;
+
+    /**
+     * 申请单位名称
+     */
+    @ApiModelProperty(value = "申请单位名称")
+    private String applicationDeptName;
+
+    /**
+     * 责任单位/责任人
+     */
+    @ApiModelProperty(value = "责任单位/责任人")
+    private String duty;
 
     /**
      * 版本号(乐观锁)
      */
     @ApiModelProperty(value = "版本号(乐观锁)")
     private String version;
-
-    /**
-     * 所属日期
-     */
-    @ApiModelProperty(value = "所属日期")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonFormat(
-            pattern = "yyyy-MM-dd",
-            timezone = "GMT+8"
-    )
-    private Date dataDate;
-
-    /**
-     * 数据起始日期
-     */
-    @ApiModelProperty(value = "数据起始日期")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonFormat(
-            pattern = "yyyy-MM-dd",
-            timezone = "GMT+8"
-    )
-    private Date startDate;
-
-    /**
-     * 数据结束日期
-     */
-    @ApiModelProperty(value = "数据结束日期")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonFormat(
-            pattern = "yyyy-MM-dd",
-            timezone = "GMT+8"
-    )
-    private Date endDate;
 }
