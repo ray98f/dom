@@ -1,10 +1,14 @@
 package com.wzmtr.dom.mapper.operate;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.wzmtr.dom.dto.req.operate.OperateEventInfoReqDTO;
-import com.wzmtr.dom.dto.req.operate.OperateEventReqDTO;
-import com.wzmtr.dom.dto.res.operate.OperateEventInfoResDTO;
-import com.wzmtr.dom.dto.res.operate.OperateEventResDTO;
+import com.wzmtr.dom.dto.req.operate.IndicatorInfoReqDTO;
+import com.wzmtr.dom.dto.req.operate.IndicatorPowerReqDTO;
+import com.wzmtr.dom.dto.req.operate.IndicatorRecordReqDTO;
+import com.wzmtr.dom.dto.res.operate.IndicatorDetailResDTO;
+import com.wzmtr.dom.dto.res.operate.IndicatorInfoResDTO;
+import com.wzmtr.dom.dto.res.operate.IndicatorPowerResDTO;
+import com.wzmtr.dom.dto.res.operate.IndicatorRecordResDTO;
+import com.wzmtr.dom.dto.res.vehicle.IndicatorResDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -29,22 +33,28 @@ public interface OperateIndicatorMapper {
      * @param endDate 查询参数
      * @return 列表
      */
-    Page<OperateEventResDTO> list(Page<OperateEventResDTO> page, String dataType, String startDate, String endDate);
-
-    /**
-     * 列表
-     * @param startDate 查询参数
-     * @param endDate 查询参数
-     * @return 列表
-     */
-    List<OperateEventResDTO> listAll(String startDate, String endDate);
+    Page<IndicatorRecordResDTO> list(Page<IndicatorRecordResDTO> page, String dataType, String startDate, String endDate);
 
     /**
      * 详情
      * @param id 入参数
      * @return LineEventResDTO
      */
-    OperateEventResDTO queryInfoById(String id);
+    IndicatorDetailResDTO queryInfoById(String id);
+
+    /**
+     * 详情
+     * @param recordId 入参数
+      @return LineEventResDTO
+     */
+    List<IndicatorInfoResDTO> infoList(String recordId);
+
+    /**
+     * 详情
+     * @param recordId 入参数
+     @return LineEventResDTO
+     */
+    IndicatorPowerResDTO queryPower(String recordId);
 
     /**
      * 校验数据是否存在
@@ -57,10 +67,38 @@ public interface OperateIndicatorMapper {
 
     /**
      * 新增
-     * @param operateEventReqDTO 入参数
+     * @param indicatorRecordReqDTO 入参数
      */
-    void add(OperateEventReqDTO operateEventReqDTO);
+    void add(IndicatorRecordReqDTO indicatorRecordReqDTO);
 
+    /**
+     * 新增
+     * @param indicatorInfoReqDTO 入参数
+     */
+    void addInfo(IndicatorInfoReqDTO indicatorInfoReqDTO);
 
+    /**
+     * 新增
+     * @param indicatorPowerReqDTO 入参数
+     */
+    void addPower(IndicatorPowerReqDTO indicatorPowerReqDTO);
+
+    /**
+     * 编辑
+     * @param indicatorRecordReqDTO 入参数
+     */
+    int modify(IndicatorRecordReqDTO indicatorRecordReqDTO);
+
+    /**
+     * 编辑
+     * @param indicatorInfoReqDTO 入参数
+     */
+    int modifyInfo(IndicatorInfoReqDTO indicatorInfoReqDTO);
+
+    /**
+     * 编辑
+     * @param indicatorPowerReqDTO 入参数
+     */
+    int modifyPower(IndicatorPowerReqDTO indicatorPowerReqDTO);
 
 }

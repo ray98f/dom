@@ -1,17 +1,16 @@
 package com.wzmtr.dom.service.operate;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.wzmtr.dom.dto.req.operate.OperateEventInfoReqDTO;
-import com.wzmtr.dom.dto.req.operate.OperateEventReqDTO;
-import com.wzmtr.dom.dto.res.operate.OperateEventInfoResDTO;
-import com.wzmtr.dom.dto.res.operate.OperateEventResDTO;
+import com.wzmtr.dom.dto.req.operate.IndicatorInfoReqDTO;
+import com.wzmtr.dom.dto.req.operate.IndicatorPowerReqDTO;
+import com.wzmtr.dom.dto.req.operate.IndicatorRecordReqDTO;
+import com.wzmtr.dom.dto.res.operate.IndicatorDetailResDTO;
+import com.wzmtr.dom.dto.res.operate.IndicatorRecordResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 
-import java.util.List;
-
 /**
- * 运营日报-运营事件
+ * 运营日报-初期运营指标
  *
  * @author zhangxin
  * @version 1.0
@@ -20,28 +19,48 @@ import java.util.List;
 public interface OperateIndicatorService {
 
     /**
-     * 正运营事件记录-列表
+     * 初期运营指标-列表
      * @param dataType 查询参数
      * @param startDate 查询参数
      * @param endDate 查询参数
      * @param pageReqDTO 分页参数
      * @return 运营事件记录列表
      */
-    Page<OperateEventResDTO> list(String dataType, String startDate, String endDate, PageReqDTO pageReqDTO);
+    Page<IndicatorRecordResDTO> list(String dataType, String startDate, String endDate, PageReqDTO pageReqDTO);
 
     /**
-     * 正线/车场事件记录-详情
+     * 初期运营指标-详情
      * @param id 入参数
-     * @return IndicatorResDTO
+     * @re IndicatorResDTO
      */
-    OperateEventResDTO detail(String id);
+    IndicatorDetailResDTO detail(String id);
 
     /**
-     * 正线/车场事件记录-新增
+     * 初期运营指标-新增
      * @param currentLoginUser 入参数
-     * @param operateEventReqDTO 入参数
+     * @param indicatorRecordReqDTO 入参数
      */
-    void add(CurrentLoginUser currentLoginUser, OperateEventReqDTO operateEventReqDTO);
+    void add(CurrentLoginUser currentLoginUser, IndicatorRecordReqDTO indicatorRecordReqDTO);
 
+    /**
+     * 初期运营指标-编辑
+     * @param currentLoginUser 入参数
+     * @param indicatorRecordReqDTO 入参数
+     */
+    void modify(CurrentLoginUser currentLoginUser, IndicatorRecordReqDTO indicatorRecordReqDTO);
+
+    /**
+     * 初期运营指标-编辑八项指标
+     * @param currentLoginUser 入参数
+     * @param indicatorInfoReqDTO 入参数
+     */
+    void modifyInfo(CurrentLoginUser currentLoginUser, IndicatorInfoReqDTO indicatorInfoReqDTO);
+
+    /**
+     * 初期运营指标-新增
+     * @param currentLoginUser 入参数
+     * @param indicatorPowerReqDTO 入参数
+     */
+    void modifyPower(CurrentLoginUser currentLoginUser, IndicatorPowerReqDTO indicatorPowerReqDTO);
 
 }

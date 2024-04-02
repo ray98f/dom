@@ -4,7 +4,7 @@
 
     <select id="list" resultType="com.wzmtr.dom.dto.res.operate.IndicatorRecordResDTO">
         SELECT *
-        FROM OPERATE_EVENT_RECORD
+        FROM OPERATE_INDICATOR_RECORD
         WHERE DEL_FLAG='0'
         AND DATA_TYPE = #{dataType}
         <if test="startDate != null and startDate!=''">
@@ -16,28 +16,15 @@
         ORDER BY START_DATE desc
     </select>
 
-    <select id="listAll" resultType="com.wzmtr.dom.dto.res.operate.OperateEventResDTO">
+    <select id="queryInfoById" resultType="com.wzmtr.dom.dto.res.operate.IndicatorDetailResDTO">
         SELECT *
-        FROM OPERATE_EVENT_RECORD
-        WHERE DEL_FLAG='0'
-        <if test="startDate != null">
-            AND to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') >= START_DATE
-        </if>
-        <if test="endDate != null">
-            AND END_DATE >= to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
-        </if>
-        ORDER BY START_DATE desc
-    </select>
-
-    <select id="queryInfoById" resultType="com.wzmtr.dom.dto.res.operate.OperateEventResDTO">
-        SELECT *
-        FROM OPERATE_EVENT_RECORD
+        FROM OPERATE_INDICATOR_RECORD
         WHERE ID=#{id} AND DEL_FLAG = '0'
     </select>
 
     <select id="checkExist" resultType="java.lang.Integer">
         SELECT COUNT(*)
-        FROM OPERATE_EVENT_RECORD
+        FROM OPERATE_INDICATOR_RECORD
         WHERE DEL_FLAG = '0'
         AND DATA_TYPE = #{dataType}
         <if test="startDate != null">
@@ -48,8 +35,26 @@
         </if>
     </select>
 
+    <select id="infoList" resultType="com.wzmtr.dom.dto.res.operate.IndicatorInfoResDTO">
+        SELECT *
+        FROM OPERATE_INDICATOR_INFO
+        WHERE DEL_FLAG='0'
+        AND RECORD_ID = #{recordId}
+
+        ORDER BY START_DATE desc
+    </select>
+
+    <select id="queryPower" resultType="com.wzmtr.dom.dto.res.operate.IndicatorPowerResDTO">
+        SELECT *
+        FROM OPERATE_INDICATOR_POWER
+        WHERE DEL_FLAG='0'
+        AND RECORD_ID = #{recordId}
+
+        ORDER BY START_DATE desc
+    </select>
+
     <insert id="add">
-        INSERT INTO OPERATE_EVENT_RECORD (ID,DATA_TYPE,
+        INSERT INTO OPERATE_INDICATOR_RECORD (ID,DATA_TYPE,
         <if test="eventCount != null">
             EVENT_COUNT,
         </if>
@@ -71,95 +76,81 @@
         #{createBy}, sysdate,#{createBy}, sysdate)
     </insert>
 
-    <update id="modifyCount">
-        UPDATE OPERATE_EVENT_RECORD SET
-        EVENT_COUNT=(SELECT COUNT(1) FROM OPERATE_EVENT_INFO WHERE DEL_FLAG='0' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE)
-        WHERE ID=#{id}
-    </update>
-
-    <select id="eventList" resultType="com.wzmtr.dom.dto.res.operate.OperateEventInfoResDTO">
-        SELECT *
-        FROM OPERATE_EVENT_INFO
-        WHERE DEL_FLAG='0'
-        <if test="startDate != null">
-            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+    <update id="modify">
+        UPDATE OPERATE_INDICATOR_RECORD SET
+        <if test="runCode != null and runCode!=''">
+            RUN_CODE=#{runCode},
         </if>
-        <if test="endDate != null">
-            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        <if test="trainCount != null">
+            TRAIN_COUNT=#{trainCount},
         </if>
-        ORDER BY CREATE_DATE desc
-    </select>
-
-    <select id="queryDateRange" resultType="com.wzmtr.dom.dto.res.operate.OperateEventInfoResDTO">
-        SELECT MIN(START_DATE) AS START_DATE,MAX(END_DATE) AS END_DATE
-        FROM OPERATE_EVENT_INFO
-        WHERE ID IN (
-        <foreach collection="ids" index="index" item="id" separator=",">
-            #{id}
-        </foreach>
-        )
-    </select>
-
-    <insert id="createEvent">
-        INSERT INTO OPERATE_EVENT_INFO (ID, RECORD_ID,
-        <if test="majorType != null and majorType!=''">
-            MAJOR_TYPE,
+        <if test="sendTimeInterval != null">
+            SEND_TIME_INTERVAL=#{sendTimeInterval},
         </if>
-        <if test="title != null and title!=''">
-            TITLE,
+        <if test="noAccidentDay != null">
+            NO_ACCIDENT_DAY=#{noAccidentDay},
         </if>
-        <if test="offLineCount != null">
-            OFF_LINE_COUNT,
+        <if test="planRunCount != null">
+            PLAN_RUN_COUNT=#{planRunCount},
         </if>
-        <if test="rescueCount != null">
-            RESCUE_COUNT,
-        </if>
-        <if test="rutineGuestCount != null">
-            RUTINE_GUEST_COUNT,
+        <if test="planPromiseCount != null">
+            PLAN_PROMISE_COUNT=#{planPromiseCount},
         </if>
         <if test="addCount != null">
-            ADD_COUNT,
+            ADD_COUNT=#{addCount},
         </if>
-        <if test="delay1Count != null">
-            DELAY1_COUNT,
-        </if>
-        <if test="delay2Count != null">
-            DELAY2_COUNT,
+        <if test="realRunCount != null">
+            REAL_RUN_COUNT=#{realRunCount},
         </if>
         <if test="stopCount != null">
-            STOP_COUNT,
+            STOP_COUNT=#{stopCount},
         </if>
-        <if test="delay1EventCount != null">
-            DELAY1_EVENT_COUNT,
+        <if test="rutineGuestCount != null">
+            RUTINE_GUEST_COUNT=#{rutineGuestCount},
         </if>
-        <if test="delay1VehicleCount != null">
-            DELAY1_VEHICLE_COUNT,
+        <if test="rescueCount != null">
+            RESCUE_COUNT=#{rescueCount},
         </if>
-        <if test="delay2EventCount != null">
-            DELAY2_EVENT_COUNT,
+        <if test="offLineCount != null">
+            OFF_LINE_COUNT=#{offLineCount},
         </if>
-        <if test="delay1VehicleCount != null">
-            DELAY2_VEHICLE_COUNT,
+        <if test="trainCount != null">
+            TRAIN_COUNT=#{trainCount},
         </if>
-        <if test="gateFaultCount != null">
-            GATE_FAULT_COUNT,
+        <if test="delayCount != null">
+            DELAY_COUNT=#{delayCount},
         </if>
-        <if test="lineFaultCount != null">
-            LINE_FAULT_COUNT,
+        <if test="delay2Count != null">
+            DELAY2_COUNT=#{delay2Count},
         </if>
-        <if test="vehicleFaultCount != null">
-            VEHICLE_FAULT_COUNT,
+        <if test="delay3Count != null">
+            DELAY3_COUNT=#{delay3Count},
         </if>
-        <if test="signalFaultCount != null">
-            SIGNAL_FAULT_COUNT,
+        <if test="delay4Count != null">
+            DELAY4_COUNT=#{delay4Count},
         </if>
-        <if test="powerFaultCount != null">
-            POWER_FAULT_COUNT,
+        <if test="operate1Kilometer != null">
+            OPERATE1_KILOMETER=#{operate1Kilometer},
         </if>
-        <if test="isClose != null">
-            IS_CLOSE,
+        <if test="operate2Kilometer != null">
+            OPERATE2_KILOMETER=#{operate2Kilometer},
+        </if>
+        <if test="run1Kilometer != null">
+            RUN1_KILOMETER=#{run1Kilometer},
+        </if>
+        <if test="run2Kilometer != null">
+            RUN2_KILOMETER=#{run2Kilometer},
         </if>
 
+        VERSION = VERSION+1,
+        UPDATE_BY=#{updateBy},
+        UPDATE_DATE=sysdate
+        WHERE ID=#{id}
+        AND VERSION = #{version}
+    </update>
+
+    <insert id="createInfo">
+        INSERT INTO OPERATE_INDICATOR_INFO (ID, RECORD_ID,
         DATA_TYPE,
         <if test="dataDate != null">
             DATA_DATE,
@@ -169,64 +160,6 @@
         CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
         VALUES ( #{id},
         #{recordId},
-        <if test="majorType != null and majorType!=''">
-            #{majorType},
-        </if>
-        <if test="title != null and title!=''">
-            #{title},
-        </if>
-        <if test="offLineCount != null">
-            #{offLineCount},
-        </if>
-        <if test="rescueCount != null">
-            #{rescueCount},
-        </if>
-        <if test="rutineGuestCount != null">
-            #{rutineGuestCount},
-        </if>
-        <if test="addCount != null">
-            #{addCount},
-        </if>
-        <if test="delay1Count != null">
-            #{delay1Count},
-        </if>
-        <if test="delay2Count != null">
-            #{delay2Count},
-        </if>
-        <if test="stopCount != null">
-            #{stopCount},
-        </if>
-        <if test="delay1EventCount != null">
-            #{delay1EventCount},
-        </if>
-        <if test="delay1VehicleCount != null">
-            #{delay1VehicleCount},
-        </if>
-        <if test="delay2EventCount != null">
-            #{delay2EventCount},
-        </if>
-        <if test="delay2VehicleCount != null">
-            #{delay2VehicleCount},
-        </if>
-        <if test="gateFaultCount != null">
-            #{gateFaultCount},
-        </if>
-        <if test="lineFaultCount != null">
-            #{lineFaultCount},
-        </if>
-        <if test="vehicleFaultCount != null">
-            #{vehicleFaultCount},
-        </if>
-        <if test="signalFaultCount != null">
-            #{signalFaultCount},
-        </if>
-        <if test="powerFaultCount != null">
-            #{powerFaultCount},
-        </if>
-        <if test="isClose != null">
-            #{isClose},
-        </if>
-
         #{dataType},
         <if test="dataDate != null">
             to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
@@ -236,65 +169,30 @@
         #{createBy}, sysdate,#{createBy}, sysdate)
     </insert>
 
-    <update id="modifyEvent">
-        UPDATE OPERATE_EVENT_INFO SET
-        <if test="majorType != null and majorType!=''">
-            MAJOR_TYPE=#{majorType},
+    <update id="modifyInfo">
+        UPDATE OPERATE_INDICATOR_INFO SET
+        <if test="punctualityRate != null and punctualityRate!=''">
+            PUNCTUALITY_RATE=#{punctualityRate},
         </if>
-        <if test="title != null and title!=''">
-            TITLE=#{title},
+        <if test="fulfillmentRate != null and fulfillmentRate!=''">
+            FULFILLMENT_RATE=#{fulfillmentRate},
         </if>
-        <if test="offLineCount != null">
-            OFF_LINE_COUNT=#{offLineCount},
+        <if test="serviceReliability != null and serviceReliability!=''">
+            SERVICE_RELIABILITY=#{serviceReliability},
         </if>
-        <if test="rescueCount != null">
-            RESCUE_COUNT=#{rescueCount},
+        <if test="lineFaultRate != null and lineFaultRate!=''">
+            LINE_FAULT_RATE=#{lineFaultRate},
         </if>
-        <if test="rutineGuestCount != null">
-            RUTINE_GUEST_COUNT=#{rutineGuestCount},
+        <if test="vehicleFaultRate != null and vehicleFaultRate!=''">
+            VEHICLE_FAULT_RATE=#{vehicleFaultRate},
         </if>
-        <if test="addCount != null">
-            ADD_COUNT=#{addCount},
+        <if test="signalFaultRate != null and signalFaultRate!=''">
+            SIGNAL_FAULT_RATE=#{signalFaultRate},
         </if>
-        <if test="delay1Count != null">
-            DELAY1_COUNT=#{delay1Count},
+        <if test="gateFaultRate != null and gateFaultRate!=''">
+            GATE_FAULT_RATE=#{gateFaultRate},
         </if>
-        <if test="delay2Count != null">
-            DELAY2_COUNT=#{delay2Count},
-        </if>
-        <if test="stopCount != null">
-            STOP_COUNT=#{stopCount},
-        </if>
-        <if test="delay1EventCount != null">
-            DELAY1_EVENT_COUNT=#{delay1EventCount},
-        </if>
-        <if test="delay1VehicleCount != null">
-            DELAY1_VEHICLE_COUNT=#{delay1VehicleCount},
-        </if>
-        <if test="delay2EventCount != null">
-            DELAY2_EVENT_COUNT=#{delay2EventCount},
-        </if>
-        <if test="delay1VehicleCount != null">
-            DELAY2_VEHICLE_COUNT=#{delay1VehicleCount},
-        </if>
-        <if test="gateFaultCount != null">
-            GATE_FAULT_COUNT=#{gateFaultCount},
-        </if>
-        <if test="lineFaultCount != null">
-            LINE_FAULT_COUNT=#{lineFaultCount},
-        </if>
-        <if test="vehicleFaultCount != null">
-            VEHICLE_FAULT_COUNT=#{vehicleFaultCount},
-        </if>
-        <if test="signalFaultCount != null">
-            SIGNAL_FAULT_COUNT=#{signalFaultCount},
-        </if>
-        <if test="powerFaultCount != null">
-            POWER_FAULT_COUNT=#{powerFaultCount},
-        </if>
-        <if test="isClose != null">
-            IS_CLOSE=#{isClose},
-        </if>
+
         VERSION = VERSION+1,
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate
@@ -302,12 +200,70 @@
         AND VERSION = #{version}
     </update>
 
-    <delete id="deleteEvent">
-        DELETE FROM OPERATE_EVENT_INFO
-        WHERE ID IN (
-        <foreach collection="ids" index="index" item="id" separator=",">
-            #{id}
-        </foreach>
-        )
-    </delete>
+    <insert id="createPower">
+        INSERT INTO OPERATE_INDICATOR_POWER (ID, RECORD_ID,
+        DATA_TYPE,
+        <if test="dataDate != null">
+            DATA_DATE,
+        </if>
+        START_DATE,
+        END_DATE,
+        CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+        VALUES ( #{id},
+        #{recordId},
+        #{dataType},
+        <if test="dataDate != null">
+            to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
+        to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
+        #{createBy}, sysdate,#{createBy}, sysdate)
+    </insert>
+
+    <update id="modifyPower">
+        UPDATE OPERATE_INDICATOR_POWER SET
+        <if test="energyConsumption != null">
+            ENERGY_CONSUMPTION=#{energyConsumption},
+        </if>
+        <if test="rmlConsumption != null">
+            RML_CONSUMPTION=#{rmlConsumption},
+        </if>
+        <if test="xtConsumption != null">
+            XT_CONSUMPTION=#{xtConsumption},
+        </if>
+        <if test="lkConsumption != null">
+            LK_CONSUMPTION=#{lkConsumption},
+        </if>
+        <if test="ttConsumption != null">
+            TT_CONSUMPTION=#{ttConsumption},
+        </if>
+        <if test="traction1Consumption != null">
+            TRACTION1_CONSUMPTION=#{traction1Consumption},
+        </if>
+        <if test="traction2Consumption != null">
+            TRACTION2_CONSUMPTION=#{traction2Consumption},
+        </if>
+        <if test="vehicleConsumption != null">
+            VEHICLE_CONSUMPTION=#{vehicleConsumption},
+        </if>
+        <if test="traction3Consumption != null">
+            TRACTION3_CONSUMPTION=#{traction3Consumption},
+        </if>
+        <if test="tractionRate != null and tractionRate !='' ">
+            TRACTION_RATE=#{tractionRate},
+        </if>
+        <if test="lightConsumption != null">
+            LIGHT_CONSUMPTION=#{lightConsumption},
+        </if>
+        <if test="lightRate != null and lightRate !=''">
+            LIGHT_RATE=#{lightRate},
+        </if>
+
+        VERSION = VERSION+1,
+        UPDATE_BY=#{updateBy},
+        UPDATE_DATE=sysdate
+        WHERE ID=#{id}
+        AND VERSION = #{version}
+    </update>
+
 </mapper>

@@ -2,8 +2,9 @@ package com.wzmtr.dom.controller.operate;
 
 import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.constant.ValidationGroup;
-import com.wzmtr.dom.dto.req.operate.OperateEventInfoReqDTO;
-import com.wzmtr.dom.dto.req.operate.OperateEventReqDTO;
+import com.wzmtr.dom.dto.req.operate.*;
+import com.wzmtr.dom.dto.res.operate.IndicatorDetailResDTO;
+import com.wzmtr.dom.dto.res.operate.IndicatorRecordResDTO;
 import com.wzmtr.dom.dto.res.operate.OperateEventInfoResDTO;
 import com.wzmtr.dom.dto.res.operate.OperateEventResDTO;
 import com.wzmtr.dom.entity.BaseIdsEntity;
@@ -12,6 +13,7 @@ import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.entity.response.PageResponse;
 import com.wzmtr.dom.service.operate.OperateEventService;
+import com.wzmtr.dom.service.operate.OperateIndicatorService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.poi.ss.formula.functions.T;
@@ -35,102 +37,89 @@ import javax.validation.Valid;
 public class OperateIndicatorController {
 
     @Autowired
-    private OperateEventService operateEventService;
+    private OperateIndicatorService indicatorService;
 
     /**
-     * 运营事件-列表
+     * 初期运营指标-列表
      * @param dataType 数据类型
      * @param startDate 起始日期
      * @param endDate 终止日期
      * @param pageReqDTO 分页参数
-     * @return 运营事件-列表
+     * @return 初期运营指标-列表
      */
     @GetMapping("/list")
-    @ApiOperation(value = "运营事件-列表")
-    public PageResponse<OperateEventResDTO> list(@RequestParam  String dataType,
-                                                 @RequestParam(required = false) String startDate,
-                                                 @RequestParam(required = false) String endDate,
-                                                 @Valid PageReqDTO pageReqDTO) {
-        return PageResponse.of(operateEventService.list(dataType,startDate,endDate,pageReqDTO));
+    @ApiOperation(value = "初期运营指标-列表")
+    public PageResponse<IndicatorRecordResDTO> list(@RequestParam  String dataType,
+                                                    @RequestParam(required = false) String startDate,
+                                                    @RequestParam(required = false) String endDate,
+                                                    @Valid PageReqDTO pageReqDTO) {
+        return PageResponse.of(indicatorService.list(dataType,startDate,endDate,pageReqDTO));
     }
 
     /**
-     * 运营事件-详情
+     * 初期运营指标-详情
      * @param id 记录ID
      * @return 成功
      */
     @GetMapping("/detail")
-    @ApiOperation(value = "运营事件记录详情")
-    public DataResponse<OperateEventResDTO> add(@RequestParam String id) {
-        return DataResponse.of(operateEventService.detail(id));
+    @ApiOperation(value = "初期运营指标详情")
+    public DataResponse<IndicatorDetailResDTO> add(@RequestParam String id) {
+        return DataResponse.of(indicatorService.detail(id));
     }
 
     /**
-     * 运营事件-新增
-     * @param operateEventReqDTO 入参数
+     * 初期运营指标-新增
+     * @param indicatorRecordReqDTO 入参数
      * @return 成功
      */
     @PostMapping("/add")
-    @ApiOperation(value = "运营事件-新增")
+    @ApiOperation(value = "初期运营指标-新增")
     public DataResponse<T> add(@CurrUser CurrentLoginUser currentLoginUser,
                                @Validated({ValidationGroup.create.class})
-                               @RequestBody OperateEventReqDTO operateEventReqDTO) {
-        operateEventService.add(currentLoginUser,operateEventReqDTO);
+                               @RequestBody IndicatorRecordReqDTO indicatorRecordReqDTO) {
+        indicatorService.add(currentLoginUser,indicatorRecordReqDTO);
         return DataResponse.success();
     }
 
     /**
-     * 运营事件信息-列表
-     * @param startDate 起始日期
-     * @param endDate 终止日期
-     * @param pageReqDTO 分页参数
-     * @return 运营事件列表
-     */
-    @GetMapping("/eventList")
-    @ApiOperation(value = "运营事件信息-列表")
-    public PageResponse<OperateEventInfoResDTO> eventList(@RequestParam String startDate,
-                                                          @RequestParam String endDate,
-                                                          @Valid PageReqDTO pageReqDTO) {
-        return PageResponse.of(operateEventService.eventList(startDate,endDate,pageReqDTO));
-    }
-
-    /**
-     * 事件信息-新增
-     * @param operateEventInfoReqDTO 入参数
+     * 初期运营指标-编辑
+     * @param indicatorRecordReqDTO 入参数
      * @return 成功
      */
-    @PostMapping("/createEvent")
-    @ApiOperation(value = "事件信息-新增")
-    public DataResponse<T> createEvent(@CurrUser CurrentLoginUser currentLoginUser,
-                               @Validated({ValidationGroup.class})
-                               @RequestBody OperateEventInfoReqDTO operateEventInfoReqDTO) {
-        operateEventService.createEvent(currentLoginUser,operateEventInfoReqDTO);
+    @PostMapping("/modify")
+    @ApiOperation(value = "初期运营指标-编辑")
+    public DataResponse<T> modify(@CurrUser CurrentLoginUser currentLoginUser,
+                               @Validated({ValidationGroup.create.class})
+                               @RequestBody IndicatorRecordReqDTO indicatorRecordReqDTO) {
+        indicatorService.modify(currentLoginUser,indicatorRecordReqDTO);
         return DataResponse.success();
     }
 
     /**
-     * 事件信息-编辑
-     * @param operateEventInfoReqDTO 入参数
+     * 初期运营指标-编辑八项指标
+     * @param indicatorInfoReqDTO 入参数
      * @return 成功
      */
-    @PostMapping("/modifyEvent")
-    @ApiOperation(value = "事件信息-新增")
-    public DataResponse<T> modifyEvent(@CurrUser CurrentLoginUser currentLoginUser,
-                                       @Validated({ValidationGroup.create.class})
-                                       @RequestBody OperateEventInfoReqDTO operateEventInfoReqDTO) {
-        operateEventService.modifyEvent(currentLoginUser,operateEventInfoReqDTO);
+    @PostMapping("/modifyInfo")
+    @ApiOperation(value = "初期运营指标-编辑八项指标")
+    public DataResponse<T> modify(@CurrUser CurrentLoginUser currentLoginUser,
+                                  @Validated({ValidationGroup.create.class})
+                                  @RequestBody IndicatorInfoReqDTO indicatorInfoReqDTO) {
+        indicatorService.modifyInfo(currentLoginUser,indicatorInfoReqDTO);
         return DataResponse.success();
     }
 
     /**
-     * 事件信息-删除
-     * @param baseIdsEntity 入参数
+     * 初期运营指标-编辑能耗
+     * @param indicatorPowerReqDTO 入参数
      * @return 成功
      */
-    @PostMapping("/deleteEvent")
-    @ApiOperation(value = "事件信息-删除)")
-    public DataResponse<T> deleteEvent(@RequestBody BaseIdsEntity baseIdsEntity) {
-        operateEventService.deleteEvent(baseIdsEntity.getIds());
+    @PostMapping("/modifyPower")
+    @ApiOperation(value = "初期运营指标-编辑能耗")
+    public DataResponse<T> modify(@CurrUser CurrentLoginUser currentLoginUser,
+                                  @Validated({ValidationGroup.create.class})
+                                  @RequestBody IndicatorPowerReqDTO indicatorPowerReqDTO) {
+        indicatorService.modifyPower(currentLoginUser,indicatorPowerReqDTO);
         return DataResponse.success();
     }
 
