@@ -23,6 +23,13 @@
         ORDER BY SERIAL_NO ASC
     </select>
 
+    <select id="getInfoDetail" resultType="com.wzmtr.dom.dto.res.operate.SpeedLimitInfoResDTO">
+        SELECT ID, SERIAL_NO, REASON, LIMIT_START_TIME, LIMIT_END_TIME, LIMIT_SECTION,
+        LIMIT_VALUE, APPLICATION_DEPT, APPLICATION_DEPT_NAME, DUTY, VERSION, RECORD_ID
+        FROM OPERATE_SPEED_LIMIT_INFO
+        WHERE DEL_FLAG='0' AND ID=#{id}
+    </select>
+
     <select id="selectRecordIsExist" resultType="java.lang.Integer">
         SELECT count(1) FROM OPERATE_SPEED_LIMIT_RECORD
         WHERE DATA_DATE=#{dataDate,jdbcType=TIMESTAMP}
@@ -119,6 +126,12 @@
         </if>
         #{createBy}, sysdate)
     </insert>
+
+    <update id="incrementRecord">
+        UPDATE OPERATE_SPEED_LIMIT_INFO SET
+        LIMIT_NUM=LIMIT_NUM+${num}
+        WHERE ID=#{recordId}
+    </update>
 
     <update id="modifyRecord">
         UPDATE OPERATE_SPEED_LIMIT_RECORD SET
