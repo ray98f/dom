@@ -134,6 +134,42 @@ public class OperateEventInfoReqDTO extends BaseEntity {
     private Integer powerFaultCount;
 
     /**
+     * 事件时间
+     * */
+    @ApiModelProperty(value = "事件时间")
+    private String eventTime;
+
+    /**
+     * 事件内容、处理经过
+     * */
+    @ApiModelProperty(value = "事件内容、处理经过")
+    private String eventContent;
+
+    /**
+     * 事件内容
+     * */
+    @ApiModelProperty(value = "事件内容")
+    private String eventDesc;
+
+    /**
+     * 造成指标
+     * */
+    @ApiModelProperty(value = "造成指标")
+    private String effect;
+
+    /**
+     * 是否整改
+     * */
+    @ApiModelProperty(value = "是否整改")
+    private String isRectified;
+
+    /**
+     * 事件等级
+     * */
+    @ApiModelProperty(value = "事件等级")
+    private String eventLevel;
+
+    /**
      * 是否闭环
      * */
     @ApiModelProperty(value = "是否闭环")

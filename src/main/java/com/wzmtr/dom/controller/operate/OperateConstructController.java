@@ -21,6 +21,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 运营日报-施工情况
@@ -157,7 +158,7 @@ public class OperateConstructController {
      * @return 施工情况列表
      */
     @GetMapping("/eventList")
-    @ApiOperation(value = "施工情况-列表")
+    @ApiOperation(value = "施工事件-列表")
     public PageResponse<ConstructEventResDTO> eventList(@RequestParam String startDate,
                                                         @RequestParam String endDate,
                                                         @Valid PageReqDTO pageReqDTO) {

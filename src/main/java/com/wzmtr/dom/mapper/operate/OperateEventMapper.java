@@ -5,6 +5,7 @@ import com.wzmtr.dom.dto.req.operate.OperateEventInfoReqDTO;
 import com.wzmtr.dom.dto.req.operate.OperateEventReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.LineEventInfoReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.LineEventRecordReqDTO;
+import com.wzmtr.dom.dto.res.operate.EventCountResDTO;
 import com.wzmtr.dom.dto.res.operate.OperateEventInfoResDTO;
 import com.wzmtr.dom.dto.res.operate.OperateEventResDTO;
 import com.wzmtr.dom.dto.res.vehicle.LineEventDetailResDTO;
@@ -89,6 +90,14 @@ public interface OperateEventMapper {
      * @return 列表
      */
     Page<OperateEventInfoResDTO> eventList(Page<OperateEventInfoResDTO> page,String startDate,String endDate);
+
+    /**
+     * 事件信息-统计
+     * @param startDate 查询参数
+     * @param endDate 查询参数
+     * @return 统计
+     */
+    List<EventCountResDTO> eventCount(String startDate, String endDate);
 
     /**
      * 事件信息-新增

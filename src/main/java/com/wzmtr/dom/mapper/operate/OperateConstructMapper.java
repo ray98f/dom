@@ -2,9 +2,7 @@ package com.wzmtr.dom.mapper.operate;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.operate.*;
-import com.wzmtr.dom.dto.req.vehicle.DepotConstructPlanReqDTO;
 import com.wzmtr.dom.dto.res.operate.*;
-import com.wzmtr.dom.dto.res.vehicle.DepotConstructPlanResDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
