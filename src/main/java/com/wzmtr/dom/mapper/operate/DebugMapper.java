@@ -41,6 +41,7 @@ public interface DebugMapper {
     /**
      * 获取调试情况详情
      * @param id id
+     * @return 调试情况详情
      */
     DebugInfoResDTO getInfoDetail(String id);
 

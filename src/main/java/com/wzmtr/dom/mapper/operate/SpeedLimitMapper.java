@@ -38,6 +38,13 @@ public interface SpeedLimitMapper {
     Page<SpeedLimitInfoResDTO> infoPage(Page<SpeedLimitRecordResDTO> page, String id);
 
     /**
+     * 获取线路限速情况详情
+     * @param id id
+     * @return 线路限速情况详情
+     */
+    SpeedLimitInfoResDTO getInfoDetail(String id);
+
+    /**
      * 查询当天线路限速情况记录是否已存在
      * @param speedLimitRecordReqDTO 线路限速情况记录参数
      * @return 是否已存在
@@ -55,6 +62,13 @@ public interface SpeedLimitMapper {
      * @param speedLimitInfoReqDTO 线路限速情况详情参数
      */
     void addInfo(SpeedLimitInfoReqDTO speedLimitInfoReqDTO);
+
+    /**
+     * 记录数据增长
+     * @param recordId 记录id
+     * @param num 数量
+     */
+    void incrementRecord(String recordId, Integer num);
 
     /**
      * 编辑线路限速情况记录
