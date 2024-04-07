@@ -55,9 +55,6 @@
 
     <insert id="add">
         INSERT INTO OPERATE_INDICATOR_RECORD (ID,DATA_TYPE,
-        <if test="eventCount != null">
-            EVENT_COUNT,
-        </if>
         <if test="dataDate != null">
             DATA_DATE,
         </if>
@@ -65,9 +62,6 @@
         END_DATE,
         CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
         VALUES (#{id},#{dataType},
-        <if test="eventCount != null">
-            #{eventCount},
-        </if>
         <if test="dataDate != null">
             to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
         </if>
@@ -114,9 +108,6 @@
         <if test="offLineCount != null">
             OFF_LINE_COUNT=#{offLineCount},
         </if>
-        <if test="trainCount != null">
-            TRAIN_COUNT=#{trainCount},
-        </if>
         <if test="delayCount != null">
             DELAY_COUNT=#{delayCount},
         </if>
@@ -149,8 +140,9 @@
         AND VERSION = #{version}
     </update>
 
-    <insert id="createInfo">
+    <insert id="addInfo">
         INSERT INTO OPERATE_INDICATOR_INFO (ID, RECORD_ID,
+        INDICATOR_TYPE,
         DATA_TYPE,
         <if test="dataDate != null">
             DATA_DATE,
@@ -160,6 +152,7 @@
         CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
         VALUES ( #{id},
         #{recordId},
+        #{indicatorType},
         #{dataType},
         <if test="dataDate != null">
             to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
@@ -200,7 +193,7 @@
         AND VERSION = #{version}
     </update>
 
-    <insert id="createPower">
+    <insert id="addPower">
         INSERT INTO OPERATE_INDICATOR_POWER (ID, RECORD_ID,
         DATA_TYPE,
         <if test="dataDate != null">

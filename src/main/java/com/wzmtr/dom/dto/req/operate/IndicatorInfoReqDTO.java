@@ -50,10 +50,16 @@ public class IndicatorInfoReqDTO extends BaseEntity {
     private String serviceReliability;
 
     /**
+     * 列车退出正线故障率
+     * */
+    @ApiModelProperty(value = " 列车退出正线故障率")
+    private String lineFaultRate;
+
+    /**
      * 车辆系统故障率
      * */
     @ApiModelProperty(value = " 车辆系统故障率")
-    private String lineFaultRate;
+    private String vehicleFaultRate;
 
     /**
      * 信号系统故障率

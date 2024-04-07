@@ -139,6 +139,9 @@ public class IndicatorRecordReqDTO extends BaseEntity {
     @ApiModelProperty(value = " 走行车公里(万车公里)")
     private Double run2Kilometer;
 
+    @ApiModelProperty(value = "版本号")
+    private String version;
+
     @ApiModelProperty(value = "数据类型:1:日报,2周报,3月报")
     private String dataType;
 

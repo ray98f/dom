@@ -83,6 +83,8 @@ public class OperateIndicatorServiceImpl implements OperateIndicatorService {
                 infoReqDTO.setDataDate(indicatorRecordReqDTO.getDataDate());
                 infoReqDTO.setStartDate(indicatorRecordReqDTO.getStartDate());
                 infoReqDTO.setEndDate(indicatorRecordReqDTO.getEndDate());
+                infoReqDTO.setCreateBy(currentLoginUser.getPersonId());
+                infoReqDTO.setUpdateBy(currentLoginUser.getPersonId());
 
                 operateIndicatorMapper.addInfo(infoReqDTO);
             }
@@ -93,6 +95,8 @@ public class OperateIndicatorServiceImpl implements OperateIndicatorService {
             powerReqDTO.setDataDate(indicatorRecordReqDTO.getDataDate());
             powerReqDTO.setStartDate(indicatorRecordReqDTO.getStartDate());
             powerReqDTO.setEndDate(indicatorRecordReqDTO.getEndDate());
+            powerReqDTO.setCreateBy(currentLoginUser.getPersonId());
+            powerReqDTO.setUpdateBy(currentLoginUser.getPersonId());
 
             operateIndicatorMapper.addPower(powerReqDTO);
         }catch (Exception e){
