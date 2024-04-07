@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzmtr.dom.mapper.operate.SecurityCleaningMapper">
+
+    <select id="page" resultType="com.wzmtr.dom.dto.res.operate.SecurityCleaningResDTO">
+        SELECT ID, SECURITY_DESC, CLEANING_DESC, VERSION, DATA_DATE, DATA_TYPE, START_DATE, END_DATE
+        FROM OPERATE_SECURITY_CLEANING
+        WHERE DEL_FLAG='0'
+        <if test="dataType=='1'.toString()">
+            <if test="startDate!=null and startDate!=''">
+                AND DATA_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+            </if>
+            <if test="endDate!=null and endDate!=''">
+                AND to_date(#{endDate},'YYYY-MM-DD')>=DATA_DATE
+            </if>
+            ORDER BY DATA_DATE desc
+        </if>
+        <if test="dataType!='1'.toString()">
+            <if test="startDate!=null and startDate!=''">
+                AND START_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+            </if>
+            <if test="endDate!=null and endDate!=''">
+                AND to_date(#{endDate},'YYYY-MM-DD')>=END_DATE
+            </if>
+            ORDER BY START_DATE desc
+        </if>
+    </select>
+
+    <select id="detail" resultType="com.wzmtr.dom.dto.res.operate.SecurityCleaningResDTO">
+        SELECT ID, SECURITY_DESC, CLEANING_DESC, VERSION, DATA_DATE, DATA_TYPE, START_DATE, END_DATE
+        FROM OPERATE_SECURITY_CLEANING
+        WHERE DEL_FLAG='0' AND ID=#{id}
+    </select>
+
+    <select id="selectIsExist" resultType="java.lang.Integer">
+        SELECT count(1) FROM OPERATE_SECURITY_CLEANING
+        WHERE
+        <if test="dataType=='1'.toString()">
+            DATA_DATE=#{dataDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="dataType!='1'.toString()">
+            START_DATE=#{startDate,jdbcType=TIMESTAMP} AND END_DATE=#{endDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="version!=null and version!=''">
+            AND VERSION=#{version,jdbcType=VARCHAR}
+        </if>
+        AND DEL_FLAG='0' AND rownum=1
+    </select>
+
+    <insert id="add">
+        INSERT INTO OPERATE_SECURITY_CLEANING
+        (ID,
+        <if test="securityDesc!=null and securityDesc!=''">
+            SECURITY_DESC,
+        </if>
+        <if test="cleaningDesc!=null and cleaningDesc!=''">
+            CLEANING_DESC,
+        </if>
+        <if test="dataType!=null and dataType!=''">
+            DATA_TYPE,
+        </if>
+        <if test="startDate!=null">
+            START_DATE,
+        </if>
+        <if test="endDate!=null">
+            END_DATE,
+        </if>
+        <if test="dataDate!=null">
+            DATA_DATE,
+        </if>
+        CREATE_BY, CREATE_DATE)
+        VALUES (#{id},
+        <if test="securityDesc!=null and securityDesc!=''">
+            #{securityDesc},
+        </if>
+        <if test="cleaningDesc!=null and cleaningDesc!=''">
+            #{cleaningDesc},
+        </if>
+        <if test="dataType!=null and dataType!=''">
+            #{dataType},
+        </if>
+        <if test="startDate!=null">
+            #{startDate},
+        </if>
+        <if test="endDate!=null">
+            #{endDate},
+        </if>
+        <if test="dataDate!=null">
+            #{dataDate},
+        </if>
+        #{createBy}, sysdate)
+    </insert>
+
+    <update id="modify">
+        UPDATE OPERATE_SECURITY_CLEANING SET
+        <if test="securityDesc!=null">
+            SECURITY_DESC=#{securityDesc},
+        </if>
+        <if test="cleaningDesc!=null">
+            CLEANING_DESC=#{cleaningDesc},
+        </if>
+        <if test="dataType!=null">
+            DATA_TYPE=#{dataType},
+        </if>
+        <if test="startDate!=null">
+            START_DATE=#{startDate},
+        </if>
+        <if test="endDate!=null">
+            END_DATE=#{endDate},
+        </if>
+        VERSION=VERSION+1, UPDATE_BY=#{updateBy}, UPDATE_DATE=sysdate
+        WHERE ID=#{id} and VERSION=#{version}
+    </update>
+
+    <update id="delete">
+        UPDATE OPERATE_SECURITY_CLEANING SET
+        DEL_FLAG='1', UPDATE_BY=#{userId}, UPDATE_DATE=sysdate
+        WHERE ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+
+</mapper>
