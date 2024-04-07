@@ -4,6 +4,7 @@ import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.constant.ValidationGroup;
 import com.wzmtr.dom.dto.req.operate.OperateEventInfoReqDTO;
 import com.wzmtr.dom.dto.req.operate.OperateEventReqDTO;
+import com.wzmtr.dom.dto.res.operate.EventCountResDTO;
 import com.wzmtr.dom.dto.res.operate.OperateEventInfoResDTO;
 import com.wzmtr.dom.dto.res.operate.OperateEventResDTO;
 import com.wzmtr.dom.entity.BaseIdsEntity;
@@ -20,6 +21,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 运营日报-运营事件
@@ -92,6 +94,19 @@ public class OperateEventController {
                                                           @RequestParam String endDate,
                                                           @Valid PageReqDTO pageReqDTO) {
         return PageResponse.of(operateEventService.eventList(startDate,endDate,pageReqDTO));
+    }
+
+    /**
+     * 施工情况-统计
+     * @param startDate 起始日期
+     * @param endDate 终止日期
+     * @return 施工情况列表
+     */
+    @GetMapping("/eventCount")
+    @ApiOperation(value = "施工事件-统计")
+    public DataResponse<List<EventCountResDTO>> eventCount(@RequestParam String startDate,
+                                                           @RequestParam String endDate) {
+        return DataResponse.of(operateEventService.eventCount(startDate,endDate));
     }
 
     /**

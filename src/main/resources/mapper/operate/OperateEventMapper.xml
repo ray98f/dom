@@ -90,6 +90,19 @@
         ORDER BY CREATE_DATE desc
     </select>
 
+    <select id="eventCount" resultType="com.wzmtr.dom.dto.res.operate.EventCountResDTO">
+        SELECT RTRIM(MAJOR_TYPE) AS MAJOR_TYPE, COUNT(*) AS count
+        FROM OPERATE_EVENT_INFO
+        WHERE DEL_FLAG='0'
+        <if test="startDate != null">
+            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        </if>
+        GROUP BY MAJOR_TYPE
+    </select>
+
     <select id="queryDateRange" resultType="com.wzmtr.dom.dto.res.operate.OperateEventInfoResDTO">
         SELECT MIN(START_DATE) AS START_DATE,MAX(END_DATE) AS END_DATE
         FROM OPERATE_EVENT_INFO
@@ -155,6 +168,21 @@
         </if>
         <if test="powerFaultCount != null">
             POWER_FAULT_COUNT,
+        </if>
+        <if test="eventTime != null">
+            EVENT_TIME,
+        </if>
+        <if test="eventContent != null and eventContent!=''">
+            EVENT_CONTENT,
+        </if>
+        <if test="isRectified != null and isRectified!=''">
+            IS_RECTIFIED,
+        </if>
+        <if test="effect != null and effect!=''">
+            EFFECT,
+        </if>
+        <if test="eventLevel != null and eventLevel!=''">
+            EVENT_LEVEL,
         </if>
         <if test="isClose != null">
             IS_CLOSE,
@@ -222,6 +250,21 @@
         </if>
         <if test="powerFaultCount != null">
             #{powerFaultCount},
+        </if>
+        <if test="eventTime != null">
+            to_date(#{eventTime},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        <if test="eventContent != null and eventContent!=''">
+            #{eventContent},
+        </if>
+        <if test="isRectified != null and isRectified!=''">
+            #{isRectified},
+        </if>
+        <if test="effect != null and effect!=''">
+            #{effect},
+        </if>
+        <if test="eventLevel != null and eventLevel!=''">
+            #{eventLevel},
         </if>
         <if test="isClose != null">
             #{isClose},
@@ -294,6 +337,21 @@
         </if>
         <if test="isClose != null">
             IS_CLOSE=#{isClose},
+        </if>
+        <if test="eventContent != null and eventContent!=''">
+            EVENT_CONTENT=#{eventContent},
+        </if>
+        <if test="eventDesc != null and eventDesc!=''">
+            EVENT_DESC=#{eventDesc},
+        </if>
+        <if test="isRectified != null and isRectified!=''">
+            IS_RECTIFIED=#{isRectified},
+        </if>
+        <if test="effect != null and effect!=''">
+            EFFECT=#{effect},
+        </if>
+        <if test="eventLevel != null and eventLevel!=''">
+            EVENT_LEVEL=#{eventLevel},
         </if>
         VERSION = VERSION+1,
         UPDATE_BY=#{updateBy},
