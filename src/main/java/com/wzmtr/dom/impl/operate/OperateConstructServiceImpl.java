@@ -80,6 +80,8 @@ public class OperateConstructServiceImpl implements OperateConstructService {
         } else {
             //周报 月报 //TODO 施工概况 REMARK 参数来源未知
             String baseRemark = CommonConstants.OPERATE_CONSTRUCT_REMARK_TPL;
+
+            //constructRecordReqDTO.
         }
 
         constructRecordReqDTO.setCreateBy(currentLoginUser.getPersonId());

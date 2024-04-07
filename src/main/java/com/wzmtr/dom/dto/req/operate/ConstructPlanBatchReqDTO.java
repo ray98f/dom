@@ -30,12 +30,6 @@ public class ConstructPlanBatchReqDTO extends BaseEntity {
     private String recordId;
 
     /**
-     * 车场编码
-     */
-    @ApiModelProperty(value = "车场编码")
-    private String depotCode;
-
-    /**
      * 数据类型:1日报 2月报 3周报
      * */
     @NotNull(message = "32000006",groups = ValidationGroup.create.class)

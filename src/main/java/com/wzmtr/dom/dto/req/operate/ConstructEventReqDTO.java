@@ -121,7 +121,6 @@ public class ConstructEventReqDTO extends BaseEntity {
     /**
      * 数据类型:1日报 2月报 3周报
      * */
-    @NotNull(message = "32000006",groups = ValidationGroup.create.class)
     private String dataType;
 
     /**
@@ -132,13 +131,11 @@ public class ConstructEventReqDTO extends BaseEntity {
     /**
      * 数据起始日期
      * */
-    @NotNull(message = "32000006",groups = ValidationGroup.create.class)
     private String startDate;
 
     /**
      * 数据终止日期
      * */
-    @NotNull(message = "32000006",groups = ValidationGroup.create.class)
     private String endDate;
 
 }

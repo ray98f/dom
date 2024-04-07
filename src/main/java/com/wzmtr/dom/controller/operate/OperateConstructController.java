@@ -2,10 +2,7 @@ package com.wzmtr.dom.controller.operate;
 
 import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.constant.ValidationGroup;
-import com.wzmtr.dom.dto.req.operate.ConstructEventReqDTO;
-import com.wzmtr.dom.dto.req.operate.ConstructRecordReqDTO;
-import com.wzmtr.dom.dto.req.operate.OperateEventInfoReqDTO;
-import com.wzmtr.dom.dto.req.operate.OperateEventReqDTO;
+import com.wzmtr.dom.dto.req.operate.*;
 import com.wzmtr.dom.dto.req.vehicle.DepotConstructPlanBatchReqDTO;
 import com.wzmtr.dom.dto.res.operate.*;
 import com.wzmtr.dom.dto.res.vehicle.DepotConstructPlanResDTO;
@@ -113,6 +110,46 @@ public class OperateConstructController {
     }
 
     /**
+     * 施工计划-列表
+     * @param startDate 起始日期
+     * @param endDate 终止日期
+     * @param pageReqDTO 分页参数
+     * @return 施工计划列表
+     */
+    @GetMapping("/planList")
+    @ApiOperation(value = "施工计划-列表")
+    public PageResponse<ConstructPlanResDTO> planList(@RequestParam String startDate,
+                                                           @RequestParam String endDate,
+                                                           @Valid PageReqDTO pageReqDTO) {
+        return PageResponse.of(operateConstructService.planList(startDate,endDate,pageReqDTO));
+    }
+
+    /**
+     * 施工计划-新增
+     * @param constructPlanBatchReqDTO 入参数
+     * @return 成功
+     */
+    @PostMapping("/createPlan")
+    @ApiOperation(value = "施工计划-新增")
+    public DataResponse<T> createPlan(@CurrUser CurrentLoginUser currentLoginUser,
+                                      @RequestBody ConstructPlanBatchReqDTO constructPlanBatchReqDTO) {
+        operateConstructService.createPlan(currentLoginUser,constructPlanBatchReqDTO);
+        return DataResponse.success();
+    }
+
+    /**
+     * 施工计划-删除
+     * @param baseIdsEntity 入参数
+     * @return 成功
+     */
+    @PostMapping("/deletePlan")
+    @ApiOperation(value = "施工计划-删除")
+    public DataResponse<T> createPlan(@RequestBody BaseIdsEntity baseIdsEntity) {
+        operateConstructService.deletePlan(baseIdsEntity.getIds());
+        return DataResponse.success();
+    }
+
+    /**
      * 施工情况-列表
      * @param startDate 起始日期
      * @param endDate 终止日期
@@ -135,7 +172,6 @@ public class OperateConstructController {
     @PostMapping("/createEvent")
     @ApiOperation(value = "事件信息-新增")
     public DataResponse<T> createEvent(@CurrUser CurrentLoginUser currentLoginUser,
-                               @Validated({ValidationGroup.class})
                                @RequestBody ConstructEventReqDTO constructEventReqDTO) {
         operateConstructService.createEvent(currentLoginUser,constructEventReqDTO);
         return DataResponse.success();
@@ -149,7 +185,6 @@ public class OperateConstructController {
     @PostMapping("/modifyEvent")
     @ApiOperation(value = "事件信息-新增")
     public DataResponse<T> modifyEvent(@CurrUser CurrentLoginUser currentLoginUser,
-                                       @Validated({ValidationGroup.create.class})
                                        @RequestBody ConstructEventReqDTO constructEventReqDTO) {
         operateConstructService.modifyEvent(currentLoginUser,constructEventReqDTO);
         return DataResponse.success();
