@@ -18,6 +18,7 @@ import com.wzmtr.dom.utils.HttpUtils;
 import com.wzmtr.dom.utils.StringUtils;
 import com.wzmtr.dom.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,6 +32,9 @@ import java.util.List;
  */
 @Service
 public class DebugServiceImpl implements DebugService {
+
+    @Value("${open-api.csm.constructPlan}")
+    private String constructPlanApi;
 
     @Autowired
     private DebugMapper debugMapper;

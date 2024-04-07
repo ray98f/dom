@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzmtr.dom.mapper.operate.HotLineMapper">
+
+    <select id="page" resultType="com.wzmtr.dom.dto.res.traffic.hotline.HotLineSummaryDetailResDTO">
+        SELECT oh.ID, ths.ANSWER_TOTAL, ths.APP_ANSWER, oh.VERSION, oh.DATA_DATE, oh.DATA_TYPE, oh.START_DATE, oh.END_DATE
+        FROM OPERATE_HOTLINE oh
+        LEFT JOIN TRAFFIC_HOTLINE_SUMMARY ths ON ths.DATA_TYPE=oh.DATA_TYPE AND ths.START_DATE=oh.START_DATE
+        AND ths.END_DATE=oh.END_DATE AND ths.DATA_DATE=oh.DATA_DATE
+        WHERE oh.DEL_FLAG='0'
+        <if test="dataType=='1'.toString()">
+            <if test="startDate!=null and startDate!=''">
+                AND oh.DATA_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+            </if>
+            <if test="endDate!=null and endDate!=''">
+                AND to_date(#{endDate},'YYYY-MM-DD')>=oh.DATA_DATE
+            </if>
+            ORDER BY oh.DATA_DATE desc
+        </if>
+        <if test="dataType!='1'.toString()">
+            <if test="startDate!=null and startDate!=''">
+                AND oh.START_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+            </if>
+            <if test="endDate!=null and endDate!=''">
+                AND to_date(#{endDate},'YYYY-MM-DD')>=oh.END_DATE
+            </if>
+            ORDER BY oh.START_DATE desc
+        </if>
+    </select>
+
+    <select id="detailSummary" resultType="com.wzmtr.dom.dto.res.traffic.hotline.HotLineSummaryDetailResDTO">
+        SELECT oh.ID, ths.COMPLAINT_TOTAL, ths.PRAISE_TOTAL, ths.ANSWER_TOTAL, ths.APP_ANSWER, ths.CONSULT, ths.RESORT,
+        ths.TYPE1_COMPLAINT, ths.TYPE2_COMPLAINT, ths.TYPE1_PRAISE, ths.TYPE2_PRAISE, ths.PENNANT, ths.S1_SWITCH,
+        ths.OTHER, oh.VERSION, oh.DATA_DATE, oh.DATA_TYPE, oh.START_DATE, oh.END_DATE
+        FROM OPERATE_HOTLINE oh
+        LEFT JOIN TRAFFIC_HOTLINE_SUMMARY ths ON ths.DATA_TYPE=oh.DATA_TYPE AND ths.START_DATE=oh.START_DATE
+        AND ths.END_DATE=oh.END_DATE AND ths.DATA_DATE=oh.DATA_DATE
+        WHERE oh.DEL_FLAG='0' AND oh.ID=#{id}
+    </select>
+
+    <select id="detailImportant" resultType="com.wzmtr.dom.dto.res.traffic.hotline.HotLineImportantDetailResDTO">
+        SELECT oh.ID, thi.COUNT, thi.CONTENT, thi."RESULT", thi.KEYWORD, thi.HOTLINE_TYPE,
+        oh.VERSION, oh.DATA_DATE, oh.DATA_TYPE, oh.START_DATE, oh.END_DATE
+        FROM OPERATE_HOTLINE oh
+        LEFT JOIN TRAFFIC_HOTLINE_IMPORTANT thi ON thi.DATA_TYPE=oh.DATA_TYPE AND thi.START_DATE=oh.START_DATE
+        AND thi.END_DATE=oh.END_DATE AND thi.DATA_DATE=oh.DATA_DATE
+        WHERE oh.DEL_FLAG='0' AND oh.ID=#{id}
+        ORDER BY thi.HOTLINE_TYPE ASC
+    </select>
+
+    <select id="selectIsExist" resultType="java.lang.Integer">
+        SELECT count(1) FROM OPERATE_HOTLINE
+        WHERE
+        <if test="dataType=='1'.toString()">
+            DATA_DATE=#{dataDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="dataType!='1'.toString()">
+            START_DATE=#{startDate,jdbcType=TIMESTAMP} AND END_DATE=#{endDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="version!=null and version!=''">
+            AND VERSION=#{version,jdbcType=VARCHAR}
+        </if>
+        AND DEL_FLAG='0' AND rownum=1
+    </select>
+
+    <insert id="add">
+        INSERT INTO OPERATE_HOTLINE
+        (ID,
+        <if test="dataType!=null and dataType!=''">
+            DATA_TYPE,
+        </if>
+        <if test="startDate!=null">
+            START_DATE,
+        </if>
+        <if test="endDate!=null">
+            END_DATE,
+        </if>
+        <if test="dataDate!=null">
+            DATA_DATE,
+        </if>
+        CREATE_BY, CREATE_DATE)
+        VALUES (#{id},
+        <if test="dataType!=null and dataType!=''">
+            #{dataType},
+        </if>
+        <if test="startDate!=null">
+            #{startDate},
+        </if>
+        <if test="endDate!=null">
+            #{endDate},
+        </if>
+        <if test="dataDate!=null">
+            #{dataDate},
+        </if>
+        #{createBy}, sysdate)
+    </insert>
+
+    <update id="delete">
+        UPDATE OPERATE_HOTLINE SET
+        DEL_FLAG='1', UPDATE_BY=#{userId}, UPDATE_DATE=sysdate
+        WHERE ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+
+</mapper>
