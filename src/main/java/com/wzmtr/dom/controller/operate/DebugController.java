@@ -2,6 +2,7 @@ package com.wzmtr.dom.controller.operate;
 
 import com.wzmtr.dom.dto.req.operate.DebugInfoReqDTO;
 import com.wzmtr.dom.dto.req.operate.DebugRecordReqDTO;
+import com.wzmtr.dom.dto.res.operate.ConstructPlanResDTO;
 import com.wzmtr.dom.dto.res.operate.DebugInfoResDTO;
 import com.wzmtr.dom.dto.res.operate.DebugRecordResDTO;
 import com.wzmtr.dom.entity.BaseIdsEntity;
@@ -132,5 +133,20 @@ public class DebugController {
     public DataResponse<T> deleteInfo(@RequestBody BaseIdsEntity baseIdsEntity) {
         debugService.deleteInfo(baseIdsEntity.getIds());
         return DataResponse.success();
+    }
+
+    /**
+     * 选择施工计划(查询施工调度系统)-列表
+     * @param startDate 起始日期
+     * @param endDate 终止日期
+     * @param pageReqDTO 分页参数
+     * @return 施工计划列表
+     */
+    @GetMapping("/csm")
+    @ApiOperation(value = "选择施工计划-列表")
+    public PageResponse<ConstructPlanResDTO> getCsmConstructPlan(@RequestParam String startDate,
+                                                                 @RequestParam String endDate,
+                                                                 @Valid PageReqDTO pageReqDTO) {
+        return PageResponse.of(debugService.getCsmConstructPlan(startDate,endDate,pageReqDTO));
     }
 }

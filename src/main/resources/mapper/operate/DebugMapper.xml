@@ -67,56 +67,60 @@
     </insert>
 
     <insert id="addInfo">
-        INSERT INTO OPERATE_DEBUG_INFO
-        (ID,
-        <if test="recordId!=null and recordId!=''">
-            RECORD_ID,
-        </if>
-        <if test="externalId!=null and externalId!=''">
-            EXTERNAL_ID,
-        </if>
-        <if test="serialNo!=null">
-            SERIAL_NO,
-        </if>
-        <if test="dataType!=null and dataType!=''">
-            DATA_TYPE,
-        </if>
-        <if test="csmPlan!=null and csmPlan!=''">
-            CSM_PLAN,
-        </if>
-        <if test="status!=null and STATUS!=''">
-            STATUS,
-        </if>
-        CREATE_BY, CREATE_DATE)
-        VALUES (#{id},
-        <if test="recordId!=null and recordId!=''">
-            #{recordId},
-        </if>
-        <if test="externalId!=null and externalId!=''">
-            #{externalId},
-        </if>
-        <if test="serialNo!=null">
-            #{serialNo},
-        </if>
-        <if test="dataType!=null and dataType!=''">
-            #{dataType},
-        </if>
-        <if test="csmPlan!=null and csmPlan!=''">
-            #{csmPlan},
-        </if>
-        <if test="status!=null and STATUS!=''">
-            #{status},
-        </if>
-        #{createBy}, sysdate)
+        INSERT ALL
+        <foreach collection="csmList" index="index" item="csm" separator=" ">
+            INTO OPERATE_DEBUG_INFO
+            (ID,
+            <if test="recordId!=null and recordId!=''">
+                RECORD_ID,
+            </if>
+            <if test="csm.externalId!=null and csm.externalId!=''">
+                EXTERNAL_ID,
+            </if>
+            <if test="csm.serialNo!=null">
+                SERIAL_NO,
+            </if>
+            <if test="dataType!=null and dataType!=''">
+                DATA_TYPE,
+            </if>
+            <if test="csm.csmPlan!=null and csm.csmPlan!=''">
+                CSM_PLAN,
+            </if>
+            <if test="csm.status!=null and csm.STATUS!=''">
+                STATUS,
+            </if>
+            CREATE_BY, CREATE_DATE)
+            VALUES (SYS_GUID(),
+            <if test="recordId!=null and recordId!=''">
+                #{recordId},
+            </if>
+            <if test="csm.externalId!=null and csm.externalId!=''">
+                #{csm.externalId},
+            </if>
+            <if test="csm.serialNo!=null">
+                #{csm.serialNo},
+            </if>
+            <if test="dataType!=null and dataType!=''">
+                #{dataType},
+            </if>
+            <if test="csm.csmPlan!=null and csm.csmPlan!=''">
+                #{csm.csmPlan},
+            </if>
+            <if test="csm.status!=null and csm.status!=''">
+                #{csm.status},
+            </if>
+            #{createBy}, sysdate)
+        </foreach>
+        SELECT * FROM dual
     </insert>
 
     <update id="incrementRecord">
         UPDATE OPERATE_DEBUG_RECORD SET
         <if test="dataType!=null and dataType=='1'.toString()">
-            SIGNAL_NUM=SIGNAL_NUM+${num}
+            SIGNAL_NUM=#{num}
         </if>
         <if test="dataType!=null and dataType=='2'.toString()">
-            VEHICLE_NUM=VEHICLE_NUM+${num}
+            VEHICLE_NUM=#{num}
         </if>
         WHERE ID=#{recordId}
     </update>

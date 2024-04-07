@@ -3,6 +3,7 @@ package com.wzmtr.dom.service.operate;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.operate.DebugInfoReqDTO;
 import com.wzmtr.dom.dto.req.operate.DebugRecordReqDTO;
+import com.wzmtr.dom.dto.res.operate.ConstructPlanResDTO;
 import com.wzmtr.dom.dto.res.operate.DebugInfoResDTO;
 import com.wzmtr.dom.dto.res.operate.DebugRecordResDTO;
 import com.wzmtr.dom.entity.PageReqDTO;
@@ -70,4 +71,13 @@ public interface DebugService {
      * @param ids ids
      */
     void deleteInfo(List<String> ids);
+
+    /**
+     * 选择施工计划-列表
+     * @param startDate 查询参数
+     * @param endDate 查询参数
+     * @param pageReqDTO 分页参数
+     * @return 施工计划列表
+     */
+    Page<ConstructPlanResDTO> getCsmConstructPlan(String startDate, String endDate, PageReqDTO pageReqDTO);
 }
