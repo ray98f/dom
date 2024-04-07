@@ -119,4 +119,12 @@ public class PassengerFlowAddReqDTO extends BaseEntity {
      * 小时单向最大断面客流量
      */
     private Integer hourMaxPass;
+    /**
+     * 小时单向最大断面开始时间
+     */
+    private String hourMaxTimeStart;
+    /**
+     * 小时单向最大断面结束时间
+     */
+    private String hourMaxTimeEnd;
 }

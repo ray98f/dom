@@ -68,6 +68,13 @@
         <if test="hourMaxPass != null">
             HOUR_MAX_PASS=#{hourMaxPass},
         </if>
+        <if test="hourMaxTimeStart != null">
+            HOUR_MAX_START_TIME=to_date(#{hourMaxTimeStart},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        <if test="hourMaxTimeEnd != null">
+            HOUR_MAX_END_TIME=to_date(#{hourMaxTimeEnd},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
         VERSION = VERSION+1,
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate

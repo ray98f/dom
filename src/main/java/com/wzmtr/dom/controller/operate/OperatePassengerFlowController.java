@@ -104,5 +104,17 @@ public class OperatePassengerFlowController {
         return DataResponse.success();
     }
 
+    /**
+     * 客流周报列表
+     * @return 成功
+     */
+    @PostMapping("/list/week")
+    @ApiOperation(value = "客流周报列表")
+    public DataResponse<T> listWeek(@RequestBody PassengerFlowAddReqDTO req) {
+        operatePassengerFlowService.modify(req);
+        return DataResponse.success();
+    }
+
+
 
 }

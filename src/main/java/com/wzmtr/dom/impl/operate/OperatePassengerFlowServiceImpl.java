@@ -75,8 +75,7 @@ public class OperatePassengerFlowServiceImpl implements OperatePassengerFlowServ
         if (null != detail) {
             passengerFlowDetailResDTO = BeanUtils.convert(detail, PassengerFlowDetailResDTO.class);
             // 车站客流列表
-            List<PassengerInfoResDTO> passengerInfoResDTOS = operatePassengerFlowInfoMapper.eachStation(DateUtil.formatDate(detail.getStartDate()),
-                    DateUtil.formatDate(detail.getEndDate()));
+            List<PassengerInfoResDTO> passengerInfoResDTOS = operatePassengerFlowInfoMapper.eachStation(DateUtil.formatDate(detail.getStartDate()), DateUtil.formatDate(detail.getEndDate()));
             passengerFlowDetailResDTO.setStationPassengerList(passengerInfoResDTOS);
         }
         return passengerFlowDetailResDTO;
@@ -99,11 +98,8 @@ public class OperatePassengerFlowServiceImpl implements OperatePassengerFlowServ
         // 日报类型同步客流数据 更新客流数据
         if (CommonConstants.DATA_TYPE_DAILY.equals(addReqDTO.getDataType())) {
             syncACCdata(addReqDTO);
-            passengerFlowDetailMapper.modifyCount(addReqDTO.getId(), addReqDTO.getStartDate(), addReqDTO.getEndDate());
-            // 周报、月报类型 更新本周 本月客流数据
-        } else {
-            passengerFlowDetailMapper.modifyCount(addReqDTO.getId(), addReqDTO.getStartDate(), addReqDTO.getEndDate());
         }
+        passengerFlowDetailMapper.modifyCount(addReqDTO.getId(), addReqDTO.getStartDate(), addReqDTO.getEndDate());
     }
 
     private void syncACCdata(PassengerFlowAddReqDTO addReqDTO) {
