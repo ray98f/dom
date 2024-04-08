@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Size;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author: Li.Wang
@@ -116,5 +117,12 @@ public class PassengerFlowListResDTO {
      * 本日出站
      */
     private Integer todayOutCount;
-
+    /**
+     * 周报客流前三车站
+     */
+    private List<String> topThreeList;
+    /**
+     * 周报客流后三车站
+     */
+    private List<String> lastThreeList;
 }

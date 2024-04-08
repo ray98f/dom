@@ -90,9 +90,7 @@ public class OperateFaultStatisticsController {
      */
     @PostMapping("/delete")
     @ApiOperation(value = "故障统计删除")
-    public DataResponse<T> modify(@CurrUser CurrentLoginUser currentLoginUser,
-                                  @Validated({ValidationGroup.create.class})
-                                  @RequestBody BaseIdsEntity baseIdsEntity) {
+    public DataResponse<T> modify(@RequestBody BaseIdsEntity baseIdsEntity) {
         faultStatisticsService.delete(baseIdsEntity.getIds());
         return DataResponse.success();
     }

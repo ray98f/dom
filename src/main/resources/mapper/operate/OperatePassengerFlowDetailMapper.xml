@@ -74,7 +74,6 @@
         <if test="hourMaxTimeEnd != null">
             HOUR_MAX_END_TIME=to_date(#{hourMaxTimeEnd},'yyyy-mm-dd hh24:mi:ss'),
         </if>
-        to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
         VERSION = VERSION+1,
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate

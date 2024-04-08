@@ -36,5 +36,36 @@
           AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
         ORDER BY t1.PASSENGER DESC
     </select>
+    <select id="topThree" resultType="java.lang.String">
+        select ss.STATION_NAME
+        from OPERATE_PASSENGER_FLOW_INFO op
+        left join SYS_STATION ss ON op.STATION_CODE = ss.STATION_CODE
+        where DEL_FLAG = '0'
+        <if test="startDate != null and startDate!=''">
+            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null and endDate!=''">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        </if>
+        AND DATA_TYPE = #{dataType}
+        AND rownum = 3
+        order by op.PASSENGER desc
+    </select>
+
+    <select id="lastThree" resultType="java.lang.String">
+        select ss.STATION_NAME
+        from OPERATE_PASSENGER_FLOW_INFO op
+                 left join SYS_STATION ss ON op.STATION_CODE = ss.STATION_CODE
+        where DEL_FLAG = '0'
+        <if test="startDate != null and startDate!=''">
+            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null and endDate!=''">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        </if>
+          AND DATA_TYPE = #{dataType}
+          AND rownum = 3
+        order by op.PASSENGER
+    </select>
 
 </mapper>
