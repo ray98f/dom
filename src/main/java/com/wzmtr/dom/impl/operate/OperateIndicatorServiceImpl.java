@@ -47,7 +47,7 @@ public class OperateIndicatorServiceImpl implements OperateIndicatorService {
         if (CollectionUtils.isEmpty(records)){
             return new Page<>();
         }
-        if (DataType.WEEK.getCode().equals(dataType)) {
+        if (!DataType.DAY.getCode().equals(dataType)) {
             // 周报月报多返回一个正点率和总能耗
             records.forEach(a -> {
                 IndicatorInfoResDTO infoRes = operateIndicatorMapper.queryInfoByDate(DateUtil.formatDate(a.getStartDate()), DateUtil.formatDate(a.getEndDate()), dataType);
