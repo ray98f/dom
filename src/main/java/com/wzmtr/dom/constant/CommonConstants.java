@@ -160,9 +160,9 @@ public class CommonConstants {
     public static final String[] TRAFFIC_REPORT_TYPE = {"1","2","3"};
     public static final String  TRAFFIC_DAILY_REPORT = "TRAFFIC_DAILY_REPORT";
     /***/
-    public static final String  TRAFFIC_DAILY_SUB1_NODE1 ="traffic_daily_sub1_node1";
-    public static final String  TRAFFIC_DAILY_SUB2_NODE1 ="traffic_daily_sub1_node1";
-    public static final String  TRAFFIC_DAILY_SUB3_NODE1 ="traffic_daily_sub1_node1";
+    public static final String  TRAFFIC_DAILY_NODE1_SUB1 ="traffic_daily_node1_sub1";
+    public static final String  TRAFFIC_DAILY_NODE1_SUB2 ="traffic_daily_node1_sub2";
+    public static final String  TRAFFIC_DAILY_NODE1_SUB3 ="traffic_daily_node1_sub3";
 
     public static final String[] OPERATE_INDICATOR_TYPE = {"1","2","3","4"};
 

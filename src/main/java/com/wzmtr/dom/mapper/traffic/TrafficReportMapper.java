@@ -61,6 +61,12 @@ public interface TrafficReportMapper {
     int modifyDaily(DailyReportReqDTO dailyReportReqDTO);
 
     /**
+     * 更新主日报
+     * @param dailyReportReqDTO 日报参数
+     */
+    void modifyMainDaily(DailyReportReqDTO dailyReportReqDTO);
+
+    /**
      * 删除日报
      * @param ids ids
      * @param userId 用户id

@@ -12,9 +12,8 @@ import java.util.List;
 public enum BpmnFlowEnum {
     //
     traffic_daily("traffic_daily", "客运部日报审批流程"),
-    traffic_daily_sub1("traffic_daily_sub1", "客运部日报-客流收益审批流程"),
-    traffic_daily_sub2("traffic_daily_sub2", "客运部日报-服务热线审批流程"),
-    traffic_daily_sub3("traffic_daily_sub3", "客运部日报-安全生产审批流程");
+    traffic_weekly("traffic_weekly", "客运部周报审批流程"),
+    traffic_monthly("traffic_monthly", "客运部月报审批流程");
     private String value;
     private String label;
 

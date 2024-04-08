@@ -134,12 +134,15 @@ public class TrafficReportServiceImpl implements TrafficReportService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void modifyDaily(CurrentLoginUser currentLoginUser,DailyReportReqDTO dailyReportReqDTO) {
         dailyReportReqDTO.setUpdateBy(currentLoginUser.getPersonId());
         int res = reportMapper.modifyDaily(dailyReportReqDTO);
         if( res <= 0){
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
+        //更新主报表
+        reportMapper.modifyMainDaily(dailyReportReqDTO);
     }
 
     @Override
@@ -152,21 +155,18 @@ public class TrafficReportServiceImpl implements TrafficReportService {
         approvalReqDTO.setReportTable(CommonConstants.TRAFFIC_DAILY_REPORT);
         approvalReqDTO.setTodoType(CommonConstants.ONE_STRING);
         approvalReqDTO.setDataType(CommonConstants.DATA_TYPE_DAILY);
+        approvalReqDTO.setProcessKey(BpmnFlowEnum.traffic_daily.value());
         switch (dailyReportReqDTO.getReportType()){
             case CommonConstants.ONE_STRING:
-                approvalReqDTO.setProcessKey(BpmnFlowEnum.traffic_daily_sub1.value());
-                approvalReqDTO.setCurrentNode(CommonConstants.TRAFFIC_DAILY_SUB1_NODE1);
+                approvalReqDTO.setCurrentNode(CommonConstants.TRAFFIC_DAILY_NODE1_SUB1);
                 break;
             case CommonConstants.TWO_STRING:
-                approvalReqDTO.setProcessKey(BpmnFlowEnum.traffic_daily_sub2.value());
-                approvalReqDTO.setCurrentNode(CommonConstants.TRAFFIC_DAILY_SUB2_NODE1);
+                approvalReqDTO.setCurrentNode(CommonConstants.TRAFFIC_DAILY_NODE1_SUB2);
                 break;
             case CommonConstants.THREE_STRING:
-                approvalReqDTO.setProcessKey(BpmnFlowEnum.traffic_daily_sub3.value());
-                approvalReqDTO.setCurrentNode(CommonConstants.TRAFFIC_DAILY_SUB3_NODE1);
+                approvalReqDTO.setCurrentNode(CommonConstants.TRAFFIC_DAILY_NODE1_SUB3);
                 break;
             default:
-                approvalReqDTO.setProcessKey(BpmnFlowEnum.traffic_daily.value());
                 break;
         }
 

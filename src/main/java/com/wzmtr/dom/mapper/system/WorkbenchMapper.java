@@ -1,10 +1,13 @@
 package com.wzmtr.dom.mapper.system;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wzmtr.dom.dto.req.system.ApprovalReqDTO;
 import com.wzmtr.dom.dto.req.system.TodoReqDTO;
 import com.wzmtr.dom.dto.res.system.TodoResDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * 系统-工作台
@@ -37,4 +40,24 @@ public interface WorkbenchMapper {
      * @param todoReqDTO 督办审批参数
      */
     void todoApproval(TodoReqDTO todoReqDTO);
+
+    /**
+     * 发待办/待阅
+     * @param approvalReqDTO
+     */
+    void addTodo(ApprovalReqDTO approvalReqDTO);
+
+    /**
+     * 根据流程节点获取审批角色
+     * @param nodeId
+     * @return  审批角色
+     */
+    String queryRoleByNode(String nodeId);
+
+    /**
+     * 根据流程节点获取审批角色
+     * @param ids
+     * @return  审批角色
+     */
+    List<String> queryUserByRole(List<String> ids);
 }

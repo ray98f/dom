@@ -178,6 +178,43 @@
         AND VERSION=#{version}
     </update>
 
+    <update id="modifyMainDaily">
+        UPDATE TRAFFIC_DAILY_REPORT SET
+        <if test="ifPassenger!=null and ifPassenger!=''">
+            IF_PASSENGER=#{ifPassenger},
+        </if>
+        <if test="ifIncome!=null and ifIncome!=''">
+            IF_INCOME=#{ifIncome},
+        </if>
+        <if test="ifTicketUse!=null and ifTicketUse!=''">
+            IF_TICKET_USE=#{ifTicketUse},
+        </if>
+        <if test="ifOnewaySale!=null and ifOnewaySale!=''">
+            IF_ONEWAY_SALE=#{ifOnewaySale},
+        </if>
+        <if test="ifHotlineSummary!=null and ifHotlineSummary!=''">
+            IF_HOTLINE_SUMMARY=#{ifHotlineSummary},
+        </if>
+        <if test="ifHotlineImportant!=null and ifHotlineImportant!=''">
+            IF_HOTLINE_IMPORTANT=#{ifHotlineImportant},
+        </if>
+        <if test="ifTransmitInfo!=null and ifTransmitInfo!=''">
+            IF_TRANSMIT_INFO=#{ifTransmitInfo},
+        </if>
+        <if test="ifProductionSummary!=null and ifProductionSummary!=''">
+            IF_PRODUCTION_SUMMARY=#{ifProductionSummary},
+        </if>
+        <if test="ifProductionInfo!=null and ifProductionInfo!=''">
+            IF_PRODUCTION_INFO=#{ifProductionInfo},
+        </if>
+        <if test="status!=null">
+            STATUS=#{status},
+        </if>
+        UPDATE_BY=#{updateBy},
+        UPDATE_DATE=sysdate
+        WHERE ID=(SELECT PARENT_ID FROM TRAFFIC_DAILY_REPORT WHERE ID=#{id})
+    </update>
+
     <update id="deleteDaily">
         UPDATE VEHICLE_DAILY_REPORT SET
         DEL_FLAG='1', UPDATE_BY=#{userId}, UPDATE_DATE=sysdate

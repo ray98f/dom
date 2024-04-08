@@ -10,10 +10,14 @@ import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
 import com.wzmtr.dom.mapper.system.WorkbenchMapper;
 import com.wzmtr.dom.service.system.WorkbenchService;
+import com.wzmtr.dom.utils.StringUtils;
 import com.wzmtr.dom.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -55,7 +59,20 @@ public class WorkbenchServiceImpl implements WorkbenchService {
     public void commitApproval(ApprovalReqDTO approvalReqDTO) {
         //TODO
         //根据节点获取审批人员
-        //currentNode
+        String roleStr = workbenchMapper.queryRoleByNode(approvalReqDTO.getCurrentNode());
+        if(StringUtils.isNotEmpty(roleStr)){
+            List<String> roleList = Arrays.asList(roleStr.split(","));
+            List<String> userList = workbenchMapper.queryUserByRole(roleList);
+
+            //发送待办
+            for(String u:userList){
+                approvalReqDTO.setApprovalUser(u);
+
+                workbenchMapper.addTodo(approvalReqDTO);
+            }
+
+        }
+
 
 
     }
