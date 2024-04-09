@@ -52,7 +52,31 @@
 
         ORDER BY START_DATE desc
     </select>
-
+    <select id="queryInfoByDate" resultType="com.wzmtr.dom.dto.res.operate.IndicatorInfoResDTO">
+        select * from  OPERATE_INDICATOR_INFO
+        WHERE DEL_FLAG = '0'
+        AND DATA_TYPE = #{dataType}
+        <if test="startDate != null">
+            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="indicatorType != null">
+            AND INDICATOR_TYPE = #{indicatorType}
+        </if>
+    </select>
+    <select id="queryPowerByDate" resultType="com.wzmtr.dom.dto.res.operate.IndicatorPowerResDTO">
+        select * from OPERATE_INDICATOR_POWER
+        WHERE DEL_FLAG = '0'
+        AND DATA_TYPE = #{dataType}
+        <if test="startDate != null">
+            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+    </select>
     <insert id="add">
         INSERT INTO OPERATE_INDICATOR_RECORD (ID,DATA_TYPE,
         <if test="dataDate != null">

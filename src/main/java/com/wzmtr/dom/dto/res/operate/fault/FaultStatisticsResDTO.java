@@ -1,7 +1,9 @@
 package com.wzmtr.dom.dto.res.operate.fault;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -18,19 +20,23 @@ public class FaultStatisticsResDTO {
      */
     @ApiModelProperty("")
     private String id;
-    /**
-     * 创建日期
-     */
-    @ApiModelProperty("创建日期")
+    @ApiModelProperty(value = "新增时间")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8"
+    )
     private Date createDate;
     /**
      * 创建者
      */
     @ApiModelProperty("创建者")
     private String createBy;
-    /**
-     * 更新日期
-     */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8"
+    )
     @ApiModelProperty("更新日期")
     private Date updateDate;
     /**
@@ -51,6 +57,11 @@ public class FaultStatisticsResDTO {
     /**
      * 所属日期
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8"
+    )
     @ApiModelProperty("所属日期")
     private Date dataDate;
     /**

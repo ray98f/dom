@@ -12,6 +12,7 @@ import com.wzmtr.dom.dto.res.vehicle.IndicatorResDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -55,6 +56,7 @@ public interface OperateIndicatorMapper {
      @return LineEventResDTO
      */
     IndicatorPowerResDTO queryPower(String recordId);
+    IndicatorPowerResDTO queryPowerByDate(String startDate, String endDate, String dataType);
 
     /**
      * 校验数据是否存在
@@ -101,4 +103,6 @@ public interface OperateIndicatorMapper {
      */
     int modifyPower(IndicatorPowerReqDTO indicatorPowerReqDTO);
 
+
+    IndicatorInfoResDTO queryInfoByDate(String startDate, String endDate, String dataType,String indicatorType);
 }

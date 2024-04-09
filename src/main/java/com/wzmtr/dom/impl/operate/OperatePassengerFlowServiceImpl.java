@@ -16,6 +16,7 @@ import com.wzmtr.dom.dto.res.operate.passengerflow.PassengerFlowListResDTO;
 import com.wzmtr.dom.dto.res.traffic.PassengerInfoResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
+import com.wzmtr.dom.enums.DataType;
 import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
 import com.wzmtr.dom.mapper.operate.OperatePassengerFlowDetailMapper;
@@ -23,6 +24,7 @@ import com.wzmtr.dom.mapper.operate.OperatePassengerFlowInfoMapper;
 import com.wzmtr.dom.service.operate.OperatePassengerFlowService;
 import com.wzmtr.dom.utils.BeanUtils;
 import com.wzmtr.dom.utils.HttpUtils;
+import com.wzmtr.dom.utils.StringUtils;
 import com.wzmtr.dom.utils.TokenUtils;
 import org.apache.ibatis.executor.BatchResult;
 import org.apache.ibatis.session.ExecutorType;
@@ -64,7 +66,18 @@ public class OperatePassengerFlowServiceImpl implements OperatePassengerFlowServ
     @Override
     public Page<PassengerFlowListResDTO> list(String dataType, String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return passengerFlowDetailMapper.list(pageReqDTO.of(), dataType, startDate, endDate);
+        Page<PassengerFlowListResDTO> list = passengerFlowDetailMapper.list(pageReqDTO.of(), dataType, startDate, endDate);
+        // 周报月报则多返回两个列表
+        if (!DataType.DAY.getCode().equals(dataType)) {
+            List<PassengerFlowListResDTO> records = list.getRecords();
+            for (PassengerFlowListResDTO record : records) {
+                List<String> last = operatePassengerFlowInfoMapper.lastThree(DateUtil.formatDate(record.getStartDate()), DateUtil.formatDate(record.getEndDate()), record.getDataType());
+                List<String> top = operatePassengerFlowInfoMapper.topThree(DateUtil.formatDate(record.getStartDate()), DateUtil.formatDate(record.getEndDate()), dataType);
+                record.setLastThreeList(last);
+                record.setTopThreeList(top);
+            }
+        }
+        return list;
     }
 
     @Override
@@ -99,13 +112,15 @@ public class OperatePassengerFlowServiceImpl implements OperatePassengerFlowServ
         if (CommonConstants.DATA_TYPE_DAILY.equals(addReqDTO.getDataType())) {
             syncACCdata(addReqDTO);
         }
-        passengerFlowDetailMapper.modifyCount(addReqDTO.getId(), addReqDTO.getStartDate(), addReqDTO.getEndDate());
+        if (StringUtils.isNotEmpty(addReqDTO.getId())){
+            passengerFlowDetailMapper.modifyCount(addReqDTO.getId(), addReqDTO.getStartDate(), addReqDTO.getEndDate());
+        }
     }
 
     private void syncACCdata(PassengerFlowAddReqDTO addReqDTO) {
         HashMap<String, Object> res = JSONObject.parseObject(HttpUtils.doGet(
                 accPersonCountApi + "?businessDay=" + addReqDTO.getStartDate(), null, apiAppKey), HashMap.class);
-        if (CollectionUtil.isEmpty(res)){
+        if (CollectionUtil.isEmpty(res)) {
             return;
         }
         JSONArray jsonArray = JSONArray.parseArray(String.valueOf(res.get("data")));

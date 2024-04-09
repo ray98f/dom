@@ -13,6 +13,7 @@ import com.wzmtr.dom.mapper.operate.OperateFaultStatisticsMapper;
 import com.wzmtr.dom.service.operate.OperateFaultStatisticsService;
 import com.wzmtr.dom.utils.StringUtils;
 import com.wzmtr.dom.utils.TokenUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +35,22 @@ public class OperateFaultStatisticsServiceImpl implements OperateFaultStatistics
     @Override
     public Page<FaultStatisticsResDTO> list(String dataType, String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return operateFaultStatisticsMapper.list(pageReqDTO.of(), dataType, startDate, endDate);
+
+        Page<FaultStatisticsResDTO> list = new Page<>();
+        List<FaultStatisticsResDTO> records = list.getRecords();
+        if (CollectionUtils.isEmpty(records)) {
+            return list;
+        }
+        // 日报需要给每一列返回总数
+        records.forEach(a -> {
+            long sum = getFaultSum(a);
+            a.setSum(sum);
+        });
+        return list;
+    }
+
+    public static long getFaultSum(FaultStatisticsResDTO a) {
+        return a.getVehicleNum() + a.getPowerNum() + a.getSignalNum() + a.getCommunicationNum() + a.getIndustryNum() + a.getMechanismNum() + a.getAfcNum() + a.getElseNum();
     }
 
 

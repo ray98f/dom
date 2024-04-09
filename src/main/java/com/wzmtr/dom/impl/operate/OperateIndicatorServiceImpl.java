@@ -1,5 +1,6 @@
 package com.wzmtr.dom.impl.operate;
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.page.PageMethod;
 import com.wzmtr.dom.constant.CommonConstants;
@@ -12,11 +13,13 @@ import com.wzmtr.dom.dto.res.operate.IndicatorPowerResDTO;
 import com.wzmtr.dom.dto.res.operate.IndicatorRecordResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
+import com.wzmtr.dom.enums.DataType;
 import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
 import com.wzmtr.dom.mapper.operate.OperateIndicatorMapper;
 import com.wzmtr.dom.service.operate.OperateIndicatorService;
 import com.wzmtr.dom.utils.TokenUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +42,25 @@ public class OperateIndicatorServiceImpl implements OperateIndicatorService {
     @Override
     public Page<IndicatorRecordResDTO> list(String dataType, String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return operateIndicatorMapper.list(pageReqDTO.of(),dataType,startDate,endDate);
+        Page<IndicatorRecordResDTO> list = operateIndicatorMapper.list(pageReqDTO.of(), dataType, startDate, endDate);
+        List<IndicatorRecordResDTO> records = list.getRecords();
+        if (CollectionUtils.isEmpty(records)){
+            return new Page<>();
+        }
+        if (!DataType.DAY.getCode().equals(dataType)) {
+            // 周报月报多返回一个正点率和总能耗
+            records.forEach(a -> {
+                IndicatorInfoResDTO infoRes = operateIndicatorMapper.queryInfoByDate(DateUtil.formatDate(a.getStartDate()), DateUtil.formatDate(a.getEndDate()), dataType, "2");
+                IndicatorPowerResDTO indicatorPowerResDTO = operateIndicatorMapper.queryPowerByDate(DateUtil.formatDate(a.getStartDate()), DateUtil.formatDate(a.getEndDate()), dataType);
+                if (null != indicatorPowerResDTO) {
+                    a.setEnergyConsumption(indicatorPowerResDTO.getEnergyConsumption());
+                }
+                if (null != infoRes) {
+                    a.setPunctualityRate(infoRes.getPunctualityRate());
+                }
+            });
+        }
+        return list;
     }
 
     @Override
@@ -74,6 +95,7 @@ public class OperateIndicatorServiceImpl implements OperateIndicatorService {
         indicatorRecordReqDTO.setId(TokenUtils.getUuId());
         try{
             operateIndicatorMapper.add(indicatorRecordReqDTO);
+            //八项运营指标
             for(String sType:CommonConstants.OPERATE_INDICATOR_TYPE){
                 IndicatorInfoReqDTO infoReqDTO = new IndicatorInfoReqDTO();
                 infoReqDTO.setId(TokenUtils.getUuId());
