@@ -104,5 +104,5 @@ public interface OperateIndicatorMapper {
     int modifyPower(IndicatorPowerReqDTO indicatorPowerReqDTO);
 
 
-    IndicatorInfoResDTO queryInfoByDate(String startDate, String endDate, String dataType);
+    IndicatorInfoResDTO queryInfoByDate(String startDate, String endDate, String dataType,String indicatorType);
 }

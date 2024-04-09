@@ -22,6 +22,8 @@ public interface OperateFaultStatisticsMapper {
 
     Page<FaultStatisticsResDTO> list(Page<Object> of, String dataType, String startDate, String endDate);
 
+    Page<FaultStatisticsResDTO> listByDate(Page<Object> of, String startDate, String endDate);
+
     void add(OperateFaultStatisticsReqDTO req);
 
     void modify(OperateFaultStatisticsReqDTO req);

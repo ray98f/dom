@@ -50,7 +50,7 @@ public class OperateIndicatorServiceImpl implements OperateIndicatorService {
         if (!DataType.DAY.getCode().equals(dataType)) {
             // 周报月报多返回一个正点率和总能耗
             records.forEach(a -> {
-                IndicatorInfoResDTO infoRes = operateIndicatorMapper.queryInfoByDate(DateUtil.formatDate(a.getStartDate()), DateUtil.formatDate(a.getEndDate()), dataType);
+                IndicatorInfoResDTO infoRes = operateIndicatorMapper.queryInfoByDate(DateUtil.formatDate(a.getStartDate()), DateUtil.formatDate(a.getEndDate()), dataType, "2");
                 IndicatorPowerResDTO indicatorPowerResDTO = operateIndicatorMapper.queryPowerByDate(DateUtil.formatDate(a.getStartDate()), DateUtil.formatDate(a.getEndDate()), dataType);
                 if (null != indicatorPowerResDTO) {
                     a.setEnergyConsumption(indicatorPowerResDTO.getEnergyConsumption());
@@ -95,6 +95,7 @@ public class OperateIndicatorServiceImpl implements OperateIndicatorService {
         indicatorRecordReqDTO.setId(TokenUtils.getUuId());
         try{
             operateIndicatorMapper.add(indicatorRecordReqDTO);
+            //八项运营指标
             for(String sType:CommonConstants.OPERATE_INDICATOR_TYPE){
                 IndicatorInfoReqDTO infoReqDTO = new IndicatorInfoReqDTO();
                 infoReqDTO.setId(TokenUtils.getUuId());

@@ -24,6 +24,7 @@ import com.wzmtr.dom.mapper.operate.OperatePassengerFlowInfoMapper;
 import com.wzmtr.dom.service.operate.OperatePassengerFlowService;
 import com.wzmtr.dom.utils.BeanUtils;
 import com.wzmtr.dom.utils.HttpUtils;
+import com.wzmtr.dom.utils.StringUtils;
 import com.wzmtr.dom.utils.TokenUtils;
 import org.apache.ibatis.executor.BatchResult;
 import org.apache.ibatis.session.ExecutorType;
@@ -111,7 +112,9 @@ public class OperatePassengerFlowServiceImpl implements OperatePassengerFlowServ
         if (CommonConstants.DATA_TYPE_DAILY.equals(addReqDTO.getDataType())) {
             syncACCdata(addReqDTO);
         }
-        passengerFlowDetailMapper.modifyCount(addReqDTO.getId(), addReqDTO.getStartDate(), addReqDTO.getEndDate());
+        if (StringUtils.isNotEmpty(addReqDTO.getId())){
+            passengerFlowDetailMapper.modifyCount(addReqDTO.getId(), addReqDTO.getStartDate(), addReqDTO.getEndDate());
+        }
     }
 
     private void syncACCdata(PassengerFlowAddReqDTO addReqDTO) {
