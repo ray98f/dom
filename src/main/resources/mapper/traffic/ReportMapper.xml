@@ -32,6 +32,18 @@
         ORDER BY dr.DAILY_DATE desc
     </select>
 
+    <select id="queryDailyById" resultType="com.wzmtr.dom.dto.res.traffic.DailyReportResDTO">
+        SELECT dr.ID, dr.PARENT_ID,dr.REPORT_TYPE,dr.IF_PASSENGER, dr.IF_INCOME, dr.IF_TICKET_USE, dr.IF_ONEWAY_SALE,
+        dr.IF_HOTLINE_SUMMARY, dr.IF_HOTLINE_IMPORTANT, dr.IF_TRANSMIT_INFO, dr.IF_PRODUCTION_SUMMARY, dr.IF_PRODUCTION_INFO,
+        dr.DAILY_DATE, dr.START_DATE, dr.END_DATE, dr.STATUS, dr.VERSION,
+        dr.CREATE_DATE, u.NAME AS CREATE_BY
+        FROM TRAFFIC_DAILY_REPORT dr
+        LEFT JOIN SYS_USER u ON u.ID=dr.CREATE_BY
+        WHERE dr.DEL_FLAG='0'
+        AND dr.PARENT_ID=(SELECT PARENT_ID FROM TRAFFIC_DAILY_REPORT t WHERE ID = #{id})
+        ORDER BY dr.DAILY_DATE desc
+    </select>
+
     <select id="dailyDetail" resultType="com.wzmtr.dom.dto.res.traffic.DailyReportResDTO">
         SELECT dr.ID,dr.PARENT_ID,dr.REPORT_TYPE, dr.IF_PASSENGER, dr.IF_INCOME, dr.IF_TICKET_USE, dr.IF_ONEWAY_SALE,
         dr.IF_HOTLINE_SUMMARY, dr.IF_HOTLINE_IMPORTANT, dr.IF_TRANSMIT_INFO, dr.IF_PRODUCTION_SUMMARY, dr.IF_PRODUCTION_INFO,
@@ -171,12 +183,20 @@
         <if test="status!=null">
             STATUS=#{status},
         </if>
-        VERSION=VERSION+1,
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate
         WHERE ID=#{id}
-        AND VERSION=#{version}
     </update>
+
+    <update id="dailyApprovalComplete">
+        UPDATE TRAFFIC_DAILY_REPORT SET
+        STATUS='2',
+        UPDATE_BY=#{updateBy},
+        UPDATE_DATE=sysdate
+        WHERE ID=(SELECT PARENT_ID FROM TRAFFIC_DAILY_REPORT WHERE ID = #{id})
+        OR PARENT_ID = (SELECT PARENT_ID FROM TRAFFIC_DAILY_REPORT WHERE ID = #{id})
+    </update>
+
 
     <update id="modifyMainDaily">
         UPDATE TRAFFIC_DAILY_REPORT SET
@@ -215,14 +235,457 @@
         WHERE ID=(SELECT PARENT_ID FROM TRAFFIC_DAILY_REPORT WHERE ID=#{id})
     </update>
 
-    <update id="deleteDaily">
-        UPDATE VEHICLE_DAILY_REPORT SET
-        DEL_FLAG='1', UPDATE_BY=#{userId}, UPDATE_DATE=sysdate
-        WHERE ID IN (
-        <foreach collection="ids" index="index" item="id" separator=",">
-            #{id}
-        </foreach>
-        )
+    <!-- 周报 -->
+    <select id="weeklyList" resultType="com.wzmtr.dom.dto.res.traffic.WeeklyReportResDTO">
+        SELECT dr.ID,dr.PARENT_ID,dr.REPORT_TYPE, dr.IF_PASSENGER, dr.IF_INCOME, dr.IF_TICKET_USE, dr.IF_ONEWAY_SALE,
+        dr.IF_HOTLINE_SUMMARY, dr.IF_HOTLINE_IMPORTANT, dr.IF_TRANSMIT_INFO, dr.IF_PRODUCTION_SUMMARY, dr.IF_PRODUCTION_INFO,
+        dr.START_DATE, dr.END_DATE, dr.STATUS, dr.VERSION,
+        dr.CREATE_DATE, u.NAME AS CREATE_BY
+        FROM TRAFFIC_WEEKLY_REPORT dr
+        LEFT JOIN SYS_USER u ON u.ID=dr.CREATE_BY
+        WHERE dr.DEL_FLAG='0'
+        AND dr.REPORT_TYPE='0'
+        <if test="startDate!=null and startDate!=''">
+            AND dr.START_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'YYYY-MM-DD')>=dr.END_DATE
+        </if>
+        ORDER BY dr.START_DATE desc
+    </select>
+
+    <select id="weeklyDetail" resultType="com.wzmtr.dom.dto.res.traffic.WeeklyReportResDTO">
+        SELECT dr.ID,dr.PARENT_ID,dr.REPORT_TYPE, dr.IF_PASSENGER, dr.IF_INCOME, dr.IF_TICKET_USE, dr.IF_ONEWAY_SALE,
+        dr.IF_HOTLINE_SUMMARY, dr.IF_HOTLINE_IMPORTANT, dr.IF_TRANSMIT_INFO, dr.IF_PRODUCTION_SUMMARY, dr.IF_PRODUCTION_INFO,
+        dr.START_DATE, dr.END_DATE, dr.STATUS, dr.VERSION,
+        dr.CREATE_DATE, u.NAME AS CREATE_BY
+        FROM TRAFFIC_WEEKLY_REPORT dr
+        LEFT JOIN SYS_USER u ON u.ID=dr.CREATE_BY
+        WHERE dr.DEL_FLAG='0' AND dr.ID=#{id}
+    </select>
+
+    <select id="queryWeeklyById" resultType="com.wzmtr.dom.dto.res.traffic.WeeklyReportResDTO">
+        SELECT dr.ID, dr.PARENT_ID,dr.REPORT_TYPE,dr.IF_PASSENGER, dr.IF_INCOME, dr.IF_TICKET_USE, dr.IF_ONEWAY_SALE,
+        dr.IF_HOTLINE_SUMMARY, dr.IF_HOTLINE_IMPORTANT, dr.IF_TRANSMIT_INFO, dr.IF_PRODUCTION_SUMMARY, dr.IF_PRODUCTION_INFO,
+        dr.START_DATE, dr.END_DATE, dr.STATUS, dr.VERSION,
+        dr.CREATE_DATE, u.NAME AS CREATE_BY
+        FROM TRAFFIC_WEEKLY_REPORT dr
+        LEFT JOIN SYS_USER u ON u.ID=dr.CREATE_BY
+        WHERE dr.DEL_FLAG='0'
+        AND dr.PARENT_ID=(SELECT PARENT_ID FROM TRAFFIC_WEEKLY_REPORT t WHERE ID = #{id})
+        ORDER BY dr.START_DATE desc
+    </select>
+
+    <select id="queryWeeklyByParent" resultType="com.wzmtr.dom.dto.res.traffic.WeeklyReportResDTO">
+        SELECT dr.ID, dr.PARENT_ID,dr.REPORT_TYPE,dr.IF_PASSENGER, dr.IF_INCOME, dr.IF_TICKET_USE, dr.IF_ONEWAY_SALE,
+        dr.IF_HOTLINE_SUMMARY, dr.IF_HOTLINE_IMPORTANT, dr.IF_TRANSMIT_INFO, dr.IF_PRODUCTION_SUMMARY, dr.IF_PRODUCTION_INFO,
+        dr.START_DATE, dr.END_DATE, dr.STATUS, dr.VERSION,
+        dr.CREATE_DATE, u.NAME AS CREATE_BY
+        FROM TRAFFIC_WEEKLY_REPORT dr
+        LEFT JOIN SYS_USER u ON u.ID=dr.CREATE_BY
+        WHERE dr.DEL_FLAG='0'
+        AND dr.PARENT_ID=#{parentId}
+        ORDER BY dr.START_DATE desc
+    </select>
+
+    <select id="checkWeeklyExist" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM TRAFFIC_WEEKLY_REPORT
+        WHERE DEL_FLAG='0' AND PARENT_ID = '0'
+        <if test="startDate != null">
+            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+    </select>
+
+    <insert id="addWeekly">
+        INSERT INTO TRAFFIC_WEEKLY_REPORT
+        (ID,
+        <if test="parentId!=null and parentId!=''">
+            PARENT_ID,
+        </if>
+        <if test="reportType!=null and reportType!=''">
+            REPORT_TYPE,
+        </if>
+        <if test="ifPassenger!=null and ifPassenger!=''">
+            IF_PASSENGER,
+        </if>
+        <if test="ifIncome!=null and ifIncome!=''">
+            IF_INCOME,
+        </if>
+        <if test="ifTicketUse!=null and ifTicketUse!=''">
+            IF_TICKET_USE,
+        </if>
+        <if test="ifOnewaySale!=null and ifOnewaySale!=''">
+            IF_ONEWAY_SALE,
+        </if>
+        <if test="ifHotlineSummary!=null and ifHotlineSummary!=''">
+            IF_HOTLINE_SUMMARY,
+        </if>
+        <if test="ifHotlineImportant!=null and ifHotlineImportant!=''">
+            IF_HOTLINE_IMPORTANT,
+        </if>
+        <if test="ifTransmitInfo!=null and ifTransmitInfo!=''">
+            IF_TRANSMIT_INFO,
+        </if>
+        <if test="ifProductionSummary!=null and ifProductionSummary!=''">
+            IF_PRODUCTION_SUMMARY,
+        </if>
+        <if test="ifProductionInfo!=null and ifProductionInfo!=''">
+            IF_PRODUCTION_INFO,
+        </if>
+        START_DATE,
+        END_DATE,
+        CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+        VALUES
+        (#{id},
+        <if test="parentId!=null and parentId!=''">
+            #{parentId},
+        </if>
+        <if test="reportType!=null and reportType!=''">
+            #{reportType},
+        </if>
+        <if test="ifPassenger!=null and ifPassenger!=''">
+            #{ifPassenger},
+        </if>
+        <if test="ifIncome!=null and ifIncome!=''">
+            #{ifIncome},
+        </if>
+        <if test="ifTicketUse!=null and ifTicketUse!=''">
+            #{ifTicketUse},
+        </if>
+        <if test="ifOnewaySale!=null and ifOnewaySale!=''">
+            #{ifOnewaySale},
+        </if>
+        <if test="ifHotlineSummary!=null and ifHotlineSummary!=''">
+            #{ifHotlineSummary},
+        </if>
+        <if test="ifHotlineImportant!=null and ifHotlineImportant!=''">
+            #{ifHotlineImportant},
+        </if>
+        <if test="ifTransmitInfo!=null and ifTransmitInfo!=''">
+            #{ifTransmitInfo},
+        </if>
+        <if test="ifProductionSummary!=null and ifProductionSummary!=''">
+            #{ifProductionSummary},
+        </if>
+        <if test="ifProductionInfo!=null and ifProductionInfo!=''">
+            #{ifProductionInfo},
+        </if>
+        to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
+        to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
+        #{createBy}, sysdate,#{createBy}, sysdate)
+    </insert>
+
+    <update id="modifyWeekly">
+        UPDATE TRAFFIC_WEEKLY_REPORT SET
+        <if test="ifPassenger!=null and ifPassenger!=''">
+            IF_PASSENGER=#{ifPassenger},
+        </if>
+        <if test="ifIncome!=null and ifIncome!=''">
+            IF_INCOME=#{ifIncome},
+        </if>
+        <if test="ifTicketUse!=null and ifTicketUse!=''">
+            IF_TICKET_USE=#{ifTicketUse},
+        </if>
+        <if test="ifOnewaySale!=null and ifOnewaySale!=''">
+            IF_ONEWAY_SALE=#{ifOnewaySale},
+        </if>
+        <if test="ifHotlineSummary!=null and ifHotlineSummary!=''">
+            IF_HOTLINE_SUMMARY=#{ifHotlineSummary},
+        </if>
+        <if test="ifHotlineImportant!=null and ifHotlineImportant!=''">
+            IF_HOTLINE_IMPORTANT=#{ifHotlineImportant},
+        </if>
+        <if test="ifTransmitInfo!=null and ifTransmitInfo!=''">
+            IF_TRANSMIT_INFO=#{ifTransmitInfo},
+        </if>
+        <if test="ifProductionSummary!=null and ifProductionSummary!=''">
+            IF_PRODUCTION_SUMMARY=#{ifProductionSummary},
+        </if>
+        <if test="ifProductionInfo!=null and ifProductionInfo!=''">
+            IF_PRODUCTION_INFO=#{ifProductionInfo},
+        </if>
+        <if test="status!=null">
+            STATUS=#{status},
+        </if>
+        UPDATE_BY=#{updateBy},
+        UPDATE_DATE=sysdate
+        WHERE ID=#{id}
     </update>
 
+    <update id="weeklyApprovalComplete">
+        UPDATE TRAFFIC_WEEKLY_REPORT SET
+        STATUS='2',
+        UPDATE_BY=#{updateBy},
+        UPDATE_DATE=sysdate
+        WHERE ID=(SELECT PARENT_ID FROM TRAFFIC_WEEKLY_REPORT WHERE ID = #{id})
+        OR PARENT_ID = (SELECT PARENT_ID FROM TRAFFIC_WEEKLY_REPORT WHERE ID = #{id})
+    </update>
+
+    <update id="modifyMainWeekly">
+        UPDATE TRAFFIC_WEEKLY_REPORT SET
+        <if test="ifPassenger!=null and ifPassenger!=''">
+            IF_PASSENGER=#{ifPassenger},
+        </if>
+        <if test="ifIncome!=null and ifIncome!=''">
+            IF_INCOME=#{ifIncome},
+        </if>
+        <if test="ifTicketUse!=null and ifTicketUse!=''">
+            IF_TICKET_USE=#{ifTicketUse},
+        </if>
+        <if test="ifOnewaySale!=null and ifOnewaySale!=''">
+            IF_ONEWAY_SALE=#{ifOnewaySale},
+        </if>
+        <if test="ifHotlineSummary!=null and ifHotlineSummary!=''">
+            IF_HOTLINE_SUMMARY=#{ifHotlineSummary},
+        </if>
+        <if test="ifHotlineImportant!=null and ifHotlineImportant!=''">
+            IF_HOTLINE_IMPORTANT=#{ifHotlineImportant},
+        </if>
+        <if test="ifTransmitInfo!=null and ifTransmitInfo!=''">
+            IF_TRANSMIT_INFO=#{ifTransmitInfo},
+        </if>
+        <if test="ifProductionSummary!=null and ifProductionSummary!=''">
+            IF_PRODUCTION_SUMMARY=#{ifProductionSummary},
+        </if>
+        <if test="ifProductionInfo!=null and ifProductionInfo!=''">
+            IF_PRODUCTION_INFO=#{ifProductionInfo},
+        </if>
+        <if test="status!=null">
+            STATUS=#{status},
+        </if>
+        UPDATE_BY=#{updateBy},
+        UPDATE_DATE=sysdate
+        WHERE ID=(SELECT PARENT_ID FROM TRAFFIC_WEEKLY_REPORT WHERE ID=#{id})
+    </update>
+
+    <!-- 月报 -->
+    <select id="monthlyList" resultType="com.wzmtr.dom.dto.res.traffic.MonthlyReportResDTO">
+        SELECT dr.ID,dr.PARENT_ID,dr.REPORT_TYPE, dr.IF_PASSENGER, dr.IF_INCOME, dr.IF_TICKET_USE, dr.IF_ONEWAY_SALE,
+        dr.IF_HOTLINE_SUMMARY, dr.IF_HOTLINE_IMPORTANT, dr.IF_TRANSMIT_INFO, dr.IF_PRODUCTION_SUMMARY, dr.IF_PRODUCTION_INFO,
+        dr.START_DATE, dr.END_DATE, dr.STATUS, dr.VERSION,
+        dr.CREATE_DATE, u.NAME AS CREATE_BY
+        FROM TRAFFIC_MONTHLY_REPORT dr
+        LEFT JOIN SYS_USER u ON u.ID=dr.CREATE_BY
+        WHERE dr.DEL_FLAG='0'
+        AND dr.REPORT_TYPE='0'
+        <if test="startDate!=null and startDate!=''">
+            AND dr.START_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'YYYY-MM-DD')>=dr.END_DATE
+        </if>
+        ORDER BY dr.START_DATE desc
+    </select>
+
+    <select id="monthlyDetail" resultType="com.wzmtr.dom.dto.res.traffic.MonthlyReportResDTO">
+        SELECT dr.ID,dr.PARENT_ID,dr.REPORT_TYPE, dr.IF_PASSENGER, dr.IF_INCOME, dr.IF_TICKET_USE, dr.IF_ONEWAY_SALE,
+        dr.IF_HOTLINE_SUMMARY, dr.IF_HOTLINE_IMPORTANT, dr.IF_TRANSMIT_INFO, dr.IF_PRODUCTION_SUMMARY, dr.IF_PRODUCTION_INFO,
+        dr.START_DATE, dr.END_DATE, dr.STATUS, dr.VERSION,
+        dr.CREATE_DATE, u.NAME AS CREATE_BY
+        FROM TRAFFIC_MONTHLY_REPORT dr
+        LEFT JOIN SYS_USER u ON u.ID=dr.CREATE_BY
+        WHERE dr.DEL_FLAG='0' AND dr.ID=#{id}
+    </select>
+
+    <select id="queryMonthlyById" resultType="com.wzmtr.dom.dto.res.traffic.MonthlyReportResDTO">
+        SELECT dr.ID, dr.PARENT_ID,dr.REPORT_TYPE,dr.IF_PASSENGER, dr.IF_INCOME, dr.IF_TICKET_USE, dr.IF_ONEWAY_SALE,
+        dr.IF_HOTLINE_SUMMARY, dr.IF_HOTLINE_IMPORTANT, dr.IF_TRANSMIT_INFO, dr.IF_PRODUCTION_SUMMARY, dr.IF_PRODUCTION_INFO,
+        dr.START_DATE, dr.END_DATE, dr.STATUS, dr.VERSION,
+        dr.CREATE_DATE, u.NAME AS CREATE_BY
+        FROM TRAFFIC_MONTHLY_REPORT dr
+        LEFT JOIN SYS_USER u ON u.ID=dr.CREATE_BY
+        WHERE dr.DEL_FLAG='0'
+        AND dr.PARENT_ID=(SELECT PARENT_ID FROM TRAFFIC_MONTHLY_REPORT t WHERE ID = #{id})
+        ORDER BY dr.START_DATE desc
+    </select>
+
+    <select id="queryMonthlyByParent" resultType="com.wzmtr.dom.dto.res.traffic.MonthlyReportResDTO">
+        SELECT dr.ID, dr.PARENT_ID,dr.REPORT_TYPE,dr.IF_PASSENGER, dr.IF_INCOME, dr.IF_TICKET_USE, dr.IF_ONEWAY_SALE,
+        dr.IF_HOTLINE_SUMMARY, dr.IF_HOTLINE_IMPORTANT, dr.IF_TRANSMIT_INFO, dr.IF_PRODUCTION_SUMMARY, dr.IF_PRODUCTION_INFO,
+        dr.START_DATE, dr.END_DATE, dr.STATUS, dr.VERSION,
+        dr.CREATE_DATE, u.NAME AS CREATE_BY
+        FROM TRAFFIC_MONTHLY_REPORT dr
+        LEFT JOIN SYS_USER u ON u.ID=dr.CREATE_BY
+        WHERE dr.DEL_FLAG='0'
+        AND dr.PARENT_ID=#{parentId}
+        ORDER BY dr.START_DATE desc
+    </select>
+
+    <select id="checkMonthlyExist" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM TRAFFIC_MONTHLY_REPORT
+        WHERE DEL_FLAG='0' AND PARENT_ID = '0'
+        <if test="startDate != null">
+            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+    </select>
+
+    <insert id="addMonthly">
+        INSERT INTO TRAFFIC_MONTHLY_REPORT
+        (ID,
+        <if test="parentId!=null and parentId!=''">
+            PARENT_ID,
+        </if>
+        <if test="reportType!=null and reportType!=''">
+            REPORT_TYPE,
+        </if>
+        <if test="ifPassenger!=null and ifPassenger!=''">
+            IF_PASSENGER,
+        </if>
+        <if test="ifIncome!=null and ifIncome!=''">
+            IF_INCOME,
+        </if>
+        <if test="ifTicketUse!=null and ifTicketUse!=''">
+            IF_TICKET_USE,
+        </if>
+        <if test="ifOnewaySale!=null and ifOnewaySale!=''">
+            IF_ONEWAY_SALE,
+        </if>
+        <if test="ifHotlineSummary!=null and ifHotlineSummary!=''">
+            IF_HOTLINE_SUMMARY,
+        </if>
+        <if test="ifHotlineImportant!=null and ifHotlineImportant!=''">
+            IF_HOTLINE_IMPORTANT,
+        </if>
+        <if test="ifTransmitInfo!=null and ifTransmitInfo!=''">
+            IF_TRANSMIT_INFO,
+        </if>
+        <if test="ifProductionSummary!=null and ifProductionSummary!=''">
+            IF_PRODUCTION_SUMMARY,
+        </if>
+        <if test="ifProductionInfo!=null and ifProductionInfo!=''">
+            IF_PRODUCTION_INFO,
+        </if>
+        START_DATE,
+        END_DATE,
+        CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+        VALUES
+        (#{id},
+        <if test="parentId!=null and parentId!=''">
+            #{parentId},
+        </if>
+        <if test="reportType!=null and reportType!=''">
+            #{reportType},
+        </if>
+        <if test="ifPassenger!=null and ifPassenger!=''">
+            #{ifPassenger},
+        </if>
+        <if test="ifIncome!=null and ifIncome!=''">
+            #{ifIncome},
+        </if>
+        <if test="ifTicketUse!=null and ifTicketUse!=''">
+            #{ifTicketUse},
+        </if>
+        <if test="ifOnewaySale!=null and ifOnewaySale!=''">
+            #{ifOnewaySale},
+        </if>
+        <if test="ifHotlineSummary!=null and ifHotlineSummary!=''">
+            #{ifHotlineSummary},
+        </if>
+        <if test="ifHotlineImportant!=null and ifHotlineImportant!=''">
+            #{ifHotlineImportant},
+        </if>
+        <if test="ifTransmitInfo!=null and ifTransmitInfo!=''">
+            #{ifTransmitInfo},
+        </if>
+        <if test="ifProductionSummary!=null and ifProductionSummary!=''">
+            #{ifProductionSummary},
+        </if>
+        <if test="ifProductionInfo!=null and ifProductionInfo!=''">
+            #{ifProductionInfo},
+        </if>
+        to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
+        to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
+        #{createBy}, sysdate,#{createBy}, sysdate)
+    </insert>
+
+    <update id="modifyMonthly">
+        UPDATE TRAFFIC_MONTHLY_REPORT SET
+        <if test="ifPassenger!=null and ifPassenger!=''">
+            IF_PASSENGER=#{ifPassenger},
+        </if>
+        <if test="ifIncome!=null and ifIncome!=''">
+            IF_INCOME=#{ifIncome},
+        </if>
+        <if test="ifTicketUse!=null and ifTicketUse!=''">
+            IF_TICKET_USE=#{ifTicketUse},
+        </if>
+        <if test="ifOnewaySale!=null and ifOnewaySale!=''">
+            IF_ONEWAY_SALE=#{ifOnewaySale},
+        </if>
+        <if test="ifHotlineSummary!=null and ifHotlineSummary!=''">
+            IF_HOTLINE_SUMMARY=#{ifHotlineSummary},
+        </if>
+        <if test="ifHotlineImportant!=null and ifHotlineImportant!=''">
+            IF_HOTLINE_IMPORTANT=#{ifHotlineImportant},
+        </if>
+        <if test="ifTransmitInfo!=null and ifTransmitInfo!=''">
+            IF_TRANSMIT_INFO=#{ifTransmitInfo},
+        </if>
+        <if test="ifProductionSummary!=null and ifProductionSummary!=''">
+            IF_PRODUCTION_SUMMARY=#{ifProductionSummary},
+        </if>
+        <if test="ifProductionInfo!=null and ifProductionInfo!=''">
+            IF_PRODUCTION_INFO=#{ifProductionInfo},
+        </if>
+        <if test="status!=null">
+            STATUS=#{status},
+        </if>
+        UPDATE_BY=#{updateBy},
+        UPDATE_DATE=sysdate
+        WHERE ID=#{id}
+    </update>
+
+    <update id="monthlyApprovalComplete">
+        UPDATE TRAFFIC_MONTHLY_REPORT SET
+        STATUS='2',
+        UPDATE_BY=#{updateBy},
+        UPDATE_DATE=sysdate
+        WHERE ID=(SELECT PARENT_ID FROM TRAFFIC_MONTHLY_REPORT WHERE ID = #{id})
+        OR PARENT_ID = (SELECT PARENT_ID FROM TRAFFIC_MONTHLY_REPORT WHERE ID = #{id})
+    </update>
+
+    <update id="modifyMainMonthly">
+        UPDATE TRAFFIC_MONTHLY_REPORT SET
+        <if test="ifPassenger!=null and ifPassenger!=''">
+            IF_PASSENGER=#{ifPassenger},
+        </if>
+        <if test="ifIncome!=null and ifIncome!=''">
+            IF_INCOME=#{ifIncome},
+        </if>
+        <if test="ifTicketUse!=null and ifTicketUse!=''">
+            IF_TICKET_USE=#{ifTicketUse},
+        </if>
+        <if test="ifOnewaySale!=null and ifOnewaySale!=''">
+            IF_ONEWAY_SALE=#{ifOnewaySale},
+        </if>
+        <if test="ifHotlineSummary!=null and ifHotlineSummary!=''">
+            IF_HOTLINE_SUMMARY=#{ifHotlineSummary},
+        </if>
+        <if test="ifHotlineImportant!=null and ifHotlineImportant!=''">
+            IF_HOTLINE_IMPORTANT=#{ifHotlineImportant},
+        </if>
+        <if test="ifTransmitInfo!=null and ifTransmitInfo!=''">
+            IF_TRANSMIT_INFO=#{ifTransmitInfo},
+        </if>
+        <if test="ifProductionSummary!=null and ifProductionSummary!=''">
+            IF_PRODUCTION_SUMMARY=#{ifProductionSummary},
+        </if>
+        <if test="ifProductionInfo!=null and ifProductionInfo!=''">
+            IF_PRODUCTION_INFO=#{ifProductionInfo},
+        </if>
+        <if test="status!=null">
+            STATUS=#{status},
+        </if>
+        UPDATE_BY=#{updateBy},
+        UPDATE_DATE=sysdate
+        WHERE ID=(SELECT PARENT_ID FROM TRAFFIC_MONTHLY_REPORT WHERE ID=#{id})
+    </update>
 </mapper>

@@ -3,6 +3,7 @@ package com.wzmtr.dom.mapper.system;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.system.ApprovalReqDTO;
 import com.wzmtr.dom.dto.req.system.TodoReqDTO;
+import com.wzmtr.dom.dto.res.system.FlowNodeResDTO;
 import com.wzmtr.dom.dto.res.system.TodoResDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -46,6 +47,36 @@ public interface WorkbenchMapper {
      * @param approvalReqDTO
      */
     void addTodo(ApprovalReqDTO approvalReqDTO);
+
+    /**
+     * 查询待办
+     * @param processKey
+     * @param reportId
+     * @param nodes
+     * @return 待办列表
+     */
+    List<TodoResDTO> queryTodoByNode(String processKey,String reportId,List<String> nodes);
+
+    /**
+     * 查询待办
+     * @param parentId
+     * @return 待办列表
+     */
+    List<TodoResDTO> queryTodoByParent(String parentId);
+
+    /**
+     * 查询下一个节点
+     * @param nodeId
+     * @return 节点名
+     */
+    String queryNextNode(String nodeId);
+
+    /**
+     * 查询节点
+     * @param nodeId
+     * @return 节点信息
+     */
+    FlowNodeResDTO nodeDetail(String nodeId);
 
     /**
      * 根据流程节点获取审批角色

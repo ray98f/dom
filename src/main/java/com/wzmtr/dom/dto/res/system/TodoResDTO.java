@@ -110,4 +110,22 @@ public class TodoResDTO {
      */
     @ApiModelProperty(value = "新增人")
     private String createBy;
+
+    /**
+     * 标题
+     */
+    @ApiModelProperty(value = "标题")
+    private String title;
+
+    /**
+     * 是否隐藏
+     */
+    @ApiModelProperty(value = "是否隐藏")
+    private String isHide;
+
+    /**
+     * 父待办
+     */
+    @ApiModelProperty(value = "父待办")
+    private String parentId;
 }

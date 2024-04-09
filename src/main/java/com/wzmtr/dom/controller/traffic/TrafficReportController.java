@@ -3,7 +3,10 @@ package com.wzmtr.dom.controller.traffic;
 
 import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.dto.req.traffic.DailyReportReqDTO;
+import com.wzmtr.dom.dto.req.traffic.WeeklyReportReqDTO;
 import com.wzmtr.dom.dto.res.traffic.DailyReportResDTO;
+import com.wzmtr.dom.dto.res.traffic.MonthlyReportResDTO;
+import com.wzmtr.dom.dto.res.traffic.WeeklyReportResDTO;
 import com.wzmtr.dom.entity.BaseIdsEntity;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
@@ -99,9 +102,83 @@ public class TrafficReportController {
         return DataResponse.success();
     }
 
+    /**
+     * 分页查询周报列表
+     * @param startDate 开始时间
+     * @param endDate 结束时间
+     * @param pageReqDTO 分页参数
+     * @return 周报列表
+     */
+    @GetMapping("/weekly/list")
+    @ApiOperation(value = "周报列表(分页)")
+    public PageResponse<WeeklyReportResDTO> weeklyList(@RequestParam(required = false) String startDate,
+                                                       @RequestParam(required = false) String endDate,
+                                                       @Valid PageReqDTO pageReqDTO) {
+        return PageResponse.of(reportService.weeklyList(startDate, endDate, pageReqDTO));
+    }
 
+    /**
+     * 获取周报详情
+     * @param id id
+     * @return 周报详情
+     */
+    @GetMapping("/weekly/detail")
+    @ApiOperation(value = "周报详情")
+    public DataResponse<WeeklyReportResDTO> detailWeekly(@RequestParam String id) {
+        return DataResponse.of(reportService.detailWeekly(id));
+    }
 
+    /**
+     * 新增周报
+     * @param weeklyReportReqDTO 周报参数
+     * @return 成功
+     */
+    @PostMapping("/weekly/add")
+    @ApiOperation(value = "新增-周报")
+    public DataResponse<T> addWeekly(@CurrUser CurrentLoginUser currentLoginUser,
+                                    @RequestBody WeeklyReportReqDTO weeklyReportReqDTO) {
+        reportService.addWeekly(currentLoginUser,weeklyReportReqDTO);
+        return DataResponse.success();
+    }
 
+    /**
+     * 编辑周报
+     * @param weeklyReportReqDTO 周报参数
+     * @return 成功
+     */
+    @PostMapping("/weekly/modify")
+    @ApiOperation(value = "编辑-周报")
+    public DataResponse<T> modifyWeekly(@CurrUser CurrentLoginUser currentLoginUser,
+                                       @RequestBody WeeklyReportReqDTO weeklyReportReqDTO) {
+        reportService.modifyWeekly(currentLoginUser,weeklyReportReqDTO);
+        return DataResponse.success();
+    }
 
+    /**
+     * 报审-周报
+     * @param weeklyReportReqDTO 周报参数
+     * @return 成功
+     */
+    @PostMapping("/weekly/commit")
+    @ApiOperation(value = "报审-周报")
+    public DataResponse<T> commitDaily(@CurrUser CurrentLoginUser currentLoginUser,
+                                       @RequestBody WeeklyReportReqDTO weeklyReportReqDTO) {
+        reportService.commitWeekly(currentLoginUser,weeklyReportReqDTO);
+        return DataResponse.success();
+    }
 
+    /**
+     * 分页查询月报列表
+     * @param startDate 开始时间
+     * @param endDate 结束时间
+     * @param pageReqDTO 分页参数
+     * @return 月报列表
+     */
+    @GetMapping("/monthly/list")
+    @ApiOperation(value = "周报列表(分页)")
+    public PageResponse<MonthlyReportResDTO> monthlyList(@RequestParam(required = false) String startDate,
+                                                         @RequestParam(required = false) String endDate,
+                                                         @Valid PageReqDTO pageReqDTO) {
+        return PageResponse.of(reportService.monthlyList(startDate, endDate, pageReqDTO));
+    }
 }

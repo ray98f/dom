@@ -156,13 +156,26 @@ public class CommonConstants {
     public static final String  EVENT_TYPE_5 = "5";
 
     public static final String DEFAULT_PRODUCTION_TITLE = "安全生产情况";
-    public static final String[]  S2_STATION_ARRAY = {"231","232","233","234","235","236","237","238","239","240","241","242","243","244","245","246","247","248","249","250"};
+    public static final String[] S2_STATION_ARRAY = {"231","232","233","234","235","236","237","238","239","240","241","242","243","244","245","246","247","248","249","250"};
     public static final String[] TRAFFIC_REPORT_TYPE = {"1","2","3"};
     public static final String  TRAFFIC_DAILY_REPORT = "TRAFFIC_DAILY_REPORT";
-    /***/
+
+    public static final String[] TRAFFIC_DAILY_NODE1_SUB = {"traffic_daily_node1_sub1","traffic_daily_node1_sub2","traffic_daily_node1_sub3"};
     public static final String  TRAFFIC_DAILY_NODE1_SUB1 ="traffic_daily_node1_sub1";
     public static final String  TRAFFIC_DAILY_NODE1_SUB2 ="traffic_daily_node1_sub2";
     public static final String  TRAFFIC_DAILY_NODE1_SUB3 ="traffic_daily_node1_sub3";
+
+    public static final String  TRAFFIC_WEEKLY_REPORT = "TRAFFIC_WEEKLY_REPORT";
+    public static final String[] TRAFFIC_WEEKLY_NODE1_SUB = {"traffic_weekly_node1_sub1","traffic_weekly_node1_sub2","traffic_weekly_node1_sub3"};
+    public static final String  TRAFFIC_WEEKLY_NODE1_SUB1 ="traffic_weekly_node1_sub1";
+    public static final String  TRAFFIC_WEEKLY_NODE1_SUB2 ="traffic_weekly_node1_sub2";
+    public static final String  TRAFFIC_WEEKLY_NODE1_SUB3 ="traffic_weekly_node1_sub3";
+
+    public static final String  TRAFFIC_MONTHLY_REPORT = "TRAFFIC_MONTHLY_REPORT";
+    public static final String[]  TRAFFIC_MONTHLY_NODE1_SUB = {"traffic_monthly_node1_sub1","traffic_monthly_node1_sub2","traffic_monthly_node1_sub3"};
+    public static final String  TRAFFIC_MONTHLY_NODE1_SUB1 ="traffic_monthly_node1_sub1";
+    public static final String  TRAFFIC_MONTHLY_NODE1_SUB2 ="traffic_monthly_node1_sub2";
+    public static final String  TRAFFIC_MONTHLY_NODE1_SUB3 ="traffic_monthly_node1_sub3";
 
     public static final String[] OPERATE_INDICATOR_TYPE = {"1","2","3","4"};
 
