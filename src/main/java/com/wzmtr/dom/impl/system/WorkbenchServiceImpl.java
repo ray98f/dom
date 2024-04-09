@@ -20,6 +20,7 @@ import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
 import com.wzmtr.dom.mapper.system.WorkbenchMapper;
 import com.wzmtr.dom.mapper.traffic.TrafficReportMapper;
+import com.wzmtr.dom.mapper.vehicle.VehicleReportMapper;
 import com.wzmtr.dom.service.system.WorkbenchService;
 import com.wzmtr.dom.utils.StringUtils;
 import com.wzmtr.dom.utils.TokenUtils;
@@ -40,6 +41,9 @@ import java.util.Objects;
  */
 @Service
 public class WorkbenchServiceImpl implements WorkbenchService {
+
+    @Autowired
+    private VehicleReportMapper vehicleReportMapper;
 
     @Autowired
     private TrafficReportMapper trafficReportMapper;
@@ -73,13 +77,9 @@ public class WorkbenchServiceImpl implements WorkbenchService {
         // todo 根据流程配置进行下一步审核
         switch (Objects.requireNonNull(BpmnFlowEnum.find(todoReqDTO.getProcessKey()))){
             case vehicle_daily:
-                vehicleDailyApproval(todoReqDTO,res);
-                break;
             case vehicle_weekly:
-                //vehicleWeeklyApproval(todoReqDTO,res);
-                break;
             case vehicle_monthly:
-                //vehicleMonthlyApproval(todoReqDTO,res);
+                vehicleReportApproval(todoReqDTO,res);
                 break;
             case traffic_daily:
                 trafficDailyApproval(todoReqDTO,res);
@@ -122,12 +122,96 @@ public class WorkbenchServiceImpl implements WorkbenchService {
     }
 
     /**
-     * 车辆部日报审批
+     * 车辆部报表审批
      *
      * */
     @Transactional(rollbackFor = Exception.class)
-    private void vehicleDailyApproval(TodoReqDTO todoReqDTO,TodoResDTO todoResDTO){
+    private void vehicleReportApproval(TodoReqDTO todoReqDTO,TodoResDTO todoResDTO){
 
+        //
+        String titlePrefix = "";
+
+        //流转下一节点标记
+        String goNextFlag = CommonConstants.ONE_STRING;
+
+        String status = "";
+
+        //通过
+        if(CommonConstants.ONE_STRING.equals(todoReqDTO.getApprovalStatus())){
+            status = CommonConstants.THREE_STRING;
+        }else{
+            status = CommonConstants.ZERO_STRING;
+            goNextFlag = CommonConstants.ZERO_STRING;
+        }
+        switch (todoResDTO.getDataType()){
+            case CommonConstants.DATA_TYPE_DAILY:
+                titlePrefix = "车辆部日报";
+                updateVehicleDaily(todoReqDTO.getReportId(),status);
+                break;
+            case CommonConstants.DATA_TYPE_WEEKLY:
+                titlePrefix = "车辆部周报";
+                updateVehicleWeekly(todoReqDTO.getReportId(),status);
+                break;
+            case CommonConstants.DATA_TYPE_MONTHLY:
+                titlePrefix = "车辆部月报";
+                updateVehicleMonthly(todoReqDTO.getReportId(),status);
+                break;
+        }
+
+        if(CommonConstants.ONE_STRING.equals(goNextFlag)){
+            String nextNode = workbenchMapper.queryNextNode(todoResDTO.getCurrentNode());
+            FlowNodeResDTO nodeDetail = workbenchMapper.nodeDetail(nextNode);
+            List<String> nextUserList = getUserByNode(nextNode);
+
+            String title = titlePrefix+"-请审批";
+
+            //下一节点不是待办,则更新报表为审批完成
+            if(!nodeDetail.getNodeType().equals(CommonConstants.ONE_STRING)){
+                title = titlePrefix+"-请查阅";
+                status = CommonConstants.TWO_STRING;
+                switch (todoResDTO.getDataType()){
+                    case CommonConstants.DATA_TYPE_DAILY:
+                        updateVehicleDaily(todoReqDTO.getReportId(),status);
+                        break;
+                    case CommonConstants.DATA_TYPE_WEEKLY:
+                        updateVehicleWeekly(todoReqDTO.getReportId(),status);
+                        break;
+                    case CommonConstants.DATA_TYPE_MONTHLY:
+                        updateVehicleMonthly(todoReqDTO.getReportId(),status);
+                        break;
+                }
+            }
+            //节点流转
+            for(String u:nextUserList){
+                addTodo( title,
+                        todoReqDTO.getReportId(),
+                        todoResDTO.getReportTable(),
+                        nodeDetail.getNodeType(),
+                        todoResDTO.getDataType(),
+                        nodeDetail.getFlowId(),
+                        nodeDetail.getNodeId(),u,"0",null);
+            }
+        }
+    }
+    private void updateVehicleDaily(String id,String status){
+        com.wzmtr.dom.dto.req.vehicle.DailyReportReqDTO modifyReq = new com.wzmtr.dom.dto.req.vehicle.DailyReportReqDTO();
+        modifyReq.setId(id);
+        modifyReq.setStatus(status);
+        vehicleReportMapper.modifyDailyByFlow(modifyReq);
+    }
+
+    private void updateVehicleWeekly(String id,String status){
+        com.wzmtr.dom.dto.req.vehicle.WeeklyReportReqDTO modifyReq = new com.wzmtr.dom.dto.req.vehicle.WeeklyReportReqDTO();
+        modifyReq.setId(id);
+        modifyReq.setStatus(status);
+        vehicleReportMapper.modifyWeeklyByFlow(modifyReq);
+    }
+
+    private void updateVehicleMonthly(String id,String status){
+        com.wzmtr.dom.dto.req.vehicle.MonthlyReportReqDTO modifyReq = new com.wzmtr.dom.dto.req.vehicle.MonthlyReportReqDTO();
+        modifyReq.setId(id);
+        modifyReq.setStatus(status);
+        vehicleReportMapper.modifyMonthlyByFlow(modifyReq);
     }
 
     /**

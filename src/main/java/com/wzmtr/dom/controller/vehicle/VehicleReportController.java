@@ -1,5 +1,6 @@
 package com.wzmtr.dom.controller.vehicle;
 
+import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.dto.req.vehicle.DailyReportReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.MonthlyReportReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.WeeklyReportReqDTO;
@@ -7,6 +8,7 @@ import com.wzmtr.dom.dto.res.vehicle.DailyReportResDTO;
 import com.wzmtr.dom.dto.res.vehicle.MonthlyReportResDTO;
 import com.wzmtr.dom.dto.res.vehicle.WeeklyReportResDTO;
 import com.wzmtr.dom.entity.BaseIdsEntity;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.entity.response.PageResponse;
@@ -229,6 +231,45 @@ public class VehicleReportController {
     @ApiOperation(value = "删除-月报(单删+批量删除)")
     public DataResponse<T> deleteMonthly(@RequestBody BaseIdsEntity baseIdsEntity) {
         vehicleReportService.deleteMonthly(baseIdsEntity.getIds());
+        return DataResponse.success();
+    }
+
+    /**
+     * 报审-日报
+     * @param dailyReportReqDTO 日报参数
+     * @return 成功
+     */
+    @PostMapping("/daily/commit")
+    @ApiOperation(value = "报审-日报")
+    public DataResponse<T> commitDaily(@CurrUser CurrentLoginUser currentLoginUser,
+                                       @RequestBody DailyReportReqDTO dailyReportReqDTO) {
+        vehicleReportService.commitDaily(currentLoginUser,dailyReportReqDTO);
+        return DataResponse.success();
+    }
+
+    /**
+     * 报审-周报
+     * @param weeklyReportReqDTO 周报参数
+     * @return 成功
+     */
+    @PostMapping("/weekly/commit")
+    @ApiOperation(value = "报审-周报")
+    public DataResponse<T> commitWeekly(@CurrUser CurrentLoginUser currentLoginUser,
+                                        @RequestBody WeeklyReportReqDTO weeklyReportReqDTO) {
+        vehicleReportService.commitWeekly(currentLoginUser,weeklyReportReqDTO);
+        return DataResponse.success();
+    }
+
+    /**
+     * 报审-月报
+     * @param monthlyReportReqDTO 月报参数
+     * @return 成功
+     */
+    @PostMapping("/monthly/commit")
+    @ApiOperation(value = "报审-月报")
+    public DataResponse<T> commitMonthly(@CurrUser CurrentLoginUser currentLoginUser,
+                                         @RequestBody MonthlyReportReqDTO monthlyReportReqDTO) {
+        vehicleReportService.commitMonthly(currentLoginUser,monthlyReportReqDTO);
         return DataResponse.success();
     }
 }

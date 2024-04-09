@@ -3,6 +3,7 @@ package com.wzmtr.dom.controller.traffic;
 
 import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.dto.req.traffic.DailyReportReqDTO;
+import com.wzmtr.dom.dto.req.traffic.MonthlyReportReqDTO;
 import com.wzmtr.dom.dto.req.traffic.WeeklyReportReqDTO;
 import com.wzmtr.dom.dto.res.traffic.DailyReportResDTO;
 import com.wzmtr.dom.dto.res.traffic.MonthlyReportResDTO;
@@ -161,7 +162,7 @@ public class TrafficReportController {
      */
     @PostMapping("/weekly/commit")
     @ApiOperation(value = "报审-周报")
-    public DataResponse<T> commitDaily(@CurrUser CurrentLoginUser currentLoginUser,
+    public DataResponse<T> commitWeekly(@CurrUser CurrentLoginUser currentLoginUser,
                                        @RequestBody WeeklyReportReqDTO weeklyReportReqDTO) {
         reportService.commitWeekly(currentLoginUser,weeklyReportReqDTO);
         return DataResponse.success();
@@ -175,10 +176,60 @@ public class TrafficReportController {
      * @return 月报列表
      */
     @GetMapping("/monthly/list")
-    @ApiOperation(value = "周报列表(分页)")
+    @ApiOperation(value = "月报列表(分页)")
     public PageResponse<MonthlyReportResDTO> monthlyList(@RequestParam(required = false) String startDate,
                                                          @RequestParam(required = false) String endDate,
                                                          @Valid PageReqDTO pageReqDTO) {
         return PageResponse.of(reportService.monthlyList(startDate, endDate, pageReqDTO));
+    }
+
+    /**
+     * 获取月报详情
+     * @param id id
+     * @return 月报详情
+     */
+    @GetMapping("/monthly/detail")
+    @ApiOperation(value = "月报详情")
+    public DataResponse<MonthlyReportResDTO> detailMonthly(@RequestParam String id) {
+        return DataResponse.of(reportService.detailMonthly(id));
+    }
+
+    /**
+     * 新增月报
+     * @param monthlyReportReqDTO 月报参数
+     * @return 成功
+     */
+    @PostMapping("/monthly/add")
+    @ApiOperation(value = "新增-月报")
+    public DataResponse<T> addWeekly(@CurrUser CurrentLoginUser currentLoginUser,
+                                     @RequestBody MonthlyReportReqDTO monthlyReportReqDTO) {
+        reportService.addMonthly(currentLoginUser,monthlyReportReqDTO);
+        return DataResponse.success();
+    }
+
+    /**
+     * 编辑月报
+     * @param monthlyReportReqDTO 月报参数
+     * @return 成功
+     */
+    @PostMapping("/monthly/modify")
+    @ApiOperation(value = "编辑-月报")
+    public DataResponse<T> modifyMonthly(@CurrUser CurrentLoginUser currentLoginUser,
+                                        @RequestBody MonthlyReportReqDTO monthlyReportReqDTO) {
+        reportService.modifyMonthly(currentLoginUser,monthlyReportReqDTO);
+        return DataResponse.success();
+    }
+
+    /**
+     * 报审-月报
+     * @param monthlyReportReqDTO 月报参数
+     * @return 成功
+     */
+    @PostMapping("/monthly/commit")
+    @ApiOperation(value = "报审-月报")
+    public DataResponse<T> commitMonthly(@CurrUser CurrentLoginUser currentLoginUser,
+                                       @RequestBody MonthlyReportReqDTO monthlyReportReqDTO) {
+        reportService.commitMonthly(currentLoginUser,monthlyReportReqDTO);
+        return DataResponse.success();
     }
 }

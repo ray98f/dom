@@ -157,6 +157,14 @@ public class CommonConstants {
 
     public static final String DEFAULT_PRODUCTION_TITLE = "安全生产情况";
     public static final String[] S2_STATION_ARRAY = {"231","232","233","234","235","236","237","238","239","240","241","242","243","244","245","246","247","248","249","250"};
+
+    public static final String  VEHICLE_DAILY_REPORT = "VEHICLE_DAILY_REPORT";
+    public static final String  VEHICLE_WEEKLY_REPORT = "VEHICLE_WEEKLY_REPORT";
+    public static final String  VEHICLE_MONTHLY_REPORT = "VEHICLE_MONTHLY_REPORT";
+    public static final String  VEHICLE_DAILY_NODE1 ="vehicle_daily_node1";
+    public static final String  VEHICLE_WEEKLY_NODE1 ="vehicle_weekly_node1";
+    public static final String  VEHICLE_MONTHLY_NODE1 ="vehicle_monthly_node1";
+
     public static final String[] TRAFFIC_REPORT_TYPE = {"1","2","3"};
     public static final String  TRAFFIC_DAILY_REPORT = "TRAFFIC_DAILY_REPORT";
 

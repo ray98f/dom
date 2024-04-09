@@ -2,16 +2,21 @@ package com.wzmtr.dom.impl.vehicle;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.page.PageMethod;
+import com.wzmtr.dom.constant.CommonConstants;
+import com.wzmtr.dom.dto.req.system.ApprovalReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.DailyReportReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.MonthlyReportReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.WeeklyReportReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.DailyReportResDTO;
 import com.wzmtr.dom.dto.res.vehicle.MonthlyReportResDTO;
 import com.wzmtr.dom.dto.res.vehicle.WeeklyReportResDTO;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
+import com.wzmtr.dom.enums.BpmnFlowEnum;
 import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
 import com.wzmtr.dom.mapper.vehicle.VehicleReportMapper;
+import com.wzmtr.dom.service.system.WorkbenchService;
 import com.wzmtr.dom.service.vehicle.VehicleReportService;
 import com.wzmtr.dom.utils.StringUtils;
 import com.wzmtr.dom.utils.TokenUtils;
@@ -28,6 +33,10 @@ import java.util.List;
  */
 @Service
 public class VehicleReportServiceImpl implements VehicleReportService {
+
+
+    @Autowired
+    private WorkbenchService workbenchService;
 
     @Autowired
     private VehicleReportMapper vehicleReportMapper;
@@ -159,6 +168,54 @@ public class VehicleReportServiceImpl implements VehicleReportService {
         if (StringUtils.isNotEmpty(ids)) {
             vehicleReportMapper.deleteMonthly(ids, TokenUtils.getCurrentPersonId());
         }
+    }
+
+    @Override
+    public void commitDaily(CurrentLoginUser currentLoginUser, DailyReportReqDTO dailyReportReqDTO) {
+        //报表审核参数
+        ApprovalReqDTO approvalReqDTO = new ApprovalReqDTO();
+        approvalReqDTO.setTitle("车辆部日报-请审批");
+        approvalReqDTO.setReportId(dailyReportReqDTO.getId());
+        approvalReqDTO.setReportTable(CommonConstants.VEHICLE_DAILY_REPORT);
+        approvalReqDTO.setTodoType(CommonConstants.ONE_STRING);
+        approvalReqDTO.setDataType(CommonConstants.DATA_TYPE_DAILY);
+        approvalReqDTO.setProcessKey(BpmnFlowEnum.vehicle_daily.value());
+        approvalReqDTO.setCurrentNode(CommonConstants.VEHICLE_DAILY_NODE1);
+
+        //提交流程
+        workbenchService.commitApproval(approvalReqDTO);
+    }
+
+    @Override
+    public void commitWeekly(CurrentLoginUser currentLoginUser, WeeklyReportReqDTO weeklyReportReqDTO) {
+        //报表审核参数
+        ApprovalReqDTO approvalReqDTO = new ApprovalReqDTO();
+        approvalReqDTO.setTitle("车辆部周报-请审批");
+        approvalReqDTO.setReportId(weeklyReportReqDTO.getId());
+        approvalReqDTO.setReportTable(CommonConstants.VEHICLE_WEEKLY_REPORT);
+        approvalReqDTO.setTodoType(CommonConstants.ONE_STRING);
+        approvalReqDTO.setDataType(CommonConstants.DATA_TYPE_WEEKLY);
+        approvalReqDTO.setProcessKey(BpmnFlowEnum.vehicle_weekly.value());
+        approvalReqDTO.setCurrentNode(CommonConstants.VEHICLE_WEEKLY_NODE1);
+
+        //提交流程
+        workbenchService.commitApproval(approvalReqDTO);
+    }
+
+    @Override
+    public void commitMonthly(CurrentLoginUser currentLoginUser, MonthlyReportReqDTO monthlyReportReqDTO) {
+        //报表审核参数
+        ApprovalReqDTO approvalReqDTO = new ApprovalReqDTO();
+        approvalReqDTO.setTitle("车辆部月报-请审批");
+        approvalReqDTO.setReportId(monthlyReportReqDTO.getId());
+        approvalReqDTO.setReportTable(CommonConstants.VEHICLE_MONTHLY_REPORT);
+        approvalReqDTO.setTodoType(CommonConstants.ONE_STRING);
+        approvalReqDTO.setDataType(CommonConstants.DATA_TYPE_MONTHLY);
+        approvalReqDTO.setProcessKey(BpmnFlowEnum.vehicle_monthly.value());
+        approvalReqDTO.setCurrentNode(CommonConstants.VEHICLE_MONTHLY_NODE1);
+
+        //提交流程
+        workbenchService.commitApproval(approvalReqDTO);
     }
 
 }
