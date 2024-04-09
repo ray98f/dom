@@ -90,16 +90,11 @@ public class WorkbenchServiceImpl implements WorkbenchService {
             case traffic_monthly:
                 trafficMonthlyApproval(todoReqDTO,res);
                 break;
-/*
-                case operate_daily:
-                    operateDailyApproval(todoReqDTO,res);
-                    break;
-                case operate_weekly:
-                    operateWeeklyApproval(todoReqDTO,res);
-                    break;
-                case operate_monthly:
-                    operateMonthlyApproval(todoReqDTO,res);
-                    break;*/
+            case operate_daily:
+            case operate_weekly:
+            case operate_monthly:
+                operateReportApproval(todoReqDTO,res);
+                break;
             default:
                 break;
         }
@@ -119,6 +114,15 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                 workbenchMapper.addTodo(approvalReqDTO);
             }
         }
+    }
+
+    /**
+     * 运营日报/周报/月报表审批
+     *
+     * */
+    @Transactional(rollbackFor = Exception.class)
+    private void operateReportApproval(TodoReqDTO todoReqDTO,TodoResDTO todoResDTO){
+        //TODO
     }
 
     /**
