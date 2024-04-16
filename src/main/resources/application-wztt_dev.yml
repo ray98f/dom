@@ -33,16 +33,16 @@ excluded:
 
 sso:
   url: http://zxgd.softether.net:4443/cas
-  home: http://192.168.30.140:8100/dom/
+  home: http://192.168.30.140:8900/dom/
 
 cas:
   serverUrlPrefix: "${sso.url}"
-  serviceUrlPrefix: "http://192.168.30.140:8100/dom"
+  serviceUrlPrefix: "http://192.168.30.140:8900/dom"
   casFilterUrlPattern: "/cas"
   loginUrlPattern: "/login"
   logoutUrlPattern: "/logout"
   successUrlPattern: "/index"
-  serviceFront: "http://192.168.30.140:8199/index.html"
+  serviceFront: "http://192.168.30.140:8899/index.html"
 
 diboot:
   core:
