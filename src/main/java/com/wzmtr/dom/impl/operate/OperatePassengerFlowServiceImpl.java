@@ -81,10 +81,10 @@ public class OperatePassengerFlowServiceImpl implements OperatePassengerFlowServ
     }
 
     @Override
-    public PassengerFlowDetailResDTO detail(String id) {
+    public PassengerFlowDetailResDTO detail(String id, String startDate, String endDate) {
         PassengerFlowDetailResDTO passengerFlowDetailResDTO = new PassengerFlowDetailResDTO();
         // 获取详情
-        OperatePassengerFlowDetailDO detail = passengerFlowDetailMapper.selectById(id);
+        OperatePassengerFlowDetailDO detail = passengerFlowDetailMapper.info(id,startDate,endDate);
         if (null != detail) {
             passengerFlowDetailResDTO = BeanUtils.convert(detail, PassengerFlowDetailResDTO.class);
             // 车站客流列表

@@ -19,7 +19,16 @@
     <select id="queryInfoById" resultType="com.wzmtr.dom.dto.res.operate.IndicatorDetailResDTO">
         SELECT *
         FROM OPERATE_INDICATOR_RECORD
-        WHERE ID=#{id} AND DEL_FLAG = '0'
+        WHERE DEL_FLAG = '0'
+        <if test="startDate != null">
+            AND ID=#{id}
+        </if>
+        <if test="startDate != null">
+            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
     </select>
 
     <select id="checkExist" resultType="java.lang.Integer">
@@ -39,8 +48,15 @@
         SELECT *
         FROM OPERATE_INDICATOR_INFO
         WHERE DEL_FLAG='0'
-        AND RECORD_ID = #{recordId}
-
+        <if test="recordId != null">
+            AND RECORD_ID = #{recordId}
+        </if>
+        <if test="startDate != null">
+            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
         ORDER BY START_DATE desc
     </select>
 
@@ -48,8 +64,15 @@
         SELECT *
         FROM OPERATE_INDICATOR_POWER
         WHERE DEL_FLAG='0'
-        AND RECORD_ID = #{recordId}
-
+        <if test="recordId != null">
+            AND RECORD_ID = #{recordId}
+        </if>
+        <if test="startDate != null">
+            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
         ORDER BY START_DATE desc
     </select>
     <select id="queryInfoByDate" resultType="com.wzmtr.dom.dto.res.operate.IndicatorInfoResDTO">

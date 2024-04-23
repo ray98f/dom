@@ -41,21 +41,21 @@ public interface OperateIndicatorMapper {
      * @param id 入参数
      * @return LineEventResDTO
      */
-    IndicatorDetailResDTO queryInfoById(String id);
+    IndicatorDetailResDTO queryInfoById(String id,String startDate, String endDate);
 
     /**
      * 详情
      * @param recordId 入参数
       @return LineEventResDTO
      */
-    List<IndicatorInfoResDTO> infoList(String recordId);
+    List<IndicatorInfoResDTO> infoList(String recordId,String startDate, String endDate);
 
     /**
      * 详情
      * @param recordId 入参数
      @return LineEventResDTO
      */
-    IndicatorPowerResDTO queryPower(String recordId);
+    IndicatorPowerResDTO queryPower(String recordId,String startDate, String endDate);
     IndicatorPowerResDTO queryPowerByDate(String startDate, String endDate, String dataType);
 
     /**

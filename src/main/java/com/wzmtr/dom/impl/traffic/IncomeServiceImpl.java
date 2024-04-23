@@ -46,10 +46,10 @@ public class IncomeServiceImpl implements IncomeService {
 
     @Override
     public void add(IncomeAddReqDTO reqDTO) {
-        IncomeRecordDO incomeRecordDO = reqDTO.toDO(reqDTO);
-        incomeRecordDO.setCreateBy(TokenUtils.getCurrentPersonId());
-        incomeRecordDO.setUpdateBy(TokenUtils.getCurrentPersonId());
-        incomeMapper.insert(incomeRecordDO);
+        reqDTO.setCreateBy(TokenUtils.getCurrentPersonId());
+        reqDTO.setUpdateBy(TokenUtils.getCurrentPersonId());
+        reqDTO.setId(TokenUtils.getUuId());
+        incomeMapper.add(reqDTO);
     }
 
 

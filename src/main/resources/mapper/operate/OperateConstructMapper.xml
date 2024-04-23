@@ -20,6 +20,12 @@
         SELECT *
         FROM OPERATE_CONSTRUCT_RECORD
         WHERE ID=#{id} AND DEL_FLAG = '0'
+        <if test="startDate != null">
+            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
     </select>
 
     <select id="checkExist" resultType="java.lang.Integer">

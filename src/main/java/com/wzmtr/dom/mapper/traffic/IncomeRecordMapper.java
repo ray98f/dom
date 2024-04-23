@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dataobject.traffic.IncomeRecordDO;
 import com.wzmtr.dom.dto.req.common.SidReqDTO;
+import com.wzmtr.dom.dto.req.traffic.income.IncomeAddReqDTO;
 import com.wzmtr.dom.dto.req.traffic.income.IncomeListReqDTO;
 import com.wzmtr.dom.dto.res.traffic.PassengerResDTO;
 import com.wzmtr.dom.dto.res.traffic.income.IncomeDetailResDTO;
@@ -23,4 +24,5 @@ public interface IncomeRecordMapper extends BaseMapper<IncomeRecordDO> {
 
     IncomeRecordDO selectDetailById(SidReqDTO reqDTO);
 
+    void add(IncomeAddReqDTO req);
 }

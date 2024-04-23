@@ -54,8 +54,8 @@ public class OperateConstructServiceImpl implements OperateConstructService {
     }
 
     @Override
-    public ConstructRecordResDTO detail(String id) {
-        return operateConstructMapper.queryInfoById(id);
+    public ConstructRecordResDTO detail(String id,String startDate, String endDate) {
+        return operateConstructMapper.queryInfoById(id,startDate,endDate);
     }
 
     @Override

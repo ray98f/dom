@@ -42,8 +42,8 @@ public class OperateEventServiceImpl implements OperateEventService {
     }
 
     @Override
-    public OperateEventResDTO detail(String id) {
-        return operateEventMapper.queryInfoById(id);
+    public OperateEventResDTO detail(String id,String startDate, String endDate) {
+        return operateEventMapper.queryInfoById(id,startDate,endDate);
     }
 
     @Override

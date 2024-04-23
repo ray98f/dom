@@ -28,13 +28,6 @@ public interface OperateConstructService {
     Page<ConstructRecordResDTO> list(String dataType, String startDate, String endDate, PageReqDTO pageReqDTO);
 
     /**
-     * 正线/车场事件记录-详情
-     * @param id 入参数
-     * @return IndicatorResDTO
-     */
-    ConstructRecordResDTO detail(String id);
-
-    /**
      * 正线/车场事件记录-新增
      * @param currentLoginUser 入参数
      * @param constructRecordReqDTO 入参数
@@ -107,4 +100,10 @@ public interface OperateConstructService {
      * @param ids ids
      */
     void deleteEvent(List<String> ids);
+    /**
+     * 正线/车场事件记录-详情
+     * @param id 入参数
+     * @return IndicatorResDTO
+     */
+    ConstructRecordResDTO detail(String id, String startDate, String endDate);
 }

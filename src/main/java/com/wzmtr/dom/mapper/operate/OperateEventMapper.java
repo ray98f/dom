@@ -50,7 +50,7 @@ public interface OperateEventMapper {
      * @param id 入参数
      * @return LineEventResDTO
      */
-    OperateEventResDTO queryInfoById(String id);
+    OperateEventResDTO queryInfoById(String id,String startDate, String endDate);
 
     /**
      * 校验数据是否存在

@@ -17,6 +17,8 @@ public interface OperatePassengerFlowDetailMapper extends BaseMapper<OperatePass
 
     Page<PassengerFlowListResDTO> list(Page<Object> of, String dataType, String startDate, String endDate);
 
+    OperatePassengerFlowDetailDO info(String id, String startDate, String endDate);
+
     void add(PassengerFlowAddReqDTO addReqDTO);
 
     int modify(PassengerFlowAddReqDTO req);

@@ -55,8 +55,9 @@ public class HotLineController {
      */
     @GetMapping("/detail")
     @ApiOperation(value = "服务热线情况详情")
-    public DataResponse<HotLineResDTO> detail(@RequestParam String id) {
-        return DataResponse.of(hotLineService.detail(id));
+    public DataResponse<HotLineResDTO> detail(@RequestParam String id,@RequestParam(required = false) String startDate,
+                                              @RequestParam(required = false) String endDate) {
+        return DataResponse.of(hotLineService.detail(id,startDate,endDate));
     }
 
     /**

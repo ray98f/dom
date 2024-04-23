@@ -36,10 +36,10 @@ public class HotLineServiceImpl implements HotLineService {
     }
 
     @Override
-    public HotLineResDTO detail(String id) {
+    public HotLineResDTO detail(String id, String startDate, String endDate) {
         HotLineResDTO res = new HotLineResDTO();
-        res.setHotLineSummary(hotLineMapper.detailSummary(id));
-        res.setHotLineImportant(hotLineMapper.detailImportant(id));
+        res.setHotLineSummary(hotLineMapper.detailSummary(id,startDate,endDate));
+        res.setHotLineImportant(hotLineMapper.detailImportant(id,startDate,endDate));
         return res;
     }
 

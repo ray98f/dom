@@ -35,7 +35,7 @@ public interface OperateEventService {
      * @param id 入参数
      * @return IndicatorResDTO
      */
-    OperateEventResDTO detail(String id);
+    OperateEventResDTO detail(String id,String startDate, String endDate);
 
     /**
      * 正线/车场事件记录-新增

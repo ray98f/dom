@@ -4,6 +4,7 @@ import cn.hutool.log.Log;
 import com.alibaba.fastjson.JSON;
 import com.wzmtr.dom.dataobject.traffic.IncomeRecordDO;
 import com.wzmtr.dom.dto.res.traffic.income.IncomeListResDTO;
+import com.wzmtr.dom.entity.BaseEntity;
 import com.wzmtr.dom.utils.BeanUtils;
 import com.wzmtr.dom.utils.DateUtils;
 import com.wzmtr.dom.utils.StringUtils;
@@ -11,6 +12,7 @@ import com.wzmtr.dom.utils.TokenUtils;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.util.Date;
 
@@ -20,7 +22,7 @@ import java.util.Date;
  */
 @Data
 @Slf4j
-public class IncomeAddReqDTO {
+public class IncomeAddReqDTO extends BaseEntity {
     @ApiModelProperty("ID")
     private String id;
     @ApiModelProperty("运营总收益")
@@ -50,9 +52,16 @@ public class IncomeAddReqDTO {
     @ApiModelProperty(value = "数据类型")
     private String dataType;
 
+    private String dataDate;
+
     public IncomeRecordDO toDO(IncomeAddReqDTO req) {
-        log.info(JSON.toJSONString(req));
-        IncomeRecordDO convert = BeanUtils.convert(req.getTotalIncomeList(), IncomeRecordDO.class);
+        IncomeListResDTO totalIncomeList1 = req.getTotalIncomeList();
+        IncomeRecordDO convert = new IncomeRecordDO();
+        if (null != totalIncomeList1){
+            convert.setDayIncome(totalIncomeList1.getDayIncome());
+            convert.setMonthIncome(totalIncomeList1.getMonthIncome());
+            convert.setYearIncome(totalIncomeList1.getYearIncome());
+        }
         String id = req.getId();
         convert.setId(StringUtils.isNotEmpty(id) ? id : TokenUtils.getUuId());
         convert.setType1Income(req.getType1Income());

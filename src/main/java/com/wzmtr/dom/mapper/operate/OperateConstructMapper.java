@@ -34,7 +34,7 @@ public interface OperateConstructMapper {
      * @param id 入参数
      * @return LineEventResDTO
      */
-    ConstructRecordResDTO queryInfoById(String id);
+    ConstructRecordResDTO queryInfoById(String id,String startDate, String endDate);
 
     /**
      * 校验数据是否存在

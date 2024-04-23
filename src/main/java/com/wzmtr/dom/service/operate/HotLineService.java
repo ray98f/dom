@@ -28,10 +28,13 @@ public interface HotLineService {
 
     /**
      * 获取服务热线情况详情
-     * @param id id
+     *
+     * @param id        id
+     * @param startDate id
+     * @param endDate
      * @return 服务热线情况详情
      */
-    HotLineResDTO detail(String id);
+    HotLineResDTO detail(String id, String startDate, String endDate);
 
     /**
      * 新增服务热线情况
