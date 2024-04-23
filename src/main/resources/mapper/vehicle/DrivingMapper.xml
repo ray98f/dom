@@ -252,7 +252,6 @@
         AND DEPOT_CODE = #{depotCode}
         AND ID != #{id})
         WHERE ID=#{id}
-        AND VERSION = #{version}
     </update>
 
     <insert id="createInfoData">
