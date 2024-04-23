@@ -5,14 +5,17 @@ import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
 import com.wzmtr.dom.service.common.FileService;
+import io.minio.errors.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * 公共分类-文件管理
@@ -46,5 +49,27 @@ public class FileController {
             throw new CommonException(ErrorCode.FILE_BIG);
         }
         return DataResponse.of(fileService.upload(file, bucketCode));
+    }
+
+    /**
+     * 清空桶
+     * @param bucketCode 桶名
+     * @return 成功
+     * @throws ServerException 异常
+     * @throws InsufficientDataException 异常
+     * @throws ErrorResponseException 异常
+     * @throws IOException 异常
+     * @throws NoSuchAlgorithmException 异常
+     * @throws InvalidKeyException 异常
+     * @throws InvalidResponseException 异常
+     * @throws XmlParserException 异常
+     * @throws InternalException 异常
+     */
+    @ApiOperation(value = "清空桶")
+    @GetMapping("/clear")
+    public DataResponse<T> clear(@RequestParam String bucketCode) throws ServerException, InsufficientDataException, ErrorResponseException, IOException,
+            NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+        fileService.clear(bucketCode);
+        return DataResponse.success();
     }
 }
