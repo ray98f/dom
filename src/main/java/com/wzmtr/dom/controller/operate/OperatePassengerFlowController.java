@@ -62,7 +62,7 @@ public class OperatePassengerFlowController {
      */
     @GetMapping("/detail")
     @ApiOperation(value = "客流记录详情")
-    public DataResponse<PassengerFlowDetailResDTO> add(@RequestParam String id,@RequestParam(required = false) String startDate,
+    public DataResponse<PassengerFlowDetailResDTO> add(@RequestParam(required = false) String id,@RequestParam(required = false) String startDate,
                                                        @RequestParam(required = false) String endDate) {
         return DataResponse.of(operatePassengerFlowService.detail(id,startDate,endDate));
     }
