@@ -44,43 +44,43 @@ public interface WorkbenchMapper {
 
     /**
      * 发待办/待阅
-     * @param approvalReqDTO
+     * @param approvalReqDTO 待办/待阅 信息
      */
     void addTodo(ApprovalReqDTO approvalReqDTO);
 
     /**
      * 查询待办
-     * @param processKey
-     * @param reportId
-     * @param nodes
+     * @param processKey 流程名
+     * @param reportId 报表id
+     * @param nodes 节点列表
      * @return 待办列表
      */
-    List<TodoResDTO> queryTodoByNode(String processKey,String reportId,List<String> nodes);
+    List<TodoResDTO> queryTodoByNode(String processKey, String reportId, List<String> nodes);
 
     /**
      * 查询待办
-     * @param parentId
+     * @param parentId 父级id
      * @return 待办列表
      */
     List<TodoResDTO> queryTodoByParent(String parentId);
 
     /**
      * 查询下一个节点
-     * @param nodeId
+     * @param nodeId 节点id
      * @return 节点名
      */
     String queryNextNode(String nodeId);
 
     /**
      * 查询节点
-     * @param nodeId
+     * @param nodeId 节点id
      * @return 节点信息
      */
     FlowNodeResDTO nodeDetail(String nodeId);
 
     /**
      * 根据流程节点获取审批角色
-     * @param nodeId
+     * @param nodeId 节点id
      * @return  审批角色
      */
     String queryRoleByNode(String nodeId);

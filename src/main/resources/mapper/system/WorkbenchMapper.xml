@@ -181,6 +181,13 @@
     <select id="queryNextNode" resultType="java.lang.String">
         SELECT NEXT_NODE
         FROM DOM_FLOW_NODE
-        WHERE NODE_ID=#{nodeId}
+        WHERE NODE_ID=#{nodeId} AND DEL_FLAG='0'
+    </select>
+
+    <select id="nodeDetail" resultType="com.wzmtr.dom.dto.res.system.FlowNodeResDTO">
+        SELECT FLOW_ID, FLOW_NAME, NODE_ID, NODE_NAME, ROLE_ID,
+        PARENT_NODE, NODE_ORDER, NODE_TYPE, TODO_SHOW_FLAG, NEXT_NODE
+        FROM DOM_FLOW_NODE
+        WHERE NODE_ID=#{nodeId} AND DEL_FLAG='0'
     </select>
 </mapper>
