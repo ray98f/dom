@@ -204,7 +204,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
         List<String> nodes = Arrays.asList(CommonConstants.TRAFFIC_DAILY_NODE1_SUB);
         if (nodes.contains(todoResDTO.getCurrentNode())) {
             List<TodoResDTO> todoList = workbenchMapper.queryTodoByNode(todoReqDTO.getProcessKey(), todoReqDTO.getReportId(), nodes);
-            if (StringUtils.isNotEmpty(todoList)) {
+            if (StringUtils.isNull(todoList)) {
                 String nextNode = workbenchMapper.queryNextNode(todoResDTO.getCurrentNode());
                 FlowNodeResDTO nodeDetail = workbenchMapper.nodeDetail(nextNode);
                 List<String> nextUserList = getUserByNode(nextNode);
@@ -291,14 +291,14 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                     trafficReportMapper.dailyApprovalComplete(modifyReq);
                 }
                 //节点流转
-                for (String u : nextUserList) {
+                for (String user : nextUserList) {
                     addTodo(DateUtil.formatDate(dailyList.get(0).getDailyDate()) + title,
                             dailyList.get(0).getParentId(),
                             CommonConstants.TRAFFIC_DAILY_REPORT,
                             nodeDetail.getNodeType(),
                             CommonConstants.DATA_TYPE_DAILY,
                             nodeDetail.getFlowId(),
-                            nodeDetail.getNodeId(), u, "0", null);
+                            nodeDetail.getNodeId(), user, "0", null);
                 }
             }
         }
@@ -316,7 +316,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
         if (nodes.contains(todoResDTO.getCurrentNode())) {
 
             List<TodoResDTO> todoList = workbenchMapper.queryTodoByNode(todoReqDTO.getProcessKey(), todoReqDTO.getReportId(), nodes);
-            if (todoList == null) {
+            if (StringUtils.isNull(todoList)) {
                 String nextNode = workbenchMapper.queryNextNode(todoResDTO.getCurrentNode());
                 FlowNodeResDTO nodeDetail = workbenchMapper.nodeDetail(nextNode);
                 List<String> nextUserList = getUserByNode(nextNode);
@@ -404,14 +404,14 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                     trafficReportMapper.weeklyApprovalComplete(modifyReq);
                 }
                 //节点流转
-                for (String u : nextUserList) {
+                for (String user : nextUserList) {
                     addTodo(DateUtil.formatDate(weeklyList.get(0).getStartDate()) + "-" + DateUtil.formatDate(weeklyList.get(0).getEndDate()) + title,
                             weeklyList.get(0).getParentId(),
                             CommonConstants.TRAFFIC_WEEKLY_REPORT,
                             nodeDetail.getNodeType(),
                             CommonConstants.DATA_TYPE_WEEKLY,
                             nodeDetail.getFlowId(),
-                            nodeDetail.getNodeId(), u, "0", null);
+                            nodeDetail.getNodeId(), user, "0", null);
                 }
             }
         }
@@ -428,7 +428,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
         List<String> nodes = Arrays.asList(CommonConstants.TRAFFIC_MONTHLY_NODE1_SUB);
         if (nodes.contains(todoResDTO.getCurrentNode())) {
             List<TodoResDTO> todoList = workbenchMapper.queryTodoByNode(todoReqDTO.getProcessKey(), todoReqDTO.getReportId(), nodes);
-            if (todoList == null) {
+            if (StringUtils.isNull(todoList)) {
                 String nextNode = workbenchMapper.queryNextNode(todoResDTO.getCurrentNode());
                 FlowNodeResDTO nodeDetail = workbenchMapper.nodeDetail(nextNode);
                 List<String> nextUserList = getUserByNode(nextNode);
@@ -516,14 +516,14 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                     trafficReportMapper.monthlyApprovalComplete(modifyReq);
                 }
                 //节点流转
-                for (String u : nextUserList) {
+                for (String user : nextUserList) {
                     addTodo(DateUtil.formatDate(monthlyList.get(0).getStartDate()) + "-" + DateUtil.formatDate(monthlyList.get(0).getEndDate()) + title,
                             monthlyList.get(0).getParentId(),
                             CommonConstants.TRAFFIC_MONTHLY_REPORT,
                             nodeDetail.getNodeType(),
                             CommonConstants.DATA_TYPE_MONTHLY,
                             nodeDetail.getFlowId(),
-                            nodeDetail.getNodeId(), u, "0", null);
+                            nodeDetail.getNodeId(), user, "0", null);
                 }
             }
         }
