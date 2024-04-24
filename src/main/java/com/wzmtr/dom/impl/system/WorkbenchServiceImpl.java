@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.page.PageMethod;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.system.ApprovalReqDTO;
+import com.wzmtr.dom.dto.req.system.ReportUpdateReqDTO;
 import com.wzmtr.dom.dto.req.system.TodoReqDTO;
 import com.wzmtr.dom.dto.req.traffic.DailyReportReqDTO;
 import com.wzmtr.dom.dto.req.traffic.MonthlyReportReqDTO;
@@ -18,6 +19,7 @@ import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.BpmnFlowEnum;
 import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
+import com.wzmtr.dom.mapper.operate.OperateReportMapper;
 import com.wzmtr.dom.mapper.system.WorkbenchMapper;
 import com.wzmtr.dom.mapper.traffic.TrafficReportMapper;
 import com.wzmtr.dom.mapper.vehicle.VehicleReportMapper;
@@ -46,6 +48,9 @@ public class WorkbenchServiceImpl implements WorkbenchService {
 
     @Autowired
     private TrafficReportMapper trafficReportMapper;
+
+    @Autowired
+    private OperateReportMapper operateReportMapper;
 
     @Autowired
     private WorkbenchMapper workbenchMapper;
@@ -101,28 +106,18 @@ public class WorkbenchServiceImpl implements WorkbenchService {
 
     @Override
     public void commitApproval(ApprovalReqDTO approvalReqDTO) {
-        //根据节点获取审批人员
+        // 根据节点获取审批人员
         List<String> userList = getUserByNode(approvalReqDTO.getCurrentNode());
-        if(userList !=null && userList.size()>0){
+        if (StringUtils.isNotEmpty(userList)) {
             approvalReqDTO.setCreateBy(TokenUtils.getCurrentPersonId());
             approvalReqDTO.setUpdateBy(TokenUtils.getCurrentPersonId());
-            //发送待办
-            for(String u:userList){
+            // 发送待办
+            for (String u : userList) {
                 approvalReqDTO.setId(TokenUtils.getUuId());
                 approvalReqDTO.setApprovalUser(u);
                 workbenchMapper.addTodo(approvalReqDTO);
             }
         }
-    }
-
-    /**
-     * 运营日报/周报/月报表审批
-     * @param todoReqDTO 任务督办审批请求对象
-     * @param todoResDTO 任务督办结果对象
-     */
-    @Transactional(rollbackFor = Exception.class)
-    private void operateReportApproval(TodoReqDTO todoReqDTO,TodoResDTO todoResDTO){
-        //TODO
     }
 
     /**
@@ -143,6 +138,8 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                 break;
             case CommonConstants.DATA_TYPE_MONTHLY:
                 titlePrefix = "车辆部月报";
+                break;
+            default:
                 break;
         }
         // 流转下一节点标记
@@ -183,21 +180,15 @@ public class WorkbenchServiceImpl implements WorkbenchService {
      * @param status 状态
      * @param type 报表类型1日报,2周报,3月报
      */
-    private void updateVehicle(String id, String status, String type){
+    private void updateVehicle(String id, String status, String type) {
+        ReportUpdateReqDTO modifyReq = new ReportUpdateReqDTO();
+        modifyReq.setId(id);
+        modifyReq.setStatus(status);
         if (CommonConstants.ONE_STRING.equals(type)) {
-            com.wzmtr.dom.dto.req.vehicle.DailyReportReqDTO modifyReq = new com.wzmtr.dom.dto.req.vehicle.DailyReportReqDTO();
-            modifyReq.setId(id);
-            modifyReq.setStatus(status);
             vehicleReportMapper.modifyDailyByFlow(modifyReq);
         } else if (CommonConstants.TWO_STRING.equals(type)) {
-            com.wzmtr.dom.dto.req.vehicle.WeeklyReportReqDTO modifyReq = new com.wzmtr.dom.dto.req.vehicle.WeeklyReportReqDTO();
-            modifyReq.setId(id);
-            modifyReq.setStatus(status);
             vehicleReportMapper.modifyWeeklyByFlow(modifyReq);
-        } else {
-            com.wzmtr.dom.dto.req.vehicle.MonthlyReportReqDTO modifyReq = new com.wzmtr.dom.dto.req.vehicle.MonthlyReportReqDTO();
-            modifyReq.setId(id);
-            modifyReq.setStatus(status);
+        } else if (CommonConstants.THREE_STRING.equals(type)) {
             vehicleReportMapper.modifyMonthlyByFlow(modifyReq);
         }
     }
@@ -527,6 +518,79 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                             nodeDetail.getNodeId(),u,"0",null);
                 }
             }
+        }
+    }
+
+    /**
+     * 运营日报/周报/月报表审批
+     * @param todoReqDTO 任务督办审批请求对象
+     * @param todoResDTO 任务督办结果对象
+     */
+    @Transactional(rollbackFor = Exception.class)
+    private void operateReportApproval(TodoReqDTO todoReqDTO,TodoResDTO todoResDTO){
+        // 标题
+        String titlePrefix = "";
+        switch (todoResDTO.getDataType()) {
+            case CommonConstants.DATA_TYPE_DAILY:
+                titlePrefix = "运营日报";
+                break;
+            case CommonConstants.DATA_TYPE_WEEKLY:
+                titlePrefix = "运营周报";
+                break;
+            case CommonConstants.DATA_TYPE_MONTHLY:
+                titlePrefix = "运营月报";
+                break;
+            default:
+                break;
+        }
+        // 流转下一节点标记
+        String goNextFlag = CommonConstants.ONE_STRING;
+        String status = "";
+        // 通过
+        if (CommonConstants.ONE_STRING.equals(todoReqDTO.getApprovalStatus())) {
+            status = CommonConstants.ONE_STRING;
+        } else {
+            status = CommonConstants.ZERO_STRING;
+            goNextFlag = CommonConstants.ZERO_STRING;
+        }
+        updateOperate(todoReqDTO.getReportId(), status, todoResDTO.getDataType());
+
+        if (CommonConstants.ONE_STRING.equals(goNextFlag)) {
+            String nextNode = workbenchMapper.queryNextNode(todoResDTO.getCurrentNode());
+            FlowNodeResDTO nodeDetail = workbenchMapper.nodeDetail(nextNode);
+            List<String> nextUserList = getUserByNode(nextNode);
+
+            String title = titlePrefix + "-请审批";
+            // 下一节点不是待办时，更新报表为审批完成
+            if (!nodeDetail.getNodeType().equals(CommonConstants.ONE_STRING)) {
+                title = titlePrefix + "-请查阅";
+                status = CommonConstants.TWO_STRING;
+                updateOperate(todoReqDTO.getReportId(), status, todoResDTO.getDataType());
+            }
+            // 节点流转
+            for (String user : nextUserList) {
+                addTodo(title, todoReqDTO.getReportId(), todoResDTO.getReportTable(), nodeDetail.getNodeType(),
+                        todoResDTO.getDataType(), nodeDetail.getFlowId(), nodeDetail.getNodeId(), user, "0", null);
+            }
+        }
+    }
+
+    /**
+     * 修改运营报表状态
+     * @param id 报表id
+     * @param status 状态
+     * @param type 报表类型1日报,2周报,3月报
+     */
+    private void updateOperate(String id, String status, String type) {
+        ReportUpdateReqDTO modifyReq = new ReportUpdateReqDTO();
+        modifyReq.setId(id);
+        modifyReq.setStatus(status);
+        if (CommonConstants.ONE_STRING.equals(type)) {
+            operateReportMapper.modifyDailyByFlow(modifyReq);
+        } else if (CommonConstants.TWO_STRING.equals(type)) {
+            operateReportMapper.modifyWeeklyByFlow(modifyReq);
+        } else if (CommonConstants.THREE_STRING.equals(type)) {
+            operateReportMapper.modifyMonthlyByFlow(modifyReq);
         }
     }
 

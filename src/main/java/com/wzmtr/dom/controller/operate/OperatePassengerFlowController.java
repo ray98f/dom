@@ -29,7 +29,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/operate/passenger/flow")
-@Api(tags = "运营日报-客流")
+@Api(tags = "运营-客流")
 @Validated
 public class OperatePassengerFlowController {
 

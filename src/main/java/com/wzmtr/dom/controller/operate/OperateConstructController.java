@@ -2,17 +2,18 @@ package com.wzmtr.dom.controller.operate;
 
 import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.constant.ValidationGroup;
-import com.wzmtr.dom.dto.req.operate.*;
-import com.wzmtr.dom.dto.req.vehicle.DepotConstructPlanBatchReqDTO;
-import com.wzmtr.dom.dto.res.operate.*;
-import com.wzmtr.dom.dto.res.vehicle.DepotConstructPlanResDTO;
+import com.wzmtr.dom.dto.req.operate.ConstructEventReqDTO;
+import com.wzmtr.dom.dto.req.operate.ConstructPlanBatchReqDTO;
+import com.wzmtr.dom.dto.req.operate.ConstructRecordReqDTO;
+import com.wzmtr.dom.dto.res.operate.ConstructEventResDTO;
+import com.wzmtr.dom.dto.res.operate.ConstructPlanResDTO;
+import com.wzmtr.dom.dto.res.operate.ConstructRecordResDTO;
 import com.wzmtr.dom.entity.BaseIdsEntity;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.entity.response.PageResponse;
 import com.wzmtr.dom.service.operate.OperateConstructService;
-import com.wzmtr.dom.service.operate.OperateEventService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.poi.ss.formula.functions.T;
@@ -21,7 +22,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * 运营日报-施工情况
@@ -32,7 +32,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/operate/construct")
-@Api(tags = "运营日报-施工情况 ")
+@Api(tags = "运营-施工情况")
 @Validated
 public class OperateConstructController {
 

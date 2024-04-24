@@ -32,7 +32,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/operate/event")
-@Api(tags = "运营日报-运营事件 ")
+@Api(tags = "运营-运营事件")
 @Validated
 public class OperateEventController {
 

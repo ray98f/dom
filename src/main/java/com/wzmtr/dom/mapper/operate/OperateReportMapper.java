@@ -1,27 +1,27 @@
-package com.wzmtr.dom.mapper.vehicle;
+package com.wzmtr.dom.mapper.operate;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.system.ReportUpdateReqDTO;
-import com.wzmtr.dom.dto.req.vehicle.DailyReportReqDTO;
-import com.wzmtr.dom.dto.req.vehicle.MonthlyReportReqDTO;
-import com.wzmtr.dom.dto.req.vehicle.WeeklyReportReqDTO;
-import com.wzmtr.dom.dto.res.vehicle.DailyReportResDTO;
-import com.wzmtr.dom.dto.res.vehicle.MonthlyReportResDTO;
-import com.wzmtr.dom.dto.res.vehicle.WeeklyReportResDTO;
+import com.wzmtr.dom.dto.req.operate.DailyReportReqDTO;
+import com.wzmtr.dom.dto.req.operate.MonthlyReportReqDTO;
+import com.wzmtr.dom.dto.req.operate.WeeklyReportReqDTO;
+import com.wzmtr.dom.dto.res.operate.DailyReportResDTO;
+import com.wzmtr.dom.dto.res.operate.MonthlyReportResDTO;
+import com.wzmtr.dom.dto.res.operate.WeeklyReportResDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 /**
- * 车辆部-车辆部报表
+ * 运营-运营报表
  * @author  Ray
  * @version 1.0
- * @date 2024/03/14
+ * @date 2024/04/24
  */
 @Mapper
 @Repository
-public interface VehicleReportMapper {
+public interface OperateReportMapper {
 
     /**
      * 分页查询日报列表
@@ -167,21 +167,4 @@ public interface VehicleReportMapper {
      */
     void modifyMonthlyByFlow(ReportUpdateReqDTO reqDTO);
 
-    /**
-     * 编辑日报
-     * @param dailyReportReqDTO 日报参数
-     */
-    void dailyApprovalComplete(DailyReportReqDTO dailyReportReqDTO);
-
-    /**
-     * 编辑周报
-     * @param weeklyReportReqDTO 周报参数
-     */
-    void weeklyApprovalComplete(WeeklyReportReqDTO weeklyReportReqDTO);
-
-    /**
-     * 编辑月报
-     * @param monthlyReportReqDTO 月报参数
-     */
-    void monthlyApprovalComplete(MonthlyReportReqDTO monthlyReportReqDTO);
 }

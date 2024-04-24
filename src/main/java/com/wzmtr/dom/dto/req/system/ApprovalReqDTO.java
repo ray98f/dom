@@ -28,6 +28,12 @@ public class ApprovalReqDTO extends BaseEntity {
     private String processKey;
 
     /**
+     * 父流程名
+     */
+    @ApiModelProperty(value = "父流程名")
+    private String parentProcessKey;
+
+    /**
      * 事项类型:1待办,2待阅
      */
     @ApiModelProperty(value = "事项类型:1待办,2待阅")

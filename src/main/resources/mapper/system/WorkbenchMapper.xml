@@ -81,37 +81,40 @@
         INSERT INTO DOM_APPROVAL_HISTORY (
         ID,
         PROCESS_KEY,
-        <if test="parentProcessKey != null and parentProcessKey!=''">
+        <if test="parentProcessKey!=null and parentProcessKey!=''">
             PARENT_PROCESS_KEY,
         </if>
-        <if test="todoType != null and todoType!=''">
+        <if test="todoType!=null and todoType!=''">
             TODO_TYPE,
         </if>
-        <if test="status != null and status!=''">
+        <if test="status!=null and status!=''">
             STATUS,
         </if>
-        <if test="dataType != null and dataType!=''">
+        <if test="dataType!=null and dataType!=''">
             DATA_TYPE,
         </if>
-        <if test="reportId != null and reportId!=''">
+        <if test="reportId!=null and reportId!=''">
             REPORT_ID,
         </if>
-        <if test="reportTable != null and reportTable!=''">
+        <if test="reportTable!=null and reportTable!=''">
             REPORT_TABLE,
         </if>
-        <if test="approvalUser != null and approvalUser!=''">
+        <if test="approvalUser!=null and approvalUser!=''">
             APPROVAL_USER,
         </if>
-        <if test="approvalResult != null and approvalResult!=''">
+        <if test="approvalResult!=null and approvalResult!=''">
             APPROVAL_RESULT,
         </if>
-        <if test="currentNode != null and currentNode!=''">
+        <if test="currentNode!=null and currentNode!=''">
             CURRENT_NODE,
         </if>
-        <if test="isHide != null and isHide!=''">
+        <if test="title!=null and title!=''">
+            TITLE,
+        </if>
+        <if test="isHide!=null and isHide!=''">
             IS_HIDE,
         </if>
-        <if test="parentId != null and parentId!=''">
+        <if test="parentId!=null and parentId!=''">
             PARENT_ID,
         </if>
         CREATE_DATE,
@@ -121,37 +124,40 @@
         VALUES
         (#{id},
         #{processKey},
-        <if test="parentProcessKey != null and parentProcessKey!=''">
+        <if test="parentProcessKey!=null and parentProcessKey!=''">
             #{parentProcessKey},
         </if>
-        <if test="todoType != null and todoType!=''">
+        <if test="todoType!=null and todoType!=''">
             #{todoType},
         </if>
-        <if test="status != null and status!=''">
+        <if test="status!=null and status!=''">
             #{status},
         </if>
-        <if test="dataType != null and dataType!=''">
+        <if test="dataType!=null and dataType!=''">
             #{dataType},
         </if>
-        <if test="reportId != null and reportId!=''">
+        <if test="reportId!=null and reportId!=''">
             #{reportId},
         </if>
-        <if test="reportTable != null and reportTable!=''">
+        <if test="reportTable!=null and reportTable!=''">
             #{reportTable},
         </if>
-        <if test="approvalUser != null and approvalUser!=''">
+        <if test="approvalUser!=null and approvalUser!=''">
             #{approvalUser},
         </if>
-        <if test="approvalResult != null and approvalResult!=''">
+        <if test="approvalResult!=null and approvalResult!=''">
             #{approvalResult},
         </if>
-        <if test="currentNode != null and currentNode!=''">
+        <if test="currentNode!=null and currentNode!=''">
             #{currentNode},
         </if>
-        <if test="isHide != null and isHide!=''">
+        <if test="title!=null and title!=''">
+            #{title},
+        </if>
+        <if test="isHide!=null and isHide!=''">
             #{isHide},
         </if>
-        <if test="parentId != null and parentId!=''">
+        <if test="parentId!=null and parentId!=''">
             #{parentId},
         </if>
         sysdate,
