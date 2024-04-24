@@ -28,7 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -118,8 +117,9 @@ public class WorkbenchServiceImpl implements WorkbenchService {
 
     /**
      * 运营日报/周报/月报表审批
-     *
-     * */
+     * @param todoReqDTO 任务督办审批请求对象
+     * @param todoResDTO 任务督办结果对象
+     */
     @Transactional(rollbackFor = Exception.class)
     private void operateReportApproval(TodoReqDTO todoReqDTO,TodoResDTO todoResDTO){
         //TODO
@@ -127,95 +127,79 @@ public class WorkbenchServiceImpl implements WorkbenchService {
 
     /**
      * 车辆部报表审批
-     *
-     * */
+     * @param todoReqDTO 任务督办审批请求对象
+     * @param todoResDTO 任务督办结果对象
+     */
     @Transactional(rollbackFor = Exception.class)
-    private void vehicleReportApproval(TodoReqDTO todoReqDTO,TodoResDTO todoResDTO){
-
-        //
+    private void vehicleReportApproval(TodoReqDTO todoReqDTO, TodoResDTO todoResDTO) {
+        // 标题
         String titlePrefix = "";
-
-        //流转下一节点标记
-        String goNextFlag = CommonConstants.ONE_STRING;
-
-        String status = "";
-
-        //通过
-        if(CommonConstants.ONE_STRING.equals(todoReqDTO.getApprovalStatus())){
-            status = CommonConstants.THREE_STRING;
-        }else{
-            status = CommonConstants.ZERO_STRING;
-            goNextFlag = CommonConstants.ZERO_STRING;
-        }
-        switch (todoResDTO.getDataType()){
+        switch (todoResDTO.getDataType()) {
             case CommonConstants.DATA_TYPE_DAILY:
                 titlePrefix = "车辆部日报";
-                updateVehicleDaily(todoReqDTO.getReportId(),status);
                 break;
             case CommonConstants.DATA_TYPE_WEEKLY:
                 titlePrefix = "车辆部周报";
-                updateVehicleWeekly(todoReqDTO.getReportId(),status);
                 break;
             case CommonConstants.DATA_TYPE_MONTHLY:
                 titlePrefix = "车辆部月报";
-                updateVehicleMonthly(todoReqDTO.getReportId(),status);
                 break;
         }
+        // 流转下一节点标记
+        String goNextFlag = CommonConstants.ONE_STRING;
+        String status = "";
+        // 通过
+        if (CommonConstants.ONE_STRING.equals(todoReqDTO.getApprovalStatus())) {
+            status = CommonConstants.ONE_STRING;
+        } else {
+            status = CommonConstants.ZERO_STRING;
+            goNextFlag = CommonConstants.ZERO_STRING;
+        }
+        updateVehicle(todoReqDTO.getReportId(), status, todoResDTO.getDataType());
 
-        if(CommonConstants.ONE_STRING.equals(goNextFlag)){
+        if (CommonConstants.ONE_STRING.equals(goNextFlag)) {
             String nextNode = workbenchMapper.queryNextNode(todoResDTO.getCurrentNode());
             FlowNodeResDTO nodeDetail = workbenchMapper.nodeDetail(nextNode);
             List<String> nextUserList = getUserByNode(nextNode);
 
-            String title = titlePrefix+"-请审批";
-
-            //下一节点不是待办,则更新报表为审批完成
-            if(!nodeDetail.getNodeType().equals(CommonConstants.ONE_STRING)){
-                title = titlePrefix+"-请查阅";
+            String title = titlePrefix + "-请审批";
+            // 下一节点不是待办时，更新报表为审批完成
+            if (!nodeDetail.getNodeType().equals(CommonConstants.ONE_STRING)) {
+                title = titlePrefix + "-请查阅";
                 status = CommonConstants.TWO_STRING;
-                switch (todoResDTO.getDataType()){
-                    case CommonConstants.DATA_TYPE_DAILY:
-                        updateVehicleDaily(todoReqDTO.getReportId(),status);
-                        break;
-                    case CommonConstants.DATA_TYPE_WEEKLY:
-                        updateVehicleWeekly(todoReqDTO.getReportId(),status);
-                        break;
-                    case CommonConstants.DATA_TYPE_MONTHLY:
-                        updateVehicleMonthly(todoReqDTO.getReportId(),status);
-                        break;
-                }
+                updateVehicle(todoReqDTO.getReportId(), status, todoResDTO.getDataType());
             }
-            //节点流转
-            for(String u:nextUserList){
-                addTodo( title,
-                        todoReqDTO.getReportId(),
-                        todoResDTO.getReportTable(),
-                        nodeDetail.getNodeType(),
-                        todoResDTO.getDataType(),
-                        nodeDetail.getFlowId(),
-                        nodeDetail.getNodeId(),u,"0",null);
+            // 节点流转
+            for (String user : nextUserList) {
+                addTodo(title, todoReqDTO.getReportId(), todoResDTO.getReportTable(), nodeDetail.getNodeType(),
+                        todoResDTO.getDataType(), nodeDetail.getFlowId(), nodeDetail.getNodeId(), user, "0", null);
             }
         }
     }
-    private void updateVehicleDaily(String id,String status){
-        com.wzmtr.dom.dto.req.vehicle.DailyReportReqDTO modifyReq = new com.wzmtr.dom.dto.req.vehicle.DailyReportReqDTO();
-        modifyReq.setId(id);
-        modifyReq.setStatus(status);
-        vehicleReportMapper.modifyDailyByFlow(modifyReq);
-    }
 
-    private void updateVehicleWeekly(String id,String status){
-        com.wzmtr.dom.dto.req.vehicle.WeeklyReportReqDTO modifyReq = new com.wzmtr.dom.dto.req.vehicle.WeeklyReportReqDTO();
-        modifyReq.setId(id);
-        modifyReq.setStatus(status);
-        vehicleReportMapper.modifyWeeklyByFlow(modifyReq);
-    }
-
-    private void updateVehicleMonthly(String id,String status){
-        com.wzmtr.dom.dto.req.vehicle.MonthlyReportReqDTO modifyReq = new com.wzmtr.dom.dto.req.vehicle.MonthlyReportReqDTO();
-        modifyReq.setId(id);
-        modifyReq.setStatus(status);
-        vehicleReportMapper.modifyMonthlyByFlow(modifyReq);
+    /**
+     * 修改车辆部报表状态
+     * @param id 报表id
+     * @param status 状态
+     * @param type 报表类型1日报,2周报,3月报
+     */
+    private void updateVehicle(String id, String status, String type){
+        if (CommonConstants.ONE_STRING.equals(type)) {
+            com.wzmtr.dom.dto.req.vehicle.DailyReportReqDTO modifyReq = new com.wzmtr.dom.dto.req.vehicle.DailyReportReqDTO();
+            modifyReq.setId(id);
+            modifyReq.setStatus(status);
+            vehicleReportMapper.modifyDailyByFlow(modifyReq);
+        } else if (CommonConstants.TWO_STRING.equals(type)) {
+            com.wzmtr.dom.dto.req.vehicle.WeeklyReportReqDTO modifyReq = new com.wzmtr.dom.dto.req.vehicle.WeeklyReportReqDTO();
+            modifyReq.setId(id);
+            modifyReq.setStatus(status);
+            vehicleReportMapper.modifyWeeklyByFlow(modifyReq);
+        } else {
+            com.wzmtr.dom.dto.req.vehicle.MonthlyReportReqDTO modifyReq = new com.wzmtr.dom.dto.req.vehicle.MonthlyReportReqDTO();
+            modifyReq.setId(id);
+            modifyReq.setStatus(status);
+            vehicleReportMapper.modifyMonthlyByFlow(modifyReq);
+        }
     }
 
     /**
@@ -548,9 +532,20 @@ public class WorkbenchServiceImpl implements WorkbenchService {
 
     /**
      * 发送待办
-     * */
-    private String addTodo(String title,String reportId,String reportTable,String todoType,String dataType,
-                         String processKey,String currentNode,String userId,String isHide,String parentId){
+     * @param title 代办标题
+     * @param reportId 报表id
+     * @param reportTable 报表表明
+     * @param todoType 事项类型:1待办,2待阅
+     * @param dataType 所属数据类型:1日报,2周报,3月报
+     * @param processKey 流程名
+     * @param currentNode 当前审批节点名
+     * @param userId 用户id
+     * @param isHide 是否隐藏
+     * @param parentId 父ID
+     * @return 返回待办id
+     */
+    private String addTodo(String title, String reportId, String reportTable, String todoType, String dataType,
+                           String processKey, String currentNode, String userId, String isHide, String parentId) {
         ApprovalReqDTO approvalReqDTO = new ApprovalReqDTO();
         approvalReqDTO.setTitle(title);
         approvalReqDTO.setReportId(reportId);
@@ -561,24 +556,25 @@ public class WorkbenchServiceImpl implements WorkbenchService {
         approvalReqDTO.setCurrentNode(currentNode);
         approvalReqDTO.setId(TokenUtils.getUuId());
         approvalReqDTO.setApprovalUser(userId);
-        if(StringUtils.isNotEmpty(isHide)){
+        if (StringUtils.isNotEmpty(isHide)) {
             approvalReqDTO.setIsHide(isHide);
         }
-        if(StringUtils.isNotEmpty(parentId)){
+        if (StringUtils.isNotEmpty(parentId)) {
             approvalReqDTO.setParentId(parentId);
         }
-
         workbenchMapper.addTodo(approvalReqDTO);
         return approvalReqDTO.getId();
     }
 
     /**
      * 根据节点获取用户
-     * */
-    private List<String> getUserByNode(String nodeId){
+     * @param nodeId 节点id
+     * @return 用户id列表
+     */
+    private List<String> getUserByNode(String nodeId) {
         String roleStr = workbenchMapper.queryRoleByNode(nodeId);
         List<String> userList = null;
-        if(StringUtils.isNotEmpty(roleStr)){
+        if (StringUtils.isNotEmpty(roleStr)) {
             List<String> roleList = Arrays.asList(roleStr.split(","));
             userList = workbenchMapper.queryUserByRole(roleList);
         }
