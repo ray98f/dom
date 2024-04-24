@@ -19,7 +19,16 @@
         SELECT ID, SERIAL_NO, REASON, LIMIT_START_TIME, LIMIT_END_TIME, LIMIT_SECTION,
         LIMIT_VALUE, APPLICATION_DEPT, APPLICATION_DEPT_NAME, DUTY, VERSION, RECORD_ID
         FROM OPERATE_SPEED_LIMIT_INFO
-        WHERE DEL_FLAG='0' AND RECORD_ID=#{id}
+        WHERE DEL_FLAG='0'
+        <if test="id!=null and id!=''">
+            AND RECORD_ID=#{id}
+        </if>
+        <if test="startDate!=null and startDate!=''">
+            AND DATA_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'YYYY-MM-DD')>=DATA_DATE
+        </if>
         ORDER BY SERIAL_NO ASC
     </select>
 

@@ -35,7 +35,7 @@ public interface SpeedLimitMapper {
      * @param id 记录id
      * @return 线路限速情况详情列表
      */
-    Page<SpeedLimitInfoResDTO> infoPage(Page<SpeedLimitRecordResDTO> page, String id);
+    Page<SpeedLimitInfoResDTO> infoPage(Page<SpeedLimitRecordResDTO> page,String startDate, String endDate, String id);
 
     /**
      * 获取线路限速情况详情

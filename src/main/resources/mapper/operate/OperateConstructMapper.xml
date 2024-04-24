@@ -19,7 +19,10 @@
     <select id="queryInfoById" resultType="com.wzmtr.dom.dto.res.operate.ConstructRecordResDTO">
         SELECT *
         FROM OPERATE_CONSTRUCT_RECORD
-        WHERE ID=#{id} AND DEL_FLAG = '0'
+        WHERE DEL_FLAG = '0'
+        <if test="id != null">
+            AND ID=#{id}
+        </if>
         <if test="startDate != null">
             AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>

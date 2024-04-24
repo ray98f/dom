@@ -20,7 +20,7 @@
         SELECT *
         FROM OPERATE_INDICATOR_RECORD
         WHERE DEL_FLAG = '0'
-        <if test="startDate != null">
+        <if test="id != null">
             AND ID=#{id}
         </if>
         <if test="startDate != null">

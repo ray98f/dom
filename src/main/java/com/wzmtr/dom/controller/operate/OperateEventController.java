@@ -63,8 +63,7 @@ public class OperateEventController {
      */
     @GetMapping("/detail")
     @ApiOperation(value = "运营事件记录详情")
-    public DataResponse<OperateEventResDTO> add(@RequestParam String id, @RequestParam(required = false) String startDate,
-                                                @RequestParam(required = false) String endDate) {
+    public DataResponse<OperateEventResDTO> add(@RequestParam(required = false) String id, @RequestParam(required = false) String startDate,@RequestParam(required = false) String endDate) {
         return DataResponse.of(operateEventService.detail(id,startDate,endDate));
     }
 

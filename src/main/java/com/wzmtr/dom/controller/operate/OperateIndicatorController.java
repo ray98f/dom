@@ -63,7 +63,7 @@ public class OperateIndicatorController {
      */
     @GetMapping("/detail")
     @ApiOperation(value = "初期运营指标详情")
-    public DataResponse<IndicatorDetailResDTO> add(@RequestParam String id,
+    public DataResponse<IndicatorDetailResDTO> add(@RequestParam(required = false) String id,
                                                    @RequestParam(required = false) String startDate,
                                                    @RequestParam(required = false) String endDate) {
         return DataResponse.of(indicatorService.detail(id,startDate,endDate));

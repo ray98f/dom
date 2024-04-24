@@ -32,7 +32,10 @@
     <select id="queryInfoById" resultType="com.wzmtr.dom.dto.res.operate.OperateEventResDTO">
         SELECT *
         FROM OPERATE_EVENT_RECORD
-        WHERE ID=#{id} AND DEL_FLAG = '0'
+        WHERE DEL_FLAG = '0'
+        <if test="id != null">
+            AND ID=#{id}
+        </if>
         <if test="startDate != null">
             AND to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') >= START_DATE
         </if>

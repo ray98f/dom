@@ -41,7 +41,6 @@ public class OperateFaultStatisticsServiceImpl implements OperateFaultStatistics
         if (CollectionUtils.isEmpty(records)) {
             return list;
         }
-        // 日报需要给每一列返回总数
         records.forEach(a -> {
             long sum = getFaultSum(a);
             a.setSum(sum);
