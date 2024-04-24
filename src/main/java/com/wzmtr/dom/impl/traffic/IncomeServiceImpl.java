@@ -7,6 +7,7 @@ import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.dataobject.traffic.IncomeRecordDO;
 import com.wzmtr.dom.dto.req.common.SidReqDTO;
 import com.wzmtr.dom.dto.req.traffic.income.IncomeAddReqDTO;
+import com.wzmtr.dom.dto.req.traffic.income.IncomeDetailReqDTO;
 import com.wzmtr.dom.dto.req.traffic.income.IncomeListReqDTO;
 import com.wzmtr.dom.dto.res.traffic.income.IncomeDetailResDTO;
 import com.wzmtr.dom.dto.res.traffic.income.IncomeListResDTO;
@@ -39,7 +40,7 @@ public class IncomeServiceImpl implements IncomeService {
     }
 
     @Override
-    public IncomeDetailResDTO detail(SidReqDTO req) {
+    public IncomeDetailResDTO detail(IncomeDetailReqDTO req) {
         IncomeRecordDO incomeRecordDO = incomeMapper.selectDetailById(req);
         return IncomeDetailResDTO.buildRes(incomeRecordDO);
     }

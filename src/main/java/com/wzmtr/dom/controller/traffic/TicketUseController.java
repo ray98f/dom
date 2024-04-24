@@ -55,8 +55,9 @@ public class TicketUseController {
      */
     @GetMapping("/detail")
     @ApiOperation(value = "线网车票过闸使用情况详情")
-    public DataResponse<TicketUseResDTO> detail(@RequestParam String id) {
-        return DataResponse.of(ticketUseService.detail(id));
+    public DataResponse<TicketUseResDTO> detail(@RequestParam(required = false) String id,@RequestParam(required = false) String startDate,
+                                                @RequestParam(required = false) String endDate) {
+        return DataResponse.of(ticketUseService.detail(id,startDate,endDate));
     }
 
     /**

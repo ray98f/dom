@@ -122,6 +122,20 @@
         </if>
         ORDER BY CREATE_DATE desc
     </select>
+    <select id="detail" resultType="com.wzmtr.dom.dataobject.traffic.TrafficOnewaySaleDO">
+        select *
+        from TRAFFIC_ONEWAY_SALE
+        WHERE DEL_FLAG='0'
+        <if test="startDate != null">
+            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="id != null">
+            AND ID = #{id}
+        </if>
+    </select>
 
     <insert id="createStationPassenger">
         INSERT INTO TRAFFIC_PASSENGER_INFO (ID,RECORD_ID,STATION_CODE,PASSENGER,DATA_TYPE,

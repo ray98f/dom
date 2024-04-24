@@ -30,7 +30,7 @@ public interface TicketUseService {
      * @param id id
      * @return 线网车票过闸使用情况详情
      */
-    TicketUseResDTO detail(String id);
+    TicketUseResDTO detail(String id,String startDate, String endDate);
 
     /**
      * 获取ACC系统线网车票过闸使用情况
