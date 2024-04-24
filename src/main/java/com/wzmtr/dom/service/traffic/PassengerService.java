@@ -33,7 +33,7 @@ public interface PassengerService {
      * @param recordId 入参数
      * @return 客流总体情况-详情
      */
-    PassengerDetailResDTO detail(String recordId);
+    PassengerDetailResDTO detail(String recordId,String startDate, String endDate);
 
     /**
      * 客流总体情况-新增
