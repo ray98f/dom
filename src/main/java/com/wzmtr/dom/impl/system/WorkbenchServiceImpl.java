@@ -174,9 +174,10 @@ public class WorkbenchServiceImpl implements WorkbenchService {
 
     /**
      * 修改车辆部报表状态
-     * @param id 报表id
+     *
+     * @param id     报表id
      * @param status 状态
-     * @param type 报表类型1日报,2周报,3月报
+     * @param type   报表类型1日报,2周报,3月报
      */
     private void updateVehicle(String id, String status, String type) {
         ReportUpdateReqDTO modifyReq = new ReportUpdateReqDTO();
@@ -243,7 +244,6 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                 //下一节点不是待办,则更新报表为审批完成
                 if (!nodeDetail.getNodeType().equals(CommonConstants.ONE_STRING)) {
                     title = "运营日报-请查阅";
-                    modifyReq.setStatus(CommonConstants.TWO_STRING);
                     trafficReportMapper.dailyApprovalComplete(modifyReq);
                 }
                 //节点流转
@@ -311,7 +311,6 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                 // 下一节点不是待办,则更新报表为审批完成
                 if (!nodeDetail.getNodeType().equals(CommonConstants.ONE_STRING)) {
                     title = "运营周报-请查阅";
-                    modifyReq.setStatus(CommonConstants.TWO_STRING);
                     trafficReportMapper.weeklyApprovalComplete(modifyReq);
                 }
                 // 节点流转
@@ -379,7 +378,6 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                 // 下一节点不是待办,则更新报表为审批完成
                 if (!nodeDetail.getNodeType().equals(CommonConstants.ONE_STRING)) {
                     title = "运营月报-请查阅";
-                    modifyReq.setStatus(CommonConstants.TWO_STRING);
                     trafficReportMapper.monthlyApprovalComplete(modifyReq);
                 }
                 // 节点流转
@@ -449,7 +447,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
      * @param todoResDTO 任务督办结果对象
      */
     @Transactional(rollbackFor = Exception.class)
-    private void operateReportApproval(TodoReqDTO todoReqDTO,TodoResDTO todoResDTO){
+    private void operateReportApproval(TodoReqDTO todoReqDTO, TodoResDTO todoResDTO) {
         // 标题
         String titlePrefix = "";
         switch (todoResDTO.getDataType()) {
@@ -499,9 +497,9 @@ public class WorkbenchServiceImpl implements WorkbenchService {
 
     /**
      * 修改运营报表状态
-     * @param id 报表id
+     * @param id     报表id
      * @param status 状态
-     * @param type 报表类型1日报,2周报,3月报
+     * @param type   报表类型1日报,2周报,3月报
      */
     private void updateOperate(String id, String status, String type) {
         ReportUpdateReqDTO modifyReq = new ReportUpdateReqDTO();
@@ -519,16 +517,16 @@ public class WorkbenchServiceImpl implements WorkbenchService {
 
     /**
      * 发送待办
-     * @param title 代办标题
-     * @param reportId 报表id
+     * @param title       代办标题
+     * @param reportId    报表id
      * @param reportTable 报表表明
-     * @param todoType 事项类型:1待办,2待阅
-     * @param dataType 所属数据类型:1日报,2周报,3月报
-     * @param processKey 流程名
+     * @param todoType    事项类型:1待办,2待阅
+     * @param dataType    所属数据类型:1日报,2周报,3月报
+     * @param processKey  流程名
      * @param currentNode 当前审批节点名
-     * @param userId 用户id
-     * @param isHide 是否隐藏
-     * @param parentId 父ID
+     * @param userId      用户id
+     * @param isHide      是否隐藏
+     * @param parentId    父ID
      * @return 返回待办id
      */
     private String addTodo(String title, String reportId, String reportTable, String todoType, String dataType,
