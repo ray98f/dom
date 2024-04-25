@@ -6,13 +6,13 @@
         select * from SYS_FILE
         <trim prefix="WHERE" prefixOverrides="AND">
             <if test="url!=null and url!=''">
-                and URL = #{url}
+                and URL=#{url}
             </if>
             <if test="bucket!=null and bucket!=''">
-                and BUCKET = #{bucket}
+                and BUCKET=#{bucket}
             </if>
             <if test="oldName!=null and oldName!=''">
-                and OLD_NAME = #{oldName}
+                and OLD_NAME=#{oldName}
             </if>
         </trim>
     </select>

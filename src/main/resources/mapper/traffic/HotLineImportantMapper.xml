@@ -18,7 +18,7 @@
         SELECT *
         FROM TRAFFIC_HOTLINE_IMPORTANT
         WHERE DEL_FLAG='0'
-        AND DATA_TYPE = #{req.dataType}
+        AND DATA_TYPE=#{req.dataType}
         <if test="req.startDate != null and req.startDate!=''">
             AND START_DATE >= to_date(#{req.startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
@@ -42,6 +42,6 @@
         from TRAFFIC_HOTLINE_IMPORTANT
         where DATA_DATE =
               to_date(#{date}, 'yyyy-mm-dd hh24:mi:ss')
-          AND DATA_TYPE = #{dataType}
+          AND DATA_TYPE=#{dataType}
     </select>
 </mapper>

@@ -6,8 +6,8 @@
         SELECT *
         FROM TRAFFIC_PRODUCTION_RECORD
         WHERE DEL_FLAG='0'
-        AND DATA_TYPE = #{dataType}
-        AND STATION_CODE = #{stationCode}
+        AND DATA_TYPE=#{dataType}
+        AND STATION_CODE=#{stationCode}
         <if test="startDate != null and startDate!=''">
             AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
@@ -21,7 +21,7 @@
         SELECT *
         FROM TRAFFIC_PRODUCTION_RECORD
         WHERE DEL_FLAG='0'
-        AND STATION_CODE = #{stationCode}
+        AND STATION_CODE=#{stationCode}
         <if test="startDate != null">
             AND to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') >= START_DATE
         </if>
@@ -35,8 +35,8 @@
         SELECT COUNT(*)
         FROM TRAFFIC_PRODUCTION_RECORD
         WHERE DEL_FLAG = '0'
-        AND DATA_TYPE = #{dataType}
-        AND STATION_CODE = #{stationCode}
+        AND DATA_TYPE=#{dataType}
+        AND STATION_CODE=#{stationCode}
         <if test="startDate != null">
             AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
@@ -57,8 +57,8 @@
         FROM TRAFFIC_PRODUCTION_RECORD t1
         LEFT JOIN SYS_STATION t2 on t1.STATION_CODE = t2.STATION_CODE
         WHERE t1.DEL_FLAG = '0'
-        AND t1.STATION_CODE = #{stationCode}
-        AND t1.DATA_TYPE = #{dataType}
+        AND t1.STATION_CODE=#{stationCode}
+        AND t1.DATA_TYPE=#{dataType}
         <if test="startDate != null and startDate!=''">
             AND t1.START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
@@ -85,7 +85,7 @@
         SELECT *
         FROM TRAFFIC_PRODUCTION_APPROVAL
         WHERE DEL_FLAG = '0'
-        AND DATA_TYPE = #{dataType}
+        AND DATA_TYPE=#{dataType}
         AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
     </select>
@@ -131,12 +131,12 @@
 
     <update id="modifyRecordCount">
         UPDATE TRAFFIC_PRODUCTION_RECORD SET
-        TYPE1_COUNT=(SELECT COUNT(1) FROM TRAFFIC_PRODUCTION_INFO WHERE DEL_FLAG='0' AND PRODUCTION_TYPE = '1' AND STATION_CODE = #{stationCode} AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
-        TYPE2_COUNT=(SELECT COUNT(1) FROM TRAFFIC_PRODUCTION_INFO WHERE DEL_FLAG='0' AND PRODUCTION_TYPE = '2' AND STATION_CODE = #{stationCode} AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
-        TYPE3_COUNT=(SELECT COUNT(1) FROM TRAFFIC_PRODUCTION_INFO WHERE DEL_FLAG='0' AND PRODUCTION_TYPE = '3' AND STATION_CODE = #{stationCode} AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
-        TYPE4_COUNT=(SELECT COUNT(1) FROM TRAFFIC_PRODUCTION_INFO WHERE DEL_FLAG='0' AND PRODUCTION_TYPE = '4' AND STATION_CODE = #{stationCode} AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
-        TYPE5_COUNT=(SELECT COUNT(1) FROM TRAFFIC_PRODUCTION_INFO WHERE DEL_FLAG='0' AND PRODUCTION_TYPE = '5' AND STATION_CODE = #{stationCode} AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
-        TYPE6_COUNT=(SELECT COUNT(1) FROM TRAFFIC_PRODUCTION_INFO WHERE DEL_FLAG='0' AND PRODUCTION_TYPE = '6' AND STATION_CODE = #{stationCode} AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE)
+        TYPE1_COUNT=(SELECT COUNT(1) FROM TRAFFIC_PRODUCTION_INFO WHERE DEL_FLAG='0' AND PRODUCTION_TYPE = '1' AND STATION_CODE=#{stationCode} AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        TYPE2_COUNT=(SELECT COUNT(1) FROM TRAFFIC_PRODUCTION_INFO WHERE DEL_FLAG='0' AND PRODUCTION_TYPE = '2' AND STATION_CODE=#{stationCode} AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        TYPE3_COUNT=(SELECT COUNT(1) FROM TRAFFIC_PRODUCTION_INFO WHERE DEL_FLAG='0' AND PRODUCTION_TYPE = '3' AND STATION_CODE=#{stationCode} AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        TYPE4_COUNT=(SELECT COUNT(1) FROM TRAFFIC_PRODUCTION_INFO WHERE DEL_FLAG='0' AND PRODUCTION_TYPE = '4' AND STATION_CODE=#{stationCode} AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        TYPE5_COUNT=(SELECT COUNT(1) FROM TRAFFIC_PRODUCTION_INFO WHERE DEL_FLAG='0' AND PRODUCTION_TYPE = '5' AND STATION_CODE=#{stationCode} AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        TYPE6_COUNT=(SELECT COUNT(1) FROM TRAFFIC_PRODUCTION_INFO WHERE DEL_FLAG='0' AND PRODUCTION_TYPE = '6' AND STATION_CODE=#{stationCode} AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE)
         WHERE ID=#{id}
     </update>
 
@@ -149,7 +149,7 @@
         FROM TRAFFIC_PRODUCTION_RECORD
         WHERE ID=#{recordId}
         )
-        WHERE STATION_CODE = #{stationCode}
+        WHERE STATION_CODE=#{stationCode}
         AND DATA_TYPE=#{dataType}
         AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         AND END_DATE   = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
@@ -182,7 +182,7 @@
             SUBMIT_STATION=#{submitStation},
         </if>
         UPDATE_DATE=sysdate
-        WHERE ID = #{id}
+        WHERE ID=#{id}
     </update>
 
     <insert id="createProductionApprovalRelation">
@@ -199,7 +199,7 @@
         APPROVAL_STATUS=#{status},
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate
-        WHERE APPROVAL_ID = #{approvalId}
+        WHERE APPROVAL_ID=#{approvalId}
         AND RECORD_ID=#{recordId}
         AND APPROVAL_STATUS = '0'
     </update>
@@ -351,7 +351,7 @@
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate
         WHERE ID=#{id}
-        AND VERSION = #{version}
+        AND VERSION=#{version}
     </update>
 
     <delete id="deleteEvent">

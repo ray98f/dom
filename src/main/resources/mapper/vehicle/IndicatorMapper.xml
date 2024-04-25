@@ -6,7 +6,7 @@
         SELECT ID, TRAIN_COUNT, CONSTRUCT_COUNT, DELAY_COUNT, VERSION, DATA_TYPE,DATA_DATE,START_DATE, CREATE_DATE,END_DATE, UPDATE_DATE
         FROM VEHICLE_IMPORTANT_INDICATOR
         WHERE DEL_FLAG='0'
-        AND DATA_TYPE = #{dataType}
+        AND DATA_TYPE=#{dataType}
         <if test="startDate != null and startDate!=''">
             AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
@@ -20,7 +20,7 @@
         SELECT COUNT(*)
         FROM VEHICLE_IMPORTANT_INDICATOR
         WHERE DEL_FLAG = '0'
-        AND DATA_TYPE = #{dataType}
+        AND DATA_TYPE=#{dataType}
         <if test="startDate != null">
             AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
@@ -77,7 +77,7 @@
             VERSION = VERSION+1,
             UPDATE_BY=#{updateBy},
             UPDATE_DATE=sysdate
-        WHERE ID=#{id} and VERSION = #{version}
+        WHERE ID=#{id} and VERSION=#{version}
     </update>
 
     <update id="modifyDayCount">

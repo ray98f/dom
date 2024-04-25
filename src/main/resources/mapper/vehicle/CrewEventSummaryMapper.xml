@@ -6,7 +6,7 @@
         SELECT ID, TYPE1_COUNT,TYPE2_COUNT,TYPE3_COUNT,TYPE4_COUNT, VERSION, DATA_DATE,DATA_TYPE,START_DATE,END_DATE
         FROM VEHICLE_CREW_EVENT_SUMMARY
         WHERE DEL_FLAG='0'
-        AND DATA_TYPE = #{dataType}
+        AND DATA_TYPE=#{dataType}
         <if test="startDate != null and startDate!=''">
             AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
@@ -39,7 +39,7 @@
         SELECT COUNT(*)
         FROM VEHICLE_CREW_EVENT_SUMMARY
         WHERE DEL_FLAG = '0'
-        AND DATA_TYPE = #{dataType}
+        AND DATA_TYPE=#{dataType}
         <if test="startDate != null">
             AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
@@ -118,7 +118,7 @@
         VERSION = VERSION+1,
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate
-        WHERE ID=#{id} and VERSION = #{version}
+        WHERE ID=#{id} and VERSION=#{version}
     </update>
 
     <update id="modifyCount">
@@ -199,22 +199,22 @@
     <update id="modifyEvent">
         UPDATE VEHICLE_CREW_EVENT_INFO SET
         <if test="eventType !=null">
-            EVENT_TYPE = #{eventType},
+            EVENT_TYPE=#{eventType},
         </if>
         <if test="eventDesc !=null">
-            EVENT_DESC = #{eventDesc},
+            EVENT_DESC=#{eventDesc},
         </if>
         <if test="driverHandle !=null">
-            DRIVER_HANDLE = #{driverHandle},
+            DRIVER_HANDLE=#{driverHandle},
         </if>
         <if test="eventMeasure !=null">
-            EVENT_MEASURE = #{eventMeasure},
+            EVENT_MEASURE=#{eventMeasure},
         </if>
         VERSION = VERSION+1,
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate
         WHERE ID=#{id}
-        AND VERSION = #{version}
+        AND VERSION=#{version}
     </update>
 
     <delete id="deleteEvent">

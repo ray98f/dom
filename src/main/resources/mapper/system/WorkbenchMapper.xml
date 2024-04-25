@@ -36,7 +36,7 @@
     <select id="queryRoleByNode" resultType="java.lang.String">
         SELECT ROLE_ID
         FROM DOM_FLOW_NODE t1
-        WHERE t1.NODE_ID = #{nodeId}
+        WHERE t1.NODE_ID=#{nodeId}
     </select>
 
     <select id="queryUserByRole" resultType="java.lang.String">

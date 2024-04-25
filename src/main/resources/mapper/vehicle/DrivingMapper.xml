@@ -6,7 +6,7 @@
         SELECT ID, TRAIN_COUNT1, TRAIN_COUNT2, DRIVER_COUNT, MILEAGE_TOTAL, VERSION, DATA_DATE,END_DATE,START_DATE,DATA_TYPE, CREATE_DATE, UPDATE_DATE
         FROM VEHICLE_DRIVING_RECORD
         WHERE DEL_FLAG='0'
-        AND DATA_TYPE = #{dataType}
+        AND DATA_TYPE=#{dataType}
         <if test="startDate != null and startDate!=''">
             AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
@@ -24,7 +24,7 @@
         LEFT JOIN SYS_STATION t2 on t1.DEPOT_CODE = t2.STATION_CODE
         LEFT JOIN SYS_USER t3 on t1.update_BY = t3.LOGIN_NAME
         WHERE t1.DEL_FLAG='0'
-        AND t1.RECORD_ID = #{recordId}
+        AND t1.RECORD_ID=#{recordId}
         ORDER BY t1.CREATE_DATE desc
     </select>
 
@@ -42,7 +42,7 @@
         VERSION
         FROM VEHICLE_DRIVING_INFO
         WHERE DEL_FLAG='0'
-        AND RECORD_ID = #{recordId}
+        AND RECORD_ID=#{recordId}
     </select>
 
     <select id="queryInfoById" resultType="com.wzmtr.dom.dto.res.vehicle.DrivingRecordDetailResDTO">
@@ -55,7 +55,7 @@
         SELECT COUNT(*)
         FROM VEHICLE_DRIVING_RECORD
         WHERE DEL_FLAG = '0'
-        AND DATA_TYPE = #{dataType}
+        AND DATA_TYPE=#{dataType}
         <if test="startDate != null">
             AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
@@ -113,7 +113,7 @@
         VERSION = VERSION+1,
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate
-        WHERE ID=#{id} and VERSION = #{version}
+        WHERE ID=#{id} and VERSION=#{version}
     </update>
 
     <update id="modifyDayCount">
@@ -136,13 +136,13 @@
 
     <update id="modifyRecordCount">
         UPDATE VEHICLE_DRIVING_RECORD SET
-        TRAIN_COUNT1 = (SELECT REAL_DEPARTURE FROM VEHICLE_DRIVING_DEPOT WHERE DEL_FLAG='0' AND DEPOT_CODE='280' AND RECORD_ID = #{id}),
-        TRAIN_COUNT2 = (SELECT REAL_DEPARTURE FROM VEHICLE_DRIVING_DEPOT WHERE DEL_FLAG='0' AND DEPOT_CODE='281' AND RECORD_ID = #{id}),
+        TRAIN_COUNT1 = (SELECT REAL_DEPARTURE FROM VEHICLE_DRIVING_DEPOT WHERE DEL_FLAG='0' AND DEPOT_CODE='280' AND RECORD_ID=#{id}),
+        TRAIN_COUNT2 = (SELECT REAL_DEPARTURE FROM VEHICLE_DRIVING_DEPOT WHERE DEL_FLAG='0' AND DEPOT_CODE='281' AND RECORD_ID=#{id}),
         (DRIVER_COUNT,MILEAGE_TOTAL)
         =
         (SELECT DRIVER_COUNT,MILEAGE_TOTAL FROM VEHICLE_DRIVING_INFO
         WHERE DEL_FLAG='0'
-        AND RECORD_ID = #{id})
+        AND RECORD_ID=#{id})
         WHERE ID=#{id}
     </update>
 
@@ -210,28 +210,28 @@
     <update id="modifyDepotData">
         UPDATE VEHICLE_DRIVING_DEPOT SET
         <if test="planDeparture !=null">
-            PLAN_DEPARTURE = #{planDeparture},
+            PLAN_DEPARTURE=#{planDeparture},
         </if>
         <if test="planReceive !=null">
-            PLAN_RECEIVE = #{planReceive},
+            PLAN_RECEIVE=#{planReceive},
         </if>
         <if test="realDeparture !=null">
-            REAL_DEPARTURE = #{realDeparture},
+            REAL_DEPARTURE=#{realDeparture},
         </if>
         <if test="realReceive !=null">
-            REAL_RECEIVE = #{realReceive},
+            REAL_RECEIVE=#{realReceive},
         </if>
         <if test="railcarDeparture !=null">
-            RAILCAR_DEPARTURE = #{railcarDeparture},
+            RAILCAR_DEPARTURE=#{railcarDeparture},
         </if>
         <if test="railcarReceive !=null">
-            RAILCAR_RECEIVE = #{railcarReceive},
+            RAILCAR_RECEIVE=#{railcarReceive},
         </if>
         VERSION = VERSION+1,
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate
         WHERE ID=#{id}
-        AND VERSION = #{version}
+        AND VERSION=#{version}
     </update>
 
     <update id="modifyDepotCount">
@@ -249,7 +249,7 @@
         AND DATA_TYPE = '1'
         AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
-        AND DEPOT_CODE = #{depotCode}
+        AND DEPOT_CODE=#{depotCode}
         AND ID != #{id})
         WHERE ID=#{id}
     </update>
@@ -319,34 +319,34 @@
     <update id="modifyInfoData">
         UPDATE VEHICLE_DRIVING_INFO SET
         <if test="driverCount !=null">
-            DRIVER_COUNT = #{driverCount},
+            DRIVER_COUNT=#{driverCount},
         </if>
         <if test="planAttend !=null">
-            PLAN_ATTEND = #{planAttend},
+            PLAN_ATTEND=#{planAttend},
         </if>
         <if test="realAttend !=null">
-            REAL_ATTEND = #{realAttend},
+            REAL_ATTEND=#{realAttend},
         </if>
         <if test="supportCount !=null">
-            SUPPORT_COUNT = #{supportCount},
+            SUPPORT_COUNT=#{supportCount},
         </if>
         <if test="mileage !=null">
-            MILEAGE = #{mileage},
+            MILEAGE=#{mileage},
         </if>
         <if test="testMileage !=null">
-            TEST_MILEAGE = #{testMileage},
+            TEST_MILEAGE=#{testMileage},
         </if>
         <if test="mileageTotal !=null">
-            MILEAGE_TOTAL = #{mileageTotal},
+            MILEAGE_TOTAL=#{mileageTotal},
         </if>
         <if test="avgMileage !=null">
-            AVG_MILEAGE = #{avgMileage},
+            AVG_MILEAGE=#{avgMileage},
         </if>
         VERSION = VERSION+1,
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate
         WHERE ID=#{id}
-        AND VERSION = #{version}
+        AND VERSION=#{version}
     </update>
 
     <update id="modifyInfoCount">

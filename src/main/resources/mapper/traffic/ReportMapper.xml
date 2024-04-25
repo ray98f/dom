@@ -40,7 +40,7 @@
         FROM TRAFFIC_DAILY_REPORT dr
         LEFT JOIN SYS_USER u ON u.ID=dr.CREATE_BY
         WHERE dr.DEL_FLAG='0'
-        AND dr.PARENT_ID=(SELECT PARENT_ID FROM TRAFFIC_DAILY_REPORT t WHERE ID = #{id})
+        AND dr.PARENT_ID=(SELECT PARENT_ID FROM TRAFFIC_DAILY_REPORT t WHERE ID=#{id})
         ORDER BY dr.DAILY_DATE desc
     </select>
 
@@ -57,12 +57,12 @@
     <select id="checkDailyExist" resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM TRAFFIC_DAILY_REPORT
-        WHERE DEL_FLAG='0' AND PARENT_ID = '0'
+        WHERE DEL_FLAG='0' AND PARENT_ID='0'
         <if test="startDate != null">
-            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+            AND START_DATE=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
         <if test="endDate != null">
-            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+            AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
     </select>
 
@@ -193,8 +193,8 @@
         STATUS='2',
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate
-        WHERE ID=(SELECT PARENT_ID FROM TRAFFIC_DAILY_REPORT WHERE ID = #{id})
-        OR PARENT_ID = (SELECT PARENT_ID FROM TRAFFIC_DAILY_REPORT WHERE ID = #{id})
+        WHERE ID=(SELECT PARENT_ID FROM TRAFFIC_DAILY_REPORT WHERE ID=#{id})
+        OR PARENT_ID=(SELECT PARENT_ID FROM TRAFFIC_DAILY_REPORT WHERE ID=#{id})
     </update>
 
 
@@ -272,7 +272,7 @@
         FROM TRAFFIC_WEEKLY_REPORT dr
         LEFT JOIN SYS_USER u ON u.ID=dr.CREATE_BY
         WHERE dr.DEL_FLAG='0'
-        AND dr.PARENT_ID=(SELECT PARENT_ID FROM TRAFFIC_WEEKLY_REPORT t WHERE ID = #{id})
+        AND dr.PARENT_ID=(SELECT PARENT_ID FROM TRAFFIC_WEEKLY_REPORT t WHERE ID=#{id})
         ORDER BY dr.START_DATE desc
     </select>
 
@@ -291,12 +291,12 @@
     <select id="checkWeeklyExist" resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM TRAFFIC_WEEKLY_REPORT
-        WHERE DEL_FLAG='0' AND PARENT_ID = '0'
+        WHERE DEL_FLAG='0' AND PARENT_ID='0'
         <if test="startDate != null">
-            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+            AND START_DATE=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
         <if test="endDate != null">
-            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+            AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
     </select>
 
@@ -421,8 +421,8 @@
         STATUS='2',
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate
-        WHERE ID=(SELECT PARENT_ID FROM TRAFFIC_WEEKLY_REPORT WHERE ID = #{id})
-        OR PARENT_ID = (SELECT PARENT_ID FROM TRAFFIC_WEEKLY_REPORT WHERE ID = #{id})
+        WHERE ID=(SELECT PARENT_ID FROM TRAFFIC_WEEKLY_REPORT WHERE ID=#{id})
+        OR PARENT_ID=(SELECT PARENT_ID FROM TRAFFIC_WEEKLY_REPORT WHERE ID=#{id})
     </update>
 
     <update id="modifyMainWeekly">
@@ -499,7 +499,7 @@
         FROM TRAFFIC_MONTHLY_REPORT dr
         LEFT JOIN SYS_USER u ON u.ID=dr.CREATE_BY
         WHERE dr.DEL_FLAG='0'
-        AND dr.PARENT_ID=(SELECT PARENT_ID FROM TRAFFIC_MONTHLY_REPORT t WHERE ID = #{id})
+        AND dr.PARENT_ID=(SELECT PARENT_ID FROM TRAFFIC_MONTHLY_REPORT t WHERE ID=#{id})
         ORDER BY dr.START_DATE desc
     </select>
 
@@ -518,12 +518,12 @@
     <select id="checkMonthlyExist" resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM TRAFFIC_MONTHLY_REPORT
-        WHERE DEL_FLAG='0' AND PARENT_ID = '0'
+        WHERE DEL_FLAG='0' AND PARENT_ID='0'
         <if test="startDate != null">
-            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+            AND START_DATE=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
         <if test="endDate != null">
-            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+            AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
     </select>
 
@@ -648,8 +648,8 @@
         STATUS='2',
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate
-        WHERE ID=(SELECT PARENT_ID FROM TRAFFIC_MONTHLY_REPORT WHERE ID = #{id})
-        OR PARENT_ID = (SELECT PARENT_ID FROM TRAFFIC_MONTHLY_REPORT WHERE ID = #{id})
+        WHERE ID=(SELECT PARENT_ID FROM TRAFFIC_MONTHLY_REPORT WHERE ID=#{id})
+        OR PARENT_ID=(SELECT PARENT_ID FROM TRAFFIC_MONTHLY_REPORT WHERE ID=#{id})
     </update>
 
     <update id="modifyMainMonthly">

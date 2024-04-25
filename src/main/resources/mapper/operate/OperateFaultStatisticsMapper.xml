@@ -35,34 +35,34 @@
     <update id="modify">
         UPDATE OPERATE_FAULT_STATISTICS SET
         <if test="vehicleNum != null and vehicleNum != ''">
-            VEHICLE_NUM = #{vehicleNum},
+            VEHICLE_NUM=#{vehicleNum},
         </if>
         <if test="powerNum != null and powerNum != ''">
-            POWER_NUM = #{powerNum},
+            POWER_NUM=#{powerNum},
         </if>
         <if test="signalNum != null and signalNum != ''">
-            SIGNAL_NUM = #{signalNum},
+            SIGNAL_NUM=#{signalNum},
         </if>
         <if test="communicationNum != null and communicationNum != ''">
-            COMMUNICATION_NUM = #{communicationNum},
+            COMMUNICATION_NUM=#{communicationNum},
         </if>
         <if test="industryNum != null and industryNum != ''">
-            INDUSTRY_NUM = #{industryNum},
+            INDUSTRY_NUM=#{industryNum},
         </if>
         <if test="mechanismNum != null and mechanismNum != ''">
-            MECHANISM_NUM = #{mechanismNum},
+            MECHANISM_NUM=#{mechanismNum},
         </if>
         <if test="afcNum != null and afcNum != ''">
-            AFC_NUM = #{afcNum},
+            AFC_NUM=#{afcNum},
         </if>
         <if test="elseNum != null and elseNum != ''">
-            ELSE_NUM = #{elseNum},
+            ELSE_NUM=#{elseNum},
         </if>
         VERSION = VERSION + 1,
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate
-        WHERE ID = #{id}
-        AND VERSION = #{version}
+        WHERE ID=#{id}
+        AND VERSION=#{version}
     </update>
     <update id="delete">
         UPDATE OPERATE_FAULT_STATISTICS SET
@@ -77,7 +77,7 @@
         SELECT *
         FROM OPERATE_FAULT_STATISTICS
         WHERE DEL_FLAG='0'
-        AND DATA_TYPE = #{dataType}
+        AND DATA_TYPE=#{dataType}
         <if test="startDate != null and startDate!=''">
             AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>

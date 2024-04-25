@@ -6,8 +6,8 @@
         SELECT ID, DEPOT_CODE,PLAN_CONSTRUCT,REAL_CONSTRUCT, VERSION, DATA_TYPE, DATA_DATE, START_DATE,END_DATE,CREATE_DATE, UPDATE_DATE
         FROM VEHICLE_CONSTRUCT_RECORD
         WHERE DEL_FLAG='0'
-        AND DEPOT_CODE = #{depotCode}
-        AND DATA_TYPE = #{dataType}
+        AND DEPOT_CODE=#{depotCode}
+        AND DATA_TYPE=#{dataType}
         <if test="startDate != null and startDate!=''">
             AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
@@ -42,8 +42,8 @@
         SELECT COUNT(*)
         FROM VEHICLE_CONSTRUCT_RECORD
         WHERE DEL_FLAG = '0'
-        AND DEPOT_CODE = #{depotCode}
-        AND DATA_TYPE = #{dataType}
+        AND DEPOT_CODE=#{depotCode}
+        AND DATA_TYPE=#{dataType}
         <if test="startDate != null">
             AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
@@ -221,7 +221,7 @@
         VERSION = VERSION+1,
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate
-        WHERE ID=#{id} and VERSION = #{version}
+        WHERE ID=#{id} and VERSION=#{version}
     </update>
 
     <update id="modifyCount">
@@ -298,7 +298,7 @@
         AND DATA_TYPE = '1'
         AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
-        AND DEPOT_CODE = #{depotCode})
+        AND DEPOT_CODE=#{depotCode})
         WHERE ID=#{id}
     </update>
 
@@ -307,7 +307,7 @@
         VERSION, DATA_TYPE, DATA_DATE, START_DATE,END_DATE,CREATE_DATE, UPDATE_DATE
         FROM VEHICLE_CONSTRUCT_PLAN
         WHERE DEL_FLAG='0'
-        AND DEPOT_CODE = #{depotCode}
+        AND DEPOT_CODE=#{depotCode}
         <if test="startDate != null">
             AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>

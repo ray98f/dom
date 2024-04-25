@@ -6,8 +6,8 @@
         SELECT *
         FROM TRAFFIC_PRODUCTION_SUMMARY
         WHERE DEL_FLAG='0'
-        AND DATA_TYPE = #{dataType}
-        AND STATION_CODE = #{stationCode}
+        AND DATA_TYPE=#{dataType}
+        AND STATION_CODE=#{stationCode}
         <if test="startDate != null and startDate!=''">
             AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
@@ -21,8 +21,8 @@
         SELECT COUNT(*)
         FROM TRAFFIC_PRODUCTION_SUMMARY
         WHERE DEL_FLAG = '0'
-        AND DATA_TYPE = #{dataType}
-        AND STATION_CODE = #{stationCode}
+        AND DATA_TYPE=#{dataType}
+        AND STATION_CODE=#{stationCode}
         <if test="startDate != null">
             AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
@@ -42,7 +42,7 @@
         SELECT *
         FROM TRAFFIC_PRODUCTION_SUMMARY
         WHERE DATA_TYPE=#{dataType}
-        AND STATION_CODE = #{stationCode}
+        AND STATION_CODE=#{stationCode}
         AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
         AND DEL_FLAG = '0'
@@ -52,7 +52,7 @@
         SELECT *
         FROM TRAFFIC_PRODUCTION_SUMMARY
         WHERE DATA_TYPE=#{dataType}
-        AND STATION_CODE = #{stationCode}
+        AND STATION_CODE=#{stationCode}
         <if test='dataType == "1"'>
             AND START_DATE = TRUNC(to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')-1)
         </if>
@@ -126,7 +126,7 @@
             VERSION = VERSION+1,
             UPDATE_BY=#{updateBy},
             UPDATE_DATE=sysdate
-        WHERE ID=#{id} and VERSION = #{version}
+        WHERE ID=#{id} and VERSION=#{version}
     </update>
 
 

@@ -8,7 +8,7 @@
         SELECT COUNT(*)
         FROM TRAFFIC_ONEWAY_SALE
         WHERE DEL_FLAG = '0'
-        AND DATA_TYPE = #{dataType}
+        AND DATA_TYPE=#{dataType}
         <if test="startDate != null">
             AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
@@ -85,7 +85,7 @@
             VERSION = VERSION+1,
             UPDATE_BY=#{updateBy},
             UPDATE_DATE=sysdate
-        WHERE ID=#{id} and VERSION = #{version}
+        WHERE ID=#{id} and VERSION=#{version}
     </update>
 
     <update id="modifyCount">
@@ -112,7 +112,7 @@
         FROM TRAFFIC_ONEWAY_SALE
         WHERE DEL_FLAG='0'
         <if test="req.dataType != null and req.dataType!=''">
-            AND DATA_TYPE = #{req.dataType,jdbcType=VARCHAR}
+            AND DATA_TYPE=#{req.dataType,jdbcType=VARCHAR}
         </if>
         <if test="req.startDate != null and req.startDate!=''">
             AND START_DATE >= to_date(#{req.startDate},'yyyy-mm-dd hh24:mi:ss')
@@ -147,7 +147,7 @@
         VERSION = VERSION+1,
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate
-        WHERE ID=#{id} and VERSION = #{version}
+        WHERE ID=#{id} and VERSION=#{version}
     </update>
 
 
