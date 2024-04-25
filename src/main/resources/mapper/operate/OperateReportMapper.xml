@@ -378,7 +378,7 @@
         <if test="status!=null">
             STATUS=#{status},
         </if>
-        UPDATE_DATE=sysdate
+        UPDATE_DATE=sysdate, UPDATE_BY=#{updateBy}
         WHERE ID=#{id}
     </update>
 
@@ -387,7 +387,7 @@
         <if test="status!=null">
             STATUS=#{status},
         </if>
-        UPDATE_DATE=sysdate
+        UPDATE_DATE=sysdate, UPDATE_BY=#{updateBy}
         WHERE ID=#{id}
     </update>
 
@@ -396,7 +396,7 @@
         <if test="status!=null">
             STATUS=#{status},
         </if>
-        UPDATE_DATE=sysdate
+        UPDATE_DATE=sysdate, UPDATE_BY=#{updateBy}
         WHERE ID=#{id}
     </update>
 </mapper>

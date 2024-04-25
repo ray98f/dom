@@ -166,22 +166,4 @@ public interface VehicleReportMapper {
      * @param reqDTO 报表修改参数
      */
     void modifyMonthlyByFlow(ReportUpdateReqDTO reqDTO);
-
-    /**
-     * 编辑日报
-     * @param dailyReportReqDTO 日报参数
-     */
-    void dailyApprovalComplete(DailyReportReqDTO dailyReportReqDTO);
-
-    /**
-     * 编辑周报
-     * @param weeklyReportReqDTO 周报参数
-     */
-    void weeklyApprovalComplete(WeeklyReportReqDTO weeklyReportReqDTO);
-
-    /**
-     * 编辑月报
-     * @param monthlyReportReqDTO 月报参数
-     */
-    void monthlyApprovalComplete(MonthlyReportReqDTO monthlyReportReqDTO);
 }

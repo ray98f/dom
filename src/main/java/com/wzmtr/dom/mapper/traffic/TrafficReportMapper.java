@@ -1,6 +1,7 @@
 package com.wzmtr.dom.mapper.traffic;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wzmtr.dom.dto.req.system.ReportUpdateReqDTO;
 import com.wzmtr.dom.dto.req.traffic.DailyReportReqDTO;
 import com.wzmtr.dom.dto.req.traffic.MonthlyReportReqDTO;
 import com.wzmtr.dom.dto.req.traffic.WeeklyReportReqDTO;
@@ -47,7 +48,7 @@ public interface TrafficReportMapper {
 
     /**
      * 获取日报子报表
-     * @param id
+     * @param id id
      * @return 日报子报表
      */
     List<DailyReportResDTO> queryDailyById(String id);
@@ -68,27 +69,21 @@ public interface TrafficReportMapper {
     /**
      * 编辑日报
      * @param dailyReportReqDTO 日报参数
+     * @return 是否成功
      */
     int modifyDaily(DailyReportReqDTO dailyReportReqDTO);
 
     /**
      * 编辑日报
-     * @param dailyReportReqDTO 日报参数
+     * @param reqDTO 日报参数
      */
-    void dailyApprovalComplete(DailyReportReqDTO dailyReportReqDTO);
+    void dailyApprovalComplete(ReportUpdateReqDTO reqDTO);
 
     /**
      * 更新主日报
      * @param dailyReportReqDTO 日报参数
      */
     void modifyMainDaily(DailyReportReqDTO dailyReportReqDTO);
-
-    /**
-     * 删除日报
-     * @param ids ids
-     * @param userId 用户id
-     */
-    void deleteDaily(List<String> ids, String userId);
 
     /**
      * 分页查询周报列表
@@ -108,7 +103,7 @@ public interface TrafficReportMapper {
 
     /**
      * 获取周报子报表
-     * @param id
+     * @param id id
      * @return 周报子报表
      */
     List<WeeklyReportResDTO> queryWeeklyById(String id);
@@ -137,14 +132,15 @@ public interface TrafficReportMapper {
     /**
      * 编辑周报
      * @param weeklyReportReqDTO 周报参数
+     * @return 是否成功
      */
     int modifyWeekly(WeeklyReportReqDTO weeklyReportReqDTO);
 
     /**
      * 编辑周报
-     * @param weeklyReportReqDTO 周报参数
+     * @param reqDTO 周报参数
      */
-    void weeklyApprovalComplete(WeeklyReportReqDTO weeklyReportReqDTO);
+    void weeklyApprovalComplete(ReportUpdateReqDTO reqDTO);
 
     /**
      * 更新主周报
@@ -199,18 +195,37 @@ public interface TrafficReportMapper {
     /**
      * 编辑月报
      * @param monthlyReportReqDTO 月报参数
+     * @return 是否成功
      */
     int modifyMonthly(MonthlyReportReqDTO monthlyReportReqDTO);
 
     /**
      * 编辑月报
-     * @param monthlyReportReqDTO 月报参数
+     * @param reqDTO 月报参数
      */
-    void monthlyApprovalComplete(MonthlyReportReqDTO monthlyReportReqDTO);
+    void monthlyApprovalComplete(ReportUpdateReqDTO reqDTO);
 
     /**
      * 更新主周报
      * @param monthlyReportReqDTO 周报参数
      */
     void modifyMainMonthly(MonthlyReportReqDTO monthlyReportReqDTO);
+
+    /**
+     * 根据流程修改日报状态
+     * @param reqDTO 报表修改参数
+     */
+    void modifyDailyByFlow(ReportUpdateReqDTO reqDTO);
+
+    /**
+     * 根据流程修改周报状态
+     * @param reqDTO 报表修改参数
+     */
+    void modifyWeeklyByFlow(ReportUpdateReqDTO reqDTO);
+
+    /**
+     * 根据流程修改月报状态
+     * @param reqDTO 报表修改参数
+     */
+    void modifyMonthlyByFlow(ReportUpdateReqDTO reqDTO);
 }

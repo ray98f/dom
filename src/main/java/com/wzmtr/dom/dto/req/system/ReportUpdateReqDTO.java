@@ -24,4 +24,10 @@ public class ReportUpdateReqDTO {
     @ApiModelProperty(value = "日报状态:0草稿,1审核中,2审核通过")
     private String status;
 
+    /**
+     * 编辑人
+     */
+    @ApiModelProperty(value = "编辑人")
+    private String updateBy;
+
 }
