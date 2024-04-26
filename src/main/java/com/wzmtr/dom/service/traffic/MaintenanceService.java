@@ -34,7 +34,7 @@ public interface MaintenanceService {
      * @param recordId 入参数
      * @return 主要工作情况-详情
      */
-    MaintenanceRecordResDTO detail(String recordId);
+    MaintenanceRecordResDTO detail(String recordId, String startDate, String endDate);
 
     /**
      * 主要工作情况-新增

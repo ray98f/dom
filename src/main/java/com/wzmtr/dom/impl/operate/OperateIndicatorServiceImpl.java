@@ -65,11 +65,15 @@ public class OperateIndicatorServiceImpl implements OperateIndicatorService {
 
     @Override
     public IndicatorDetailResDTO detail(String id,String startDate, String endDate) {
-        IndicatorDetailResDTO detail = operateIndicatorMapper.queryInfoById(id,startDate,endDate);
-        List<IndicatorInfoResDTO> indicatorList =operateIndicatorMapper.infoList(id,startDate,endDate);
-        IndicatorPowerResDTO indicatorPower = operateIndicatorMapper.queryPower(id,startDate,endDate);
-        detail.setIndicatorList(indicatorList);
-        detail.setIndicatorPower(indicatorPower);
+        IndicatorDetailResDTO detail = operateIndicatorMapper.queryInfoById(id, startDate, endDate);
+        List<IndicatorInfoResDTO> indicatorList = operateIndicatorMapper.infoList(id, startDate, endDate);
+        IndicatorPowerResDTO indicatorPower = operateIndicatorMapper.queryPower(id, startDate, endDate);
+        if (CollectionUtils.isNotEmpty(indicatorList)) {
+            detail.setIndicatorList(indicatorList);
+        }
+        if (null != indicatorPower) {
+            detail.setIndicatorPower(indicatorPower);
+        }
         return detail;
     }
 

@@ -63,8 +63,9 @@ public class MaintenanceController {
      */
     @GetMapping("/detail")
     @ApiOperation(value = "设备维保施工情况")
-    public DataResponse<MaintenanceRecordResDTO> add(@RequestParam String id) {
-        return DataResponse.of(maintenanceService.detail(id));
+    public DataResponse<MaintenanceRecordResDTO> add(@RequestParam(required = false) String id  , @RequestParam(required = false) String startDate,
+                                                     @RequestParam(required = false) String endDate) {
+        return DataResponse.of(maintenanceService.detail(id,startDate,endDate));
     }
 
     /**

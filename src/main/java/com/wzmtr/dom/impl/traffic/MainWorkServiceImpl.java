@@ -35,8 +35,8 @@ public class MainWorkServiceImpl implements MainWorkService {
     }
 
     @Override
-    public MainWorkResDTO detail(String recordId) {
-        return mainWorkMapper.queryInfoById(recordId);
+    public MainWorkResDTO detail(String recordId, String startDate, String endDate) {
+        return mainWorkMapper.queryInfoById(recordId,startDate,endDate);
     }
 
     @Override

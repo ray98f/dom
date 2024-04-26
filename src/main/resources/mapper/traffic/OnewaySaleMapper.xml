@@ -126,11 +126,11 @@
         select *
         from TRAFFIC_ONEWAY_SALE
         WHERE DEL_FLAG='0'
-        <if test="startDate != null">
-            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        <if test="startDate != null and startDate!=''">
+            AND START_DATE >= to_date(#{req.startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
-        <if test="endDate != null">
-            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        <if test="endDate != null and endDate!=''">
+            AND to_date(#{req.endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
         </if>
         <if test="id != null">
             AND ID = #{id}

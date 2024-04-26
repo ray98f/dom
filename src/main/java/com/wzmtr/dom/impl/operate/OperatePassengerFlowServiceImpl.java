@@ -7,12 +7,14 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.page.PageMethod;
+import com.google.common.collect.Lists;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dataobject.operate.OperatePassengerFlowDetailDO;
 import com.wzmtr.dom.dto.req.operate.passengerflow.PassengerFlowAddReqDTO;
 import com.wzmtr.dom.dto.req.traffic.PassengerInfoReqDTO;
 import com.wzmtr.dom.dto.res.operate.passengerflow.PassengerFlowDetailResDTO;
 import com.wzmtr.dom.dto.res.operate.passengerflow.PassengerFlowListResDTO;
+import com.wzmtr.dom.dto.res.system.StationResDTO;
 import com.wzmtr.dom.dto.res.traffic.PassengerInfoResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
@@ -21,11 +23,9 @@ import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
 import com.wzmtr.dom.mapper.operate.OperatePassengerFlowDetailMapper;
 import com.wzmtr.dom.mapper.operate.OperatePassengerFlowInfoMapper;
+import com.wzmtr.dom.mapper.system.StationMapper;
 import com.wzmtr.dom.service.operate.OperatePassengerFlowService;
-import com.wzmtr.dom.utils.BeanUtils;
-import com.wzmtr.dom.utils.HttpUtils;
-import com.wzmtr.dom.utils.StringUtils;
-import com.wzmtr.dom.utils.TokenUtils;
+import com.wzmtr.dom.utils.*;
 import org.apache.ibatis.executor.BatchResult;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -34,9 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * description:
@@ -61,6 +59,8 @@ public class OperatePassengerFlowServiceImpl implements OperatePassengerFlowServ
 
     @Value("${open-api.acc.person-count}")
     private String accPersonCountApi;
+    @Autowired
+    private StationMapper stationMapper;
 
 
     @Override
@@ -85,13 +85,36 @@ public class OperatePassengerFlowServiceImpl implements OperatePassengerFlowServ
         PassengerFlowDetailResDTO passengerFlowDetailResDTO = new PassengerFlowDetailResDTO();
         // 获取详情
         OperatePassengerFlowDetailDO detail = passengerFlowDetailMapper.info(id,startDate,endDate);
+        List<PassengerInfoResDTO> passengerInfoResDTOS = Lists.newArrayList();
         if (null != detail) {
             passengerFlowDetailResDTO = BeanUtils.convert(detail, PassengerFlowDetailResDTO.class);
             // 车站客流列表
-            List<PassengerInfoResDTO> passengerInfoResDTOS = operatePassengerFlowInfoMapper.eachStation(DateUtil.formatDate(detail.getStartDate()), DateUtil.formatDate(detail.getEndDate()));
-            passengerFlowDetailResDTO.setStationPassengerList(passengerInfoResDTOS);
+            passengerInfoResDTOS = operatePassengerFlowInfoMapper.eachStation(DateUtil.formatDate(detail.getStartDate()), DateUtil.formatDate(detail.getEndDate()));
         }
+        if (CollectionUtil.isEmpty(passengerInfoResDTOS)){
+            passengerInfoResDTOS = dataInit();
+        }
+        passengerFlowDetailResDTO.setStationPassengerList(passengerInfoResDTOS);
         return passengerFlowDetailResDTO;
+    }
+
+    private List<PassengerInfoResDTO> dataInit() {
+        List<PassengerInfoResDTO> list = Lists.newArrayList();
+        List<String> codes = Arrays.asList("231","232","233","234","235","236","237","238","239","240","241","242","243","244","245","246","247","248","249","250");
+        Set<String> strings = new HashSet<>(codes);
+        List<StationResDTO> stationResDTOS = stationMapper.listByCodes(strings);
+        Map<String, StationResDTO> map = StreamUtil.toMap(stationResDTOS, StationResDTO::getStationCode);
+        for (String a : codes) {
+            PassengerInfoResDTO res = new PassengerInfoResDTO();
+            res.setStationCode(a);
+            if (map.containsKey(a)){
+                res.setStationName(map.get(a).getStationName());
+            }
+            //缺省值0
+            res.setPassenger(0.0);
+            list.add(res);
+        }
+        return list;
     }
 
     @Override
