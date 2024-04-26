@@ -28,10 +28,9 @@ public interface ProductionSummaryService {
 
     /**
      * 安全生产情况汇总-详情
-     * @param recordId 入参数
      * @return 客流总体情况-详情
      */
-    ProductionSummaryResDTO detail(String recordId);
+    ProductionSummaryResDTO detail(String id,String startDate,String endDate);;
 
     /**
      * 安全生产情况汇总-新增

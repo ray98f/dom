@@ -60,7 +60,7 @@ public interface ProductionMapper {
      * @param id 入参数
      * @return ProductionDetailResDTO
      */
-    ProductionDetailResDTO queryInfoById(String id);
+    ProductionDetailResDTO queryInfoById(String id,String startDate,String endDate);
 
     /**
      * 详情

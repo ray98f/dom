@@ -37,10 +37,10 @@
             ID=#{id}
         </if>
         <if test="startDate != null">
-            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+            AND to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') >= START_DATE
         </if>
         <if test="endDate != null">
-            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+            AND END_DATE >= to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
     </select>
 

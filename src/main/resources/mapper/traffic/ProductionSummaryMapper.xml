@@ -35,7 +35,17 @@
         SELECT t1.*, t2.STATION_NAME
         FROM TRAFFIC_PRODUCTION_SUMMARY t1
         LEFT JOIN SYS_STATION t2 on t1.STATION_CODE = t2.STATION_CODE
-        WHERE t1.ID=#{id} AND t1.DEL_FLAG = '0'
+        WHERE  t1.DEL_FLAG = '0'
+        <if test="id != null">
+            AND t1.ID=#{id}
+        </if>
+        <if test="startDate != null">
+            AND to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') >=  t1.START_DATE
+        </if>
+        <if test="endDate != null">
+            AND  t1.END_DATE >= to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+
     </select>
 
     <select id="queryInfoByDate" resultType="com.wzmtr.dom.dto.res.traffic.ProductionSummaryResDTO">
