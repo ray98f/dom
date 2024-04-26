@@ -12,6 +12,7 @@ import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.entity.response.PageResponse;
 import com.wzmtr.dom.service.traffic.HotLineHandoverService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,8 +52,11 @@ public class HotLineHandoverController {
      */
     @GetMapping("/detail")
     @ApiOperation(value = "需转交其他部门做处理事项详情")
-    public DataResponse<List<HotLineHandoverDetailResDTO>> detail(@RequestParam String date,@RequestParam String dataType) {
-        return DataResponse.of(hotLineHandoverService.detail(date,dataType));
+    public DataResponse<List<HotLineHandoverDetailResDTO>> detail(@RequestParam String date,
+                                                                  @RequestParam(required = false) String startDate,
+                                                                  @RequestParam(required = false) String endDate,
+                                                                  @RequestParam String dataType) {
+        return DataResponse.of(hotLineHandoverService.detail(date,dataType,startDate,endDate));
     }
 
     @PostMapping("/acc")

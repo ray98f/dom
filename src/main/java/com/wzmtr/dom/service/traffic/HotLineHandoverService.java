@@ -11,6 +11,7 @@ import com.wzmtr.dom.dto.res.traffic.hotline.HotLineHandoverListResDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineImportantDetailResDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineImportantListResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Date;
 import java.util.List;
@@ -24,7 +25,8 @@ public interface HotLineHandoverService {
 
     Page<HotLineHandoverListResDTO> list(HotLineHandoverListReqDTO reqDTO);
 
-    List<HotLineHandoverDetailResDTO> detail(String date,String dataType);
+    List<HotLineHandoverDetailResDTO> detail(String date, String dataType, String startDate,
+                                             String endDate);
 
     HotLineHandoverDetailResDTO acc(SidReqDTO reqDTO);
 
