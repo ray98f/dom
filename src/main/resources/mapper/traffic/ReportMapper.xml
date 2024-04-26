@@ -41,7 +41,7 @@
         LEFT JOIN SYS_USER u ON u.ID=dr.CREATE_BY
         WHERE dr.DEL_FLAG='0'
         AND dr.PARENT_ID=(SELECT PARENT_ID FROM TRAFFIC_DAILY_REPORT t WHERE ID=#{id})
-        ORDER BY dr.DAILY_DATE desc
+        ORDER BY dr.REPORT_TYPE desc, dr.REPORT_TYPE ASC
     </select>
 
     <select id="dailyDetail" resultType="com.wzmtr.dom.dto.res.traffic.DailyReportResDTO">
@@ -273,7 +273,7 @@
         LEFT JOIN SYS_USER u ON u.ID=dr.CREATE_BY
         WHERE dr.DEL_FLAG='0'
         AND dr.PARENT_ID=(SELECT PARENT_ID FROM TRAFFIC_WEEKLY_REPORT t WHERE ID=#{id})
-        ORDER BY dr.START_DATE desc
+        ORDER BY dr.START_DATE desc, dr.REPORT_TYPE ASC
     </select>
 
     <select id="queryWeeklyByParent" resultType="com.wzmtr.dom.dto.res.traffic.WeeklyReportResDTO">
@@ -500,7 +500,7 @@
         LEFT JOIN SYS_USER u ON u.ID=dr.CREATE_BY
         WHERE dr.DEL_FLAG='0'
         AND dr.PARENT_ID=(SELECT PARENT_ID FROM TRAFFIC_MONTHLY_REPORT t WHERE ID=#{id})
-        ORDER BY dr.START_DATE desc
+        ORDER BY dr.START_DATE desc, dr.REPORT_TYPE ASC
     </select>
 
     <select id="queryMonthlyByParent" resultType="com.wzmtr.dom.dto.res.traffic.MonthlyReportResDTO">

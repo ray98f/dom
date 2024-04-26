@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 系统-工作台
@@ -167,7 +168,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
             // 节点流转
             for (String user : nextUserList) {
                 addTodo(title, todoReqDTO.getReportId(), todoResDTO.getReportTable(), nodeDetail.getNodeType(),
-                        todoResDTO.getDataType(), nodeDetail.getFlowId(), nodeDetail.getNodeId(), user, "0", null);
+                        todoResDTO.getDataType(), nodeDetail.getFlowId(), nodeDetail.getNodeId(), user, CommonConstants.ZERO_STRING, null);
             }
         }
     }
@@ -202,22 +203,30 @@ public class WorkbenchServiceImpl implements WorkbenchService {
     private void trafficDailyApproval(TodoReqDTO todoReqDTO, TodoResDTO todoResDTO) {
         // 若属于第一个节点，需查询这三个节点下是否还存在未审批的待办，没有则可以流转到下一节点
         List<String> nodes = Arrays.asList(CommonConstants.TRAFFIC_DAILY_NODE1_SUB);
+        // 获取各子报表
+        List<DailyReportResDTO> dailyList = trafficReportMapper.queryDailyById(todoReqDTO.getReportId());
+
         if (nodes.contains(todoResDTO.getCurrentNode())) {
             List<TodoResDTO> todoList = workbenchMapper.queryTodoByNode(todoReqDTO.getProcessKey(), todoReqDTO.getReportId(), nodes);
-            if (StringUtils.isNull(todoList)) {
+            List<String> status = dailyList.stream().map(DailyReportResDTO::getStatus).collect(Collectors.toList());
+            if (StringUtils.isNull(todoList) && !status.contains(CommonConstants.ZERO_STRING)) {
                 String nextNode = workbenchMapper.queryNextNode(todoResDTO.getCurrentNode());
                 FlowNodeResDTO nodeDetail = workbenchMapper.nodeDetail(nextNode);
                 List<String> nextUserList = getUserByNode(nextNode);
-                // 获取各子报表
-                List<DailyReportResDTO> dailyList = trafficReportMapper.queryDailyById(todoReqDTO.getReportId());
                 // 节点流转
                 for (String user : nextUserList) {
                     String title = DateUtil.formatDate(dailyList.get(0).getDailyDate()) + "运营日报-请审批";
                     // 主报表添加待办
-                    String parentId = addTodo(title, dailyList.get(0).getParentId(), CommonConstants.TRAFFIC_DAILY_REPORT, nodeDetail.getNodeType(), CommonConstants.DATA_TYPE_DAILY, nodeDetail.getFlowId(), nodeDetail.getNodeId(), user, null, null);
-                    // 判断子报表状态 为1审批中则发送待办
+                    String parentId = addTodo(title, dailyList.get(0).getParentId(),
+                            CommonConstants.TRAFFIC_DAILY_REPORT, nodeDetail.getNodeType(),
+                            CommonConstants.DATA_TYPE_DAILY, nodeDetail.getFlowId(), nodeDetail.getNodeId(),
+                            user, CommonConstants.ZERO_STRING, null);
+                    // 发送子报表待办（隐藏）
                     for (DailyReportResDTO r : dailyList) {
-                        addTodo(title, r.getId(), CommonConstants.TRAFFIC_DAILY_REPORT, nodeDetail.getNodeType(), CommonConstants.DATA_TYPE_DAILY, nodeDetail.getFlowId(), nodeDetail.getNodeId(), user, CommonConstants.ONE_STRING, parentId);
+                        addTodo(title, r.getId(), CommonConstants.TRAFFIC_DAILY_REPORT,
+                                nodeDetail.getNodeType(), CommonConstants.DATA_TYPE_DAILY,
+                                nodeDetail.getFlowId(), nodeDetail.getNodeId(),
+                                user, CommonConstants.ONE_STRING, parentId);
                     }
                 }
             }
@@ -226,11 +235,9 @@ public class WorkbenchServiceImpl implements WorkbenchService {
             ReportUpdateReqDTO modifyReq = childTodoUpdate(todoReqDTO, todoResDTO);
             // 获取各子报表
             String goNextFlag = CommonConstants.ONE_STRING;
-            List<DailyReportResDTO> dailyList = trafficReportMapper.queryDailyById(todoReqDTO.getReportId());
             for (DailyReportResDTO daily : dailyList) {
                 // 存在草稿、一级审核状态下，不流转
-                if (CommonConstants.ONE_STRING.equals(daily.getStatus())
-                        || CommonConstants.ZERO_STRING.equals(daily.getStatus())) {
+                if (CommonConstants.ONE_STRING.equals(daily.getStatus()) || CommonConstants.ZERO_STRING.equals(daily.getStatus())) {
                     goNextFlag = CommonConstants.ZERO_STRING;
                     break;
                 }
@@ -241,12 +248,12 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                 FlowNodeResDTO nodeDetail = workbenchMapper.nodeDetail(nextNode);
                 List<String> nextUserList = getUserByNode(nextNode);
                 String title = "运营日报-请审批";
-                //下一节点不是待办,则更新报表为审批完成
+                // 下一节点不是待办,则更新报表为审批完成
                 if (!nodeDetail.getNodeType().equals(CommonConstants.ONE_STRING)) {
                     title = "运营日报-请查阅";
                     trafficReportMapper.dailyApprovalComplete(modifyReq);
                 }
-                //节点流转
+                // 节点流转
                 for (String user : nextUserList) {
                     addTodo(DateUtil.formatDate(dailyList.get(0).getDailyDate()) + title,
                             dailyList.get(0).getParentId(),
@@ -254,7 +261,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                             nodeDetail.getNodeType(),
                             CommonConstants.DATA_TYPE_DAILY,
                             nodeDetail.getFlowId(),
-                            nodeDetail.getNodeId(), user, "0", null);
+                            nodeDetail.getNodeId(), user, CommonConstants.ZERO_STRING, null);
                 }
             }
         }
@@ -269,22 +276,30 @@ public class WorkbenchServiceImpl implements WorkbenchService {
     private void trafficWeeklyApproval(TodoReqDTO todoReqDTO, TodoResDTO todoResDTO) {
         // 若属于第一个节点，需查询这三个节点下是否还存在未审批的待办，没有则可以流转到下一节点
         List<String> nodes = Arrays.asList(CommonConstants.TRAFFIC_WEEKLY_NODE1_SUB);
+        // 获取各子报表
+        List<WeeklyReportResDTO> weeklyList = trafficReportMapper.queryWeeklyById(todoReqDTO.getReportId());
+
         if (nodes.contains(todoResDTO.getCurrentNode())) {
             List<TodoResDTO> todoList = workbenchMapper.queryTodoByNode(todoReqDTO.getProcessKey(), todoReqDTO.getReportId(), nodes);
-            if (StringUtils.isNull(todoList)) {
+            List<String> status = weeklyList.stream().map(WeeklyReportResDTO::getStatus).collect(Collectors.toList());
+            if (StringUtils.isNull(todoList) && !status.contains(CommonConstants.ZERO_STRING)) {
                 String nextNode = workbenchMapper.queryNextNode(todoResDTO.getCurrentNode());
                 FlowNodeResDTO nodeDetail = workbenchMapper.nodeDetail(nextNode);
                 List<String> nextUserList = getUserByNode(nextNode);
-                // 获取各子报表
-                List<WeeklyReportResDTO> weeklyList = trafficReportMapper.queryWeeklyById(todoReqDTO.getReportId());
                 // 节点流转
                 for (String user : nextUserList) {
                     String title = DateUtil.formatDate(weeklyList.get(0).getStartDate()) + "-" + DateUtil.formatDate(weeklyList.get(0).getEndDate()) + "运营周报-请审批";
                     // 主报表添加待办
-                    String parentId = addTodo(title, weeklyList.get(0).getParentId(), CommonConstants.TRAFFIC_WEEKLY_REPORT, nodeDetail.getNodeType(), CommonConstants.DATA_TYPE_WEEKLY, nodeDetail.getFlowId(), nodeDetail.getNodeId(), user, null, null);
+                    String parentId = addTodo(title, weeklyList.get(0).getParentId(),
+                            CommonConstants.TRAFFIC_WEEKLY_REPORT, nodeDetail.getNodeType(),
+                            CommonConstants.DATA_TYPE_WEEKLY, nodeDetail.getFlowId(), nodeDetail.getNodeId(),
+                            user, CommonConstants.ZERO_STRING, null);
                     // 判断子报表状态 为1审批中则发送待办
                     for (WeeklyReportResDTO r : weeklyList) {
-                        addTodo(title, r.getId(), CommonConstants.TRAFFIC_WEEKLY_REPORT, nodeDetail.getNodeType(), CommonConstants.DATA_TYPE_WEEKLY, nodeDetail.getFlowId(), nodeDetail.getNodeId(), user, CommonConstants.ONE_STRING, parentId);
+                        addTodo(title, r.getId(), CommonConstants.TRAFFIC_WEEKLY_REPORT,
+                                nodeDetail.getNodeType(), CommonConstants.DATA_TYPE_WEEKLY,
+                                nodeDetail.getFlowId(), nodeDetail.getNodeId(),
+                                user, CommonConstants.ONE_STRING, parentId);
                     }
                 }
             }
@@ -293,11 +308,9 @@ public class WorkbenchServiceImpl implements WorkbenchService {
             ReportUpdateReqDTO modifyReq = childTodoUpdate(todoReqDTO, todoResDTO);
             // 获取各子报表
             String goNextFlag = CommonConstants.ONE_STRING;
-            List<WeeklyReportResDTO> weeklyList = trafficReportMapper.queryWeeklyById(todoReqDTO.getReportId());
             for (WeeklyReportResDTO weekly : weeklyList) {
                 // 存在草稿、一级审核状态下，不流转
-                if (CommonConstants.ONE_STRING.equals(weekly.getStatus())
-                        || CommonConstants.ZERO_STRING.equals(weekly.getStatus())) {
+                if (CommonConstants.ONE_STRING.equals(weekly.getStatus()) || CommonConstants.ZERO_STRING.equals(weekly.getStatus())) {
                     goNextFlag = CommonConstants.ZERO_STRING;
                     break;
                 }
@@ -321,7 +334,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                             nodeDetail.getNodeType(),
                             CommonConstants.DATA_TYPE_WEEKLY,
                             nodeDetail.getFlowId(),
-                            nodeDetail.getNodeId(), user, "0", null);
+                            nodeDetail.getNodeId(), user, CommonConstants.ZERO_STRING, null);
                 }
             }
         }
@@ -336,22 +349,30 @@ public class WorkbenchServiceImpl implements WorkbenchService {
     private void trafficMonthlyApproval(TodoReqDTO todoReqDTO, TodoResDTO todoResDTO) {
         // 若属于第一个节点，需查询这三个节点下是否还存在未审批的待办，没有则可以流转到下一节点
         List<String> nodes = Arrays.asList(CommonConstants.TRAFFIC_MONTHLY_NODE1_SUB);
+        // 获取各子报表
+        List<MonthlyReportResDTO> monthlyList = trafficReportMapper.queryMonthlyById(todoReqDTO.getReportId());
+
         if (nodes.contains(todoResDTO.getCurrentNode())) {
             List<TodoResDTO> todoList = workbenchMapper.queryTodoByNode(todoReqDTO.getProcessKey(), todoReqDTO.getReportId(), nodes);
-            if (StringUtils.isNull(todoList)) {
+            List<String> status = monthlyList.stream().map(MonthlyReportResDTO::getStatus).collect(Collectors.toList());
+            if (StringUtils.isNull(todoList) && !status.contains(CommonConstants.ZERO_STRING)) {
                 String nextNode = workbenchMapper.queryNextNode(todoResDTO.getCurrentNode());
                 FlowNodeResDTO nodeDetail = workbenchMapper.nodeDetail(nextNode);
                 List<String> nextUserList = getUserByNode(nextNode);
-                // 获取各子报表
-                List<MonthlyReportResDTO> monthlyList = trafficReportMapper.queryMonthlyById(todoReqDTO.getReportId());
                 // 节点流转
                 for (String user : nextUserList) {
                     String title = DateUtil.formatDate(monthlyList.get(0).getStartDate()) + "-" + DateUtil.formatDate(monthlyList.get(0).getEndDate()) + "运营月报-请审批";
                     // 主报表添加待办
-                    String parentId = addTodo(title, monthlyList.get(0).getParentId(), CommonConstants.TRAFFIC_MONTHLY_REPORT, nodeDetail.getNodeType(), CommonConstants.DATA_TYPE_MONTHLY, nodeDetail.getFlowId(), nodeDetail.getNodeId(), user, null, null);
+                    String parentId = addTodo(title, monthlyList.get(0).getParentId(),
+                            CommonConstants.TRAFFIC_MONTHLY_REPORT, nodeDetail.getNodeType(),
+                            CommonConstants.DATA_TYPE_MONTHLY, nodeDetail.getFlowId(), nodeDetail.getNodeId(),
+                            user, CommonConstants.ZERO_STRING, null);
                     // 判断子报表状态 为1审批中则发送待办
                     for (MonthlyReportResDTO r : monthlyList) {
-                        addTodo(title, r.getId(), CommonConstants.TRAFFIC_MONTHLY_REPORT, nodeDetail.getNodeType(), CommonConstants.DATA_TYPE_MONTHLY, nodeDetail.getFlowId(), nodeDetail.getNodeId(), user, CommonConstants.ONE_STRING, parentId);
+                        addTodo(title, r.getId(), CommonConstants.TRAFFIC_MONTHLY_REPORT,
+                                nodeDetail.getNodeType(), CommonConstants.DATA_TYPE_MONTHLY,
+                                nodeDetail.getFlowId(), nodeDetail.getNodeId(),
+                                user, CommonConstants.ONE_STRING, parentId);
                     }
                 }
             }
@@ -360,11 +381,9 @@ public class WorkbenchServiceImpl implements WorkbenchService {
             ReportUpdateReqDTO modifyReq = childTodoUpdate(todoReqDTO, todoResDTO);
             // 获取各子报表
             String goNextFlag = CommonConstants.ONE_STRING;
-            List<MonthlyReportResDTO> monthlyList = trafficReportMapper.queryMonthlyById(todoReqDTO.getReportId());
             for (MonthlyReportResDTO monthly : monthlyList) {
                 // 存在草稿、一级审核状态下，不流转
-                if (CommonConstants.ONE_STRING.equals(monthly.getStatus())
-                        || CommonConstants.ZERO_STRING.equals(monthly.getStatus())) {
+                if (CommonConstants.ONE_STRING.equals(monthly.getStatus()) || CommonConstants.ZERO_STRING.equals(monthly.getStatus())) {
                     goNextFlag = CommonConstants.ZERO_STRING;
                     break;
                 }
@@ -388,7 +407,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                             nodeDetail.getNodeType(),
                             CommonConstants.DATA_TYPE_MONTHLY,
                             nodeDetail.getFlowId(),
-                            nodeDetail.getNodeId(), user, "0", null);
+                            nodeDetail.getNodeId(), user, CommonConstants.ZERO_STRING, null);
                 }
             }
         }
@@ -405,14 +424,18 @@ public class WorkbenchServiceImpl implements WorkbenchService {
         String modifyParenFlag = CommonConstants.ONE_STRING;
         String parenStatus = CommonConstants.ONE_STRING;
         List<TodoResDTO> subTodoList = workbenchMapper.queryTodoByParent(todoResDTO.getParentId());
+        // 存在未完成的待办
         for (TodoResDTO todo : subTodoList) {
-            // 存在未完成的待办
             if (CommonConstants.ZERO_STRING.equals(todo.getStatus())) {
                 modifyParenFlag = CommonConstants.ZERO_STRING;
+                break;
             }
-            //存在驳回的情况,父待办则为驳回
+        }
+        // 存在驳回的情况,父待办则为驳回
+        for (TodoResDTO todo : subTodoList) {
             if (CommonConstants.TWO_STRING.equals(todo.getApprovalStatus())) {
                 parenStatus = CommonConstants.TWO_STRING;
+                break;
             }
         }
         // 将主待办更新为已办
@@ -490,7 +513,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
             // 节点流转
             for (String user : nextUserList) {
                 addTodo(title, todoReqDTO.getReportId(), todoResDTO.getReportTable(), nodeDetail.getNodeType(),
-                        todoResDTO.getDataType(), nodeDetail.getFlowId(), nodeDetail.getNodeId(), user, "0", null);
+                        todoResDTO.getDataType(), nodeDetail.getFlowId(), nodeDetail.getNodeId(), user, CommonConstants.ZERO_STRING, null);
             }
         }
     }

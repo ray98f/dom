@@ -73,7 +73,6 @@
         FROM DOM_APPROVAL_HISTORY ah
         LEFT JOIN SYS_USER u on u.ID=ah.CREATE_BY
         WHERE ah.DEL_FLAG='0'
-        AND ah.STATUS='0'
         AND ah.PARENT_ID=#{parentId}
     </select>
 
