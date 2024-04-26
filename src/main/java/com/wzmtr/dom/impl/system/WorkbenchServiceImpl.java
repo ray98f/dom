@@ -541,6 +541,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
         approvalReqDTO.setCurrentNode(currentNode);
         approvalReqDTO.setId(TokenUtils.getUuId());
         approvalReqDTO.setApprovalUser(userId);
+        approvalReqDTO.setCreateBy(TokenUtils.getCurrentPersonId());
         if (StringUtils.isNotEmpty(isHide)) {
             approvalReqDTO.setIsHide(isHide);
         }

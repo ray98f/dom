@@ -8,7 +8,6 @@ import com.wzmtr.dom.dto.req.traffic.WeeklyReportReqDTO;
 import com.wzmtr.dom.dto.res.traffic.DailyReportResDTO;
 import com.wzmtr.dom.dto.res.traffic.MonthlyReportResDTO;
 import com.wzmtr.dom.dto.res.traffic.WeeklyReportResDTO;
-import com.wzmtr.dom.entity.BaseIdsEntity;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
@@ -92,6 +91,7 @@ public class TrafficReportController {
 
     /**
      * 报审-日报
+     * @param currentLoginUser 登录用户信息
      * @param dailyReportReqDTO 日报参数
      * @return 成功
      */
@@ -137,7 +137,7 @@ public class TrafficReportController {
     @PostMapping("/weekly/add")
     @ApiOperation(value = "新增-周报")
     public DataResponse<T> addWeekly(@CurrUser CurrentLoginUser currentLoginUser,
-                                    @RequestBody WeeklyReportReqDTO weeklyReportReqDTO) {
+                                     @RequestBody WeeklyReportReqDTO weeklyReportReqDTO) {
         reportService.addWeekly(currentLoginUser,weeklyReportReqDTO);
         return DataResponse.success();
     }
@@ -150,20 +150,21 @@ public class TrafficReportController {
     @PostMapping("/weekly/modify")
     @ApiOperation(value = "编辑-周报")
     public DataResponse<T> modifyWeekly(@CurrUser CurrentLoginUser currentLoginUser,
-                                       @RequestBody WeeklyReportReqDTO weeklyReportReqDTO) {
+                                        @RequestBody WeeklyReportReqDTO weeklyReportReqDTO) {
         reportService.modifyWeekly(currentLoginUser,weeklyReportReqDTO);
         return DataResponse.success();
     }
 
     /**
      * 报审-周报
+     * @param currentLoginUser 登录用户信息
      * @param weeklyReportReqDTO 周报参数
      * @return 成功
      */
     @PostMapping("/weekly/commit")
     @ApiOperation(value = "报审-周报")
     public DataResponse<T> commitWeekly(@CurrUser CurrentLoginUser currentLoginUser,
-                                       @RequestBody WeeklyReportReqDTO weeklyReportReqDTO) {
+                                        @RequestBody WeeklyReportReqDTO weeklyReportReqDTO) {
         reportService.commitWeekly(currentLoginUser,weeklyReportReqDTO);
         return DataResponse.success();
     }
@@ -215,20 +216,21 @@ public class TrafficReportController {
     @PostMapping("/monthly/modify")
     @ApiOperation(value = "编辑-月报")
     public DataResponse<T> modifyMonthly(@CurrUser CurrentLoginUser currentLoginUser,
-                                        @RequestBody MonthlyReportReqDTO monthlyReportReqDTO) {
+                                         @RequestBody MonthlyReportReqDTO monthlyReportReqDTO) {
         reportService.modifyMonthly(currentLoginUser,monthlyReportReqDTO);
         return DataResponse.success();
     }
 
     /**
      * 报审-月报
+     * @param currentLoginUser 登录用户信息
      * @param monthlyReportReqDTO 月报参数
      * @return 成功
      */
     @PostMapping("/monthly/commit")
     @ApiOperation(value = "报审-月报")
     public DataResponse<T> commitMonthly(@CurrUser CurrentLoginUser currentLoginUser,
-                                       @RequestBody MonthlyReportReqDTO monthlyReportReqDTO) {
+                                         @RequestBody MonthlyReportReqDTO monthlyReportReqDTO) {
         reportService.commitMonthly(currentLoginUser,monthlyReportReqDTO);
         return DataResponse.success();
     }

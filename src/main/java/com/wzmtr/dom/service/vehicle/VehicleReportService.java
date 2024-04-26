@@ -131,18 +131,21 @@ public interface VehicleReportService {
 
     /**
      * 报审日报
+     * @param currentLoginUser 登录用户信息
      * @param dailyReportReqDTO 日报参数
      */
     void commitDaily(CurrentLoginUser currentLoginUser, DailyReportReqDTO dailyReportReqDTO);
 
     /**
      * 报审-周报
+     * @param currentLoginUser 登录用户信息
      * @param weeklyReportReqDTO 周报参数
      */
     void commitWeekly(CurrentLoginUser currentLoginUser,WeeklyReportReqDTO weeklyReportReqDTO);
 
     /**
      * 报审月报
+     * @param currentLoginUser 登录用户信息
      * @param monthlyReportReqDTO 月报参数
      */
     void commitMonthly(CurrentLoginUser currentLoginUser, MonthlyReportReqDTO monthlyReportReqDTO);

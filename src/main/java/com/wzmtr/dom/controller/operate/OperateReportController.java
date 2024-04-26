@@ -225,6 +225,7 @@ public class OperateReportController {
 
     /**
      * 报审-日报
+     * @param currentLoginUser 登录用户信息
      * @param dailyReportReqDTO 日报参数
      * @return 成功
      */
@@ -238,6 +239,7 @@ public class OperateReportController {
 
     /**
      * 报审-周报
+     * @param currentLoginUser 登录用户信息
      * @param weeklyReportReqDTO 周报参数
      * @return 成功
      */
@@ -251,6 +253,7 @@ public class OperateReportController {
 
     /**
      * 报审-月报
+     * @param currentLoginUser 登录用户信息
      * @param monthlyReportReqDTO 月报参数
      * @return 成功
      */

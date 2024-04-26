@@ -7,6 +7,7 @@ import com.wzmtr.dom.dto.req.operate.DailyReportReqDTO;
 import com.wzmtr.dom.dto.req.operate.MonthlyReportReqDTO;
 import com.wzmtr.dom.dto.req.operate.WeeklyReportReqDTO;
 import com.wzmtr.dom.dto.req.system.ApprovalReqDTO;
+import com.wzmtr.dom.dto.req.system.ReportUpdateReqDTO;
 import com.wzmtr.dom.dto.res.operate.DailyReportResDTO;
 import com.wzmtr.dom.dto.res.operate.MonthlyReportResDTO;
 import com.wzmtr.dom.dto.res.operate.WeeklyReportResDTO;
@@ -166,7 +167,7 @@ public class OperateReportServiceImpl implements OperateReportService {
 
     @Override
     public void commitDaily(CurrentLoginUser currentLoginUser, DailyReportReqDTO dailyReportReqDTO) {
-        //报表审核参数
+        // 报表审核参数
         ApprovalReqDTO approvalReqDTO = new ApprovalReqDTO();
         approvalReqDTO.setTitle("运营日报-请审批");
         approvalReqDTO.setReportId(dailyReportReqDTO.getId());
@@ -175,14 +176,15 @@ public class OperateReportServiceImpl implements OperateReportService {
         approvalReqDTO.setDataType(CommonConstants.DATA_TYPE_DAILY);
         approvalReqDTO.setProcessKey(BpmnFlowEnum.operate_daily.value());
         approvalReqDTO.setCurrentNode(CommonConstants.VEHICLE_DAILY_NODE1);
-
-        //提交流程
+        // 提交流程
         workbenchService.commitApproval(approvalReqDTO);
+        // 修改报表状态为审核中
+        underReviewReport(dailyReportReqDTO.getId(), "1");
     }
 
     @Override
     public void commitWeekly(CurrentLoginUser currentLoginUser, WeeklyReportReqDTO weeklyReportReqDTO) {
-        //报表审核参数
+        // 报表审核参数
         ApprovalReqDTO approvalReqDTO = new ApprovalReqDTO();
         approvalReqDTO.setTitle("运营周报-请审批");
         approvalReqDTO.setReportId(weeklyReportReqDTO.getId());
@@ -191,14 +193,15 @@ public class OperateReportServiceImpl implements OperateReportService {
         approvalReqDTO.setDataType(CommonConstants.DATA_TYPE_WEEKLY);
         approvalReqDTO.setProcessKey(BpmnFlowEnum.operate_weekly.value());
         approvalReqDTO.setCurrentNode(CommonConstants.VEHICLE_WEEKLY_NODE1);
-
-        //提交流程
+        // 提交流程
         workbenchService.commitApproval(approvalReqDTO);
+        // 修改报表状态为审核中
+        underReviewReport(weeklyReportReqDTO.getId(), "2");
     }
 
     @Override
     public void commitMonthly(CurrentLoginUser currentLoginUser, MonthlyReportReqDTO monthlyReportReqDTO) {
-        //报表审核参数
+        // 报表审核参数
         ApprovalReqDTO approvalReqDTO = new ApprovalReqDTO();
         approvalReqDTO.setTitle("运营月报-请审批");
         approvalReqDTO.setReportId(monthlyReportReqDTO.getId());
@@ -207,9 +210,29 @@ public class OperateReportServiceImpl implements OperateReportService {
         approvalReqDTO.setDataType(CommonConstants.DATA_TYPE_MONTHLY);
         approvalReqDTO.setProcessKey(BpmnFlowEnum.operate_monthly.value());
         approvalReqDTO.setCurrentNode(CommonConstants.VEHICLE_MONTHLY_NODE1);
-
-        //提交流程
+        // 提交流程
         workbenchService.commitApproval(approvalReqDTO);
+        // 修改报表状态为审核中
+        underReviewReport(monthlyReportReqDTO.getId(), "3");
+    }
+
+    /**
+     * 修改报表状态为审核中
+     * @param id 报表id
+     * @param type 类型 1日报2周报3月报
+     */
+    private void underReviewReport(String id, String type) {
+        ReportUpdateReqDTO reqDTO = new ReportUpdateReqDTO();
+        reqDTO.setId(id);
+        reqDTO.setUpdateBy(TokenUtils.getCurrentPersonId());
+        reqDTO.setStatus(CommonConstants.ONE_STRING);
+        if (CommonConstants.ONE_STRING.equals(type)) {
+            operateReportMapper.modifyDailyByFlow(reqDTO);
+        } else if (CommonConstants.TWO_STRING.equals(type)) {
+            operateReportMapper.modifyWeeklyByFlow(reqDTO);
+        } else if (CommonConstants.THREE_STRING.equals(type)) {
+            operateReportMapper.modifyMonthlyByFlow(reqDTO);
+        }
     }
 
 }
