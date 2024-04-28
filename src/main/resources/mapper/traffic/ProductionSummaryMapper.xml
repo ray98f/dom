@@ -7,7 +7,9 @@
         FROM TRAFFIC_PRODUCTION_SUMMARY
         WHERE DEL_FLAG='0'
         AND DATA_TYPE=#{dataType}
+        <if test="stationCode != null and stationCode!=''">
         AND STATION_CODE=#{stationCode}
+        </if>
         <if test="startDate != null and startDate!=''">
             AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
