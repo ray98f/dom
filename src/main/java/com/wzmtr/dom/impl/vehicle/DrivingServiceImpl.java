@@ -17,6 +17,7 @@ import com.wzmtr.dom.mapper.vehicle.DrivingMapper;
 import com.wzmtr.dom.mapper.vehicle.IndicatorMapper;
 import com.wzmtr.dom.service.vehicle.DrivingService;
 import com.wzmtr.dom.utils.DateUtils;
+import com.wzmtr.dom.utils.StringUtils;
 import com.wzmtr.dom.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -139,6 +140,7 @@ public class DrivingServiceImpl implements DrivingService {
         if( res <= 0){
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
+
     }
 
     @Override
@@ -178,6 +180,11 @@ public class DrivingServiceImpl implements DrivingService {
         if( res <= 0){
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
+
+        //更新统计
+        if(StringUtils.isNotEmpty(drivingDepotReqDTO.getRecordId())){
+            updateRecordCount(drivingDepotReqDTO.getRecordId());
+        }
     }
 
     @Override
@@ -212,6 +219,11 @@ public class DrivingServiceImpl implements DrivingService {
             }
         }catch (Exception e){
             throw new CommonException(ErrorCode.UPDATE_ERROR);
+        }
+
+        //更新统计
+        if(StringUtils.isNotEmpty(drivingInfoReqDTO.getRecordId())){
+            updateRecordCount(drivingInfoReqDTO.getRecordId());
         }
 
     }
