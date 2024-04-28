@@ -8,16 +8,13 @@ import com.wzmtr.dom.dto.res.operate.IndicatorDetailResDTO;
 import com.wzmtr.dom.dto.res.operate.IndicatorInfoResDTO;
 import com.wzmtr.dom.dto.res.operate.IndicatorPowerResDTO;
 import com.wzmtr.dom.dto.res.operate.IndicatorRecordResDTO;
-import com.wzmtr.dom.dto.res.vehicle.IndicatorResDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
 import java.util.List;
 
 /**
  * 运营日报-初期运营指标
- *
  * @author zhangxin
  * @version 1.0
  * @date 2024/3/11 16:25

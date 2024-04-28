@@ -29,8 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * description:
- *
+ * 运营日报-施工情况
  * @author zhangxin
  * @version 1.0
  * @date 2024/4/3 10:25
@@ -50,25 +49,25 @@ public class OperateConstructServiceImpl implements OperateConstructService {
     @Override
     public Page<ConstructRecordResDTO> list(String dataType, String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return operateConstructMapper.list(pageReqDTO.of(),dataType,startDate,endDate);
+        return operateConstructMapper.list(pageReqDTO.of(), dataType, startDate, endDate);
     }
 
     @Override
-    public ConstructRecordResDTO detail(String id,String startDate, String endDate) {
-        return operateConstructMapper.queryInfoById(id,startDate,endDate);
+    public ConstructRecordResDTO detail(String id, String startDate, String endDate) {
+        return operateConstructMapper.queryInfoById(id, startDate, endDate);
     }
 
     @Override
     public void add(CurrentLoginUser currentLoginUser, ConstructRecordReqDTO constructRecordReqDTO) {
         int existFlag = operateConstructMapper.checkExist(constructRecordReqDTO.getDataType(),
-                constructRecordReqDTO.getStartDate(),constructRecordReqDTO.getEndDate());
-        if(existFlag > 0){
+                constructRecordReqDTO.getStartDate(), constructRecordReqDTO.getEndDate());
+        if (existFlag > 0) {
             throw new CommonException(ErrorCode.DATA_EXIST);
         }
 
         // 日报类型
-        if(CommonConstants.DATA_TYPE_DAILY.equals(constructRecordReqDTO.getDataType())){
-            if(!constructRecordReqDTO.getStartDate().equals(constructRecordReqDTO.getEndDate())){
+        if (CommonConstants.DATA_TYPE_DAILY.equals(constructRecordReqDTO.getDataType())) {
+            if (!constructRecordReqDTO.getStartDate().equals(constructRecordReqDTO.getEndDate())) {
                 throw new CommonException(ErrorCode.DATE_ERROR);
             }
             constructRecordReqDTO.setDataDate(constructRecordReqDTO.getStartDate());
@@ -82,9 +81,9 @@ public class OperateConstructServiceImpl implements OperateConstructService {
         constructRecordReqDTO.setCreateBy(currentLoginUser.getPersonId());
         constructRecordReqDTO.setUpdateBy(currentLoginUser.getPersonId());
         constructRecordReqDTO.setId(TokenUtils.getUuId());
-        try{
+        try {
             operateConstructMapper.add(constructRecordReqDTO);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CommonException(ErrorCode.INSERT_ERROR);
         }
     }
@@ -93,14 +92,14 @@ public class OperateConstructServiceImpl implements OperateConstructService {
     public void modify(CurrentLoginUser currentLoginUser, ConstructRecordReqDTO constructRecordReqDTO) {
         constructRecordReqDTO.setUpdateBy(currentLoginUser.getPersonId());
         int res = operateConstructMapper.modify(constructRecordReqDTO);
-        if( res <= 0){
+        if (res <= 0) {
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
     }
 
     @Override
     public Page<ConstructPlanResDTO> getCsmConstructPlan(String startDate, String endDate, PageReqDTO pageReqDTO) {
-//TODO 调取施工调度计划
+        //TODO 调取施工调度计划
         //JSONObject.toJSONString(convertDto(req));
         String reqData = "{}";
         JSONObject res = JSONObject.parseObject(HttpUtils.doPost(constructPlanApi, reqData, null), JSONObject.class);
@@ -128,7 +127,7 @@ public class OperateConstructServiceImpl implements OperateConstructService {
                 "        }";
 
         List<ConstructPlanResDTO> list = new ArrayList<>();
-        list.add(JSONObject.parseObject(test1,ConstructPlanResDTO.class));
+        list.add(JSONObject.parseObject(test1, ConstructPlanResDTO.class));
         PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         Page<ConstructPlanResDTO> page = new Page<>();
         page.setRecords(list);
@@ -142,7 +141,7 @@ public class OperateConstructServiceImpl implements OperateConstructService {
     @Override
     public Page<ConstructPlanResDTO> planList(String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return operateConstructMapper.planList(pageReqDTO.of(),startDate,endDate);
+        return operateConstructMapper.planList(pageReqDTO.of(), startDate, endDate);
     }
 
     @Override
@@ -150,7 +149,7 @@ public class OperateConstructServiceImpl implements OperateConstructService {
         List<ConstructPlanReqDTO> planList = constructPlanBatchReqDTO.getPlanList();
         List<ConstructPlanReqDTO> newPlanList = new ArrayList<>();
         //数据填充
-        for(ConstructPlanReqDTO item: planList){
+        for (ConstructPlanReqDTO item : planList) {
             item.setId(TokenUtils.getUuId());
             item.setCreateBy(currentLoginUser.getPersonId());
             item.setUpdateBy(currentLoginUser.getPersonId());
@@ -162,7 +161,7 @@ public class OperateConstructServiceImpl implements OperateConstructService {
             item.setEndDate(constructPlanBatchReqDTO.getEndDate());
             newPlanList.add(item);
         }
-        if(newPlanList.size()>0){
+        if (!newPlanList.isEmpty()) {
             doPlanInsertBatch(newPlanList);
         }
     }
@@ -177,20 +176,20 @@ public class OperateConstructServiceImpl implements OperateConstructService {
     @Override
     public Page<ConstructEventResDTO> eventList(String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return operateConstructMapper.eventList(pageReqDTO.of(),startDate,endDate);
+        return operateConstructMapper.eventList(pageReqDTO.of(), startDate, endDate);
     }
 
     @Override
     public void createEvent(CurrentLoginUser currentLoginUser, ConstructEventReqDTO constructEventReqDTO) {
-        try{
-            if(CommonConstants.DATA_TYPE_DAILY.equals(constructEventReqDTO.getDataType())){
+        try {
+            if (CommonConstants.DATA_TYPE_DAILY.equals(constructEventReqDTO.getDataType())) {
                 constructEventReqDTO.setDataDate(constructEventReqDTO.getStartDate());
             }
             constructEventReqDTO.setId(TokenUtils.getUuId());
             constructEventReqDTO.setCreateBy(currentLoginUser.getPersonId());
             constructEventReqDTO.setUpdateBy(currentLoginUser.getPersonId());
             operateConstructMapper.createEvent(constructEventReqDTO);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CommonException(ErrorCode.INSERT_ERROR);
         }
 
@@ -201,7 +200,7 @@ public class OperateConstructServiceImpl implements OperateConstructService {
     public void modifyEvent(CurrentLoginUser currentLoginUser, ConstructEventReqDTO constructEventReqDTO) {
         constructEventReqDTO.setUpdateBy(currentLoginUser.getPersonId());
         int res = operateConstructMapper.modifyEvent(constructEventReqDTO);
-        if( res <= 0){
+        if (res <= 0) {
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
     }
@@ -209,10 +208,10 @@ public class OperateConstructServiceImpl implements OperateConstructService {
     @Override
     public void deleteEvent(List<String> ids) {
         if (StringUtils.isNotEmpty(ids)) {
-           // OperateEventInfoResDTO eventInfo = operateEventMapper.queryDateRange(ids);
-            try{
+            // OperateEventInfoResDTO eventInfo = operateEventMapper.queryDateRange(ids);
+            try {
                 operateConstructMapper.deleteEvent(ids, TokenUtils.getCurrentPersonId());
-            }catch (Exception e){
+            } catch (Exception e) {
                 throw new CommonException(ErrorCode.DELETE_ERROR);
             }
 
@@ -223,12 +222,12 @@ public class OperateConstructServiceImpl implements OperateConstructService {
      * 批量添加施工计划
      */
     @SneakyThrows
-    private void doPlanInsertBatch(List<ConstructPlanReqDTO> list){
+    private void doPlanInsertBatch(List<ConstructPlanReqDTO> list) {
         //批处理
-        SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH,false);
-        try{
+        SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH, false);
+        try {
             OperateConstructMapper mapper = sqlSession.getMapper(OperateConstructMapper.class);
-            for(ConstructPlanReqDTO item : list){
+            for (ConstructPlanReqDTO item : list) {
                 mapper.createPlan(item);
             }
             sqlSession.commit();
@@ -236,7 +235,7 @@ public class OperateConstructServiceImpl implements OperateConstructService {
             sqlSession.clearCache();
             sqlSession.close();
             batchResults.clear();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
