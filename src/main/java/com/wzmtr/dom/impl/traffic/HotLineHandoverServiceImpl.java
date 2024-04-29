@@ -1,9 +1,7 @@
 package com.wzmtr.dom.impl.traffic;
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.google.common.collect.Lists;
 import com.wzmtr.dom.dataobject.traffic.TrafficHotlineHandoverDO;
 import com.wzmtr.dom.dto.req.common.SidReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HandoverAddData;
@@ -12,17 +10,13 @@ import com.wzmtr.dom.dto.req.traffic.hotline.HotLineHandoverListReqDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineHandoverDetailResDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineHandoverListResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
-import com.wzmtr.dom.enums.ErrorCode;
-import com.wzmtr.dom.exception.CommonException;
 import com.wzmtr.dom.mapper.traffic.HotLineHandoverMapper;
 import com.wzmtr.dom.service.traffic.HotLineHandoverService;
 import com.wzmtr.dom.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -45,11 +39,10 @@ public class HotLineHandoverServiceImpl implements HotLineHandoverService {
     }
 
     @Override
-    public List<HotLineHandoverDetailResDTO> detail(String date, String dataType,String startDate,
-                                                    String endDate) {
+    public List<HotLineHandoverDetailResDTO> detail(String id, String date, String dataType, String startDate, String endDate) {
         // 查日期内所有数据
         Assert.notNull(date, "参数缺失");
-        return hotLineHandoverMapper.selectListByDate(date,dataType,startDate,endDate);
+        return hotLineHandoverMapper.selectListByDate(id, date, dataType, startDate, endDate);
     }
 
     @Override

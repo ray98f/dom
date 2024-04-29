@@ -23,7 +23,9 @@ public interface HotLineHandoverMapper extends BaseMapper<TrafficHotlineHandover
     Page<HotLineHandoverListResDTO> list(Page<Object> of, @Param("req") HotLineHandoverListReqDTO reqDTO);
 
     Integer selectIsExist(HotLineHandoverAddReqDTO req);
+
     void insertList(List<TrafficHotlineHandoverDO> list);
 
-    List<HotLineHandoverDetailResDTO> selectListByDate(String date,String dataType,String startDate,String endDate);
+    List<HotLineHandoverDetailResDTO> selectListByDate(String id, String date, String dataType, String startDate,
+                                                       String endDate);
 }

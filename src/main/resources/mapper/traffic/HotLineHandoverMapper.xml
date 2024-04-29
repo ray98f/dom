@@ -18,11 +18,10 @@
         </foreach>
     </insert>
 
-
     <select id="list" resultType="com.wzmtr.dom.dto.res.traffic.hotline.HotLineHandoverListResDTO">
         SELECT t1.*,
         (SELECT COUNT(*) FROM TRAFFIC_HOTLINE_HANDOVER t2
-        WHERE t2.DEL_FLAG = '0'
+        WHERE t2.DEL_FLAG='0'
         AND t2.DATA_TYPE=#{req.dataType}
         <if test="req.startDate != null and req.startDate != ''">
             AND t2.START_DATE &gt;= TO_DATE(#{req.startDate}, 'YYYY-MM-DD HH24:MI:SS')
@@ -32,7 +31,7 @@
         </if>
         ) AS needHandOverCount
         FROM TRAFFIC_HOTLINE_HANDOVER t1
-        WHERE t1.DEL_FLAG = '0'
+        WHERE t1.DEL_FLAG='0'
         AND t1.DATA_TYPE=#{req.dataType}
         <if test="req.startDate != null and req.startDate != ''">
             AND t1.START_DATE &gt;= TO_DATE(#{req.startDate}, 'YYYY-MM-DD HH24:MI:SS')
@@ -42,6 +41,7 @@
         </if>
         ORDER BY t1.CREATE_DATE DESC
     </select>
+
     <select id="selectIsExist" resultType="java.lang.Integer">
         select count(1) from TRAFFIC_HOTLINE_HANDOVER
         WHERE
@@ -56,11 +56,11 @@
         </if>
         AND DEL_FLAG='0' AND rownum=1
     </select>
-    <select id="selectListByDate"
-            resultType="com.wzmtr.dom.dto.res.traffic.hotline.HotLineHandoverDetailResDTO">
+
+    <select id="selectListByDate" resultType="com.wzmtr.dom.dto.res.traffic.hotline.HotLineHandoverDetailResDTO">
         select *
         from TRAFFIC_HOTLINE_HANDOVER
-        WHERE DEL_FLAG = '0'
+        WHERE DEL_FLAG='0'
         <if test="startDate!=null and startDate!=''">
             AND START_DATE=#{startDate,jdbcType=VARCHAR}
         </if>
@@ -68,14 +68,13 @@
             AND END_DATE=#{endDate,jdbcType=VARCHAR}
         </if>
         <if test="dataType!=null and dataType!=''">
-            AND DATA_TYPE = #{dataType}
+            AND DATA_TYPE=#{dataType}
         </if>
         <if test="date!=null and date!=''">
-            AND DATA_DATE = TO_DATE(#{date}, 'YYYY-MM-DD HH24:MI:SS')
+            AND DATA_DATE=TO_DATE(#{date}, 'YYYY-MM-DD HH24:MI:SS')
         </if>
         <if test="id!=null and id!=''">
-            AND ID = #{id}
+            AND ID=#{id}
         </if>
->>>>>>> feature/operate_0401
     </select>
 </mapper>

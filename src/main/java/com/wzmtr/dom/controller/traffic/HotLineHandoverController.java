@@ -12,7 +12,6 @@ import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.entity.response.PageResponse;
 import com.wzmtr.dom.service.traffic.HotLineHandoverService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +35,6 @@ public class HotLineHandoverController {
 
     /**
      * 需转交其他部门做处理事项-列表
-     *
      * @return 需转交其他部门做处理事项
      */
     @PostMapping("/list")
@@ -47,16 +45,16 @@ public class HotLineHandoverController {
 
     /**
      * 需转交其他部门做处理事项-详情
-     *
      * @return 需转交其他部门做处理事项
      */
     @GetMapping("/detail")
     @ApiOperation(value = "需转交其他部门做处理事项详情")
-    public DataResponse<List<HotLineHandoverDetailResDTO>> detail(@RequestParam String date,
+    public DataResponse<List<HotLineHandoverDetailResDTO>> detail(@RequestParam(required = false) String id,
+                                                                  @RequestParam(required = false) String date,
                                                                   @RequestParam(required = false) String startDate,
                                                                   @RequestParam(required = false) String endDate,
                                                                   @RequestParam String dataType) {
-        return DataResponse.of(hotLineHandoverService.detail(date,dataType,startDate,endDate));
+        return DataResponse.of(hotLineHandoverService.detail(id, date, dataType, startDate, endDate));
     }
 
     @PostMapping("/acc")
@@ -77,7 +75,6 @@ public class HotLineHandoverController {
 
     /**
      * 需转交其他部门做处理事项-编辑
-     *
      * @return 成功
      */
     @PostMapping("/modify")

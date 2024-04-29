@@ -32,9 +32,9 @@
     <select id="selectDetailById" resultType="com.wzmtr.dom.dataobject.traffic.IncomeRecordDO">
         SELECT *
         FROM TRAFFIC_INCOME_RECORD
-        WHERE  DEL_FLAG = '0'
+        WHERE DEL_FLAG = '0'
         <if test="id != null">
-            ID=#{id}
+            AND ID=#{id}
         </if>
         <if test="startDate != null">
             AND to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') >= START_DATE
