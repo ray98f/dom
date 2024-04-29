@@ -91,22 +91,22 @@
             IF_PASSENGER=#{ifPassenger},
         </if>
         <if test="ifIndicator!=null">
-            IF_INDICATOR#{ifIndicator},
+            IF_INDICATOR=#{ifIndicator},
         </if>
         <if test="ifEvent!=null">
-            IF_EVENT#{ifEvent},
+            IF_EVENT=#{ifEvent},
         </if>
         <if test="ifConstruct!=null">
-            IF_CONSTRUCT#{ifConstruct},
+            IF_CONSTRUCT=#{ifConstruct},
         </if>
         <if test="ifDebug!=null">
-            IF_DEBUG#{ifDebug},
+            IF_DEBUG=#{ifDebug},
         </if>
         <if test="ifSpeedLimit!=null">
-            IF_SPEED_LIMIT#{ifSpeedLimit},
+            IF_SPEED_LIMIT=#{ifSpeedLimit},
         </if>
         <if test="ifFaultStatistics!=null">
-            IF_FAULT_STATISTICS#{ifFaultStatistics},
+            IF_FAULT_STATISTICS=#{ifFaultStatistics},
         </if>
         <if test="status!=null">
             STATUS=#{status},

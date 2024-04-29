@@ -32,7 +32,7 @@ public interface SpeedLimitService {
      * @param pageReqDTO 分页参数
      * @return 线路限速情况详情列表
      */
-    Page<SpeedLimitInfoResDTO> infoPage(String id, String startDate, String endDate,PageReqDTO pageReqDTO);
+    Page<SpeedLimitInfoResDTO> infoPage(String id, String startDate, String endDate, PageReqDTO pageReqDTO);
 
     /**
      * 新增线路限速情况记录

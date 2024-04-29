@@ -16,14 +16,12 @@ import com.wzmtr.dom.exception.CommonException;
 import com.wzmtr.dom.mapper.vehicle.DrivingMapper;
 import com.wzmtr.dom.mapper.vehicle.IndicatorMapper;
 import com.wzmtr.dom.service.vehicle.DrivingService;
-import com.wzmtr.dom.utils.DateUtils;
 import com.wzmtr.dom.utils.StringUtils;
 import com.wzmtr.dom.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -51,18 +49,14 @@ public class DrivingServiceImpl implements DrivingService {
 
     @Override
     public DrivingRecordDetailResDTO detail(String recordId) {
-
-        //获取详情
-        DrivingRecordDetailResDTO  detail = drivingMapper.queryInfoById(recordId);
-
-        //车场情况
-        List<DrivingDepotResDTO> depotList = drivingMapper.depot(recordId);
-        detail.setDepotList(depotList);
-
-        //司机驾驶情况
-        DrivingInfoResDTO driveInfo = drivingMapper.driveInfo(recordId);
-        detail.setDriveInfo(driveInfo);
-
+        // 获取详情
+        DrivingRecordDetailResDTO detail = drivingMapper.queryInfoById(recordId);
+        if (StringUtils.isNotNull(detail)) {
+            // 车场情况
+            detail.setDepotList(drivingMapper.depot(recordId));
+            // 司机驾驶情况
+            detail.setDriveInfo(drivingMapper.driveInfo(recordId));
+        }
         return detail;
     }
 

@@ -39,7 +39,7 @@ public class SpeedLimitServiceImpl implements SpeedLimitService {
     @Override
     public Page<SpeedLimitInfoResDTO> infoPage(String id,String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return speedLimitMapper.infoPage(pageReqDTO.of(),startDate,endDate, id);
+        return speedLimitMapper.infoPage(pageReqDTO.of(), startDate, endDate, id);
     }
 
     @Override
