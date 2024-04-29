@@ -12,6 +12,7 @@ import com.wzmtr.dom.mapper.common.UserAccountMapper;
 import com.wzmtr.dom.service.common.UserAccountService;
 import com.wzmtr.dom.shiro.model.Person;
 import com.wzmtr.dom.shiro.service.IPersonService;
+import com.wzmtr.dom.utils.StringUtils;
 import com.wzmtr.dom.utils.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,7 @@ public class UserAccountServiceImpl implements UserAccountService {
     public String getToken(String no) {
         CurrentLoginUser person = new CurrentLoginUser();
             Person p = personService.searchPersonByNo(no);
-            if (p != null) {
+            if (StringUtils.isNotNull(p)) {
                 person.setPersonId(p.getId());
                 person.setPersonNo(p.getNo());
                 person.setPersonName(p.getName());

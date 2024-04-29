@@ -124,7 +124,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
      * */
     private void updateSummaryCount(String startDate,String endDate){
         List<MaintenanceRecordResDTO> res =  maintenanceMapper.listAll(startDate,endDate);
-        if(res != null && res.size() > 0){
+        if(StringUtils.isNotEmpty(res)){
             for(MaintenanceRecordResDTO item:res){
                 maintenanceMapper.modifyCount(item.getId(),DateUtil.formatDate(item.getStartDate()),DateUtil.formatDate(item.getEndDate()));
             }

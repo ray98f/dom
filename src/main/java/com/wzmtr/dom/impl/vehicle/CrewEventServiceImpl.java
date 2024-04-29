@@ -140,7 +140,7 @@ public class CrewEventServiceImpl implements CrewEventService {
      * */
     private void updateSummaryCount(String startDate,String endDate){
          List<CrewEventSummaryResDTO> res =  crewEventMapper.listAll(startDate,endDate);
-         if(res != null && res.size() > 0){
+         if(StringUtils.isNotEmpty(res)){
              for(CrewEventSummaryResDTO item:res){
                  crewEventMapper.modifyCount(item.getId(),DateUtil.formatDate(item.getStartDate()),DateUtil.formatDate(item.getEndDate()));
              }

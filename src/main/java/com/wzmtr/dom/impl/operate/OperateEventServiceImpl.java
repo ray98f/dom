@@ -136,7 +136,7 @@ public class OperateEventServiceImpl implements OperateEventService {
      * */
     private void updateSummaryCount(String startDate,String endDate){
         List<OperateEventResDTO> res =  operateEventMapper.listAll(startDate,endDate);
-        if(res != null && res.size() > 0){
+        if(StringUtils.isNotEmpty(res)){
             for(OperateEventResDTO item:res){
                 operateEventMapper.modifyCount(item.getId(), DateUtil.formatDate(item.getStartDate()),DateUtil.formatDate(item.getEndDate()));
             }

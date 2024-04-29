@@ -85,16 +85,16 @@ public class OperatePassengerFlowServiceImpl implements OperatePassengerFlowServ
         PassengerFlowDetailResDTO passengerFlowDetailResDTO = new PassengerFlowDetailResDTO();
         // 获取详情
         OperatePassengerFlowDetailDO detail = passengerFlowDetailMapper.info(id,startDate,endDate);
-        List<PassengerInfoResDTO> passengerInfoResDTOS = Lists.newArrayList();
-        if (null != detail) {
+        List<PassengerInfoResDTO> passengerInfoRes = Lists.newArrayList();
+        if (StringUtils.isNotNull(detail)) {
             passengerFlowDetailResDTO = BeanUtils.convert(detail, PassengerFlowDetailResDTO.class);
             // 车站客流列表
-            passengerInfoResDTOS = operatePassengerFlowInfoMapper.eachStation(DateUtil.formatDate(detail.getStartDate()), DateUtil.formatDate(detail.getEndDate()));
+            passengerInfoRes = operatePassengerFlowInfoMapper.eachStation(DateUtil.formatDate(detail.getStartDate()), DateUtil.formatDate(detail.getEndDate()));
         }
-        if (CollectionUtil.isEmpty(passengerInfoResDTOS)){
-            passengerInfoResDTOS = dataInit();
+        if (CollectionUtil.isEmpty(passengerInfoRes)){
+            passengerInfoRes = dataInit();
         }
-        passengerFlowDetailResDTO.setStationPassengerList(passengerInfoResDTOS);
+        passengerFlowDetailResDTO.setStationPassengerList(passengerInfoRes);
         return passengerFlowDetailResDTO;
     }
 

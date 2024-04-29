@@ -3,7 +3,7 @@
 <mapper namespace="com.wzmtr.dom.mapper.operate.OperatePassengerFlowInfoMapper">
     <insert id="createStationPassenger">
         INSERT INTO OPERATE_PASSENGER_FLOW_INFO (ID,RECORD_ID,STATION_CODE,PASSENGER,DATA_TYPE,
-        <if test="dataDate != null">
+        <if test="dataDate!=null">
             DATA_DATE,
         </if>
         START_DATE,
@@ -11,7 +11,7 @@
         CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
         VALUES
         (#{id}, #{recordId},#{stationCode},#{passenger},#{dataType},
-        <if test="dataDate != null">
+        <if test="dataDate!=null">
             to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
         </if>
         to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
@@ -41,10 +41,10 @@
         from OPERATE_PASSENGER_FLOW_INFO op
         left join SYS_STATION ss ON op.STATION_CODE = ss.STATION_CODE
         where DEL_FLAG = '0'
-        <if test="startDate != null and startDate!=''">
+        <if test="startDate!=null and startDate!=''">
             AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
-        <if test="endDate != null and endDate!=''">
+        <if test="endDate!=null and endDate!=''">
             AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
         </if>
         AND DATA_TYPE=#{dataType}
@@ -57,10 +57,10 @@
         from OPERATE_PASSENGER_FLOW_INFO op
                  left join SYS_STATION ss ON op.STATION_CODE = ss.STATION_CODE
         where DEL_FLAG = '0'
-        <if test="startDate != null and startDate!=''">
+        <if test="startDate!=null and startDate!=''">
             AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
-        <if test="endDate != null and endDate!=''">
+        <if test="endDate!=null and endDate!=''">
             AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
         </if>
           AND DATA_TYPE=#{dataType}

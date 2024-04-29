@@ -8,7 +8,7 @@
         WHERE OPEN_FLAG='1'
         AND DEPOT_FLAG='0'
         AND VIRTUAL_FLAG='0'
-        <if test="lineCode != null and lineCode!=''">
+        <if test="lineCode!=null and lineCode!=''">
             AND LINE_CODE=#{lineCode}
         </if>
         ORDER BY STATION_ORDER ASC

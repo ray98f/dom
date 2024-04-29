@@ -3,6 +3,7 @@ package com.wzmtr.dom.utils.tree;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.wzmtr.dom.dto.res.common.MenuResDTO;
+import com.wzmtr.dom.utils.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,7 @@ public class MenuTreeUtils {
     }
 
     public List<MenuResDTO> getTree() {
-        if (bodyList != null && !bodyList.isEmpty()) {
+        if (StringUtils.isNotEmpty(bodyList)) {
             //声明一个map，用来过滤已操作过的数据
             Map<String, String> map = Maps.newHashMapWithExpectedSize(bodyList.size());
             rootList.forEach(beanTree -> getChild(beanTree, map));

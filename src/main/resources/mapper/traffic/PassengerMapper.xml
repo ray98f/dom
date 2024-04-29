@@ -7,10 +7,10 @@
         FROM TRAFFIC_PASSENGER_RECORD
         WHERE DEL_FLAG='0'
         AND DATA_TYPE=#{dataType}
-        <if test="startDate != null and startDate!=''">
+        <if test="startDate!=null and startDate!=''">
             AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
-        <if test="endDate != null and endDate!=''">
+        <if test="endDate!=null and endDate!=''">
             AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
         </if>
         ORDER BY CREATE_DATE desc
@@ -21,10 +21,10 @@
         FROM TRAFFIC_PASSENGER_RECORD
         WHERE DEL_FLAG = '0'
         AND DATA_TYPE=#{dataType}
-        <if test="startDate != null">
+        <if test="startDate!=null">
             AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
-        <if test="endDate != null">
+        <if test="endDate!=null">
             AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
     </select>
@@ -33,20 +33,20 @@
         SELECT *
         FROM TRAFFIC_PASSENGER_RECORD
         WHERE DEL_FLAG = '0'
-        <if test="startDate != null">
+        <if test="startDate!=null">
             AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
-        <if test="endDate != null">
+        <if test="endDate!=null">
             AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
-        <if test="id != null">
+        <if test="id!=null">
             AND ID=#{id}
         </if>
     </select>
 
     <insert id="add">
         INSERT INTO TRAFFIC_PASSENGER_RECORD (ID,DATA_TYPE,
-        <if test="dataDate != null">
+        <if test="dataDate!=null">
             DATA_DATE,
         </if>
         START_DATE,
@@ -54,7 +54,7 @@
         CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
         VALUES
         (#{id}, #{dataType},
-        <if test="dataDate != null">
+        <if test="dataDate!=null">
             to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
         </if>
         to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
@@ -64,43 +64,43 @@
 
     <update id="modify">
         UPDATE TRAFFIC_PASSENGER_RECORD SET
-        <if test="wiringDayPassenger != null">
+        <if test="wiringDayPassenger!=null">
             WIRING_DAY_PASSENGER=#{wiringDayPassenger},
         </if>
-        <if test="wiringWeekPassenger != null">
+        <if test="wiringWeekPassenger!=null">
             WIRING_WEEK_PASSENGER=#{wiringWeekPassenger},
         </if>
-        <if test="wiringMonthPassenger != null">
+        <if test="wiringMonthPassenger!=null">
             WIRING_MONTH_PASSENGER=#{wiringMonthPassenger},
         </if>
-        <if test="wiringYearPassenger != null">
+        <if test="wiringYearPassenger!=null">
             WIRING_YEAR_PASSENGER=#{wiringYearPassenger},
         </if>
-        <if test="transferCount != null">
+        <if test="transferCount!=null">
             TRANSFER_COUNT=#{transferCount},
         </if>
-        <if test="s2TransferIn != null">
+        <if test="s2TransferIn!=null">
             S2_TRANSFER_IN=#{s2TransferIn},
         </if>
-        <if test="s2TransferOut != null">
+        <if test="s2TransferOut!=null">
             S2_TRANSFER_OUT=#{s2TransferOut},
         </if>
-        <if test="s2In != null">
+        <if test="s2In!=null">
             S2_IN=#{s2In},
         </if>
-        <if test="inSuccess != null">
+        <if test="inSuccess!=null">
             IN_SUCCESS=#{inSuccess},
         </if>
-        <if test="cardIn != null">
+        <if test="cardIn!=null">
             CARD_IN=#{cardIn},
         </if>
-        <if test="s2Out != null">
+        <if test="s2Out!=null">
             S2_OUT=#{s2Out},
         </if>
-        <if test="outSuccess != null">
+        <if test="outSuccess!=null">
             OUT_SUCCESS=#{outSuccess},
         </if>
-        <if test="cardOut != null">
+        <if test="cardOut!=null">
             CARD_OUT=#{cardOut},
         </if>
             VERSION = VERSION+1,
@@ -131,7 +131,7 @@
 
     <insert id="createStationPassenger">
         INSERT INTO TRAFFIC_PASSENGER_INFO (ID,RECORD_ID,STATION_CODE,PASSENGER,DATA_TYPE,
-        <if test="dataDate != null">
+        <if test="dataDate!=null">
             DATA_DATE,
         </if>
         START_DATE,
@@ -139,7 +139,7 @@
         CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
         VALUES
         (#{id}, #{recordId},#{stationCode},#{passenger},#{dataType},
-        <if test="dataDate != null">
+        <if test="dataDate!=null">
             to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
         </if>
         to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),

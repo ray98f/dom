@@ -137,7 +137,7 @@ public class LineEventServiceImpl implements LineEventService {
      * */
     private void updateSummaryCount(String startDate,String endDate){
         List<LineEventResDTO> res =  lineEventMapper.listAll(startDate,endDate);
-        if(res != null && res.size() > 0){
+        if(StringUtils.isNotEmpty(res)){
             for(LineEventResDTO item:res){
                 lineEventMapper.modifyCount(item.getId(),DateUtil.formatDate(item.getStartDate()),DateUtil.formatDate(item.getEndDate()));
             }
