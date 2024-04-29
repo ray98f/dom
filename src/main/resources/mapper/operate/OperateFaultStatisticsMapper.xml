@@ -86,8 +86,5 @@
         </if>
         ORDER BY START_DATE desc
     </select>
-    <select id="listByDate" resultType="com.wzmtr.dom.dto.res.operate.fault.FaultStatisticsResDTO">
-
-    </select>
 
 </mapper>

@@ -3,6 +3,7 @@ package com.wzmtr.dom.service.traffic;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.common.SidReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineSummaryAddReqDTO;
+import com.wzmtr.dom.dto.req.traffic.hotline.HotLineSummaryDetailReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineSummaryListReqDTO;
 import com.wzmtr.dom.dto.req.traffic.onewaysale.OnewaySaleAddReqDTO;
 import com.wzmtr.dom.dto.req.traffic.onewaysale.OnewaySaleListReqDTO;
@@ -17,7 +18,7 @@ import com.wzmtr.dom.entity.CurrentLoginUser;
  */
 public interface HotLineSummaryService {
 
-    HotLineSummaryDetailResDTO detail(SidReqDTO reqDTO);
+    HotLineSummaryDetailResDTO detail(HotLineSummaryDetailReqDTO reqDTO);
 
     void add(HotLineSummaryAddReqDTO reqDTO);
 

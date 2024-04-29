@@ -51,7 +51,7 @@ public class TrafficReportServiceImpl implements TrafficReportService {
     }
 
     @Override
-    public DailyReportResDTO dailyDetail(String id) {
+    public DailyReportResDTO dailyDetail(String id,String startDate,String endDate) {
 
         //主报表信息
         DailyReportResDTO detail = trafficReportMapper.dailyDetail(id);

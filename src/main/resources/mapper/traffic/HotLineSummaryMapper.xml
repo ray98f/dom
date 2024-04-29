@@ -15,5 +15,15 @@
         </if>
         ORDER BY CREATE_DATE desc
     </select>
+    <select id="detail" resultType="com.wzmtr.dom.dataobject.traffic.TrafficHotlineSummaryDO">
+        select * from TRAFFIC_HOTLINE_SUMMARY
+        WHERE DEL_FLAG='0'
+        <if test="startDate != null and startDate!=''">
+            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null and endDate!=''">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>= END_DATE
+        </if>
+    </select>
 
 </mapper>

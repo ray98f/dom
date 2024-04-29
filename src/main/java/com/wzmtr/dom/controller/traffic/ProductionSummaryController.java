@@ -57,8 +57,9 @@ public class ProductionSummaryController {
      */
     @GetMapping("/detail")
     @ApiOperation(value = "安全生产情况汇总-详情")
-    public DataResponse<ProductionSummaryResDTO> detail(@RequestParam String id) {
-        return DataResponse.of(productionSummaryService.detail(id));
+    public DataResponse<ProductionSummaryResDTO> detail(@RequestParam(required = false) String id,@RequestParam(required = false) String startDate,
+                                                        @RequestParam(required = false) String endDate) {
+        return DataResponse.of(productionSummaryService.detail(id,startDate,endDate));
     }
 
     /**

@@ -29,7 +29,7 @@
     </update>
     <select id="eachStation" resultType="com.wzmtr.dom.dto.res.traffic.PassengerInfoResDTO">
         SELECT t1.ID,t1.RECORD_ID,t1.STATION_CODE,t1.PASSENGER,VERSION,t2.STATION_NAME
-        FROM OPERATE_PASSENGER_FLOW_INFO t1
+        FROM TRAFFIC_PASSENGER_INFO t1
                  LEFT JOIN SYS_STATION t2 on t1.STATION_CODE = t2.STATION_CODE
         WHERE  DEL_FLAG = '0'
           AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')

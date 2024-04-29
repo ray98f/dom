@@ -60,7 +60,22 @@
             resultType="com.wzmtr.dom.dto.res.traffic.hotline.HotLineHandoverDetailResDTO">
         select *
         from TRAFFIC_HOTLINE_HANDOVER
-        WHERE DATA_DATE = TO_DATE(#{date}, 'YYYY-MM-DD HH24:MI:SS')
-            AND DATA_TYPE=#{dataType}
+        WHERE DEL_FLAG = '0'
+        <if test="startDate!=null and startDate!=''">
+            AND START_DATE=#{startDate,jdbcType=VARCHAR}
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND END_DATE=#{endDate,jdbcType=VARCHAR}
+        </if>
+        <if test="dataType!=null and dataType!=''">
+            AND DATA_TYPE = #{dataType}
+        </if>
+        <if test="date!=null and date!=''">
+            AND DATA_DATE = TO_DATE(#{date}, 'YYYY-MM-DD HH24:MI:SS')
+        </if>
+        <if test="id!=null and id!=''">
+            AND ID = #{id}
+        </if>
+>>>>>>> feature/operate_0401
     </select>
 </mapper>

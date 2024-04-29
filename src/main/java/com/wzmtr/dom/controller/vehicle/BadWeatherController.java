@@ -55,8 +55,9 @@ public class BadWeatherController {
      */
     @GetMapping("/detail")
     @ApiOperation(value = "恶劣天气组织详情")
-    public DataResponse<BadWeatherResDTO> detail(@RequestParam String id) {
-        return DataResponse.of(badWeatherService.detail(id));
+    public DataResponse<BadWeatherResDTO> detail(@RequestParam(required = false) String id,@RequestParam(required = false) String startDate,
+                                                 @RequestParam(required = false) String endDate) {
+        return DataResponse.of(badWeatherService.detail(id,startDate,endDate));
     }
 
     /**

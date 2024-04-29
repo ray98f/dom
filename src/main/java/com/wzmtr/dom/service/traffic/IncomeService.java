@@ -3,6 +3,7 @@ package com.wzmtr.dom.service.traffic;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.common.SidReqDTO;
 import com.wzmtr.dom.dto.req.traffic.income.IncomeAddReqDTO;
+import com.wzmtr.dom.dto.req.traffic.income.IncomeDetailReqDTO;
 import com.wzmtr.dom.dto.req.traffic.income.IncomeListReqDTO;
 import com.wzmtr.dom.dto.res.traffic.income.IncomeDetailResDTO;
 import com.wzmtr.dom.dto.res.traffic.income.IncomeListResDTO;
@@ -20,7 +21,7 @@ public interface IncomeService {
     Page<IncomeListResDTO> list(IncomeListReqDTO reqDTO);
 
 
-    IncomeDetailResDTO detail(SidReqDTO reqDTO);
+    IncomeDetailResDTO detail(IncomeDetailReqDTO reqDTO);
 
     void add(IncomeAddReqDTO reqDTO);
 

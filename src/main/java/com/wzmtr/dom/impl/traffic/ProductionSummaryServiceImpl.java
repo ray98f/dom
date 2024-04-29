@@ -38,8 +38,8 @@ public class ProductionSummaryServiceImpl implements ProductionSummaryService {
     }
 
     @Override
-    public ProductionSummaryResDTO detail(String recordId) {
-        ProductionSummaryResDTO detail = productionSummaryMapper.queryInfoById(recordId);
+    public ProductionSummaryResDTO detail(String recordId,String startDate,String endDate) {
+        ProductionSummaryResDTO detail = productionSummaryMapper.queryInfoById(recordId,startDate,endDate);
         //获取前一日/周/月数据
         ProductionSummaryResDTO preDetail = productionSummaryMapper.queryPreInfoByDate(detail.getStationCode(),detail.getDataType(),
                 DateUtil.formatDate(detail.getStartDate()),DateUtil.formatDate(detail.getEndDate()));

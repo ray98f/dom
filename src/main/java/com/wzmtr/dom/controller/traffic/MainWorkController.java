@@ -55,8 +55,9 @@ public class MainWorkController {
      */
     @GetMapping("/detail")
     @ApiOperation(value = "主要工作情况")
-    public DataResponse<MainWorkResDTO> add(@RequestParam String id) {
-        return DataResponse.of(mainWorkService.detail(id));
+    public DataResponse<MainWorkResDTO> add(@RequestParam(required = false) String id  , @RequestParam(required = false) String startDate,
+                                            @RequestParam(required = false) String endDate) {
+        return DataResponse.of(mainWorkService.detail(id,startDate,endDate));
     }
 
     /**

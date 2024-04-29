@@ -20,6 +20,7 @@ import com.wzmtr.dom.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Date;
 import java.util.List;
@@ -44,10 +45,11 @@ public class HotLineHandoverServiceImpl implements HotLineHandoverService {
     }
 
     @Override
-    public List<HotLineHandoverDetailResDTO> detail(String date,String dataType) {
+    public List<HotLineHandoverDetailResDTO> detail(String date, String dataType,String startDate,
+                                                    String endDate) {
         // 查日期内所有数据
         Assert.notNull(date, "参数缺失");
-        return hotLineHandoverMapper.selectListByDate(date,dataType);
+        return hotLineHandoverMapper.selectListByDate(date,dataType,startDate,endDate);
     }
 
     @Override

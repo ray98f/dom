@@ -35,8 +35,7 @@ public class OperateFaultStatisticsServiceImpl implements OperateFaultStatistics
     @Override
     public Page<FaultStatisticsResDTO> list(String dataType, String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-
-        Page<FaultStatisticsResDTO> list = new Page<>();
+        Page<FaultStatisticsResDTO> list = operateFaultStatisticsMapper.list(pageReqDTO.of(), dataType, startDate, endDate);
         List<FaultStatisticsResDTO> records = list.getRecords();
         if (CollectionUtils.isEmpty(records)) {
             return list;
@@ -49,7 +48,8 @@ public class OperateFaultStatisticsServiceImpl implements OperateFaultStatistics
     }
 
     public static long getFaultSum(FaultStatisticsResDTO a) {
-        return a.getVehicleNum() + a.getPowerNum() + a.getSignalNum() + a.getCommunicationNum() + a.getIndustryNum() + a.getMechanismNum() + a.getAfcNum() + a.getElseNum();
+        return a.getVehicleNum() + a.getPowerNum() + a.getSignalNum() + a.getCommunicationNum() +
+                a.getIndustryNum() + a.getMechanismNum() + a.getAfcNum() + a.getElseNum();
     }
 
 

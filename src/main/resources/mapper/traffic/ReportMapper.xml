@@ -51,7 +51,16 @@
         dr.CREATE_DATE, u.NAME AS CREATE_BY
         FROM TRAFFIC_DAILY_REPORT dr
         LEFT JOIN SYS_USER u ON u.ID=dr.CREATE_BY
-        WHERE dr.DEL_FLAG='0' AND dr.ID=#{id}
+        WHERE dr.DEL_FLAG='0'
+        <if test="id != null">
+            and dr.ID=#{id}
+        </if>
+        <if test="startDate != null">
+            AND to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') >= dr.START_DATE
+        </if>
+        <if test="endDate != null">
+            AND dr.END_DATE >= to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
     </select>
 
     <select id="checkDailyExist" resultType="java.lang.Integer">

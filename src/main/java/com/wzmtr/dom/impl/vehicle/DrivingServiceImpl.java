@@ -167,12 +167,27 @@ public class DrivingServiceImpl implements DrivingService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void depotModify(CurrentLoginUser currentLoginUser, DrivingDepotReqDTO drivingDepotReqDTO) {
         drivingDepotReqDTO.setUpdateBy(currentLoginUser.getPersonId());
 
-        int res = drivingMapper.modifyDepotData(drivingDepotReqDTO);
-        if( res <= 0){
-            throw new CommonException(ErrorCode.UPDATE_ERROR);
+        drivingMapper.modifyDepotData(drivingDepotReqDTO);
+        // 更新列表数据
+        String depotCode = drivingDepotReqDTO.getDepotCode();
+        if (StringUtils.isNotEmpty(depotCode)) {
+            DrivingCountReqDTO drivingCountReqDTO = new DrivingCountReqDTO();
+            drivingCountReqDTO.setId(drivingDepotReqDTO.getRecordId());
+            switch (depotCode) {
+                case CommonConstants.STATION_280:
+                    drivingCountReqDTO.setTrainCount1(drivingDepotReqDTO.getRealDeparture());
+                    break;
+                case CommonConstants.STATION_281:
+                    drivingCountReqDTO.setTrainCount2(drivingDepotReqDTO.getRealDeparture());
+                    break;
+                default:
+                    break;
+            }
+            drivingMapper.modifyDayCount(drivingCountReqDTO);
         }
 
         //更新统计

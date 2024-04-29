@@ -50,7 +50,7 @@ public interface ProductionSummaryMapper {
      * @param id 入参数
      * @return ProductionSummaryResDTO
      */
-    ProductionSummaryResDTO queryInfoById(String id);
+    ProductionSummaryResDTO queryInfoById(String id,String startDate,String endDate);
 
     /**
      * 详情

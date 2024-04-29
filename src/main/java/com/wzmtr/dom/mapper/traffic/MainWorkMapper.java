@@ -41,7 +41,7 @@ public interface MainWorkMapper {
      * @param id 入参数
      * @return ImportantWorkResDTO
      */
-    MainWorkResDTO queryInfoById(String id);
+    MainWorkResDTO queryInfoById(String id, String startDate, String endDate);
 
     /**
      * 新增

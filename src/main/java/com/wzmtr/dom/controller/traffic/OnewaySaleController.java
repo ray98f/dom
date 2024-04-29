@@ -2,7 +2,7 @@ package com.wzmtr.dom.controller.traffic;
 
 import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.constant.ValidationGroup;
-import com.wzmtr.dom.dto.req.common.SidReqDTO;
+import com.wzmtr.dom.dto.req.traffic.onewaysale.OneWaySaleDetailReqDTO;
 import com.wzmtr.dom.dto.req.traffic.onewaysale.OnewaySaleAddReqDTO;
 import com.wzmtr.dom.dto.req.traffic.onewaysale.OnewaySaleListReqDTO;
 import com.wzmtr.dom.dto.res.traffic.oneway.OnewaySaleDetailResDTO;
@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * 客运部-单程票发售情况
+ *
  * @Author: Li.Wang
  * Date: 2024/3/22 14:00
  */
@@ -31,8 +32,10 @@ public class OnewaySaleController {
 
     @Autowired
     private OnewaySaleService onewaySaleService;
+
     /**
      * 单程票发售情况-列表
+     *
      * @return 单程票发售情况
      */
     @PostMapping("/list")
@@ -40,13 +43,15 @@ public class OnewaySaleController {
     public PageResponse<OnewaySaleListResDTO> page(@RequestBody OnewaySaleListReqDTO reqDTO) {
         return PageResponse.of(onewaySaleService.list(reqDTO));
     }
+
     /**
      * 单程票发售情况-详情
+     *
      * @return 单程票发售情况
      */
     @PostMapping("/detail")
     @ApiOperation(value = "单程票发售情况")
-    public DataResponse<OnewaySaleDetailResDTO> detail(@RequestBody SidReqDTO reqDTO) {
+    public DataResponse<OnewaySaleDetailResDTO> detail(@RequestBody OneWaySaleDetailReqDTO reqDTO) {
         return DataResponse.of(onewaySaleService.detail(reqDTO));
     }
 
@@ -55,6 +60,7 @@ public class OnewaySaleController {
     public DataResponse<OnewaySaleDetailResDTO> acc(@RequestParam String date) {
         return DataResponse.of(onewaySaleService.acc(date));
     }
+
     /**
      * 单程票发售情况-新增
      */
@@ -67,6 +73,7 @@ public class OnewaySaleController {
 
     /**
      * 单程票发售情况-编辑
+     *
      * @return 成功
      */
     @PostMapping("/modify")
@@ -74,7 +81,7 @@ public class OnewaySaleController {
     public DataResponse<T> modify(@CurrUser CurrentLoginUser currentLoginUser,
                                   @Validated({ValidationGroup.modify.class})
                                   @RequestBody OnewaySaleAddReqDTO req) {
-        onewaySaleService.modify(currentLoginUser,req);
+        onewaySaleService.modify(currentLoginUser, req);
         return DataResponse.success();
     }
 }
