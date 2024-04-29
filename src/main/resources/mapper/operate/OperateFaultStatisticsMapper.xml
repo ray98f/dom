@@ -7,10 +7,44 @@
         WHERE DEL_FLAG='0'
         AND DATA_TYPE=#{dataType}
         <if test="startDate!=null and startDate!=''">
-            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+            AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
         <if test="endDate!=null and endDate!=''">
             AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        </if>
+        ORDER BY START_DATE desc
+    </select>
+
+    <select id="getTodayDetail" resultType="com.wzmtr.dom.dto.res.operate.fault.FaultStatisticsResDTO">
+        SELECT * FROM OPERATE_FAULT_STATISTICS
+        WHERE DEL_FLAG='0'
+        AND DATA_DATE=#{date}
+    </select>
+
+    <select id="getCurrentMonthDetail" resultType="com.wzmtr.dom.dto.res.operate.fault.FaultStatisticsResDTO">
+        SELECT
+        SUM(VEHICLE_NUM) AS VEHICLE_NUM,
+        SUM(SIGNAL_NUM) AS SIGNAL_NUM,
+        SUM(COMMUNICATION_NUM) AS COMMUNICATION_NUM,
+        SUM(AFC_NUM) AS AFC_NUM,
+        SUM(CHANGE_DISTRIBUTION_NUM) AS CHANGE_DISTRIBUTION_NUM,
+        SUM(CONTACT_NETWORK_NUM) AS CONTACT_NETWORK_NUM,
+        SUM(PLATFORM_DOORS_NUM) AS PLATFORM_DOORS_NUM,
+        SUM(FAS_NUM) AS FAS_NUM,
+        SUM(BUILDING_CONSTRUCTION_NUM) AS BUILDING_CONSTRUCTION_NUM,
+        SUM(MONITOR_NUM) AS MONITOR_NUM,
+        SUM(HYDROPOWER_NUM) AS HYDROPOWER_NUM,
+        SUM(ESCALATOR_NUM) AS ESCALATOR_NUM,
+        SUM(OFFICIAL_DUTIES_NUM) AS OFFICIAL_DUTIES_NUM,
+        SUM(BRIDGE_TUNNEL_NUM) AS BRIDGE_TUNNEL_NUM,
+        SUM(ENGINEERING_VEHICLE_NUM) AS ENGINEERING_VEHICLE_NUM
+        FROM OPERATE_FAULT_STATISTICS
+        WHERE DEL_FLAG='0'
+        <if test="startDate!=null and startDate!=''">
+            AND DATA_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=DATA_DATE
         </if>
         ORDER BY START_DATE desc
     </select>

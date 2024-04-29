@@ -19,6 +19,21 @@ public interface OperateFaultStatisticsMapper {
 
     Page<FaultStatisticsResDTO> list(Page<Object> of, String dataType, String startDate, String endDate);
 
+    /**
+     * 获取报表当日数据
+     * @param date 日期
+     * @return 当日数据
+     */
+    FaultStatisticsResDTO getTodayDetail(String date);
+
+    /**
+     * 获取报表当月数据
+     * @param startDate 开始时间
+     * @param endDate 结束时间
+     * @return 当月数据
+     */
+    FaultStatisticsResDTO getCurrentMonthDetail(String startDate, String endDate);
+
     Integer selectIsExist(OperateFaultStatisticsReqDTO req);
 
     void add(OperateFaultStatisticsReqDTO req);

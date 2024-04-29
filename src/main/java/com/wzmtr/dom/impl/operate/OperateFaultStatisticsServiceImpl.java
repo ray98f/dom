@@ -5,6 +5,7 @@ import com.github.pagehelper.page.PageMethod;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.operate.OperateFaultStatisticsReqDTO;
 import com.wzmtr.dom.dto.res.operate.fault.FaultStatisticsResDTO;
+import com.wzmtr.dom.dto.res.operate.fault.ReportFaultStatisticsResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.ErrorCode;
@@ -42,6 +43,21 @@ public class OperateFaultStatisticsServiceImpl implements OperateFaultStatistics
         }
         records.forEach(a -> a.setSum(getFaultSum(a)));
         return list;
+    }
+
+    @Override
+    public ReportFaultStatisticsResDTO report(String date) {
+        ReportFaultStatisticsResDTO res = new ReportFaultStatisticsResDTO();
+        FaultStatisticsResDTO today = operateFaultStatisticsMapper.getTodayDetail(date);
+        if (StringUtils.isNotNull(today)) {
+            res.setToday(today);
+        }
+        FaultStatisticsResDTO currentMonth =
+                operateFaultStatisticsMapper.getCurrentMonthDetail(date.substring(0, 7) + "01", date);
+        if (StringUtils.isNotNull(currentMonth)) {
+            res.setCurrentMonth(currentMonth);
+        }
+        return res;
     }
 
     public static long getFaultSum(FaultStatisticsResDTO a) {
