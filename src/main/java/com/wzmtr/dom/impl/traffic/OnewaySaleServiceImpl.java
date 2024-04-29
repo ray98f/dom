@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.dataobject.traffic.TrafficOnewaySaleDO;
 import com.wzmtr.dom.dto.req.common.SidReqDTO;
+import com.wzmtr.dom.dto.req.traffic.onewaysale.OneWaySaleDetailReqDTO;
 import com.wzmtr.dom.dto.req.traffic.onewaysale.OnewaySaleAddReqDTO;
 import com.wzmtr.dom.dto.req.traffic.onewaysale.OnewaySaleListReqDTO;
 import com.wzmtr.dom.dto.res.traffic.oneway.OnewaySaleDetailResDTO;
@@ -35,9 +36,8 @@ public class OnewaySaleServiceImpl implements OnewaySaleService {
     private OnewaySaleMapper onewaySaleMapper;
 
     @Override
-    public OnewaySaleDetailResDTO detail(SidReqDTO reqDTO) {
-        String id = reqDTO.getId();
-        TrafficOnewaySaleDO trafficOnewaySaleDO = onewaySaleMapper.selectById(id);
+    public OnewaySaleDetailResDTO detail(OneWaySaleDetailReqDTO reqDTO) {
+        TrafficOnewaySaleDO trafficOnewaySaleDO = onewaySaleMapper.detail(reqDTO);
         return OnewaySaleDetailResDTO.buildRes(trafficOnewaySaleDO);
     }
 

@@ -16,6 +16,18 @@ import lombok.EqualsAndHashCode;
 public class TodoReqDTO extends BaseEntity {
 
     /**
+     * 流程名
+     */
+    @ApiModelProperty(value = "流程名")
+    private String processKey;
+
+    /**
+     * 所属报表ID
+     */
+    @ApiModelProperty(value = "所属报表ID")
+    private String reportId;
+
+    /**
      * 审批结果说明
      */
     @ApiModelProperty(value = "审批结果说明")

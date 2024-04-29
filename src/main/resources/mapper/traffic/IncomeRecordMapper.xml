@@ -6,7 +6,7 @@
         SELECT *
         FROM TRAFFIC_INCOME_RECORD
         WHERE DEL_FLAG='0'
-        AND DATA_TYPE = #{req.dataType}
+        AND DATA_TYPE=#{req.dataType}
         <if test="req.startDate != null and req.startDate!=''">
             AND START_DATE >= to_date(#{req.startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
@@ -20,7 +20,7 @@
         SELECT COUNT(*)
         FROM TRAFFIC_INCOME_RECORD
         WHERE DEL_FLAG = '0'
-        AND DATA_TYPE = #{dataType}
+        AND DATA_TYPE=#{dataType}
         <if test="startDate != null">
             AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
@@ -32,7 +32,16 @@
     <select id="selectDetailById" resultType="com.wzmtr.dom.dataobject.traffic.IncomeRecordDO">
         SELECT *
         FROM TRAFFIC_INCOME_RECORD
-        WHERE ID=#{id} AND DEL_FLAG = '0'
+        WHERE  DEL_FLAG = '0'
+        <if test="id != null">
+            ID=#{id}
+        </if>
+        <if test="startDate != null">
+            AND to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') >= START_DATE
+        </if>
+        <if test="endDate != null">
+            AND END_DATE >= to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
     </select>
 
     <insert id="add">
@@ -97,7 +106,7 @@
             VERSION = VERSION+1,
             UPDATE_BY=#{updateBy},
             UPDATE_DATE=sysdate
-        WHERE ID=#{id} and VERSION = #{version}
+        WHERE ID=#{id} and VERSION=#{version}
     </update>
 
     <update id="modifyCount">
@@ -144,7 +153,7 @@
         VERSION = VERSION+1,
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate
-        WHERE ID=#{id} and VERSION = #{version}
+        WHERE ID=#{id} and VERSION=#{version}
     </update>
 
 

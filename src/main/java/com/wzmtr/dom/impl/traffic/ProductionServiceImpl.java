@@ -57,8 +57,8 @@ public class ProductionServiceImpl implements ProductionService {
     }
 
     @Override
-    public ProductionDetailResDTO detail(String id) {
-        ProductionDetailResDTO detail = productionMapper.queryInfoById(id);
+    public ProductionDetailResDTO detail(String id,String startDate, String endDate) {
+        ProductionDetailResDTO detail = productionMapper.queryInfoById(id,startDate,endDate);
         ProductionSummaryResDTO summaryRes = productionSummaryMapper.queryInfoByDate(detail.getStationCode(),detail.getDataType(),
                 DateUtil.formatDate(detail.getStartDate()),DateUtil.formatDate(detail.getEndDate()));
 

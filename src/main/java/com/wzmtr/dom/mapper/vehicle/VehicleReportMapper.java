@@ -1,6 +1,7 @@
 package com.wzmtr.dom.mapper.vehicle;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wzmtr.dom.dto.req.system.ReportUpdateReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.DailyReportReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.MonthlyReportReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.WeeklyReportReqDTO;
@@ -147,4 +148,22 @@ public interface VehicleReportMapper {
      * @param userId 用户id
      */
     void deleteMonthly(List<String> ids, String userId);
+
+    /**
+     * 根据流程修改日报状态
+     * @param reqDTO 报表修改参数
+     */
+    void modifyDailyByFlow(ReportUpdateReqDTO reqDTO);
+
+    /**
+     * 根据流程修改周报状态
+     * @param reqDTO 报表修改参数
+     */
+    void modifyWeeklyByFlow(ReportUpdateReqDTO reqDTO);
+
+    /**
+     * 根据流程修改月报状态
+     * @param reqDTO 报表修改参数
+     */
+    void modifyMonthlyByFlow(ReportUpdateReqDTO reqDTO);
 }

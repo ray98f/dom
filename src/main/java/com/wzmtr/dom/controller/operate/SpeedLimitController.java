@@ -55,9 +55,11 @@ public class SpeedLimitController {
      */
     @GetMapping("/info/page")
     @ApiOperation(value = "查询线路限速情况详情列表(分页)")
-    public PageResponse<SpeedLimitInfoResDTO> infoPage(@RequestParam String id,
+    public PageResponse<SpeedLimitInfoResDTO> infoPage(@RequestParam(required = false) String id,
+                                                       @RequestParam(required = false) String startDate,
+                                                       @RequestParam(required = false) String endDate,
                                                        @Valid PageReqDTO pageReqDTO) {
-        return PageResponse.of(speedLimitService.infoPage(id, pageReqDTO));
+        return PageResponse.of(speedLimitService.infoPage(id,startDate,endDate, pageReqDTO));
     }
 
     /**

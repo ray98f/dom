@@ -20,4 +20,7 @@ public interface OperatePassengerFlowInfoMapper extends BaseMapper<OperatePassen
     List<PassengerInfoResDTO> eachStation(String startDate, String endDate);
 
     void createStationPassenger(PassengerInfoReqDTO item);
+
+    List<String> topThree(String startDate,String endDate,String dataType);
+    List<String> lastThree(String startDate,String endDate,String dataType);
 }

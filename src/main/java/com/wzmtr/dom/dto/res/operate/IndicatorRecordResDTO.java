@@ -11,7 +11,8 @@ import java.util.Date;
 
 /**
  * 日数据结果类
- * @author  zhangxin
+ *
+ * @author zhangxin
  * @version 1.0
  * @date 2024/3/12 08:25
  */
@@ -57,5 +58,14 @@ public class IndicatorRecordResDTO extends BaseEntity {
             timezone = "GMT+8"
     )
     private Date endDate;
-
+    /***
+     * 正点率
+     */
+    @ApiModelProperty(value = " 正点率")
+    private String punctualityRate;
+    /**
+     * 总能耗
+     */
+    @ApiModelProperty(value = " 总能耗")
+    private String energyConsumption;
 }

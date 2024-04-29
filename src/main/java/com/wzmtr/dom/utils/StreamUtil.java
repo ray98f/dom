@@ -111,4 +111,15 @@ public class StreamUtil {
     public static <F, T> List<T> mapToList(Collection<F> from, Predicate<F> predicate, Function<? super F, T> mapper) {
         return from.stream().filter(predicate).map(mapper).collect(Collectors.toList());
     }
+
+    public static <T> List<T> objToList(Object obj, Class<T> cla) {
+        List<T> list = new ArrayList<T>();
+        if (obj instanceof ArrayList<?>) {
+            for (Object o : (List<?>) obj) {
+                list.add(cla.cast(o));
+            }
+            return list;
+        }
+        return null;
+    }
 }

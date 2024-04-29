@@ -11,10 +11,15 @@ import java.util.List;
  */
 public enum BpmnFlowEnum {
     //
+    vehicle_daily("vehicle_daily", "车辆部日报审批流程"),
+    vehicle_weekly("vehicle_weekly", "车辆部周报审批流程"),
+    vehicle_monthly("vehicle_monthly", "车辆部月报审批流程"),
     traffic_daily("traffic_daily", "客运部日报审批流程"),
-    traffic_daily_sub1("traffic_daily_sub1", "客运部日报-客流收益审批流程"),
-    traffic_daily_sub2("traffic_daily_sub2", "客运部日报-服务热线审批流程"),
-    traffic_daily_sub3("traffic_daily_sub3", "客运部日报-安全生产审批流程");
+    traffic_weekly("traffic_weekly", "客运部周报审批流程"),
+    traffic_monthly("traffic_monthly", "客运部月报审批流程"),
+    operate_daily("operate_daily", "运营日报审批流程"),
+    operate_weekly("operate_weekly", "运营周报审批流程"),
+    operate_monthly("operate_monthly", "运营月报审批流程");
     private String value;
     private String label;
 

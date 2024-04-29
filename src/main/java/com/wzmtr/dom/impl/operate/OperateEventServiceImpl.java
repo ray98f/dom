@@ -6,6 +6,7 @@ import com.github.pagehelper.page.PageMethod;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.operate.OperateEventInfoReqDTO;
 import com.wzmtr.dom.dto.req.operate.OperateEventReqDTO;
+import com.wzmtr.dom.dto.res.operate.EventCountResDTO;
 import com.wzmtr.dom.dto.res.operate.OperateEventInfoResDTO;
 import com.wzmtr.dom.dto.res.operate.OperateEventResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
@@ -41,8 +42,8 @@ public class OperateEventServiceImpl implements OperateEventService {
     }
 
     @Override
-    public OperateEventResDTO detail(String id) {
-        return operateEventMapper.queryInfoById(id);
+    public OperateEventResDTO detail(String id,String startDate, String endDate) {
+        return operateEventMapper.queryInfoById(id,startDate,endDate);
     }
 
     @Override
@@ -81,6 +82,11 @@ public class OperateEventServiceImpl implements OperateEventService {
     public Page<OperateEventInfoResDTO> eventList(String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return operateEventMapper.eventList(pageReqDTO.of(),startDate,endDate);
+    }
+
+    @Override
+    public List<EventCountResDTO> eventCount(String startDate, String endDate) {
+        return operateEventMapper.eventCount(startDate,endDate);
     }
 
     @Override

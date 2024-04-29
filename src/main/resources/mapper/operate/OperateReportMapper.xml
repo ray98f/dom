@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzmtr.dom.mapper.operate.OperateReportMapper">
+    <select id="pageDaily" resultType="com.wzmtr.dom.dto.res.operate.DailyReportResDTO">
+        SELECT dr.ID, dr.IF_PASSENGER, dr.IF_INDICATOR, dr.IF_EVENT, dr.IF_CONSTRUCT, dr.IF_DEBUG, dr.IF_SPEED_LIMIT,
+        dr.IF_FAULT_STATISTICS, dr.DAILY_DATE, dr.STATUS, dr.START_DATE, dr.END_DATE, dr.VERSION,
+        dr.CREATE_DATE, u.NAME AS CREATE_BY
+        FROM OPERATE_DAILY_REPORT dr
+        LEFT JOIN SYS_USER u ON u.ID=dr.CREATE_BY
+        WHERE dr.DEL_FLAG='0'
+        <if test="startDate!=null and startDate!=''">
+            AND dr.DAILY_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'YYYY-MM-DD')>=dr.DAILY_DATE
+        </if>
+        ORDER BY dr.DAILY_DATE desc
+    </select>
+
+    <select id="detailDaily" resultType="com.wzmtr.dom.dto.res.operate.DailyReportResDTO">
+        SELECT dr.ID, dr.IF_PASSENGER, dr.IF_INDICATOR, dr.IF_EVENT, dr.IF_CONSTRUCT, dr.IF_DEBUG, dr.IF_SPEED_LIMIT,
+        dr.IF_FAULT_STATISTICS, dr.DAILY_DATE, dr.STATUS, dr.START_DATE, dr.END_DATE, dr.VERSION,
+        dr.CREATE_DATE, u.NAME AS CREATE_BY
+        FROM OPERATE_DAILY_REPORT dr
+        LEFT JOIN SYS_USER u ON u.ID=dr.CREATE_BY
+        WHERE dr.DEL_FLAG='0' AND dr.ID=#{id}
+    </select>
+
+    <select id="selectDailyIsExist" resultType="java.lang.Integer">
+        select count(1) from OPERATE_DAILY_REPORT
+        WHERE DAILY_DATE=#{dailyDate,jdbcType=TIMESTAMP}
+        <if test="version!=null and version!=''">
+            AND VERSION=#{version,jdbcType=VARCHAR}
+        </if>
+        AND DEL_FLAG='0' AND rownum=1
+    </select>
+
+    <insert id="addDaily">
+        INSERT INTO OPERATE_DAILY_REPORT
+        (ID,
+        <if test="ifPassenger!=null and ifPassenger!=''">
+            IF_PASSENGER,
+        </if>
+        <if test="ifIndicator!=null and ifIndicator!=''">
+            IF_INDICATOR,
+        </if>
+        <if test="ifEvent!=null and ifEvent!=''">
+            IF_EVENT,
+        </if>
+        <if test="ifConstruct!=null and ifConstruct!=''">
+            IF_CONSTRUCT,
+        </if>
+        <if test="ifDebug!=null and ifDebug!=''">
+            IF_DEBUG,
+        </if>
+        <if test="ifSpeedLimit!=null and ifSpeedLimit!=''">
+            IF_SPEED_LIMIT,
+        </if>
+        <if test="ifFaultStatistics!=null and ifFaultStatistics!=''">
+            IF_FAULT_STATISTICS,
+        </if>
+        STATUS, CREATE_BY, CREATE_DATE, DAILY_DATE)
+        VALUES (#{id},
+        <if test="ifPassenger!=null and ifPassenger!=''">
+            #{ifPassenger},
+        </if>
+        <if test="ifIndicator!=null and ifIndicator!=''">
+            #{ifIndicator},
+        </if>
+        <if test="ifEvent!=null and ifEvent!=''">
+            #{ifEvent},
+        </if>
+        <if test="ifConstruct!=null and ifConstruct!=''">
+            #{ifConstruct},
+        </if>
+        <if test="ifDebug!=null and ifDebug!=''">
+            #{ifDebug},
+        </if>
+        <if test="ifSpeedLimit!=null and ifSpeedLimit!=''">
+            #{ifSpeedLimit},
+        </if>
+        <if test="ifFaultStatistics!=null and ifFaultStatistics!=''">
+            #{ifFaultStatistics},
+        </if>
+        #{status}, #{createBy}, sysdate, #{dailyDate})
+    </insert>
+
+    <update id="modifyDaily">
+        UPDATE OPERATE_DAILY_REPORT SET
+        <if test="ifPassenger!=null">
+            IF_PASSENGER=#{ifPassenger},
+        </if>
+        <if test="ifIndicator!=null">
+            IF_INDICATOR=#{ifIndicator},
+        </if>
+        <if test="ifEvent!=null">
+            IF_EVENT=#{ifEvent},
+        </if>
+        <if test="ifConstruct!=null">
+            IF_CONSTRUCT=#{ifConstruct},
+        </if>
+        <if test="ifDebug!=null">
+            IF_DEBUG=#{ifDebug},
+        </if>
+        <if test="ifSpeedLimit!=null">
+            IF_SPEED_LIMIT=#{ifSpeedLimit},
+        </if>
+        <if test="ifFaultStatistics!=null">
+            IF_FAULT_STATISTICS=#{ifFaultStatistics},
+        </if>
+        <if test="status!=null">
+            STATUS=#{status},
+        </if>
+        VERSION=VERSION+1, UPDATE_BY=#{updateBy}, UPDATE_DATE=sysdate
+        WHERE ID=#{id} and VERSION=#{version}
+    </update>
+
+    <update id="deleteDaily">
+        UPDATE OPERATE_DAILY_REPORT SET
+        DEL_FLAG='1', UPDATE_BY=#{userId}, UPDATE_DATE=sysdate
+        WHERE ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+
+    <select id="pageWeekly" resultType="com.wzmtr.dom.dto.res.vehicle.WeeklyReportResDTO">
+        SELECT wr.ID, wr.IF_PASSENGER, wr.IF_ENERGY, wr.IF_EVENT_FAULT, wr.IF_CONSTRUCT,
+        wr.IF_HOTLINE, wr.IF_SECURITY_CLEAN, wr.IF_INDICATOR wr.START_DATE, wr.END_DATE,
+        wr.STATUS, wr.VERSION, wr.CREATE_DATE, u.NAME AS CREATE_BY
+        FROM OPERATE_WEEKLY_REPORT wr
+        LEFT JOIN SYS_USER u ON u.ID=wr.CREATE_BY
+        WHERE wr.DEL_FLAG='0'
+        <if test="startDate!=null and startDate!=''">
+            AND wr.START_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'YYYY-MM-DD')>=wr.END_DATE
+        </if>
+        ORDER BY wr.START_DATE desc
+    </select>
+
+    <select id="detailWeekly" resultType="com.wzmtr.dom.dto.res.vehicle.WeeklyReportResDTO">
+        SELECT wr.ID, wr.IF_PASSENGER, wr.IF_ENERGY, wr.IF_EVENT_FAULT, wr.IF_CONSTRUCT,
+        wr.IF_HOTLINE, wr.IF_SECURITY_CLEAN, wr.IF_INDICATOR wr.START_DATE, wr.END_DATE,
+        wr.STATUS, wr.VERSION, wr.CREATE_DATE, u.NAME AS CREATE_BY
+        FROM OPERATE_WEEKLY_REPORT wr
+        LEFT JOIN SYS_USER u ON u.ID=wr.CREATE_BY
+        WHERE wr.DEL_FLAG='0' AND wr.ID=#{id}
+    </select>
+
+    <select id="selectWeeklyIsExist" resultType="java.lang.Integer">
+        select count(1) from OPERATE_WEEKLY_REPORT
+        WHERE START_DATE=#{startDate,jdbcType=TIMESTAMP} and END_DATE=#{endDate,jdbcType=TIMESTAMP}
+        <if test="version!=null and version!=''">
+            AND VERSION=#{version,jdbcType=VARCHAR}
+        </if>
+        AND DEL_FLAG='0' AND rownum=1
+    </select>
+
+    <insert id="addWeekly">
+        INSERT INTO OPERATE_WEEKLY_REPORT
+        (ID,
+        <if test="ifPassenger!=null and ifPassenger!=''">
+            IF_PASSENGER,
+        </if>
+        <if test="ifEnergy!=null and ifEnergy!=''">
+            IF_ENERGY,
+        </if>
+        <if test="ifEventFault!=null and ifEventFault!=''">
+            IF_EVENT_FAULT,
+        </if>
+        <if test="ifConstruct!=null and ifConstruct!=''">
+            IF_CONSTRUCT,
+        </if>
+        <if test="ifHotline!=null and ifHotline!=''">
+            IF_HOTLINE,
+        </if>
+        <if test="ifSecurityClean!=null and ifSecurityClean!=''">
+            IF_SECURITY_CLEAN,
+        </if>
+        <if test="ifIndicator!=null and ifIndicator!=''">
+            IF_INDICATOR,
+        </if>
+        STATUS, CREATE_BY, CREATE_DATE, START_DATE, END_DATE)
+        VALUES (#{id},
+        <if test="ifPassenger!=null and ifPassenger!=''">
+            #{ifPassenger},
+        </if>
+        <if test="ifEnergy!=null and ifEnergy!=''">
+            #{ifEnergy},
+        </if>
+        <if test="ifEventFault!=null and ifEventFault!=''">
+            #{ifEventFault},
+        </if>
+        <if test="ifConstruct!=null and ifConstruct!=''">
+            #{ifConstruct},
+        </if>
+        <if test="ifHotline!=null and ifHotline!=''">
+            #{ifHotline},
+        </if>
+        <if test="ifSecurityClean!=null and ifSecurityClean!=''">
+            #{ifSecurityClean},
+        </if>
+        <if test="ifIndicator!=null and ifIndicator!=''">
+            #{ifIndicator},
+        </if>
+        #{status}, #{createBy}, sysdate, #{startDate}, #{endDate})
+    </insert>
+
+    <update id="modifyWeekly">
+        UPDATE OPERATE_WEEKLY_REPORT SET
+        <if test="ifPassenger!=null">
+            IF_PASSENGER=#{ifPassenger},
+        </if>
+        <if test="ifEnergy!=null">
+            IF_ENERGY=#{ifEnergy},
+        </if>
+        <if test="ifEventFault!=null">
+            IF_EVENT_FAULT=#{ifEventFault},
+        </if>
+        <if test="ifConstruct!=null">
+            IF_CONSTRUCT=#{ifConstruct},
+        </if>
+        <if test="ifHotline!=null">
+            IF_HOTLINE=#{ifHotline},
+        </if>
+        <if test="ifSecurityClean!=null">
+            IF_SECURITY_CLEAN=#{ifSecurityClean},
+        </if>
+        <if test="ifIndicator!=null">
+            IF_INDICATOR=#{ifIndicator},
+        </if>
+        <if test="status!=null">
+            STATUS=#{status},
+        </if>
+        VERSION=VERSION+1, UPDATE_BY=#{updateBy}, UPDATE_DATE=sysdate
+        WHERE ID=#{id} and VERSION=#{version}
+    </update>
+
+    <update id="deleteWeekly">
+        UPDATE OPERATE_WEEKLY_REPORT SET
+        DEL_FLAG='1', UPDATE_BY=#{userId}, UPDATE_DATE=sysdate
+        WHERE ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+
+    <select id="pageMonthly" resultType="com.wzmtr.dom.dto.res.vehicle.MonthlyReportResDTO">
+        SELECT mr.ID, mr.IF_PASSENGER, mr.IF_ENERGY, mr.IF_EVENT_FAULT, mr.IF_CONSTRUCT,
+        mr.IF_HOTLINE, mr.IF_SECURITY_CLEAN, mr.IF_INDICATOR, mr.START_DATE, mr.END_DATE,
+        mr.STATUS, mr.VERSION, mr.CREATE_DATE, u.NAME AS CREATE_BY
+        FROM OPERATE_MONTHLY_REPORT mr
+        LEFT JOIN SYS_USER u ON u.ID=mr.CREATE_BY
+        WHERE mr.DEL_FLAG='0'
+        <if test="startDate!=null and startDate!=''">
+            AND mr.START_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'YYYY-MM-DD')>=mr.END_DATE
+        </if>
+        ORDER BY mr.START_DATE desc
+    </select>
+
+    <select id="detailMonthly" resultType="com.wzmtr.dom.dto.res.vehicle.MonthlyReportResDTO">
+        SELECT mr.ID, mr.IF_PASSENGER, mr.IF_ENERGY, mr.IF_EVENT_FAULT, mr.IF_CONSTRUCT,
+        mr.IF_HOTLINE, mr.IF_SECURITY_CLEAN, mr.IF_INDICATOR, mr.START_DATE, mr.END_DATE,
+        mr.STATUS, mr.VERSION, mr.CREATE_DATE, u.NAME AS CREATE_BY
+        FROM OPERATE_MONTHLY_REPORT mr
+        LEFT JOIN SYS_USER u ON u.ID=mr.CREATE_BY
+        WHERE mr.DEL_FLAG='0' AND mr.ID=#{id}
+    </select>
+
+    <select id="selectMonthlyIsExist" resultType="java.lang.Integer">
+        select count(1) from OPERATE_MONTHLY_REPORT
+        WHERE START_DATE=#{startDate,jdbcType=TIMESTAMP} and END_DATE=#{endDate,jdbcType=TIMESTAMP}
+        <if test="version!=null and version!=''">
+            AND VERSION=#{version,jdbcType=VARCHAR}
+        </if>
+        AND DEL_FLAG='0' AND rownum=1
+    </select>
+
+    <insert id="addMonthly">
+        INSERT INTO OPERATE_MONTHLY_REPORT
+        (ID,
+        <if test="ifPassenger!=null and ifPassenger!=''">
+            IF_PASSENGER,
+        </if>
+        <if test="ifEnergy!=null and ifEnergy!=''">
+            IF_ENERGY,
+        </if>
+        <if test="ifEventFault!=null and ifEventFault!=''">
+            IF_EVENT_FAULT,
+        </if>
+        <if test="ifConstruct!=null and ifConstruct!=''">
+            IF_CONSTRUCT,
+        </if>
+        <if test="ifHotline!=null and ifHotline!=''">
+            IF_HOTLINE,
+        </if>
+        <if test="ifSecurityClean!=null and ifSecurityClean!=''">
+            IF_SECURITY_CLEAN,
+        </if>
+        <if test="ifIndicator!=null and ifIndicator!=''">
+            IF_INDICATOR,
+        </if>
+        STATUS, CREATE_BY, CREATE_DATE, START_DATE, END_DATE)
+        VALUES (#{id},
+        <if test="ifPassenger!=null and ifPassenger!=''">
+            #{ifPassenger},
+        </if>
+        <if test="ifEnergy!=null and ifEnergy!=''">
+            #{ifEnergy},
+        </if>
+        <if test="ifEventFault!=null and ifEventFault!=''">
+            #{ifEventFault},
+        </if>
+        <if test="ifConstruct!=null and ifConstruct!=''">
+            #{ifConstruct},
+        </if>
+        <if test="ifHotline!=null and ifHotline!=''">
+            #{ifHotline},
+        </if>
+        <if test="ifSecurityClean!=null and ifSecurityClean!=''">
+            #{ifSecurityClean},
+        </if>
+        <if test="ifIndicator!=null and ifIndicator!=''">
+            #{ifIndicator},
+        </if>
+        #{status}, #{createBy}, sysdate, #{startDate}, #{endDate})
+    </insert>
+
+    <update id="modifyMonthly">
+        UPDATE OPERATE_MONTHLY_REPORT SET
+        <if test="ifPassenger!=null">
+            IF_PASSENGER=#{ifPassenger},
+        </if>
+        <if test="ifEnergy!=null">
+            IF_ENERGY=#{ifEnergy},
+        </if>
+        <if test="ifEventFault!=null">
+            IF_EVENT_FAULT=#{ifEventFault},
+        </if>
+        <if test="ifConstruct!=null">
+            IF_CONSTRUCT=#{ifConstruct},
+        </if>
+        <if test="ifHotline!=null">
+            IF_HOTLINE=#{ifHotline},
+        </if>
+        <if test="ifSecurityClean!=null">
+            IF_SECURITY_CLEAN=#{ifSecurityClean},
+        </if>
+        <if test="ifIndicator!=null">
+            IF_INDICATOR=#{ifIndicator},
+        </if>
+        <if test="status!=null">
+            STATUS=#{status},
+        </if>
+        VERSION=VERSION+1, UPDATE_BY=#{updateBy}, UPDATE_DATE=sysdate
+        WHERE ID=#{id} and VERSION=#{version}
+    </update>
+
+    <update id="deleteMonthly">
+        UPDATE OPERATE_MONTHLY_REPORT SET
+        DEL_FLAG='1', UPDATE_BY=#{userId}, UPDATE_DATE=sysdate
+        WHERE ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+    
+    <update id="modifyDailyByFlow">
+        UPDATE OPERATE_DAILY_REPORT SET
+        <if test="status!=null">
+            STATUS=#{status},
+        </if>
+        UPDATE_DATE=sysdate, UPDATE_BY=#{updateBy}
+        WHERE ID=#{id}
+    </update>
+
+    <update id="modifyWeeklyByFlow">
+        UPDATE OPERATE_WEEKLY_REPORT SET
+        <if test="status!=null">
+            STATUS=#{status},
+        </if>
+        UPDATE_DATE=sysdate, UPDATE_BY=#{updateBy}
+        WHERE ID=#{id}
+    </update>
+
+    <update id="modifyMonthlyByFlow">
+        UPDATE OPERATE_MONTHLY_REPORT SET
+        <if test="status!=null">
+            STATUS=#{status},
+        </if>
+        UPDATE_DATE=sysdate, UPDATE_BY=#{updateBy}
+        WHERE ID=#{id}
+    </update>
+</mapper>

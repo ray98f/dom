@@ -35,7 +35,7 @@ public class BadWeatherServiceImpl implements BadWeatherService {
     }
 
     @Override
-    public BadWeatherResDTO detail(String id) {
+    public BadWeatherResDTO detail(String id,String startDate, String endDate) {
         return badWeatherMapper.detail(id);
     }
 

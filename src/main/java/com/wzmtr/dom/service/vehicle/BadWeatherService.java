@@ -30,7 +30,7 @@ public interface BadWeatherService {
      * @param id id
      * @return 恶劣天气组织详情
      */
-    BadWeatherResDTO detail(String id);
+    BadWeatherResDTO detail(String id,String startDate,String endDate);
 
     /**
      * 新增恶劣天气组织

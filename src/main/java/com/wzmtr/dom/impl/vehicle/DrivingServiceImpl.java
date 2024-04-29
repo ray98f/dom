@@ -16,13 +16,12 @@ import com.wzmtr.dom.exception.CommonException;
 import com.wzmtr.dom.mapper.vehicle.DrivingMapper;
 import com.wzmtr.dom.mapper.vehicle.IndicatorMapper;
 import com.wzmtr.dom.service.vehicle.DrivingService;
-import com.wzmtr.dom.utils.DateUtils;
+import com.wzmtr.dom.utils.StringUtils;
 import com.wzmtr.dom.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -50,18 +49,14 @@ public class DrivingServiceImpl implements DrivingService {
 
     @Override
     public DrivingRecordDetailResDTO detail(String recordId) {
-
-        //获取详情
-        DrivingRecordDetailResDTO  detail = drivingMapper.queryInfoById(recordId);
-
-        //车场情况
-        List<DrivingDepotResDTO> depotList = drivingMapper.depot(recordId);
-        detail.setDepotList(depotList);
-
-        //司机驾驶情况
-        DrivingInfoResDTO driveInfo = drivingMapper.driveInfo(recordId);
-        detail.setDriveInfo(driveInfo);
-
+        // 获取详情
+        DrivingRecordDetailResDTO detail = drivingMapper.queryInfoById(recordId);
+        if (StringUtils.isNotNull(detail)) {
+            // 车场情况
+            detail.setDepotList(drivingMapper.depot(recordId));
+            // 司机驾驶情况
+            detail.setDriveInfo(drivingMapper.driveInfo(recordId));
+        }
         return detail;
     }
 
@@ -139,6 +134,7 @@ public class DrivingServiceImpl implements DrivingService {
         if( res <= 0){
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
+
     }
 
     @Override
@@ -171,12 +167,32 @@ public class DrivingServiceImpl implements DrivingService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void depotModify(CurrentLoginUser currentLoginUser, DrivingDepotReqDTO drivingDepotReqDTO) {
         drivingDepotReqDTO.setUpdateBy(currentLoginUser.getPersonId());
 
-        int res = drivingMapper.modifyDepotData(drivingDepotReqDTO);
-        if( res <= 0){
-            throw new CommonException(ErrorCode.UPDATE_ERROR);
+        drivingMapper.modifyDepotData(drivingDepotReqDTO);
+        // 更新列表数据
+        String depotCode = drivingDepotReqDTO.getDepotCode();
+        if (StringUtils.isNotEmpty(depotCode)) {
+            DrivingCountReqDTO drivingCountReqDTO = new DrivingCountReqDTO();
+            drivingCountReqDTO.setId(drivingDepotReqDTO.getRecordId());
+            switch (depotCode) {
+                case CommonConstants.STATION_280:
+                    drivingCountReqDTO.setTrainCount1(drivingDepotReqDTO.getRealDeparture());
+                    break;
+                case CommonConstants.STATION_281:
+                    drivingCountReqDTO.setTrainCount2(drivingDepotReqDTO.getRealDeparture());
+                    break;
+                default:
+                    break;
+            }
+            drivingMapper.modifyDayCount(drivingCountReqDTO);
+        }
+
+        //更新统计
+        if(StringUtils.isNotEmpty(drivingDepotReqDTO.getRecordId())){
+            updateRecordCount(drivingDepotReqDTO.getRecordId());
         }
     }
 
@@ -212,6 +228,11 @@ public class DrivingServiceImpl implements DrivingService {
             }
         }catch (Exception e){
             throw new CommonException(ErrorCode.UPDATE_ERROR);
+        }
+
+        //更新统计
+        if(StringUtils.isNotEmpty(drivingInfoReqDTO.getRecordId())){
+            updateRecordCount(drivingInfoReqDTO.getRecordId());
         }
 
     }

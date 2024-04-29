@@ -65,10 +65,10 @@ public class PassengerServiceImpl implements PassengerService {
     }
 
     @Override
-    public PassengerDetailResDTO detail(String recordId) {
+    public PassengerDetailResDTO detail(String recordId,String startDate, String endDate) {
 
         //获取详情
-        PassengerDetailResDTO detail = passengerMapper.queryInfoById(recordId);
+        PassengerDetailResDTO detail = passengerMapper.queryInfoById(recordId,startDate,endDate);
 
         //车站情况
         List<PassengerInfoResDTO> stationPassengerList = passengerMapper.stationPassenger( DateUtil.formatDate(detail.getStartDate()),
@@ -107,8 +107,9 @@ public class PassengerServiceImpl implements PassengerService {
         //日报类型同步客流数据 更新客流数据
         if(CommonConstants.DATA_TYPE_DAILY.equals(passengerRecordReqDTO.getDataType())){
             try{
-                syncACCdata(passengerRecordReqDTO);
-                passengerMapper.modifyCount(passengerRecordReqDTO.getId(),passengerRecordReqDTO.getStartDate(),passengerRecordReqDTO.getEndDate());
+                //TODO 调试时暂时注释
+                //syncACCdata(passengerRecordReqDTO);
+                //passengerMapper.modifyCount(passengerRecordReqDTO.getId(),passengerRecordReqDTO.getStartDate(),passengerRecordReqDTO.getEndDate());
             }catch (Exception e){
                 throw new CommonException(ErrorCode.INSERT_ERROR);
             }

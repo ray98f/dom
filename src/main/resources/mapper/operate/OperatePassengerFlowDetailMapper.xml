@@ -68,10 +68,16 @@
         <if test="hourMaxPass != null">
             HOUR_MAX_PASS=#{hourMaxPass},
         </if>
+        <if test="hourMaxTimeStart != null">
+            HOUR_MAX_START_TIME=to_date(#{hourMaxTimeStart},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        <if test="hourMaxTimeEnd != null">
+            HOUR_MAX_END_TIME=to_date(#{hourMaxTimeEnd},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
         VERSION = VERSION+1,
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate
-        WHERE ID=#{id} and VERSION = #{version}
+        WHERE ID=#{id} and VERSION=#{version}
     </update>
     <update id="modifyCount">
         UPDATE OPERATE_PASSENGER_FLOW_DETAIL
@@ -88,14 +94,14 @@
                        WHERE TO_CHAR(START_DATE, 'YYYY') =
                              TO_CHAR(to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss'), 'YYYY')),
             UPDATE_DATE=sysdate
-        WHERE ID = #{id}
+        WHERE ID=#{id}
     </update>
 
     <select id="list" resultType="com.wzmtr.dom.dto.res.operate.passengerflow.PassengerFlowListResDTO">
         SELECT *
         FROM OPERATE_PASSENGER_FLOW_DETAIL
         WHERE DEL_FLAG='0'
-        AND DATA_TYPE = #{dataType}
+        AND DATA_TYPE=#{dataType}
         <if test="startDate != null and startDate!=''">
             AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
@@ -103,6 +109,20 @@
             AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
         </if>
         ORDER BY START_DATE desc
+    </select>
+    <select id="info" resultType="com.wzmtr.dom.dataobject.operate.OperatePassengerFlowDetailDO">
+        SELECT *
+        FROM OPERATE_PASSENGER_FLOW_DETAIL
+        WHERE DEL_FLAG='0'
+        <if test="id != null and id!=''">
+            AND ID=#{id}
+        </if>
+        <if test="startDate != null and startDate!=''">
+            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null and endDate!=''">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        </if>
     </select>
 
 </mapper>

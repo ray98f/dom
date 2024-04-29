@@ -2,17 +2,15 @@ package com.wzmtr.dom.controller.operate;
 
 import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.constant.ValidationGroup;
-import com.wzmtr.dom.dto.req.operate.*;
+import com.wzmtr.dom.dto.req.operate.IndicatorInfoReqDTO;
+import com.wzmtr.dom.dto.req.operate.IndicatorPowerReqDTO;
+import com.wzmtr.dom.dto.req.operate.IndicatorRecordReqDTO;
 import com.wzmtr.dom.dto.res.operate.IndicatorDetailResDTO;
 import com.wzmtr.dom.dto.res.operate.IndicatorRecordResDTO;
-import com.wzmtr.dom.dto.res.operate.OperateEventInfoResDTO;
-import com.wzmtr.dom.dto.res.operate.OperateEventResDTO;
-import com.wzmtr.dom.entity.BaseIdsEntity;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.entity.response.PageResponse;
-import com.wzmtr.dom.service.operate.OperateEventService;
 import com.wzmtr.dom.service.operate.OperateIndicatorService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,7 +30,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/operate/indicator")
-@Api(tags = "运营日报-初期运营指标 ")
+@Api(tags = "运营-初期运营指标")
 @Validated
 public class OperateIndicatorController {
 
@@ -63,8 +61,10 @@ public class OperateIndicatorController {
      */
     @GetMapping("/detail")
     @ApiOperation(value = "初期运营指标详情")
-    public DataResponse<IndicatorDetailResDTO> add(@RequestParam String id) {
-        return DataResponse.of(indicatorService.detail(id));
+    public DataResponse<IndicatorDetailResDTO> add(@RequestParam(required = false) String id,
+                                                   @RequestParam(required = false) String startDate,
+                                                   @RequestParam(required = false) String endDate) {
+        return DataResponse.of(indicatorService.detail(id,startDate,endDate));
     }
 
     /**

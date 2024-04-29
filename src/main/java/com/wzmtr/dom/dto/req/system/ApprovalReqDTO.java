@@ -16,10 +16,22 @@ import lombok.EqualsAndHashCode;
 public class ApprovalReqDTO extends BaseEntity {
 
     /**
+     * 待办标题
+     */
+    @ApiModelProperty(value = "待办标题")
+    private String title;
+
+    /**
      * 流程名
      */
     @ApiModelProperty(value = "流程名")
     private String processKey;
+
+    /**
+     * 父流程名
+     */
+    @ApiModelProperty(value = "父流程名")
+    private String parentProcessKey;
 
     /**
      * 事项类型:1待办,2待阅
@@ -75,4 +87,15 @@ public class ApprovalReqDTO extends BaseEntity {
     @ApiModelProperty(value = "当前审批节点名")
     private String currentNode;
 
+    /**
+     * 是否隐藏
+     */
+    @ApiModelProperty(value = "是否隐藏")
+    private String isHide;
+
+    /**
+     * 父ID
+     */
+    @ApiModelProperty(value = "父ID")
+    private String parentId;
 }

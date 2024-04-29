@@ -6,7 +6,7 @@
         SELECT ID, REMARK, VERSION, DATA_TYPE,DATA_DATE,START_DATE, CREATE_DATE,END_DATE, UPDATE_DATE
         FROM VEHICLE_SECURITY_RECORD
         WHERE DEL_FLAG='0'
-        AND DATA_TYPE = #{dataType}
+        AND DATA_TYPE=#{dataType}
         <if test="startDate != null and startDate!=''">
             AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
@@ -20,7 +20,7 @@
         SELECT COUNT(*)
         FROM VEHICLE_SECURITY_RECORD
         WHERE DEL_FLAG = '0'
-        AND DATA_TYPE = #{dataType}
+        AND DATA_TYPE=#{dataType}
         <if test="startDate != null">
             AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
@@ -62,7 +62,7 @@
             VERSION = VERSION+1,
             UPDATE_BY=#{updateBy},
             UPDATE_DATE=sysdate
-        WHERE ID=#{id} and VERSION = #{version}
+        WHERE ID=#{id} and VERSION=#{version}
     </update>
 
 </mapper>

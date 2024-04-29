@@ -6,7 +6,7 @@
         SELECT ID, TYPE1_COUNT,TYPE2_COUNT,TYPE3_COUNT,TYPE4_COUNT,TYPE5_COUNT, VERSION, DATA_TYPE, DATA_DATE, START_DATE,END_DATE,CREATE_DATE, UPDATE_DATE
         FROM VEHICLE_LINE_EVENT_RECORD
         WHERE DEL_FLAG='0'
-        AND DATA_TYPE = #{dataType}
+        AND DATA_TYPE=#{dataType}
         <if test="startDate != null and startDate!=''">
             AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
@@ -39,7 +39,7 @@
         SELECT COUNT(*)
         FROM VEHICLE_LINE_EVENT_RECORD
         WHERE DEL_FLAG = '0'
-        AND DATA_TYPE = #{dataType}
+        AND DATA_TYPE=#{dataType}
         <if test="startDate != null">
             AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
@@ -154,19 +154,19 @@
     <update id="modifyEvent">
         UPDATE VEHICLE_LINE_EVENT_INFO SET
         <if test="eventType !=null">
-            EVENT_TYPE = #{eventType},
+            EVENT_TYPE=#{eventType},
         </if>
         <if test="eventDesc !=null">
-            EVENT_DESC = #{eventDesc},
+            EVENT_DESC=#{eventDesc},
         </if>
         <if test="eventAnalyze !=null">
-            EVENT_ANALYZE = #{eventAnalyze},
+            EVENT_ANALYZE=#{eventAnalyze},
         </if>
         VERSION = VERSION+1,
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate
         WHERE ID=#{id}
-        AND VERSION = #{version}
+        AND VERSION=#{version}
     </update>
 
     <delete id="deleteEvent">

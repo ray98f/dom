@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 系统参数-车站管理
@@ -22,6 +23,7 @@ public interface StationMapper {
      * @return 车站列表
      */
     List<StationResDTO> allList(String lineCode);
+    List<StationResDTO> listByCodes(Set<String> stationCode);
 
 
 }

@@ -4,6 +4,7 @@ import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.constant.ValidationGroup;
 import com.wzmtr.dom.dto.req.common.SidReqDTO;
 import com.wzmtr.dom.dto.req.traffic.income.IncomeAddReqDTO;
+import com.wzmtr.dom.dto.req.traffic.income.IncomeDetailReqDTO;
 import com.wzmtr.dom.dto.req.traffic.income.IncomeListReqDTO;
 import com.wzmtr.dom.dto.res.traffic.income.IncomeDetailResDTO;
 import com.wzmtr.dom.dto.res.traffic.income.IncomeListResDTO;
@@ -49,7 +50,7 @@ public class IncomeController {
      */
     @PostMapping("/detail")
     @ApiOperation(value = "收益总体情况")
-    public DataResponse<IncomeDetailResDTO> add(@RequestBody SidReqDTO reqDTO) {
+    public DataResponse<IncomeDetailResDTO> add(@RequestBody IncomeDetailReqDTO reqDTO) {
         return DataResponse.of(incomeService.detail(reqDTO));
     }
 

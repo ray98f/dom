@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzmtr.dom.mapper.operate.DebugMapper">
+
+    <select id="recordPage" resultType="com.wzmtr.dom.dto.res.operate.DebugRecordResDTO">
+        SELECT ID, SIGNAL_NUM, VEHICLE_NUM, VERSION, DATA_DATE
+        FROM OPERATE_DEBUG_RECORD
+        WHERE DEL_FLAG='0'
+        <if test="startDate!=null and startDate!=''">
+            AND DATA_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'YYYY-MM-DD')>=DATA_DATE
+        </if>
+        ORDER BY DATA_DATE DESC
+    </select>
+
+    <select id="infoPage" resultType="com.wzmtr.dom.dto.res.operate.DebugInfoResDTO">
+        SELECT ID, SERIAL_NO, DATA_TYPE, CSM_PLAN, STATUS, EXTERNAL_ID, VERSION, RECORD_ID
+        FROM OPERATE_DEBUG_INFO
+        WHERE DEL_FLAG='0' AND RECORD_ID=#{id}
+        <if test="dataType!=null and dataType!=''">
+            and DATA_TYPE=#{dataType}
+        </if>
+        ORDER BY SERIAL_NO ASC
+    </select>
+
+    <select id="getInfoDetail" resultType="com.wzmtr.dom.dto.res.operate.DebugInfoResDTO">
+        SELECT ID, SERIAL_NO, DATA_TYPE, CSM_PLAN, STATUS, EXTERNAL_ID, VERSION, RECORD_ID
+        FROM OPERATE_DEBUG_INFO
+        WHERE DEL_FLAG='0' AND ID=#{id}
+    </select>
+
+    <select id="selectRecordIsExist" resultType="java.lang.Integer">
+        SELECT count(1) FROM OPERATE_DEBUG_RECORD
+        WHERE DATA_DATE=#{dataDate,jdbcType=TIMESTAMP}
+        <if test="version!=null and version!=''">
+            AND VERSION=#{version,jdbcType=VARCHAR}
+        </if>
+        AND DEL_FLAG='0' AND rownum=1
+    </select>
+
+    <insert id="addRecord">
+        INSERT INTO OPERATE_DEBUG_RECORD
+        (ID,
+        <if test="signalNum!=null">
+            SIGNAL_NUM,
+        </if>
+        <if test="vehicleNum!=null">
+            VEHICLE_NUM,
+        </if>
+        <if test="dataDate!=null">
+            DATA_DATE,
+        </if>
+        CREATE_BY, CREATE_DATE)
+        VALUES (#{id},
+        <if test="signalNum!=null">
+            #{signalNum},
+        </if>
+        <if test="vehicleNum!=null">
+            #{vehicleNum},
+        </if>
+        <if test="dataDate!=null">
+            #{dataDate},
+        </if>
+        #{createBy}, sysdate)
+    </insert>
+
+    <insert id="addInfo">
+        INSERT ALL
+        <foreach collection="csmList" index="index" item="csm" separator=" ">
+            INTO OPERATE_DEBUG_INFO
+            (ID,
+            <if test="recordId!=null and recordId!=''">
+                RECORD_ID,
+            </if>
+            <if test="csm.externalId!=null and csm.externalId!=''">
+                EXTERNAL_ID,
+            </if>
+            <if test="csm.serialNo!=null">
+                SERIAL_NO,
+            </if>
+            <if test="dataType!=null and dataType!=''">
+                DATA_TYPE,
+            </if>
+            <if test="csm.csmPlan!=null and csm.csmPlan!=''">
+                CSM_PLAN,
+            </if>
+            <if test="csm.status!=null and csm.STATUS!=''">
+                STATUS,
+            </if>
+            CREATE_BY, CREATE_DATE)
+            VALUES (SYS_GUID(),
+            <if test="recordId!=null and recordId!=''">
+                #{recordId},
+            </if>
+            <if test="csm.externalId!=null and csm.externalId!=''">
+                #{csm.externalId},
+            </if>
+            <if test="csm.serialNo!=null">
+                #{csm.serialNo},
+            </if>
+            <if test="dataType!=null and dataType!=''">
+                #{dataType},
+            </if>
+            <if test="csm.csmPlan!=null and csm.csmPlan!=''">
+                #{csm.csmPlan},
+            </if>
+            <if test="csm.status!=null and csm.status!=''">
+                #{csm.status},
+            </if>
+            #{createBy}, sysdate)
+        </foreach>
+        SELECT * FROM dual
+    </insert>
+
+    <update id="incrementRecord">
+        UPDATE OPERATE_DEBUG_RECORD SET
+        <if test="dataType!=null and dataType=='1'.toString()">
+            SIGNAL_NUM=#{num}
+        </if>
+        <if test="dataType!=null and dataType=='2'.toString()">
+            VEHICLE_NUM=#{num}
+        </if>
+        WHERE ID=#{recordId}
+    </update>
+
+    <update id="modifyRecord">
+        UPDATE OPERATE_DEBUG_RECORD SET
+        <if test="signalNum!=null">
+            SIGNAL_NUM=#{signalNum},
+        </if>
+        <if test="vehicleNum!=null">
+            VEHICLE_NUM=#{vehicleNum},
+        </if>
+        VERSION=VERSION+1, UPDATE_BY=#{updateBy}, UPDATE_DATE=sysdate
+        WHERE ID=#{id} and VERSION=#{version}
+    </update>
+
+    <update id="modifyInfo">
+        UPDATE OPERATE_DEBUG_INFO SET
+        <if test="csmPlan!=null">
+            CSM_PLAN=#{csmPlan},
+        </if>
+        <if test="status!=null">
+            STATUS=#{status},
+        </if>
+        <if test="externalId!=null">
+            EXTERNAL_ID=#{externalId},
+        </if>
+        <if test="serialNo!=null">
+            SERIAL_NO=#{serialNo},
+        </if>
+        <if test="dataType!=null">
+            DATA_TYPE=#{dataType},
+        </if>
+        VERSION=VERSION+1, UPDATE_BY=#{updateBy}, UPDATE_DATE=sysdate
+        WHERE ID=#{id} and VERSION=#{version}
+    </update>
+
+    <update id="deleteRecord">
+        UPDATE OPERATE_DEBUG_RECORD SET
+        DEL_FLAG='1', UPDATE_BY=#{userId}, UPDATE_DATE=sysdate
+        WHERE ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+
+    <update id="deleteInfo">
+        UPDATE OPERATE_DEBUG_INFO SET
+        DEL_FLAG='1', UPDATE_BY=#{userId}, UPDATE_DATE=sysdate
+        <if test="parentIds!=null and parentIds.size()>0">
+            WHERE RECORD_ID IN (
+            <foreach collection="parentIds" index="index" item="parentId" separator=",">
+                #{parentId}
+            </foreach>
+            )
+        </if>
+        <if test="ids!=null and ids.size()>0">
+            WHERE ID IN (
+            <foreach collection="ids" index="index" item="id" separator=",">
+                #{id}
+            </foreach>
+            )
+        </if>
+    </update>
+
+</mapper>

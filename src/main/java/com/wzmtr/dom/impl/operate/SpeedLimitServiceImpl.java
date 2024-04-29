@@ -37,9 +37,9 @@ public class SpeedLimitServiceImpl implements SpeedLimitService {
     }
 
     @Override
-    public Page<SpeedLimitInfoResDTO> infoPage(String id, PageReqDTO pageReqDTO) {
+    public Page<SpeedLimitInfoResDTO> infoPage(String id,String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return speedLimitMapper.infoPage(pageReqDTO.of(), id);
+        return speedLimitMapper.infoPage(pageReqDTO.of(), startDate, endDate, id);
     }
 
     @Override
@@ -59,6 +59,8 @@ public class SpeedLimitServiceImpl implements SpeedLimitService {
         speedLimitInfoReqDTO.setId(TokenUtils.getUuId());
         speedLimitInfoReqDTO.setCreateBy(TokenUtils.getCurrentPersonId());
         speedLimitMapper.addInfo(speedLimitInfoReqDTO);
+        // 记录数量增长
+        speedLimitMapper.incrementRecord(speedLimitInfoReqDTO.getRecordId(), 1);
     }
 
     @Override
@@ -89,7 +91,12 @@ public class SpeedLimitServiceImpl implements SpeedLimitService {
     @Override
     public void deleteInfo(List<String> ids) {
         if (StringUtils.isNotEmpty(ids)) {
+            SpeedLimitInfoResDTO res = speedLimitMapper.getInfoDetail(ids.get(0));
             speedLimitMapper.deleteInfo(null, ids, TokenUtils.getCurrentPersonId());
+            if (StringUtils.isNotNull(res)) {
+                // 记录数量减少
+                speedLimitMapper.incrementRecord(res.getRecordId(), -ids.size());
+            }
         }
     }
 

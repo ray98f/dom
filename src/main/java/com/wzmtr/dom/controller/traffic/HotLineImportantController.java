@@ -49,7 +49,7 @@ public class HotLineImportantController {
      */
     @GetMapping("/detail")
     @ApiOperation(value = "重要热线内容")
-    public DataResponse<List<HotLineImportantDetailResDTO>> detail(@RequestParam String date,@RequestParam String dataType) {
+    public DataResponse<List<HotLineImportantDetailResDTO>> detail(@RequestParam(required = false) String date,@RequestParam(required = false) String dataType) {
         return DataResponse.of(hotLineImportantService.detail(date,dataType));
     }
 

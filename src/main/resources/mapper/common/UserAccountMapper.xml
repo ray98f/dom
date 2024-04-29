@@ -164,7 +164,7 @@
     </update>
 
     <update id="updatePersonPlus"   parameterType ="java.util.Map">
-        update SYS_USER set flagPosition = #{flagPosition},room = #{room}
+        update SYS_USER set flagPosition=#{flagPosition},room=#{room}
         where id =#{id}
     </update>
 

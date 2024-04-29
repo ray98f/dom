@@ -3,6 +3,7 @@ package com.wzmtr.dom.mapper.traffic;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dataobject.traffic.TrafficHotlineSummaryDO;
+import com.wzmtr.dom.dto.req.traffic.hotline.HotLineSummaryDetailReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineSummaryListReqDTO;
 import com.wzmtr.dom.dto.req.traffic.income.IncomeListReqDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineSummaryListResDTO;
@@ -19,4 +20,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface HotLineSummaryMapper extends BaseMapper<TrafficHotlineSummaryDO> {
     Page<HotLineSummaryListResDTO> list(Page<Object> of, @Param("req") HotLineSummaryListReqDTO reqDTO);
+
+    TrafficHotlineSummaryDO detail(HotLineSummaryDetailReqDTO reqDTO);
 }

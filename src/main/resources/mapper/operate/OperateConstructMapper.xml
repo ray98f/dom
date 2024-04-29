@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzmtr.dom.mapper.operate.OperateConstructMapper">
+
+    <select id="list" resultType="com.wzmtr.dom.dto.res.operate.ConstructRecordResDTO">
+        SELECT *
+        FROM OPERATE_CONSTRUCT_RECORD
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE=#{dataType}
+        <if test="startDate != null and startDate!=''">
+            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null and endDate!=''">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        </if>
+        ORDER BY START_DATE desc
+    </select>
+
+    <select id="queryInfoById" resultType="com.wzmtr.dom.dto.res.operate.ConstructRecordResDTO">
+        SELECT *
+        FROM OPERATE_CONSTRUCT_RECORD
+        WHERE DEL_FLAG = '0'
+        <if test="id != null">
+            AND ID=#{id}
+        </if>
+        <if test="startDate != null">
+            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+    </select>
+
+    <select id="checkExist" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM OPERATE_CONSTRUCT_RECORD
+        WHERE DEL_FLAG = '0'
+        AND DATA_TYPE=#{dataType}
+        <if test="startDate != null">
+            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+    </select>
+
+    <insert id="add">
+        INSERT INTO OPERATE_CONSTRUCT_RECORD (ID,DATA_TYPE,
+        <if test="dataDate != null">
+            DATA_DATE,
+        </if>
+        START_DATE,
+        END_DATE,
+        CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+        VALUES (#{id},#{dataType},
+        <if test="dataDate != null">
+            to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
+        to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
+        #{createBy}, sysdate,#{createBy}, sysdate)
+    </insert>
+
+    <update id="modify">
+        UPDATE OPERATE_CONSTRUCT_RECORD SET
+        <if test="plan1Count != null">
+            PLAN1_COUNT=#{plan1Count},
+        </if>
+        <if test="real1Count != null">
+            REAL1_COUNT=#{real1Count},
+        </if>
+        <if test="plan2Count != null">
+            PLAN2_COUNT=#{plan2Count},
+        </if>
+        <if test="real2Count != null">
+            REAL2_COUNT=#{real2Count},
+        </if>
+        <if test="plan3Count != null">
+            PLAN3_COUNT=#{plan3Count},
+        </if>
+        <if test="real3Count != null">
+            REAL3_COUNT=#{real3Count},
+        </if>
+        <if test="totalCount != null">
+            TOTAL_COUNT=#{totalCount},
+        </if>
+        <if test="realCount != null">
+            REAL_COUNT=#{realCount},
+        </if>
+        <if test="emergencyRepair != null">
+            EMERGENCY_REPAIR=#{emergencyRepair},
+        </if>
+        <if test="rushRepair != null">
+            RUSH_REPAIR=#{rushRepair},
+        </if>
+        <if test="fulfillmentRate != null and fulfillmentRate!=''">
+            FULFILLMENT_RATE=#{fulfillmentRate},
+        </if>
+        <if test="accuracy != null and accuracy!=''">
+            ACCURACY=#{accuracy},
+        </if>
+        <if test="remark != null and remark!=''">
+            REMARK=#{remark},
+        </if>
+        <if test="problem1 != null and problem1!=''">
+            PROBLEM1=#{problem1},
+        </if>
+        <if test="problem2 != null and problem2!=''">
+            PROBLEM2=#{problem2},
+        </if>
+        <if test="problem3 != null and problem3!=''">
+            PROBLEM3=#{problem3},
+        </if>
+        <if test="problem4 != null and problem4!=''">
+            PROBLEM4=#{problem4},
+        </if>
+        <if test="problem5 != null and problem5!=''">
+            PROBLEM5=#{problem5},
+        </if>
+        <if test="summarize != null and summarize!=''">
+            SUMMARIZE=#{summarize},
+        </if>
+        VERSION = VERSION+1,
+        UPDATE_BY=#{updateBy},
+        UPDATE_DATE=sysdate
+        WHERE ID=#{id}
+        AND VERSION=#{version}
+    </update>
+
+    <select id="planList" resultType="com.wzmtr.dom.dto.res.operate.ConstructPlanResDTO">
+        SELECT ID, RECORD_ID,WORK_CODE,WORK_NAME,WORK_DEPT,WORK_AREA,WORK_DETAIL,POWER_REQ
+        VERSION, DATA_TYPE, DATA_DATE, START_DATE,END_DATE,CREATE_DATE, UPDATE_DATE
+        FROM OPERATE_CONSTRUCT_PLAN
+        WHERE DEL_FLAG='0'
+        <if test="startDate != null">
+            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        </if>
+        ORDER BY CREATE_DATE desc
+    </select>
+
+    <insert id="createPlan">
+        INSERT INTO OPERATE_CONSTRUCT_PLAN (ID,
+        RECORD_ID,
+        DATA_TYPE,
+        <if test="constructPlanId != null">
+            CONSTRUCT_PLAN_ID,
+        </if>
+        <if test="workType != null">
+            WORK_TYPE,
+        </if>
+        <if test="workconcentId != null">
+            WORKCONCENT_ID,
+        </if>
+        <if test="workCode != null">
+            WORK_CODE,
+        </if>
+        <if test="workName != null">
+            WORK_NAME,
+        </if>
+        <if test="workDept != null">
+            WORK_DEPT,
+        </if>
+        <if test="workArea != null">
+            WORK_AREA,
+        </if>
+        <if test="workDetail != null">
+            WORK_DETAIL,
+        </if>
+        <if test="powerReq != null">
+            POWER_REQ,
+        </if>
+        <if test="dataDate != null">
+            DATA_DATE,
+        </if>
+        START_DATE,
+        END_DATE,
+        CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+        VALUES
+        (#{id},
+        #{recordId},
+        #{dataType},
+        <if test="constructPlanId != null">
+            #{constructPlanId},
+        </if>
+        <if test="workType != null">
+            #{workType},
+        </if>
+        <if test="workconcentId != null">
+            #{workconcentId},
+        </if>
+        <if test="workCode != null">
+            #{workCode},
+        </if>
+        <if test="workName != null">
+            #{workName},
+        </if>
+        <if test="workDept != null">
+            #{workDept},
+        </if>
+        <if test="workArea != null">
+            #{workArea},
+        </if>
+        <if test="workDetail != null">
+            #{workDetail},
+        </if>
+        <if test="powerReq != null">
+            #{powerReq},
+        </if>
+        <if test="dataDate != null">
+            to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
+        to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
+        #{createBy}, sysdate,#{createBy}, sysdate)
+    </insert>
+
+    <delete id="deletePlan">
+        DELETE FROM OPERATE_CONSTRUCT_PLAN
+        WHERE ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </delete>
+
+    <select id="eventList" resultType="com.wzmtr.dom.dto.res.operate.ConstructEventResDTO">
+        SELECT *
+        FROM OPERATE_CONSTRUCT_EVENT
+        WHERE DEL_FLAG='0'
+        <if test="startDate != null">
+            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        </if>
+        ORDER BY CREATE_DATE desc
+    </select>
+
+    <insert id="createEvent">
+        INSERT INTO OPERATE_CONSTRUCT_EVENT (ID, RECORD_ID,
+        <if test="title != null and title!=''">
+            TITLE,
+        </if>
+        <if test="eventTime != null and eventTime!=''">
+            EVENT_TIME,
+        </if>
+        <if test="eventContent != null and eventContent!=''">
+            EVENT_CONTENT,
+        </if>
+
+        <if test="projectCount != null">
+            PROJECT_COUNT,
+        </if>
+        <if test="plan1Count != null">
+            PLAN1_COUNT,
+        </if>
+        <if test="plan2Count != null">
+            PLAN2_COUNT,
+        </if>
+        <if test="plan3Count != null">
+            PLAN3_COUNT,
+        </if>
+        <if test="totalCount != null">
+            TOTAL_COUNT,
+        </if>
+        <if test="engineeringVehicle != null">
+            ENGINEERING_VEHICLE,
+        </if>
+        <if test="debuggingVehicle != null">
+            DEBUGGING_VEHICLE,
+        </if>
+        <if test="cancelCount != null">
+            CANCEL_COUNT,
+        </if>
+        <if test="mask1Delay != null">
+            MASK1_DELAY,
+        </if>
+        <if test="mask2Delay != null">
+            MASK2_DELAY,
+        </if>
+
+        <if test="isImportant != null">
+            IS_IMPORTANT,
+        </if>
+        <if test="isClose != null">
+            IS_CLOSE,
+        </if>
+
+        DATA_TYPE,
+        <if test="dataDate != null">
+            DATA_DATE,
+        </if>
+        START_DATE,
+        END_DATE,
+        CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+        VALUES ( #{id},
+        #{recordId},
+        <if test="title != null and title!=''">
+            #{title},
+        </if>
+        <if test="eventTime != null and eventTime!=''">
+            to_date(#{eventTime},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        <if test="eventContent != null and eventContent!=''">
+            #{eventContent},
+        </if>
+
+        <if test="projectCount != null">
+            #{projectCount},
+        </if>
+        <if test="plan1Count != null">
+            #{plan1Count},
+        </if>
+        <if test="plan2Count != null">
+            #{plan2Count},
+        </if>
+        <if test="plan3Count != null">
+            #{plan3Count},
+        </if>
+        <if test="totalCount != null">
+            #{totalCount},
+        </if>
+        <if test="engineeringVehicle != null">
+            #{engineeringVehicle},
+        </if>
+        <if test="debuggingVehicle != null">
+            #{debuggingVehicle},
+        </if>
+        <if test="cancelCount != null">
+            #{cancelCount},
+        </if>
+        <if test="mask1Delay != null">
+            #{mask1Delay},
+        </if>
+        <if test="mask2Delay != null">
+            #{mask2Delay},
+        </if>
+
+        <if test="isImportant != null">
+            #{isImportant},
+        </if>
+        <if test="isClose != null">
+            #{isClose},
+        </if>
+
+        #{dataType},
+        <if test="dataDate != null">
+            to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
+        to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
+        #{createBy}, sysdate,#{createBy}, sysdate)
+    </insert>
+
+    <update id="modifyEvent">
+        UPDATE OPERATE_CONSTRUCT_EVENT SET
+        <if test="title != null and title!=''">
+            TITLE=#{title},
+        </if>
+        <if test="eventTime != null and eventTime!=''">
+            EVENT_TIME=to_date(#{eventTime},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        <if test="eventContent != null and eventContent!=''">
+            EVENT_CONTENT=#{eventContent},
+        </if>
+
+        <if test="projectCount != null">
+            PROJECT_COUNT=#{projectCount},
+        </if>
+        <if test="plan1Count != null">
+            PLAN1_COUNT=#{plan1Count},
+        </if>
+        <if test="plan2Count != null">
+            PLAN2_COUNT=#{plan2Count},
+        </if>
+        <if test="plan3Count != null">
+            PLAN3_COUNT=#{plan3Count},
+        </if>
+        <if test="totalCount != null">
+            TOTAL_COUNT=#{totalCount},
+        </if>
+        <if test="engineeringVehicle != null">
+            ENGINEERING_VEHICLE=#{engineeringVehicle},
+        </if>
+        <if test="debuggingVehicle != null">
+            DEBUGGING_VEHICLE=#{debuggingVehicle},
+        </if>
+        <if test="cancelCount != null">
+            CANCEL_COUNT=#{cancelCount},
+        </if>
+        <if test="mask1Delay != null">
+            MASK1_DELAY=#{mask1Delay},
+        </if>
+        <if test="mask2Delay != null">
+            MASK2_DELAY=#{mask2Delay},
+        </if>
+
+        <if test="isImportant != null">
+            IS_IMPORTANT=#{isImportant},
+        </if>
+        <if test="isClose != null">
+            IS_CLOSE=#{isClose},
+        </if>
+        VERSION = VERSION+1,
+        UPDATE_BY=#{updateBy},
+        UPDATE_DATE=sysdate
+        WHERE ID=#{id}
+        AND VERSION=#{version}
+    </update>
+
+    <delete id="deleteEvent">
+        DELETE FROM OPERATE_CONSTRUCT_EVENT
+        WHERE ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </delete>
+</mapper>

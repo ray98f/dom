@@ -41,8 +41,8 @@ public class MaintenanceServiceImpl implements MaintenanceService {
     }
 
     @Override
-    public MaintenanceRecordResDTO detail(String recordId) {
-        return maintenanceMapper.queryInfoById(recordId);
+    public MaintenanceRecordResDTO detail(String recordId, String startDate, String endDate) {
+        return maintenanceMapper.queryInfoById(recordId,startDate,endDate);
     }
 
     @Override

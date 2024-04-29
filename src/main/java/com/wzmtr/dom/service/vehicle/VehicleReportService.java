@@ -7,6 +7,7 @@ import com.wzmtr.dom.dto.req.vehicle.WeeklyReportReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.DailyReportResDTO;
 import com.wzmtr.dom.dto.res.vehicle.MonthlyReportResDTO;
 import com.wzmtr.dom.dto.res.vehicle.WeeklyReportResDTO;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 
 import java.util.List;
@@ -127,4 +128,25 @@ public interface VehicleReportService {
      * @param ids ids
      */
     void deleteMonthly(List<String> ids);
+
+    /**
+     * 报审日报
+     * @param currentLoginUser 登录用户信息
+     * @param dailyReportReqDTO 日报参数
+     */
+    void commitDaily(CurrentLoginUser currentLoginUser, DailyReportReqDTO dailyReportReqDTO);
+
+    /**
+     * 报审-周报
+     * @param currentLoginUser 登录用户信息
+     * @param weeklyReportReqDTO 周报参数
+     */
+    void commitWeekly(CurrentLoginUser currentLoginUser,WeeklyReportReqDTO weeklyReportReqDTO);
+
+    /**
+     * 报审月报
+     * @param currentLoginUser 登录用户信息
+     * @param monthlyReportReqDTO 月报参数
+     */
+    void commitMonthly(CurrentLoginUser currentLoginUser, MonthlyReportReqDTO monthlyReportReqDTO);
 }

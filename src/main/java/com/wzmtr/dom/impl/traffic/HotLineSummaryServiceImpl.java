@@ -7,6 +7,7 @@ import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.dataobject.traffic.TrafficHotlineSummaryDO;
 import com.wzmtr.dom.dto.req.common.SidReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineSummaryAddReqDTO;
+import com.wzmtr.dom.dto.req.traffic.hotline.HotLineSummaryDetailReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineSummaryListReqDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineImportantListResDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineSummaryDetailResDTO;
@@ -36,8 +37,8 @@ public class HotLineSummaryServiceImpl implements HotLineSummaryService {
     @Autowired
     private HotLineImportantMapper hotLineImportantMapper;
     @Override
-    public HotLineSummaryDetailResDTO detail(SidReqDTO reqDTO) {
-        TrafficHotlineSummaryDO trafficHotlineSummaryDO = hotLineSummaryMapper.selectById(reqDTO.getId());
+    public HotLineSummaryDetailResDTO detail(HotLineSummaryDetailReqDTO reqDTO) {
+        TrafficHotlineSummaryDO trafficHotlineSummaryDO = hotLineSummaryMapper.detail(reqDTO);
         return BeanUtils.convert(trafficHotlineSummaryDO,HotLineSummaryDetailResDTO.class);
     }
 
