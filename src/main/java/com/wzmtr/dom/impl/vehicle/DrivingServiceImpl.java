@@ -48,14 +48,14 @@ public class DrivingServiceImpl implements DrivingService {
     }
 
     @Override
-    public DrivingRecordDetailResDTO detail(String recordId) {
+    public DrivingRecordDetailResDTO detail(String recordId, String dataType, String startDate, String endDate) {
         // 获取详情
-        DrivingRecordDetailResDTO detail = drivingMapper.queryInfoById(recordId);
+        DrivingRecordDetailResDTO detail = drivingMapper.queryInfoById(recordId, dataType, startDate, endDate);
         if (StringUtils.isNotNull(detail)) {
             // 车场情况
-            detail.setDepotList(drivingMapper.depot(recordId));
+            detail.setDepotList(drivingMapper.depot(detail.getId()));
             // 司机驾驶情况
-            detail.setDriveInfo(drivingMapper.driveInfo(recordId));
+            detail.setDriveInfo(drivingMapper.driveInfo(detail.getId()));
         }
         return detail;
     }
@@ -139,7 +139,7 @@ public class DrivingServiceImpl implements DrivingService {
 
     @Override
     public void syncData(CurrentLoginUser currentLoginUser,String recordId) {
-        DrivingRecordDetailResDTO  detail = drivingMapper.queryInfoById(recordId);
+        DrivingRecordDetailResDTO  detail = drivingMapper.queryInfoById(recordId, null, null, null);
 
         //TODO 行车调度 乘务系统 数据接口
         SyncOdmDepotResDTO syncOdmDepotResDTO = syncOdmDepot(recordId);

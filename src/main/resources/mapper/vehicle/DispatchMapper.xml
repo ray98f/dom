@@ -6,6 +6,9 @@
         SELECT ID, ORDER_NUM, VERSION, DATA_DATE, DATA_TYPE, START_DATE, END_DATE
         FROM VEHICLE_DISPATCH_RECORD
         WHERE DEL_FLAG='0'
+        <if test="dataType!=null and dataType!=''">
+            AND DATA_TYPE=#{dataType}
+        </if>
         <if test="dataType=='1'.toString()">
             <if test="startDate!=null and startDate!=''">
                 AND DATA_DATE>=to_date(#{startDate},'YYYY-MM-DD')

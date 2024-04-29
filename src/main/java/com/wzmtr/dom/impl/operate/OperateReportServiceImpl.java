@@ -171,11 +171,11 @@ public class OperateReportServiceImpl implements OperateReportService {
         ApprovalReqDTO approvalReqDTO = new ApprovalReqDTO();
         approvalReqDTO.setTitle("运营日报-请审批");
         approvalReqDTO.setReportId(dailyReportReqDTO.getId());
-        approvalReqDTO.setReportTable(CommonConstants.VEHICLE_DAILY_REPORT);
+        approvalReqDTO.setReportTable(CommonConstants.OPERATE_DAILY_REPORT);
         approvalReqDTO.setTodoType(CommonConstants.ONE_STRING);
         approvalReqDTO.setDataType(CommonConstants.DATA_TYPE_DAILY);
         approvalReqDTO.setProcessKey(BpmnFlowEnum.operate_daily.value());
-        approvalReqDTO.setCurrentNode(CommonConstants.VEHICLE_DAILY_NODE1);
+        approvalReqDTO.setCurrentNode(CommonConstants.OPERATE_DAILY_NODE1);
         // 提交流程
         workbenchService.commitApproval(approvalReqDTO);
         // 修改报表状态为审核中
@@ -188,11 +188,11 @@ public class OperateReportServiceImpl implements OperateReportService {
         ApprovalReqDTO approvalReqDTO = new ApprovalReqDTO();
         approvalReqDTO.setTitle("运营周报-请审批");
         approvalReqDTO.setReportId(weeklyReportReqDTO.getId());
-        approvalReqDTO.setReportTable(CommonConstants.VEHICLE_WEEKLY_REPORT);
+        approvalReqDTO.setReportTable(CommonConstants.OPERATE_WEEKLY_REPORT);
         approvalReqDTO.setTodoType(CommonConstants.ONE_STRING);
         approvalReqDTO.setDataType(CommonConstants.DATA_TYPE_WEEKLY);
         approvalReqDTO.setProcessKey(BpmnFlowEnum.operate_weekly.value());
-        approvalReqDTO.setCurrentNode(CommonConstants.VEHICLE_WEEKLY_NODE1);
+        approvalReqDTO.setCurrentNode(CommonConstants.OPERATE_WEEKLY_NODE1);
         // 提交流程
         workbenchService.commitApproval(approvalReqDTO);
         // 修改报表状态为审核中
@@ -205,11 +205,11 @@ public class OperateReportServiceImpl implements OperateReportService {
         ApprovalReqDTO approvalReqDTO = new ApprovalReqDTO();
         approvalReqDTO.setTitle("运营月报-请审批");
         approvalReqDTO.setReportId(monthlyReportReqDTO.getId());
-        approvalReqDTO.setReportTable(CommonConstants.VEHICLE_MONTHLY_REPORT);
+        approvalReqDTO.setReportTable(CommonConstants.OPERATE_MONTHLY_REPORT);
         approvalReqDTO.setTodoType(CommonConstants.ONE_STRING);
         approvalReqDTO.setDataType(CommonConstants.DATA_TYPE_MONTHLY);
         approvalReqDTO.setProcessKey(BpmnFlowEnum.operate_monthly.value());
-        approvalReqDTO.setCurrentNode(CommonConstants.VEHICLE_MONTHLY_NODE1);
+        approvalReqDTO.setCurrentNode(CommonConstants.OPERATE_MONTHLY_NODE1);
         // 提交流程
         workbenchService.commitApproval(approvalReqDTO);
         // 修改报表状态为审核中

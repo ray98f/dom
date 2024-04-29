@@ -226,51 +226,53 @@
 
     <update id="modifyCount">
         UPDATE VEHICLE_CONSTRUCT_RECORD SET
-        <if test="planConstruct != null">
-            PLAN_CONSTRUCT=#{planConstruct},
-        </if>
-        <if test="realConstruct != null">
-            REAL_CONSTRUCT=#{realConstruct},
-        </if>
-        <if test="a1Plan != null">
-            A1_PLAN=#{a1Plan},
-        </if>
-        <if test="bPlan != null">
-            B_PLAN=#{bPlan},
-        </if>
-        <if test="daySupPlan != null">
-            DAY_SUP_PLAN=#{daySupPlan},
-        </if>
-        <if test="tempPlan != null">
-            TEMP_PLAN=#{tempPlan},
-        </if>
-        <if test="a1Complete != null">
-            A1_COMPLETE=#{a1Complete},
-        </if>
-        <if test="bComplete != null">
-            B_COMPLETE=#{bComplete},
-        </if>
-        <if test="daySupComplete != null">
-            DAY_SUP_COMPLETE=#{daySupComplete},
-        </if>
-        <if test="tempComplete != null">
-            TEMP_COMPLETE=#{tempComplete},
-        </if>
-        <if test="powerSupply != null">
-            POWER_SUPPLY=#{powerSupply},
-        </if>
-        <if test="shuntCount != null">
-            SHUNT_COUNT=#{shuntCount},
-        </if>
-        <if test="shuntHook != null">
-            SHUNT_HOOK=#{shuntHook},
-        </if>
-        <if test="shuntTime != null">
-            SHUNT_TIME=#{shuntTime},
-        </if>
-        <if test="inOutStorage != null">
-            IN_OUT_STORAGE=#{inOutStorage},
-        </if>
+        <trim suffixOverrides=",">
+            <if test="planConstruct != null">
+                PLAN_CONSTRUCT=#{planConstruct},
+            </if>
+            <if test="realConstruct != null">
+                REAL_CONSTRUCT=#{realConstruct},
+            </if>
+            <if test="a1Plan != null">
+                A1_PLAN=#{a1Plan},
+            </if>
+            <if test="bPlan != null">
+                B_PLAN=#{bPlan},
+            </if>
+            <if test="daySupPlan != null">
+                DAY_SUP_PLAN=#{daySupPlan},
+            </if>
+            <if test="tempPlan != null">
+                TEMP_PLAN=#{tempPlan},
+            </if>
+            <if test="a1Complete != null">
+                A1_COMPLETE=#{a1Complete},
+            </if>
+            <if test="bComplete != null">
+                B_COMPLETE=#{bComplete},
+            </if>
+            <if test="daySupComplete != null">
+                DAY_SUP_COMPLETE=#{daySupComplete},
+            </if>
+            <if test="tempComplete != null">
+                TEMP_COMPLETE=#{tempComplete},
+            </if>
+            <if test="powerSupply != null">
+                POWER_SUPPLY=#{powerSupply},
+            </if>
+            <if test="shuntCount != null">
+                SHUNT_COUNT=#{shuntCount},
+            </if>
+            <if test="shuntHook != null">
+                SHUNT_HOOK=#{shuntHook},
+            </if>
+            <if test="shuntTime != null">
+                SHUNT_TIME=#{shuntTime},
+            </if>
+            <if test="inOutStorage != null">
+                IN_OUT_STORAGE=#{inOutStorage},
+            </if>
+        </trim>
         WHERE ID=#{id}
     </update>
 

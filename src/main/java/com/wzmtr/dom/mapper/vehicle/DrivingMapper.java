@@ -1,9 +1,14 @@
 package com.wzmtr.dom.mapper.vehicle;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.wzmtr.dom.dto.req.vehicle.*;
-import com.wzmtr.dom.dto.res.system.StationRoleResDTO;
-import com.wzmtr.dom.dto.res.vehicle.*;
+import com.wzmtr.dom.dto.req.vehicle.DrivingCountReqDTO;
+import com.wzmtr.dom.dto.req.vehicle.DrivingDepotReqDTO;
+import com.wzmtr.dom.dto.req.vehicle.DrivingInfoReqDTO;
+import com.wzmtr.dom.dto.req.vehicle.DrivingRecordReqDTO;
+import com.wzmtr.dom.dto.res.vehicle.DrivingDepotResDTO;
+import com.wzmtr.dom.dto.res.vehicle.DrivingInfoResDTO;
+import com.wzmtr.dom.dto.res.vehicle.DrivingRecordDetailResDTO;
+import com.wzmtr.dom.dto.res.vehicle.DrivingRecordResDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -34,7 +39,7 @@ public interface DrivingMapper {
      * @param id 入参数
      * @return 行车情况-详情
      */
-    DrivingRecordDetailResDTO queryInfoById(String id);
+    DrivingRecordDetailResDTO queryInfoById(String id, String dataType, String startDate, String endDate);
 
     /**
      * 校验数据是否存在

@@ -1,12 +1,10 @@
 package com.wzmtr.dom.impl.traffic;
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.dataobject.traffic.TrafficOnewaySaleDO;
-import com.wzmtr.dom.dto.req.common.SidReqDTO;
 import com.wzmtr.dom.dto.req.traffic.onewaysale.OneWaySaleDetailReqDTO;
 import com.wzmtr.dom.dto.req.traffic.onewaysale.OnewaySaleAddReqDTO;
 import com.wzmtr.dom.dto.req.traffic.onewaysale.OnewaySaleListReqDTO;
@@ -15,11 +13,9 @@ import com.wzmtr.dom.dto.res.traffic.oneway.OnewaySaleListResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.mapper.traffic.OnewaySaleMapper;
 import com.wzmtr.dom.service.traffic.OnewaySaleService;
-import com.wzmtr.dom.utils.BeanUtils;
-import com.wzmtr.dom.utils.StreamUtil;
+import com.wzmtr.dom.utils.StringUtils;
 import com.wzmtr.dom.utils.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.apache.bcel.generic.RET;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,8 +33,11 @@ public class OnewaySaleServiceImpl implements OnewaySaleService {
 
     @Override
     public OnewaySaleDetailResDTO detail(OneWaySaleDetailReqDTO reqDTO) {
-        TrafficOnewaySaleDO trafficOnewaySaleDO = onewaySaleMapper.detail(reqDTO);
-        return OnewaySaleDetailResDTO.buildRes(trafficOnewaySaleDO);
+        TrafficOnewaySaleDO trafficOnewaySale = onewaySaleMapper.detail(reqDTO);
+        if (StringUtils.isNotNull(trafficOnewaySale)) {
+            return OnewaySaleDetailResDTO.buildRes(trafficOnewaySale);
+        }
+        return new OnewaySaleDetailResDTO();
     }
 
     @Override

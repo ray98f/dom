@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository;
 @Mapper
 @Repository
 public interface OnewaySaleMapper extends BaseMapper<TrafficOnewaySaleDO> {
-    Page<OnewaySaleListResDTO> list(Page<Object> of, @Param("req") OnewaySaleListReqDTO reqDTO);
+    Page<OnewaySaleListResDTO> list(Page<Object> of, @Param("req") OnewaySaleListReqDTO req);
 
     TrafficOnewaySaleDO detail(OneWaySaleDetailReqDTO reqDTO);
 }

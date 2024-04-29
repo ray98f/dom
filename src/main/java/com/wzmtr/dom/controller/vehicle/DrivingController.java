@@ -58,8 +58,11 @@ public class DrivingController {
      */
     @GetMapping("/detail")
     @ApiOperation(value = "行车情况-详情")
-    public DataResponse<DrivingRecordDetailResDTO> detail(@RequestParam String recordId) {
-        return DataResponse.of(drivingService.detail(recordId));
+    public DataResponse<DrivingRecordDetailResDTO> detail(@RequestParam(required = false) String recordId,
+                                                          @RequestParam(required = false) String dataType,
+                                                          @RequestParam(required = false) String startDate,
+                                                          @RequestParam(required = false) String endDate) {
+        return DataResponse.of(drivingService.detail(recordId, dataType, startDate, endDate));
     }
 
     /**

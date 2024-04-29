@@ -155,20 +155,26 @@ public class WorkbenchServiceImpl implements WorkbenchService {
 
         if (CommonConstants.ONE_STRING.equals(goNextFlag)) {
             String nextNode = workbenchMapper.queryNextNode(todoResDTO.getCurrentNode());
-            FlowNodeResDTO nodeDetail = workbenchMapper.nodeDetail(nextNode);
-            List<String> nextUserList = getUserByNode(nextNode);
-
-            String title = titlePrefix + "-请审批";
-            // 下一节点不是待办时，更新报表为审批完成
-            if (!nodeDetail.getNodeType().equals(CommonConstants.ONE_STRING)) {
-                title = titlePrefix + "-请查阅";
+            if (StringUtils.isEmpty(nextNode)) {
+                // 下一步节点不存在时结束流程
                 status = CommonConstants.TWO_STRING;
-                updateVehicle(todoReqDTO.getReportId(), status, todoResDTO.getDataType());
-            }
-            // 节点流转
-            for (String user : nextUserList) {
-                addTodo(title, todoReqDTO.getReportId(), todoResDTO.getReportTable(), nodeDetail.getNodeType(),
-                        todoResDTO.getDataType(), nodeDetail.getFlowId(), nodeDetail.getNodeId(), user, CommonConstants.ZERO_STRING, null);
+                updateOperate(todoReqDTO.getReportId(), status, todoResDTO.getDataType());
+            } else {
+                FlowNodeResDTO nodeDetail = workbenchMapper.nodeDetail(nextNode);
+                List<String> nextUserList = getUserByNode(nextNode);
+
+                String title = titlePrefix + "-请审批";
+                // 下一节点不是待办时，更新报表为审批完成
+                if (!nodeDetail.getNodeType().equals(CommonConstants.ONE_STRING)) {
+                    title = titlePrefix + "-请查阅";
+                    status = CommonConstants.TWO_STRING;
+                    updateVehicle(todoReqDTO.getReportId(), status, todoResDTO.getDataType());
+                }
+                // 节点流转
+                for (String user : nextUserList) {
+                    addTodo(title, todoReqDTO.getReportId(), todoResDTO.getReportTable(), nodeDetail.getNodeType(),
+                            todoResDTO.getDataType(), nodeDetail.getFlowId(), nodeDetail.getNodeId(), user, CommonConstants.ZERO_STRING, null);
+                }
             }
         }
     }
@@ -500,20 +506,26 @@ public class WorkbenchServiceImpl implements WorkbenchService {
 
         if (CommonConstants.ONE_STRING.equals(goNextFlag)) {
             String nextNode = workbenchMapper.queryNextNode(todoResDTO.getCurrentNode());
-            FlowNodeResDTO nodeDetail = workbenchMapper.nodeDetail(nextNode);
-            List<String> nextUserList = getUserByNode(nextNode);
-
-            String title = titlePrefix + "-请审批";
-            // 下一节点不是待办时，更新报表为审批完成
-            if (!nodeDetail.getNodeType().equals(CommonConstants.ONE_STRING)) {
-                title = titlePrefix + "-请查阅";
+            if (StringUtils.isEmpty(nextNode)) {
+                // 下一步节点不存在时结束流程
                 status = CommonConstants.TWO_STRING;
                 updateOperate(todoReqDTO.getReportId(), status, todoResDTO.getDataType());
-            }
-            // 节点流转
-            for (String user : nextUserList) {
-                addTodo(title, todoReqDTO.getReportId(), todoResDTO.getReportTable(), nodeDetail.getNodeType(),
-                        todoResDTO.getDataType(), nodeDetail.getFlowId(), nodeDetail.getNodeId(), user, CommonConstants.ZERO_STRING, null);
+            } else {
+                FlowNodeResDTO nodeDetail = workbenchMapper.nodeDetail(nextNode);
+                List<String> nextUserList = getUserByNode(nextNode);
+
+                String title = titlePrefix + "-请审批";
+                // 下一节点不是待办时，更新报表为审批完成
+                if (!nodeDetail.getNodeType().equals(CommonConstants.ONE_STRING)) {
+                    title = titlePrefix + "-请查阅";
+                    status = CommonConstants.TWO_STRING;
+                    updateOperate(todoReqDTO.getReportId(), status, todoResDTO.getDataType());
+                }
+                // 节点流转
+                for (String user : nextUserList) {
+                    addTodo(title, todoReqDTO.getReportId(), todoResDTO.getReportTable(), nodeDetail.getNodeType(),
+                            todoResDTO.getDataType(), nodeDetail.getFlowId(), nodeDetail.getNodeId(), user, CommonConstants.ZERO_STRING, null);
+                }
             }
         }
     }
