@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 /**
- * 运营日报-故障统计
+ * 运营-故障统计
  *
  * @author zhangxin
  * @version 1.0

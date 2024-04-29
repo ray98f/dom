@@ -40,16 +40,15 @@ public class OperateFaultStatisticsServiceImpl implements OperateFaultStatistics
         if (CollectionUtils.isEmpty(records)) {
             return list;
         }
-        records.forEach(a -> {
-            long sum = getFaultSum(a);
-            a.setSum(sum);
-        });
+        records.forEach(a -> a.setSum(getFaultSum(a)));
         return list;
     }
 
     public static long getFaultSum(FaultStatisticsResDTO a) {
-        return a.getVehicleNum() + a.getPowerNum() + a.getSignalNum() + a.getCommunicationNum() +
-                a.getIndustryNum() + a.getMechanismNum() + a.getAfcNum() + a.getElseNum();
+        return a.getChangeDistributionNum() + a.getContactNetworkNum() + a.getCommunicationNum() +
+                a.getSignalNum() + a.getPlatformDoorsNum() + a.getHydropowerNum() + a.getBuildingConstructionNum() +
+                a.getMonitorNum() + a.getAfcNum() + a.getFasNum() + a.getEscalatorNum() + a.getOfficialDutiesNum() +
+                a.getBridgeTunnelNum() + a.getEngineeringVehicleNum() + a.getVehicleNum();
     }
 
 
