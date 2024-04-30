@@ -15,6 +15,22 @@
         </if>
         ORDER BY CREATE_DATE desc
     </select>
+
+    <select id="selectIsExist" resultType="java.lang.Integer">
+        SELECT count(1) FROM TRAFFIC_HOTLINE_SUMMARY
+        WHERE
+        <if test="dataType=='1'.toString()">
+            DATA_DATE=#{dataDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="dataType!='1'.toString()">
+            START_DATE=#{startDate,jdbcType=TIMESTAMP} AND END_DATE=#{endDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="version!=null and version!=''">
+            AND VERSION=#{version,jdbcType=VARCHAR}
+        </if>
+        AND DEL_FLAG='0' AND rownum=1
+    </select>
+
     <select id="detail" resultType="com.wzmtr.dom.dataobject.traffic.TrafficHotlineSummaryDO">
         select * from TRAFFIC_HOTLINE_SUMMARY
         WHERE DEL_FLAG='0'

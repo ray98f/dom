@@ -5,9 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dataobject.traffic.TrafficHotlineSummaryDO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineSummaryDetailReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineSummaryListReqDTO;
-import com.wzmtr.dom.dto.req.traffic.income.IncomeListReqDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineSummaryListResDTO;
-import com.wzmtr.dom.dto.res.traffic.income.IncomeListResDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -20,6 +18,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface HotLineSummaryMapper extends BaseMapper<TrafficHotlineSummaryDO> {
     Page<HotLineSummaryListResDTO> list(Page<Object> of, @Param("req") HotLineSummaryListReqDTO reqDTO);
+
+    /**
+     * 判断服务热线汇总是否已存在
+     * @param summary 服务热线汇总参数
+     * @return 是否已存在
+     */
+    Integer selectIsExist(TrafficHotlineSummaryDO summary);
 
     TrafficHotlineSummaryDO detail(HotLineSummaryDetailReqDTO reqDTO);
 }

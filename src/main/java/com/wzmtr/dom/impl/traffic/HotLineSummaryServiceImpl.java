@@ -14,12 +14,15 @@ import com.wzmtr.dom.dto.res.traffic.hotline.HotLineImportantListResDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineSummaryDetailResDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineSummaryListResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
+import com.wzmtr.dom.enums.ErrorCode;
+import com.wzmtr.dom.exception.CommonException;
 import com.wzmtr.dom.mapper.traffic.HotLineImportantMapper;
 import com.wzmtr.dom.mapper.traffic.HotLineSummaryMapper;
 import com.wzmtr.dom.service.traffic.HotLineImportantService;
 import com.wzmtr.dom.service.traffic.HotLineSummaryService;
 import com.wzmtr.dom.utils.BeanUtils;
 import com.wzmtr.dom.utils.DateUtils;
+import com.wzmtr.dom.utils.StringUtils;
 import com.wzmtr.dom.utils.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +47,10 @@ public class HotLineSummaryServiceImpl implements HotLineSummaryService {
     @Override
     public HotLineSummaryDetailResDTO detail(HotLineSummaryDetailReqDTO reqDTO) {
         TrafficHotlineSummaryDO trafficHotlineSummaryDO = hotLineSummaryMapper.detail(reqDTO);
-        return BeanUtils.convert(trafficHotlineSummaryDO, HotLineSummaryDetailResDTO.class);
+        if (StringUtils.isNotNull(trafficHotlineSummaryDO)) {
+            return BeanUtils.convert(trafficHotlineSummaryDO, HotLineSummaryDetailResDTO.class);
+        }
+        return new HotLineSummaryDetailResDTO();
     }
 
     @Override
@@ -55,7 +61,11 @@ public class HotLineSummaryServiceImpl implements HotLineSummaryService {
         trafficHotlineSummaryDO.setDelFlag("0");
         trafficHotlineSummaryDO.setCreateDate(DateUtils.currentDate());
         trafficHotlineSummaryDO.setCreateBy(TokenUtils.getCurrentPersonId());
-        trafficHotlineSummaryDO.setVersion("0");
+        trafficHotlineSummaryDO.setVersion("1");
+        Integer result = hotLineSummaryMapper.selectIsExist(trafficHotlineSummaryDO);
+        if (result > 0) {
+            throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期服务热线汇总数据已存在，无法重复新增");
+        }
         hotLineSummaryMapper.insert(trafficHotlineSummaryDO);
         // 初始化重要热线内容
         HotLineImportantAddReqDTO req = new HotLineImportantAddReqDTO();
@@ -68,6 +78,11 @@ public class HotLineSummaryServiceImpl implements HotLineSummaryService {
         String id = Assert.notNull(reqDTO.getId(), "ID不能为空");
         TrafficHotlineSummaryDO now = hotLineSummaryMapper.selectById(id);
         TrafficHotlineSummaryDO incomeRecordDO = reqDTO.toDO(reqDTO);
+        // 判断修改数据版本号是否一致
+        Integer result = hotLineSummaryMapper.selectIsExist(incomeRecordDO);
+        if (result == 0) {
+            throw new CommonException(ErrorCode.NORMAL_ERROR, "当前数据已被编辑，请刷新列表并重新编辑数据");
+        }
         incomeRecordDO.setUpdateBy(TokenUtils.getCurrentPersonId());
         incomeRecordDO.setVersion(String.valueOf(Integer.parseInt(now.getVersion()) + 1));
         hotLineSummaryMapper.updateById(incomeRecordDO);
