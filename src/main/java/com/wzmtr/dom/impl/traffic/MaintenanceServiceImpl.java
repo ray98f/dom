@@ -23,7 +23,6 @@ import java.util.List;
 
 /**
  * description:
- *
  * @author zhangxin
  * @version 1.0
  * @date 2024/3/22 15:28
@@ -37,25 +36,25 @@ public class MaintenanceServiceImpl implements MaintenanceService {
     @Override
     public Page<MaintenanceRecordResDTO> list(String dataType, String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return maintenanceMapper.list(pageReqDTO.of(),dataType,startDate,endDate);
+        return maintenanceMapper.list(pageReqDTO.of(), dataType, startDate, endDate);
     }
 
     @Override
     public MaintenanceRecordResDTO detail(String recordId, String startDate, String endDate) {
-        return maintenanceMapper.queryInfoById(recordId,startDate,endDate);
+        return maintenanceMapper.queryInfoById(recordId, startDate, endDate);
     }
 
     @Override
     public void add(CurrentLoginUser currentLoginUser, MaintenanceRecordReqDTO maintenanceRecordReqDTO) {
         int existFlag = maintenanceMapper.checkExist(maintenanceRecordReqDTO.getDataType(),
-                maintenanceRecordReqDTO.getStartDate(),maintenanceRecordReqDTO.getEndDate());
-        if(existFlag > 0){
+                maintenanceRecordReqDTO.getStartDate(), maintenanceRecordReqDTO.getEndDate());
+        if (existFlag > 0) {
             throw new CommonException(ErrorCode.DATA_EXIST);
         }
 
         // 日报类型
-        if(CommonConstants.DATA_TYPE_DAILY.equals(maintenanceRecordReqDTO.getDataType())){
-            if(!maintenanceRecordReqDTO.getStartDate().equals(maintenanceRecordReqDTO.getEndDate())){
+        if (CommonConstants.DATA_TYPE_DAILY.equals(maintenanceRecordReqDTO.getDataType())) {
+            if (!maintenanceRecordReqDTO.getStartDate().equals(maintenanceRecordReqDTO.getEndDate())) {
                 throw new CommonException(ErrorCode.DATE_ERROR);
             }
             maintenanceRecordReqDTO.setDataDate(maintenanceRecordReqDTO.getStartDate());
@@ -64,9 +63,9 @@ public class MaintenanceServiceImpl implements MaintenanceService {
         maintenanceRecordReqDTO.setCreateBy(currentLoginUser.getPersonId());
         maintenanceRecordReqDTO.setUpdateBy(currentLoginUser.getPersonId());
         maintenanceRecordReqDTO.setId(TokenUtils.getUuId());
-        try{
+        try {
             maintenanceMapper.add(maintenanceRecordReqDTO);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CommonException(ErrorCode.INSERT_ERROR);
         }
     }
@@ -74,32 +73,32 @@ public class MaintenanceServiceImpl implements MaintenanceService {
     @Override
     public Page<MaintenanceInfoResDTO> eventList(String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return maintenanceMapper.eventList(pageReqDTO.of(),startDate,endDate);
+        return maintenanceMapper.eventList(pageReqDTO.of(), startDate, endDate);
     }
 
     @Override
     public void createEvent(CurrentLoginUser currentLoginUser, MaintenanceInfoReqDTO maintenanceInfoReqDTO) {
-        try{
-            if(CommonConstants.DATA_TYPE_DAILY.equals(maintenanceInfoReqDTO.getDataType())){
+        try {
+            if (CommonConstants.DATA_TYPE_DAILY.equals(maintenanceInfoReqDTO.getDataType())) {
                 maintenanceInfoReqDTO.setDataDate(maintenanceInfoReqDTO.getStartDate());
             }
             maintenanceInfoReqDTO.setId(TokenUtils.getUuId());
             maintenanceInfoReqDTO.setCreateBy(currentLoginUser.getPersonId());
             maintenanceInfoReqDTO.setUpdateBy(currentLoginUser.getPersonId());
             maintenanceMapper.createEvent(maintenanceInfoReqDTO);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CommonException(ErrorCode.INSERT_ERROR);
         }
 
         //更新事件统计
-        updateSummaryCount(maintenanceInfoReqDTO.getStartDate(),maintenanceInfoReqDTO.getEndDate());
+        updateSummaryCount(maintenanceInfoReqDTO.getStartDate(), maintenanceInfoReqDTO.getEndDate());
     }
 
     @Override
     public void modifyEvent(CurrentLoginUser currentLoginUser, MaintenanceInfoReqDTO maintenanceInfoReqDTO) {
         maintenanceInfoReqDTO.setUpdateBy(currentLoginUser.getPersonId());
         int res = maintenanceMapper.modifyEvent(maintenanceInfoReqDTO);
-        if( res <= 0){
+        if (res <= 0) {
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
     }
@@ -108,25 +107,25 @@ public class MaintenanceServiceImpl implements MaintenanceService {
     public void deleteEvent(List<String> ids) {
         if (StringUtils.isNotEmpty(ids)) {
             MaintenanceInfoResDTO eventInfo = maintenanceMapper.queryDateRange(ids);
-            try{
+            try {
                 maintenanceMapper.deleteEvent(ids, TokenUtils.getCurrentPersonId());
-            }catch (Exception e){
+            } catch (Exception e) {
                 throw new CommonException(ErrorCode.DELETE_ERROR);
             }
 
             //更新事件统计
-            updateSummaryCount(DateUtil.formatDate(eventInfo.getStartDate()),DateUtil.formatDate(eventInfo.getEndDate()));
+            updateSummaryCount(DateUtil.formatDate(eventInfo.getStartDate()), DateUtil.formatDate(eventInfo.getEndDate()));
         }
     }
 
     /**
      * 事件统计更新
-     * */
-    private void updateSummaryCount(String startDate,String endDate){
-        List<MaintenanceRecordResDTO> res =  maintenanceMapper.listAll(startDate,endDate);
-        if(StringUtils.isNotEmpty(res)){
-            for(MaintenanceRecordResDTO item:res){
-                maintenanceMapper.modifyCount(item.getId(),DateUtil.formatDate(item.getStartDate()),DateUtil.formatDate(item.getEndDate()));
+     */
+    private void updateSummaryCount(String startDate, String endDate) {
+        List<MaintenanceRecordResDTO> res = maintenanceMapper.listAll(startDate, endDate);
+        if (StringUtils.isNotEmpty(res)) {
+            for (MaintenanceRecordResDTO item : res) {
+                maintenanceMapper.modifyCount(item.getId(), DateUtil.formatDate(item.getStartDate()), DateUtil.formatDate(item.getEndDate()));
             }
         }
     }

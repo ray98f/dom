@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * 客运部-单程票发售情况
- *
  * @Author: Li.Wang
  * Date: 2024/3/22 14:00
  */
@@ -35,7 +34,6 @@ public class OnewaySaleController {
 
     /**
      * 单程票发售情况-列表
-     *
      * @return 单程票发售情况
      */
     @PostMapping("/list")
@@ -46,7 +44,6 @@ public class OnewaySaleController {
 
     /**
      * 单程票发售情况-详情
-     *
      * @return 单程票发售情况
      */
     @PostMapping("/detail")
@@ -73,7 +70,6 @@ public class OnewaySaleController {
 
     /**
      * 单程票发售情况-编辑
-     *
      * @return 成功
      */
     @PostMapping("/modify")

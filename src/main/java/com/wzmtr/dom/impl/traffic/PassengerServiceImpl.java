@@ -36,7 +36,6 @@ import java.util.List;
 
 /**
  * 客运部-客流总体情况
- *
  * @author zhangxin
  * @version 1.0
  * @date 2024/3/18 14:45
@@ -44,7 +43,6 @@ import java.util.List;
 @Service
 @Slf4j
 public class PassengerServiceImpl implements PassengerService {
-
 
     @Value("${open-api.acc.api-app-key}")
     private String apiAppKey;
@@ -61,17 +59,17 @@ public class PassengerServiceImpl implements PassengerService {
     @Override
     public Page<PassengerResDTO> list(String dataType, String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return passengerMapper.list(pageReqDTO.of(),dataType,startDate,endDate);
+        return passengerMapper.list(pageReqDTO.of(), dataType, startDate, endDate);
     }
 
     @Override
-    public PassengerDetailResDTO detail(String recordId,String startDate, String endDate) {
+    public PassengerDetailResDTO detail(String recordId, String startDate, String endDate) {
 
         //获取详情
-        PassengerDetailResDTO detail = passengerMapper.queryInfoById(recordId,startDate,endDate);
+        PassengerDetailResDTO detail = passengerMapper.queryInfoById(recordId, startDate, endDate);
 
         //车站情况
-        List<PassengerInfoResDTO> stationPassengerList = passengerMapper.stationPassenger( DateUtil.formatDate(detail.getStartDate()),
+        List<PassengerInfoResDTO> stationPassengerList = passengerMapper.stationPassenger(DateUtil.formatDate(detail.getStartDate()),
                 DateUtil.formatDate(detail.getEndDate()));
         detail.setStationPassengerList(stationPassengerList);
         return detail;
@@ -81,16 +79,16 @@ public class PassengerServiceImpl implements PassengerService {
     @Transactional(rollbackFor = Exception.class)
     public void add(CurrentLoginUser currentLoginUser, PassengerRecordReqDTO passengerRecordReqDTO) {
         int existFlag = passengerMapper.checkExist(passengerRecordReqDTO.getDataType(),
-                passengerRecordReqDTO.getStartDate(),passengerRecordReqDTO.getEndDate());
-        if(existFlag > 0){
+                passengerRecordReqDTO.getStartDate(), passengerRecordReqDTO.getEndDate());
+        if (existFlag > 0) {
             throw new CommonException(ErrorCode.DATA_EXIST);
         }
 
         //日报类型
-        if(CommonConstants.DATA_TYPE_DAILY.equals(passengerRecordReqDTO.getDataType())){
+        if (CommonConstants.DATA_TYPE_DAILY.equals(passengerRecordReqDTO.getDataType())) {
 
             //日期校验
-            if(!passengerRecordReqDTO.getStartDate().equals(passengerRecordReqDTO.getEndDate())){
+            if (!passengerRecordReqDTO.getStartDate().equals(passengerRecordReqDTO.getEndDate())) {
                 throw new CommonException(ErrorCode.DATE_ERROR);
             }
             passengerRecordReqDTO.setDataDate(passengerRecordReqDTO.getStartDate());
@@ -98,24 +96,24 @@ public class PassengerServiceImpl implements PassengerService {
         passengerRecordReqDTO.setCreateBy(currentLoginUser.getPersonId());
         passengerRecordReqDTO.setUpdateBy(currentLoginUser.getPersonId());
         passengerRecordReqDTO.setId(TokenUtils.getUuId());
-        try{
+        try {
             passengerMapper.add(passengerRecordReqDTO);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CommonException(ErrorCode.INSERT_ERROR);
         }
 
         //日报类型同步客流数据 更新客流数据
-        if(CommonConstants.DATA_TYPE_DAILY.equals(passengerRecordReqDTO.getDataType())){
-            try{
+        if (CommonConstants.DATA_TYPE_DAILY.equals(passengerRecordReqDTO.getDataType())) {
+            try {
                 //TODO 调试时暂时注释
                 //syncACCdata(passengerRecordReqDTO);
                 //passengerMapper.modifyCount(passengerRecordReqDTO.getId(),passengerRecordReqDTO.getStartDate(),passengerRecordReqDTO.getEndDate());
-            }catch (Exception e){
+            } catch (Exception e) {
                 throw new CommonException(ErrorCode.INSERT_ERROR);
             }
-        // 周报、月报类型 更新本周 本月客流数据
-        }else{
-            passengerMapper.modifyCount(passengerRecordReqDTO.getId(),passengerRecordReqDTO.getStartDate(),passengerRecordReqDTO.getEndDate());
+            // 周报、月报类型 更新本周 本月客流数据
+        } else {
+            passengerMapper.modifyCount(passengerRecordReqDTO.getId(), passengerRecordReqDTO.getStartDate(), passengerRecordReqDTO.getEndDate());
         }
     }
 
@@ -124,10 +122,10 @@ public class PassengerServiceImpl implements PassengerService {
         passengerRecordReqDTO.setUpdateBy(currentLoginUser.getPersonId());
         try {
             int res = passengerMapper.modify(passengerRecordReqDTO);
-            if( res <= 0){
+            if (res <= 0) {
                 throw new CommonException(ErrorCode.UPDATE_ERROR);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
     }
@@ -137,31 +135,31 @@ public class PassengerServiceImpl implements PassengerService {
         passengerInfoReqDTO.setUpdateBy(currentLoginUser.getPersonId());
         try {
             int res = passengerMapper.modifyStationPassenger(passengerInfoReqDTO);
-            if( res <= 0){
+            if (res <= 0) {
                 throw new CommonException(ErrorCode.UPDATE_ERROR);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
     }
 
     /**
      * 同步ACC客流
-     * */
-    private void syncACCdata(PassengerRecordReqDTO passengerRecordReqDTO){
-        HashMap<String,Object> res = JSONObject.parseObject(HttpUtils.doGet(
-                accPersonCountApi+"?businessDay="+passengerRecordReqDTO.getStartDate(), null,apiAppKey), HashMap.class);
+     */
+    private void syncACCdata(PassengerRecordReqDTO passengerRecordReqDTO) {
+        HashMap<String, Object> res = JSONObject.parseObject(HttpUtils.doGet(
+                accPersonCountApi + "?businessDay=" + passengerRecordReqDTO.getStartDate(), null, apiAppKey), HashMap.class);
         JSONArray jsonArray = JSONArray.parseArray(String.valueOf(res.get("data")));
         List<HashMap> personCountList = JSONArray.parseArray(jsonArray.toJSONString(), HashMap.class);
         List<PassengerInfoReqDTO> infoReqDTOList = new ArrayList<>();
-        if(personCountList != null && personCountList.size() > 0){
+        if (personCountList != null && personCountList.size() > 0) {
 
             //本日S2线客流
             Integer dayPersonCount = 0;
-            for(HashMap<String,Object> item:personCountList){
+            for (HashMap<String, Object> item : personCountList) {
 
                 //S2线
-                if(CommonConstants.TWO_STRING.equals(item.get("LINE_ID").toString())){
+                if (CommonConstants.TWO_STRING.equals(item.get("LINE_ID").toString())) {
                     PassengerInfoReqDTO infoReqDTO = new PassengerInfoReqDTO();
                     infoReqDTO.setId(TokenUtils.getUuId());
                     infoReqDTO.setRecordId(passengerRecordReqDTO.getId());
@@ -176,16 +174,15 @@ public class PassengerServiceImpl implements PassengerService {
                     dayPersonCount += totalIn;
 
                     //换算成万人
-                    Double passenger = new Double(Math.round(totalIn*10000/CommonConstants.TEN_THOUSAND)/CommonConstants.TEN_THOUSAND_DOUBLE);
+                    Double passenger = new Double(Math.round(totalIn * 10000 / CommonConstants.TEN_THOUSAND) / CommonConstants.TEN_THOUSAND_DOUBLE);
                     infoReqDTO.setPassenger(passenger);
                     infoReqDTOList.add(infoReqDTO);
                 }
             }
 
 
-
             //新增
-            if(infoReqDTOList != null && infoReqDTOList.size() > 0){
+            if (infoReqDTOList != null && infoReqDTOList.size() > 0) {
                 doCreatePassengerBatch(infoReqDTOList);
             }
 
@@ -194,13 +191,13 @@ public class PassengerServiceImpl implements PassengerService {
 
     /**
      * 新增车站客流
-     * */
-    private  void doCreatePassengerBatch(List<PassengerInfoReqDTO> infoReqDTOList){
+     */
+    private void doCreatePassengerBatch(List<PassengerInfoReqDTO> infoReqDTOList) {
 
-        SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH,false);
-        try{
+        SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH, false);
+        try {
             PassengerMapper mapper = sqlSession.getMapper(PassengerMapper.class);
-            for(PassengerInfoReqDTO item : infoReqDTOList){
+            for (PassengerInfoReqDTO item : infoReqDTOList) {
                 mapper.createStationPassenger(item);
             }
             sqlSession.commit();
@@ -208,13 +205,13 @@ public class PassengerServiceImpl implements PassengerService {
             sqlSession.clearCache();
             sqlSession.close();
             batchResults.clear();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             log.info(e.getMessage());
         }
     }
 
-    private void updateRecordCount(PassengerRecordReqDTO passengerRecordReqDTO){
+    private void updateRecordCount(PassengerRecordReqDTO passengerRecordReqDTO) {
         //TODO
     }
 

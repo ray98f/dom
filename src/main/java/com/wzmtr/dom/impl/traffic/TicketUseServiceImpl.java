@@ -37,8 +37,8 @@ public class TicketUseServiceImpl implements TicketUseService {
     }
 
     @Override
-    public TicketUseResDTO detail(String id,String startDate, String endDate) {
-        TicketUseResDTO res = ticketUseMapper.detail(id,startDate,endDate);
+    public TicketUseResDTO detail(String id, String startDate, String endDate) {
+        TicketUseResDTO res = ticketUseMapper.detail(id, startDate, endDate);
         if (Objects.isNull(res)) {
             throw new CommonException(ErrorCode.RESOURCE_NOT_EXIST);
         }

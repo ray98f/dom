@@ -57,7 +57,7 @@ public class OnewaySaleServiceImpl implements OnewaySaleService {
     @Override
     public void modify(CurrentLoginUser currentLoginUser, OnewaySaleAddReqDTO passengerRecordReqDTO) {
         TrafficOnewaySaleDO onewaySaleDO = passengerRecordReqDTO.toDO(passengerRecordReqDTO);
-        onewaySaleMapper.update(onewaySaleDO,new UpdateWrapper<TrafficOnewaySaleDO>().eq("id",onewaySaleDO.getId()));
+        onewaySaleMapper.update(onewaySaleDO, new UpdateWrapper<TrafficOnewaySaleDO>().eq("id", onewaySaleDO.getId()));
     }
 
     @Override

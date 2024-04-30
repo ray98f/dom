@@ -30,7 +30,6 @@ import java.util.List;
 
 /**
  * 客运部-安全生产情况
- *
  * @author zhangxin
  * @version 1.0
  * @date 2024/3/19 17:23
@@ -337,7 +336,7 @@ public class ProductionServiceImpl implements ProductionService {
     private void updateSummaryCount(String stationCode, String startDate, String endDate) {
         try {
             List<ProductionRecordResDTO> res = productionMapper.listAll(stationCode, startDate, endDate);
-            if (res != null && res.size() > 0) {
+            if (StringUtils.isNotEmpty(res)) {
                 for (ProductionRecordResDTO item : res) {
                     //更新记录统计数据
                     productionMapper.modifyRecordCount(item.getId(),

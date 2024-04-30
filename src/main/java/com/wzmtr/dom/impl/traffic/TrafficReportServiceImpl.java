@@ -30,7 +30,6 @@ import java.util.List;
 
 /**
  * 客运部-客运部报表
- *
  * @author zhangxin
  * @version 1.0
  * @date 2024/3/21 15:14
@@ -47,11 +46,11 @@ public class TrafficReportServiceImpl implements TrafficReportService {
     @Override
     public Page<DailyReportResDTO> dailyList(String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return trafficReportMapper.dailyList(pageReqDTO.of(),startDate,endDate);
+        return trafficReportMapper.dailyList(pageReqDTO.of(), startDate, endDate);
     }
 
     @Override
-    public DailyReportResDTO dailyDetail(String id,String startDate,String endDate) {
+    public DailyReportResDTO dailyDetail(String id, String startDate, String endDate) {
 
         //主报表信息
         DailyReportResDTO detail = trafficReportMapper.dailyDetail(id);
@@ -60,15 +59,15 @@ public class TrafficReportServiceImpl implements TrafficReportService {
         detail.setSubmitFlag(CommonConstants.ONE_STRING);
 
         //主报表若存在审核中 或者已审核
-        if(CommonConstants.ZERO_STRING.equals(detail.getStatus())){
+        if (CommonConstants.ZERO_STRING.equals(detail.getStatus())) {
             detail.setSubmitFlag(CommonConstants.ZERO_STRING);
         }
 
         //子报表信息
         List<DailyReportResDTO> subDailyReportNew = new ArrayList<>();
         List<DailyReportResDTO> subDailyReport = trafficReportMapper.queryDailyByParent(id);
-        for(DailyReportResDTO item : subDailyReport){
-            switch (item.getReportType()){
+        for (DailyReportResDTO item : subDailyReport) {
+            switch (item.getReportType()) {
                 case CommonConstants.ONE_STRING:
                     item.setVisibleRoles(TrafficReportRole.REPORT_TYPE_1.roles());
                     break;
@@ -84,13 +83,13 @@ public class TrafficReportServiceImpl implements TrafficReportService {
             }
             //子报表为草稿状态 可提交审批
             item.setSubmitFlag(CommonConstants.ZERO_STRING);
-            if(CommonConstants.ZERO_STRING.equals(item.getStatus())){
+            if (CommonConstants.ZERO_STRING.equals(item.getStatus())) {
                 item.setSubmitFlag(CommonConstants.ONE_STRING);
             }
             subDailyReportNew.add(item);
 
             //子报表有草稿或审核中状态,主报表不可提交审批
-            if((CommonConstants.ZERO_STRING.equals(item.getStatus()) || CommonConstants.ONE_STRING.equals(item.getStatus()))){
+            if ((CommonConstants.ZERO_STRING.equals(item.getStatus()) || CommonConstants.ONE_STRING.equals(item.getStatus()))) {
                 detail.setSubmitFlag(CommonConstants.ZERO_STRING);
             }
         }
@@ -102,14 +101,14 @@ public class TrafficReportServiceImpl implements TrafficReportService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void addDaily(CurrentLoginUser currentLoginUser,DailyReportReqDTO dailyReportReqDTO) {
+    public void addDaily(CurrentLoginUser currentLoginUser, DailyReportReqDTO dailyReportReqDTO) {
         int existFlag = trafficReportMapper.checkDailyExist(dailyReportReqDTO);
-        if(existFlag > 0){
+        if (existFlag > 0) {
             throw new CommonException(ErrorCode.DATA_EXIST);
         }
-        try{
+        try {
             //日期校验
-            if(!dailyReportReqDTO.getStartDate().equals(dailyReportReqDTO.getEndDate())){
+            if (!dailyReportReqDTO.getStartDate().equals(dailyReportReqDTO.getEndDate())) {
                 throw new CommonException(ErrorCode.DATE_ERROR);
             }
             dailyReportReqDTO.setDailyDate(dailyReportReqDTO.getStartDate());
@@ -123,24 +122,24 @@ public class TrafficReportServiceImpl implements TrafficReportService {
 
             //增加客流、热线、安全生产 三个子报表 TODO
             String[] typeArray = CommonConstants.TRAFFIC_REPORT_TYPE;
-            for(String s: typeArray){
+            for (String s : typeArray) {
                 dailyReportReqDTO.setId("sub" + s + "-" + TokenUtils.getUuId());
                 dailyReportReqDTO.setParentId(reportId);
                 dailyReportReqDTO.setReportType(s);
                 trafficReportMapper.addDaily(dailyReportReqDTO);
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CommonException(ErrorCode.INSERT_ERROR);
         }
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void modifyDaily(CurrentLoginUser currentLoginUser,DailyReportReqDTO dailyReportReqDTO) {
+    public void modifyDaily(CurrentLoginUser currentLoginUser, DailyReportReqDTO dailyReportReqDTO) {
         dailyReportReqDTO.setUpdateBy(currentLoginUser.getPersonId());
         int res = trafficReportMapper.modifyDaily(dailyReportReqDTO);
-        if( res <= 0){
+        if (res <= 0) {
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
         //更新主报表
@@ -157,7 +156,7 @@ public class TrafficReportServiceImpl implements TrafficReportService {
         approvalReqDTO.setTodoType(CommonConstants.ONE_STRING);
         approvalReqDTO.setDataType(CommonConstants.DATA_TYPE_DAILY);
         approvalReqDTO.setProcessKey(BpmnFlowEnum.traffic_daily.value());
-        switch (dailyReportReqDTO.getReportType()){
+        switch (dailyReportReqDTO.getReportType()) {
             case CommonConstants.ONE_STRING:
                 approvalReqDTO.setCurrentNode(CommonConstants.TRAFFIC_DAILY_NODE1_SUB1);
                 break;
@@ -179,7 +178,7 @@ public class TrafficReportServiceImpl implements TrafficReportService {
     @Override
     public Page<WeeklyReportResDTO> weeklyList(String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return trafficReportMapper.weeklyList(pageReqDTO.of(),startDate,endDate);
+        return trafficReportMapper.weeklyList(pageReqDTO.of(), startDate, endDate);
     }
 
     @Override
@@ -191,15 +190,15 @@ public class TrafficReportServiceImpl implements TrafficReportService {
         detail.setSubmitFlag(CommonConstants.ONE_STRING);
 
         //主报表若存在审核中 或者已审核
-        if(CommonConstants.ZERO_STRING.equals(detail.getStatus())){
+        if (CommonConstants.ZERO_STRING.equals(detail.getStatus())) {
             detail.setSubmitFlag(CommonConstants.ZERO_STRING);
         }
 
         //子报表信息
         List<WeeklyReportResDTO> subWeeklyReportNew = new ArrayList<>();
         List<WeeklyReportResDTO> subWeeklyReport = trafficReportMapper.queryWeeklyByParent(id);
-        for(WeeklyReportResDTO item : subWeeklyReport){
-            switch (item.getReportType()){
+        for (WeeklyReportResDTO item : subWeeklyReport) {
+            switch (item.getReportType()) {
                 case CommonConstants.ONE_STRING:
                     item.setVisibleRoles(TrafficReportRole.REPORT_TYPE_1.roles());
                     break;
@@ -215,13 +214,13 @@ public class TrafficReportServiceImpl implements TrafficReportService {
             }
             //子报表为草稿状态 可提交审批
             item.setSubmitFlag(CommonConstants.ZERO_STRING);
-            if(CommonConstants.ZERO_STRING.equals(item.getStatus())){
+            if (CommonConstants.ZERO_STRING.equals(item.getStatus())) {
                 item.setSubmitFlag(CommonConstants.ONE_STRING);
             }
             subWeeklyReportNew.add(item);
 
             //子报表有草稿或审核中状态,主报表不可提交审批
-            if((CommonConstants.ZERO_STRING.equals(item.getStatus()) || CommonConstants.ONE_STRING.equals(item.getStatus()))){
+            if ((CommonConstants.ZERO_STRING.equals(item.getStatus()) || CommonConstants.ONE_STRING.equals(item.getStatus()))) {
                 detail.setSubmitFlag(CommonConstants.ZERO_STRING);
             }
         }
@@ -234,10 +233,10 @@ public class TrafficReportServiceImpl implements TrafficReportService {
     @Transactional(rollbackFor = Exception.class)
     public void addWeekly(CurrentLoginUser currentLoginUser, WeeklyReportReqDTO weeklyReportReqDTO) {
         int existFlag = trafficReportMapper.checkWeeklyExist(weeklyReportReqDTO);
-        if(existFlag > 0){
+        if (existFlag > 0) {
             throw new CommonException(ErrorCode.DATA_EXIST);
         }
-        try{
+        try {
 
             //先增加父报表
             String reportId = TokenUtils.getUuId();
@@ -248,14 +247,14 @@ public class TrafficReportServiceImpl implements TrafficReportService {
 
             //增加客流、热线、安全生产 三个子报表 TODO
             String[] typeArray = CommonConstants.TRAFFIC_REPORT_TYPE;
-            for(String s: typeArray){
+            for (String s : typeArray) {
                 weeklyReportReqDTO.setId("sub" + s + "-" + TokenUtils.getUuId());
                 weeklyReportReqDTO.setParentId(reportId);
                 weeklyReportReqDTO.setReportType(s);
                 trafficReportMapper.addWeekly(weeklyReportReqDTO);
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CommonException(ErrorCode.INSERT_ERROR);
         }
     }
@@ -264,7 +263,7 @@ public class TrafficReportServiceImpl implements TrafficReportService {
     public void modifyWeekly(CurrentLoginUser currentLoginUser, WeeklyReportReqDTO weeklyReportReqDTO) {
         weeklyReportReqDTO.setUpdateBy(currentLoginUser.getPersonId());
         int res = trafficReportMapper.modifyWeekly(weeklyReportReqDTO);
-        if( res <= 0){
+        if (res <= 0) {
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
         //更新主报表
@@ -281,7 +280,7 @@ public class TrafficReportServiceImpl implements TrafficReportService {
         approvalReqDTO.setTodoType(CommonConstants.ONE_STRING);
         approvalReqDTO.setDataType(CommonConstants.DATA_TYPE_WEEKLY);
         approvalReqDTO.setProcessKey(BpmnFlowEnum.traffic_weekly.value());
-        switch (weeklyReportReqDTO.getReportType()){
+        switch (weeklyReportReqDTO.getReportType()) {
             case CommonConstants.ONE_STRING:
                 approvalReqDTO.setCurrentNode(CommonConstants.TRAFFIC_WEEKLY_NODE1_SUB1);
                 break;
@@ -303,7 +302,7 @@ public class TrafficReportServiceImpl implements TrafficReportService {
     @Override
     public Page<MonthlyReportResDTO> monthlyList(String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return trafficReportMapper.monthlyList(pageReqDTO.of(),startDate,endDate);
+        return trafficReportMapper.monthlyList(pageReqDTO.of(), startDate, endDate);
     }
 
     @Override
@@ -315,15 +314,15 @@ public class TrafficReportServiceImpl implements TrafficReportService {
         detail.setSubmitFlag(CommonConstants.ONE_STRING);
 
         //主报表若存在审核中 或者已审核
-        if(CommonConstants.ZERO_STRING.equals(detail.getStatus())){
+        if (CommonConstants.ZERO_STRING.equals(detail.getStatus())) {
             detail.setSubmitFlag(CommonConstants.ZERO_STRING);
         }
 
         //子报表信息
         List<MonthlyReportResDTO> subWeeklyReportNew = new ArrayList<>();
         List<MonthlyReportResDTO> subWeeklyReport = trafficReportMapper.queryMonthlyByParent(id);
-        for(MonthlyReportResDTO item : subWeeklyReport){
-            switch (item.getReportType()){
+        for (MonthlyReportResDTO item : subWeeklyReport) {
+            switch (item.getReportType()) {
                 case CommonConstants.ONE_STRING:
                     item.setVisibleRoles(TrafficReportRole.REPORT_TYPE_1.roles());
                     break;
@@ -340,13 +339,13 @@ public class TrafficReportServiceImpl implements TrafficReportService {
 
             //子报表为草稿状态 可提交审批
             item.setSubmitFlag(CommonConstants.ZERO_STRING);
-            if(CommonConstants.ZERO_STRING.equals(item.getStatus())){
+            if (CommonConstants.ZERO_STRING.equals(item.getStatus())) {
                 item.setSubmitFlag(CommonConstants.ONE_STRING);
             }
             subWeeklyReportNew.add(item);
 
             //子报表有草稿或审核中状态,主报表不可提交审批
-            if((CommonConstants.ZERO_STRING.equals(item.getStatus()) || CommonConstants.ONE_STRING.equals(item.getStatus()))){
+            if ((CommonConstants.ZERO_STRING.equals(item.getStatus()) || CommonConstants.ONE_STRING.equals(item.getStatus()))) {
                 detail.setSubmitFlag(CommonConstants.ZERO_STRING);
             }
         }
@@ -359,10 +358,10 @@ public class TrafficReportServiceImpl implements TrafficReportService {
     @Transactional(rollbackFor = Exception.class)
     public void addMonthly(CurrentLoginUser currentLoginUser, MonthlyReportReqDTO monthlyReportReqDTO) {
         int existFlag = trafficReportMapper.checkMonthlyExist(monthlyReportReqDTO);
-        if(existFlag > 0){
+        if (existFlag > 0) {
             throw new CommonException(ErrorCode.DATA_EXIST);
         }
-        try{
+        try {
 
             //先增加父报表
             String reportId = TokenUtils.getUuId();
@@ -373,14 +372,14 @@ public class TrafficReportServiceImpl implements TrafficReportService {
 
             //增加客流、热线、安全生产 三个子报表 TODO
             String[] typeArray = CommonConstants.TRAFFIC_REPORT_TYPE;
-            for(String s: typeArray){
+            for (String s : typeArray) {
                 monthlyReportReqDTO.setId("sub" + s + "-" + TokenUtils.getUuId());
                 monthlyReportReqDTO.setParentId(reportId);
                 monthlyReportReqDTO.setReportType(s);
                 trafficReportMapper.addMonthly(monthlyReportReqDTO);
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CommonException(ErrorCode.INSERT_ERROR);
         }
     }
@@ -389,7 +388,7 @@ public class TrafficReportServiceImpl implements TrafficReportService {
     public void modifyMonthly(CurrentLoginUser currentLoginUser, MonthlyReportReqDTO monthlyReportReqDTO) {
         monthlyReportReqDTO.setUpdateBy(currentLoginUser.getPersonId());
         int res = trafficReportMapper.modifyMonthly(monthlyReportReqDTO);
-        if( res <= 0){
+        if (res <= 0) {
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
         //更新主报表
@@ -406,7 +405,7 @@ public class TrafficReportServiceImpl implements TrafficReportService {
         approvalReqDTO.setTodoType(CommonConstants.ONE_STRING);
         approvalReqDTO.setDataType(CommonConstants.DATA_TYPE_MONTHLY);
         approvalReqDTO.setProcessKey(BpmnFlowEnum.traffic_monthly.value());
-        switch (monthlyReportReqDTO.getReportType()){
+        switch (monthlyReportReqDTO.getReportType()) {
             case CommonConstants.ONE_STRING:
                 approvalReqDTO.setCurrentNode(CommonConstants.TRAFFIC_MONTHLY_NODE1_SUB1);
                 break;
@@ -427,7 +426,7 @@ public class TrafficReportServiceImpl implements TrafficReportService {
 
     /**
      * 修改报表状态为审核中
-     * @param id 报表id
+     * @param id   报表id
      * @param type 类型 1日报2周报3月报
      */
     private void underReviewReport(String id, String type) {
