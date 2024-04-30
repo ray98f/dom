@@ -12,6 +12,9 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class HotLineSummaryDetailReqDTO extends PageReqDTO {
+
+    @ApiModelProperty("id")
+    private String id;
     @ApiModelProperty("开始时间")
     private String startDate;
     @ApiModelProperty("结束时间")

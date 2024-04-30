@@ -83,10 +83,16 @@ public class TodoResDTO {
     private String approvalStatus;
 
     /**
+     * 当前审批节点编码
+     */
+    @ApiModelProperty(value = "当前审批节点编码")
+    private String currentNode;
+
+    /**
      * 当前审批节点名
      */
     @ApiModelProperty(value = "当前审批节点名")
-    private String currentNode;
+    private String currentNodeName;
 
     /**
      * 版本号(乐观锁)
