@@ -17,6 +17,14 @@ import org.springframework.stereotype.Repository;
 @Mapper
 @Repository
 public interface OnewaySaleMapper extends BaseMapper<TrafficOnewaySaleDO> {
+
+    /**
+     * 判断单程票发售情况是否已存在
+     * @param reqDTO 单程票发售情况参数
+     * @return 是否已存在
+     */
+    Integer checkExist(TrafficOnewaySaleDO reqDTO);
+
     Page<OnewaySaleListResDTO> list(Page<Object> of, @Param("req") OnewaySaleListReqDTO req);
 
     TrafficOnewaySaleDO detail(OneWaySaleDetailReqDTO reqDTO);

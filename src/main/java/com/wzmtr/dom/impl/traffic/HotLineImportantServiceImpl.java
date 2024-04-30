@@ -1,6 +1,7 @@
 package com.wzmtr.dom.impl.traffic;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dataobject.traffic.TrafficHotlineImportantDO;
 import com.wzmtr.dom.dto.req.common.SidReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineImportantAddDataReqDTO;
@@ -41,7 +42,7 @@ public class HotLineImportantServiceImpl implements HotLineImportantService {
     @Override
     public void add(HotLineImportantAddReqDTO req) {
         List<TrafficHotlineImportantDO> list = new ArrayList<>();
-        List<DictResDTO> dictList = dictMapper.list("HOTLINE_TYPE", null, "0");
+        List<DictResDTO> dictList = dictMapper.list(CommonConstants.HOTLINE_TYPE, null, CommonConstants.ZERO_STRING);
         if (StringUtils.isNotEmpty(dictList)) {
             for (DictResDTO dict : dictList) {
                 TrafficHotlineImportantDO res = new TrafficHotlineImportantDO();

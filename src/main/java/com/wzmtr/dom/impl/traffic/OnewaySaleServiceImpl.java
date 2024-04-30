@@ -11,6 +11,8 @@ import com.wzmtr.dom.dto.req.traffic.onewaysale.OnewaySaleListReqDTO;
 import com.wzmtr.dom.dto.res.traffic.oneway.OnewaySaleDetailResDTO;
 import com.wzmtr.dom.dto.res.traffic.oneway.OnewaySaleListResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
+import com.wzmtr.dom.enums.ErrorCode;
+import com.wzmtr.dom.exception.CommonException;
 import com.wzmtr.dom.mapper.traffic.OnewaySaleMapper;
 import com.wzmtr.dom.service.traffic.OnewaySaleService;
 import com.wzmtr.dom.utils.StringUtils;
@@ -43,6 +45,10 @@ public class OnewaySaleServiceImpl implements OnewaySaleService {
     @Override
     public void add(OnewaySaleAddReqDTO reqDTO) {
         TrafficOnewaySaleDO onewaySaleDO = reqDTO.toDO(reqDTO);
+        Integer result = onewaySaleMapper.checkExist(onewaySaleDO);
+        if (result > 0) {
+            throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期单程票发售情况数据已存在，无法重复新增");
+        }
         onewaySaleDO.setId(TokenUtils.getUuId());
         onewaySaleDO.setCreateBy(TokenUtils.getCurrentPersonId());
         onewaySaleMapper.insert(onewaySaleDO);

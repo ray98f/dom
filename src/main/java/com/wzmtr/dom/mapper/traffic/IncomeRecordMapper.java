@@ -20,6 +20,13 @@ import org.springframework.stereotype.Repository;
 public interface IncomeRecordMapper extends BaseMapper<IncomeRecordDO> {
     Page<IncomeListResDTO> list(Page<Object> page, @Param("req") IncomeListReqDTO reqDTO);
 
+    /**
+     * 判断收益总体情况是否已存在
+     * @param reqDTO 收益总体情况参数
+     * @return 是否已存在
+     */
+    Integer checkExist(IncomeAddReqDTO reqDTO);
+
     IncomeRecordDO selectDetailById(IncomeDetailReqDTO reqDTO);
 
     void add(IncomeAddReqDTO req);
