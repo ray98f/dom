@@ -126,6 +126,9 @@
         select *
         from TRAFFIC_ONEWAY_SALE
         WHERE DEL_FLAG='0'
+        <if test="dataType!=null and dataType!=''">
+            AND DATA_TYPE=#{dataType}
+        </if>
         <if test="startDate!=null and startDate!=''">
             AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>

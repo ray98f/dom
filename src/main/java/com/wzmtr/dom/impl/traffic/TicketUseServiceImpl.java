@@ -53,7 +53,7 @@ public class TicketUseServiceImpl implements TicketUseService {
     }
 
     @Override
-    public TicketUseResDTO acc(String date) {
+    public TicketUseResDTO acc(String dataType, String startDate, String endDate) {
         // todo 根据日期获取当天 ACC系统线 网车票过闸使用情况
         return new TicketUseResDTO();
     }

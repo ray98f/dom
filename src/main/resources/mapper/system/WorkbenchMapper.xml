@@ -189,6 +189,7 @@
         DEL_FLAG='1', UPDATE_BY=#{userId}, UPDATE_DATE=sysdate
         WHERE PROCESS_KEY=#{res.processKey} AND REPORT_ID=#{res.reportId} AND REPORT_TABLE=#{res.reportTable}
         AND CURRENT_NODE=#{res.currentNode} AND DATA_TYPE=#{res.todoType} AND STATUS='0' AND TODO_TYPE='1'
+        AND DEL_FLAG='0'
     </update>
 
     <select id="sameStageTodoIsExist" resultType="java.lang.Integer">
@@ -196,6 +197,7 @@
         FROM DOM_APPROVAL_HISTORY
         WHERE PROCESS_KEY=#{processKey} AND REPORT_ID=#{reportId} AND REPORT_TABLE=#{reportTable}
         AND CURRENT_NODE=#{currentNode} AND DATA_TYPE=#{todoType} AND STATUS='0' AND TODO_TYPE='1'
+        AND DEL_FLAG='0'
     </select>
 
     <select id="queryNextNode" resultType="java.lang.String">

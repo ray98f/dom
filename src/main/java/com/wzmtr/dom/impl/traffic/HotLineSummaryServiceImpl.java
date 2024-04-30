@@ -40,10 +40,11 @@ public class HotLineSummaryServiceImpl implements HotLineSummaryService {
     private HotLineImportantMapper hotLineImportantMapper;
     @Autowired
     private HotLineImportantService hotLineImportantService;
+
     @Override
     public HotLineSummaryDetailResDTO detail(HotLineSummaryDetailReqDTO reqDTO) {
         TrafficHotlineSummaryDO trafficHotlineSummaryDO = hotLineSummaryMapper.detail(reqDTO);
-        return BeanUtils.convert(trafficHotlineSummaryDO,HotLineSummaryDetailResDTO.class);
+        return BeanUtils.convert(trafficHotlineSummaryDO, HotLineSummaryDetailResDTO.class);
     }
 
     @Override
@@ -64,7 +65,7 @@ public class HotLineSummaryServiceImpl implements HotLineSummaryService {
 
     @Override
     public void modify(CurrentLoginUser currentLoginUser, HotLineSummaryAddReqDTO reqDTO) {
-        String id = Assert.notNull(reqDTO.getId(), "id can not be null");
+        String id = Assert.notNull(reqDTO.getId(), "ID不能为空");
         TrafficHotlineSummaryDO now = hotLineSummaryMapper.selectById(id);
         TrafficHotlineSummaryDO incomeRecordDO = reqDTO.toDO(reqDTO);
         incomeRecordDO.setUpdateBy(TokenUtils.getCurrentPersonId());
@@ -74,20 +75,20 @@ public class HotLineSummaryServiceImpl implements HotLineSummaryService {
 
     @Override
     public Page<HotLineSummaryListResDTO> list(HotLineSummaryListReqDTO reqDTO) {
-        PageHelper.startPage(reqDTO.getPageNo(),reqDTO.getPageSize());
+        PageHelper.startPage(reqDTO.getPageNo(), reqDTO.getPageSize());
         Page<HotLineSummaryListResDTO> list = hotLineSummaryMapper.list(reqDTO.of(), reqDTO);
         List<HotLineSummaryListResDTO> records = list.getRecords();
-        if (CollectionUtil.isEmpty(records)){
+        if (CollectionUtil.isEmpty(records)) {
             return new Page<>();
         }
-        records.forEach(a->{
+        records.forEach(a -> {
             HotLineSummaryListReqDTO req = new HotLineSummaryListReqDTO();
             req.setStartDate(DateUtils.dateTime(a.getStartDate()));
             req.setEndDate(DateUtils.dateTime(a.getEndDate()));
             req.setDataType(a.getDataType());
             List<HotLineImportantListResDTO> list1 = hotLineImportantMapper.list(req);
             //查日期内是否存在重要内容数据
-            if (CollectionUtil.isNotEmpty(list1)){
+            if (CollectionUtil.isNotEmpty(list1)) {
                 a.setHotLineImportant(list1);
             }
         });

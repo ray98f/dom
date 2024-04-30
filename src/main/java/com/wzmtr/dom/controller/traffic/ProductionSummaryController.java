@@ -34,9 +34,9 @@ public class ProductionSummaryController {
 
     /**
      * 安全生产情况汇总-列表
-     * @param startDate 开始时间
-     * @param endDate 结束时间
-     * @param dataType 数据类型 1:日报 2:周报 3:月报
+     * @param startDate  开始时间
+     * @param endDate    结束时间
+     * @param dataType   数据类型 1:日报 2:周报 3:月报
      * @param pageReqDTO 分页参数
      * @return 安全生产情况汇总-列表
      */
@@ -44,10 +44,10 @@ public class ProductionSummaryController {
     @ApiOperation(value = "安全生产情况汇总-列表")
     public PageResponse<ProductionSummaryResDTO> page(@CurrUser CurrentLoginUser currentLoginUser,
                                                       @RequestParam(required = false) String startDate,
-                                                @RequestParam(required = false) String endDate,
-                                                @RequestParam String dataType,
-                                                @Valid PageReqDTO pageReqDTO) {
-        return PageResponse.of(productionSummaryService.list(dataType,currentLoginUser.getStationCode(),startDate, endDate, pageReqDTO));
+                                                      @RequestParam(required = false) String endDate,
+                                                      @RequestParam String dataType,
+                                                      @Valid PageReqDTO pageReqDTO) {
+        return PageResponse.of(productionSummaryService.list(dataType, currentLoginUser.getStationCode(), startDate, endDate, pageReqDTO));
     }
 
     /**
@@ -57,9 +57,9 @@ public class ProductionSummaryController {
      */
     @GetMapping("/detail")
     @ApiOperation(value = "安全生产情况汇总-详情")
-    public DataResponse<ProductionSummaryResDTO> detail(@RequestParam(required = false) String id,@RequestParam(required = false) String startDate,
+    public DataResponse<ProductionSummaryResDTO> detail(@RequestParam(required = false) String id, @RequestParam(required = false) String startDate,
                                                         @RequestParam(required = false) String endDate) {
-        return DataResponse.of(productionSummaryService.detail(id,startDate,endDate));
+        return DataResponse.of(productionSummaryService.detail(id, startDate, endDate));
     }
 
     /**
@@ -70,7 +70,7 @@ public class ProductionSummaryController {
     @PostMapping("/add")
     @ApiOperation(value = "安全生产情况汇总-新增")
     public DataResponse<T> add(@CurrUser CurrentLoginUser currentLoginUser, @RequestBody ProductionSummaryRecordReqDTO productionSummaryRecordReqDTO) {
-        productionSummaryService.add(currentLoginUser,productionSummaryRecordReqDTO);
+        productionSummaryService.add(currentLoginUser, productionSummaryRecordReqDTO);
         return DataResponse.success();
     }
 
@@ -82,9 +82,8 @@ public class ProductionSummaryController {
     @PostMapping("/modify")
     @ApiOperation(value = "安全生产情况汇总-编辑")
     public DataResponse<T> modify(@CurrUser CurrentLoginUser currentLoginUser, @RequestBody ProductionSummaryRecordReqDTO productionSummaryRecordReqDTO) {
-        productionSummaryService.modify(currentLoginUser,productionSummaryRecordReqDTO);
+        productionSummaryService.modify(currentLoginUser, productionSummaryRecordReqDTO);
         return DataResponse.success();
     }
-
 
 }

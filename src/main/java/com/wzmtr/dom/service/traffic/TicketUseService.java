@@ -34,10 +34,12 @@ public interface TicketUseService {
 
     /**
      * 获取ACC系统线网车票过闸使用情况
-     * @param date 日期
+     * @param dataType 数据类型
+     * @param startDate 开始日期
+     * @param endDate 结束日期
      * @return 线网车票过闸使用情况
      */
-    TicketUseResDTO acc(String date);
+    TicketUseResDTO acc(String dataType, String startDate, String endDate);
 
     /**
      * 新增线网车票过闸使用情况

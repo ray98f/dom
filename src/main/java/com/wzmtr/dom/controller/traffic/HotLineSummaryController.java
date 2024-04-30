@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class HotLineSummaryController {
     @Autowired
     private HotLineSummaryService hotLineSummaryService;
+
     /**
      * 服务热线汇总-列表
      * @return 服务热线汇总
