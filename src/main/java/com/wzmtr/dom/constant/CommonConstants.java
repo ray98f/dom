@@ -161,6 +161,7 @@ public class CommonConstants {
     public static final String VEHICLE_DAILY_REPORT = "VEHICLE_DAILY_REPORT";
     public static final String VEHICLE_WEEKLY_REPORT = "VEHICLE_WEEKLY_REPORT";
     public static final String VEHICLE_MONTHLY_REPORT = "VEHICLE_MONTHLY_REPORT";
+    public static final String VEHICLE_CONTAINS = "vehicle_";
     public static final String VEHICLE_DAILY_NODE1 ="vehicle_daily_node1";
     public static final String VEHICLE_WEEKLY_NODE1 ="vehicle_weekly_node1";
     public static final String VEHICLE_MONTHLY_NODE1 ="vehicle_monthly_node1";

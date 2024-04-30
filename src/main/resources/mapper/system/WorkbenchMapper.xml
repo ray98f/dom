@@ -181,8 +181,22 @@
             APPROVAL_STATUS=#{approvalStatus},
         </if>
         STATUS='1', UPDATE_BY=#{updateBy}, UPDATE_DATE=sysdate
-        where ID=#{id}
+        WHERE ID=#{id}
     </update>
+
+    <update id="sameStageTodoDelete">
+        UPDATE DOM_APPROVAL_HISTORY SET
+        DEL_FLAG='1', UPDATE_BY=#{userId}, UPDATE_DATE=sysdate
+        WHERE PROCESS_KEY=#{res.processKey} AND REPORT_ID=#{res.reportId} AND REPORT_TABLE=#{res.reportTable}
+        AND CURRENT_NODE=#{res.currentNode} AND DATA_TYPE=#{res.todoType} AND STATUS='0' AND TODO_TYPE='1'
+    </update>
+
+    <select id="sameStageTodoIsExist" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM DOM_APPROVAL_HISTORY
+        WHERE PROCESS_KEY=#{processKey} AND REPORT_ID=#{reportId} AND REPORT_TABLE=#{reportTable}
+        AND CURRENT_NODE=#{currentNode} AND DATA_TYPE=#{todoType} AND STATUS='0' AND TODO_TYPE='1'
+    </select>
 
     <select id="queryNextNode" resultType="java.lang.String">
         SELECT NEXT_NODE

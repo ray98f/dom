@@ -74,6 +74,10 @@ public class WorkbenchServiceImpl implements WorkbenchService {
         todoReqDTO.setUpdateBy(TokenUtils.getCurrentPersonId());
         // 更新为已办
         workbenchMapper.todoApproval(todoReqDTO);
+        // 相同阶段的待办删除(除了车辆部流程)
+        if (StringUtils.isNotEmpty(todoReqDTO.getId()) && !todoReqDTO.getProcessKey().contains(CommonConstants.VEHICLE_CONTAINS)) {
+            workbenchMapper.sameStageTodoDelete(res, TokenUtils.getCurrentPersonId());
+        }
         // 根据流程名进行审核流程
         switch (Objects.requireNonNull(BpmnFlowEnum.find(todoReqDTO.getProcessKey()))) {
             // 车辆部报表
@@ -150,9 +154,14 @@ public class WorkbenchServiceImpl implements WorkbenchService {
         } else {
             status = CommonConstants.ZERO_STRING;
             goNextFlag = CommonConstants.ZERO_STRING;
+            // 驳回时删除同阶段存在的未处理待办
+            workbenchMapper.sameStageTodoDelete(todoResDTO, TokenUtils.getCurrentPersonId());
         }
         updateVehicle(todoReqDTO.getReportId(), status, todoResDTO.getDataType());
-
+        // 车辆部同阶段存在待办时不流转下一节点
+        if (workbenchMapper.sameStageTodoIsExist(todoResDTO) > 0) {
+            goNextFlag = CommonConstants.ZERO_STRING;
+        }
         if (CommonConstants.ONE_STRING.equals(goNextFlag)) {
             String nextNode = workbenchMapper.queryNextNode(todoResDTO.getCurrentNode());
             if (StringUtils.isEmpty(nextNode)) {

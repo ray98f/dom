@@ -43,6 +43,20 @@ public interface WorkbenchMapper {
     void todoApproval(TodoReqDTO todoReqDTO);
 
     /**
+     * 相同阶段的待办删除
+     * @param res 待办信息
+     * @param userId 用户id
+     */
+    void sameStageTodoDelete(TodoResDTO res, String userId);
+
+    /**
+     * 相同阶段的待办是否存在
+     * @param todoResDTO 督办审批参数
+     * @return 是否存在
+     */
+    Integer sameStageTodoIsExist(TodoResDTO todoResDTO);
+
+    /**
      * 发待办/待阅
      * @param approvalReqDTO 待办/待阅 信息
      */
