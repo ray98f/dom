@@ -3,15 +3,74 @@
 <mapper namespace="com.wzmtr.dom.mapper.traffic.HotLineImportantMapper">
 
     <insert id="insertList">
-        INSERT INTO "DOM"."TRAFFIC_HOTLINE_IMPORTANT" ("ID", "COUNT", "CONTENT", "RESULT", "KEYWORD", "HOTLINE_TYPE",
-        "DATA_DATE", "DATA_TYPE", "START_DATE", "END_DATE", "DEL_FLAG", "VERSION", "CREATE_DATE", "CREATE_BY",
-        "UPDATE_DATE", "UPDATE_BY") VALUES
-        <foreach collection="list" item="it" separator=",">
-            (#{it.id,jdbcType=VARCHAR}, #{it.count,jdbcType=NUMERIC}, #{it.content,jdbcType=VARCHAR}, #{it.result,jdbcType=VARCHAR}, #{it.keyword,jdbcType=VARCHAR},
-            #{it.hotlineType,jdbcType=VARCHAR}, #{it.dataDate,jdbcType=DATE}, #{it.dataType,jdbcType=VARCHAR}, #{it.startDate,jdbcType=DATE},
-            #{it.endDate,jdbcType=DATE}, #{it.delFlag,jdbcType=VARCHAR}, #{it.version,jdbcType=VARCHAR}, #{it.createDate,jdbcType=DATE},
-            #{it.createBy,jdbcType=VARCHAR}, #{it.updateDate,jdbcType=DATE}, #{it.updateBy, jdbcType=VARCHAR, jdbcType=VARCHAR})
+        INSERT ALL
+        <foreach collection="list" item="it" separator=" ">
+            INTO TRAFFIC_HOTLINE_IMPORTANT(
+            ID,
+            <if test="it.count!=null">
+                COUNT,
+            </if>
+            <if test="it.content!=null and it.content!=''">
+                CONTENT,
+            </if>
+            <if test="it.result!=null and it.result!=''">
+                RESULT,
+            </if>
+            <if test="it.keyword!=null and it.keyword!=''">
+                KEYWORD,
+            </if>
+            <if test="it.hotlineType!=null and it.hotlineType!=''">
+                HOTLINE_TYPE,
+            </if>
+            <if test="it.dataDate!=null">
+                DATA_DATE,
+            </if>
+            <if test="it.dataType!=null and it.dataType!=''">
+                DATA_TYPE,
+            </if>
+            <if test="it.startDate!=null">
+                START_DATE,
+            </if>
+            <if test="it.endDate!=null">
+                END_DATE,
+            </if>
+            VERSION,
+            CREATE_DATE,
+            CREATE_BY)
+            VALUES (
+            #{it.id,jdbcType=VARCHAR},
+            <if test="it.count!=null">
+                #{it.count,jdbcType=NUMERIC},
+            </if>
+            <if test="it.content!=null and it.content!=''">
+                #{it.content,jdbcType=VARCHAR},
+            </if>
+            <if test="it.result!=null and it.result!=''">
+                #{it.result,jdbcType=VARCHAR},
+            </if>
+            <if test="it.keyword!=null and it.keyword!=''">
+                #{it.keyword,jdbcType=VARCHAR},
+            </if>
+            <if test="it.hotlineType!=null and it.hotlineType!=''">
+                #{it.hotlineType,jdbcType=VARCHAR},
+            </if>
+            <if test="it.dataDate!=null">
+                #{it.dataDate,jdbcType=DATE},
+            </if>
+            <if test="it.dataType!=null and it.dataType!=''">
+                #{it.dataType,jdbcType=VARCHAR},
+            </if>
+            <if test="it.startDate!=null">
+                #{it.startDate,jdbcType=DATE},
+            </if>
+            <if test="it.endDate!=null">
+                #{it.endDate,jdbcType=DATE},
+            </if>
+            '1',
+            SYSDATE,
+            #{it.createBy,jdbcType=VARCHAR})
         </foreach>
+        SELECT * FROM dual
     </insert>
 
     <select id="list" resultType="com.wzmtr.dom.dto.res.traffic.hotline.HotLineImportantListResDTO">

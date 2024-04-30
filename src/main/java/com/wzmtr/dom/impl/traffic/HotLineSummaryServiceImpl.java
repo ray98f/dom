@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.dataobject.traffic.TrafficHotlineSummaryDO;
 import com.wzmtr.dom.dto.req.common.SidReqDTO;
+import com.wzmtr.dom.dto.req.traffic.hotline.HotLineImportantAddReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineSummaryAddReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineSummaryDetailReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineSummaryListReqDTO;
@@ -15,6 +16,7 @@ import com.wzmtr.dom.dto.res.traffic.hotline.HotLineSummaryListResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.mapper.traffic.HotLineImportantMapper;
 import com.wzmtr.dom.mapper.traffic.HotLineSummaryMapper;
+import com.wzmtr.dom.service.traffic.HotLineImportantService;
 import com.wzmtr.dom.service.traffic.HotLineSummaryService;
 import com.wzmtr.dom.utils.BeanUtils;
 import com.wzmtr.dom.utils.DateUtils;
@@ -36,6 +38,8 @@ public class HotLineSummaryServiceImpl implements HotLineSummaryService {
     private HotLineSummaryMapper hotLineSummaryMapper;
     @Autowired
     private HotLineImportantMapper hotLineImportantMapper;
+    @Autowired
+    private HotLineImportantService hotLineImportantService;
     @Override
     public HotLineSummaryDetailResDTO detail(HotLineSummaryDetailReqDTO reqDTO) {
         TrafficHotlineSummaryDO trafficHotlineSummaryDO = hotLineSummaryMapper.detail(reqDTO);
@@ -52,6 +56,10 @@ public class HotLineSummaryServiceImpl implements HotLineSummaryService {
         trafficHotlineSummaryDO.setCreateBy(TokenUtils.getCurrentPersonId());
         trafficHotlineSummaryDO.setVersion("0");
         hotLineSummaryMapper.insert(trafficHotlineSummaryDO);
+        // 初始化重要热线内容
+        HotLineImportantAddReqDTO req = new HotLineImportantAddReqDTO();
+        org.springframework.beans.BeanUtils.copyProperties(reqDTO, req);
+        hotLineImportantService.add(req);
     }
 
     @Override
