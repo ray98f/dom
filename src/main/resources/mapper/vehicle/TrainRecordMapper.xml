@@ -3,29 +3,29 @@
 <mapper namespace="com.wzmtr.dom.mapper.vehicle.TrainRecordMapper">
 
     <select id="page" resultType="com.wzmtr.dom.dto.res.vehicle.TrainRecordResDTO">
-        SELECT ID, GROUP_ONE, GROUP_TWO, GROUP_THREE, GROUP_FOUR, GROUP_PARK,
-        TRAIN_DRIVER, REMARK, DEL_FLAG, VERSION, DATA_DATE
+        SELECT ID, REMARK, DEL_FLAG, VERSION, DATA_DATE,DATA_TYPE, START_DATE, END_DATE
         FROM VEHICLE_TRAIN_RECORD
         WHERE DEL_FLAG='0'
+        AND DATA_TYPE = #{dataType}
         <if test="startDate!=null and startDate!=''">
-            AND DATA_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+            AND START_DATE>=to_date(#{startDate},'YYYY-MM-DD')
         </if>
         <if test="endDate!=null and endDate!=''">
-            AND to_date(#{endDate},'YYYY-MM-DD')>=DATA_DATE
+            AND to_date(#{endDate},'YYYY-MM-DD')>=END_DATE
         </if>
         ORDER BY DATA_DATE desc
     </select>
 
     <select id="detail" resultType="com.wzmtr.dom.dto.res.vehicle.TrainRecordResDTO">
-        SELECT ID, GROUP_ONE, GROUP_TWO, GROUP_THREE, GROUP_FOUR, GROUP_PARK,
-        TRAIN_DRIVER, REMARK, DEL_FLAG, VERSION, DATA_DATE
+        SELECT ID, REMARK, DEL_FLAG, VERSION, DATA_DATE,DATA_TYPE, START_DATE, END_DATE
         FROM VEHICLE_TRAIN_RECORD
         WHERE DEL_FLAG='0' AND ID=#{id}
     </select>
 
     <select id="selectIsExist" resultType="java.lang.Integer">
         select count(1) from VEHICLE_TRAIN_RECORD
-        where DATA_DATE=#{dataDate}
+        where START_DATE=#{startDate}
+        and END_DATE=#{endDate}
         <if test="version!=null and version!=''">
             AND VERSION=#{version}
         </if>
@@ -35,73 +35,33 @@
     <insert id="add">
         INSERT INTO VEHICLE_TRAIN_RECORD
         (ID,
-        <if test="groupOne!=null and groupOne!=''">
-            GROUP_ONE,
-        </if>
-        <if test="groupTwo!=null and groupTwo!=''">
-            GROUP_TWO,
-        </if>
-        <if test="groupThree!=null and groupThree!=''">
-            GROUP_THREE,
-        </if>
-        <if test="groupFour!=null and groupFour!=''">
-            GROUP_FOUR,
-        </if>
-        <if test="groupPark!=null and groupPark!=''">
-            GROUP_PARK,
-        </if>
-        <if test="trainDriver!=null and trainDriver!=''">
-            TRAIN_DRIVER,
-        </if>
         <if test="remark!=null and remark!=''">
             REMARK,
         </if>
-        CREATE_BY, CREATE_DATE, DATA_DATE)
+        CREATE_BY,
+        CREATE_DATE,
+        DATA_TYPE,
+        <if test="dataDate != null">
+            DATA_DATE,
+        </if>
+        START_DATE,
+        END_DATE)
         VALUES (#{id},
-        <if test="groupOne!=null and groupOne!=''">
-            #{groupOne},
-        </if>
-        <if test="groupTwo!=null and groupTwo!=''">
-            #{groupTwo},
-        </if>
-        <if test="groupThree!=null and groupThree!=''">
-            #{groupThree},
-        </if>
-        <if test="groupFour!=null and groupFour!=''">
-            #{groupFour},
-        </if>
-        <if test="groupPark!=null and groupPark!=''">
-            #{groupPark},
-        </if>
-        <if test="trainDriver!=null and trainDriver!=''">
-            #{trainDriver},
-        </if>
         <if test="remark!=null and remark!=''">
             #{remark},
         </if>
-        #{createBy}, sysdate, #{dataDate})
+        #{createBy},
+        sysdate,
+        #{dataType},
+        <if test="dataDate != null">
+            #{dataDate},
+        </if>
+        #{startDate},
+        #{endDate})
     </insert>
 
     <update id="modify">
         UPDATE VEHICLE_TRAIN_RECORD SET
-        <if test="groupOne!=null">
-            GROUP_ONE=#{groupOne},
-        </if>
-        <if test="groupTwo!=null">
-            GROUP_TWO=#{groupTwo},
-        </if>
-        <if test="groupThree!=null">
-            GROUP_THREE=#{groupThree},
-        </if>
-        <if test="groupFour!=null">
-            GROUP_FOUR=#{groupFour},
-        </if>
-        <if test="groupPark!=null">
-            GROUP_PARK=#{groupPark},
-        </if>
-        <if test="trainDriver!=null">
-            TRAIN_DRIVER=#{trainDriver},
-        </if>
         <if test="remark!=null">
             REMARK=#{remark},
         </if>

@@ -32,6 +32,7 @@
         SHUNT_HOOK,
         SHUNT_TIME,
         IN_OUT_STORAGE,
+        CLEAN_COUNT,
         REMARK,
         VERSION, DATA_DATE,DATA_TYPE,START_DATE,END_DATE
         FROM VEHICLE_CONSTRUCT_RECORD
@@ -98,6 +99,9 @@
         </if>
         <if test="inOutStorage != null">
             IN_OUT_STORAGE,
+        </if>
+        <if test="cleanCount != null">
+            CLEAN_COUNT,
         </if>
         <if test="remark != null">
             REMARK,
@@ -214,6 +218,9 @@
         </if>
         <if test="inOutStorage != null">
             IN_OUT_STORAGE=#{inOutStorage},
+        </if>
+        <if test="cleanCount != null">
+            CLEAN_COUNT=#{cleanCount},
         </if>
         <if test="remark != null">
             REMARK=#{remark},

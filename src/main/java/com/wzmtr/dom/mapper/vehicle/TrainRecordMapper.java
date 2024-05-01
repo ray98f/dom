@@ -25,7 +25,7 @@ public interface TrainRecordMapper {
      * @param endDate 结束时间
      * @return 班组培训情况列表
      */
-    Page<TrainRecordResDTO> page(Page<TrainRecordResDTO> page, String startDate, String endDate);
+    Page<TrainRecordResDTO> page(Page<TrainRecordResDTO> page,String dataType, String startDate, String endDate);
 
     /**
      * 获取班组培训情况详情

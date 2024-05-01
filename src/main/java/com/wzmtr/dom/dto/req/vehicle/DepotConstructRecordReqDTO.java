@@ -131,6 +131,11 @@ public class DepotConstructRecordReqDTO extends BaseEntity {
     private Integer inOutStorage;
 
     /**
+     * 洗车列数
+     * */
+    private Integer cleanCount;
+
+    /**
      * 施工情况分析
      * */
     private String remark;

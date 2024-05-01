@@ -92,11 +92,6 @@ public class DepotConstructDetailResDTO {
     private Integer shuntCount;
 
     /**
-     * 车辆类事件数
-     * */
-    private Integer DEPOT_CODE;
-
-    /**
      * 调车钩数
      * */
     private Integer shuntHook;
@@ -110,6 +105,11 @@ public class DepotConstructDetailResDTO {
      * 出入检查库次数
      * */
     private Integer inOutStorage;
+
+    /**
+     * 洗车列数
+     * */
+    private Integer cleanCount;
 
     /**
      * 施工情况分析

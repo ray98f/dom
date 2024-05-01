@@ -29,9 +29,9 @@ public class TrainRecordServiceImpl implements TrainRecordService {
     private TrainRecordMapper trainRecordMapper;
 
     @Override
-    public Page<TrainRecordResDTO> page(String startDate, String endDate, PageReqDTO pageReqDTO) {
+    public Page<TrainRecordResDTO> page(String dataType,String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return trainRecordMapper.page(pageReqDTO.of(), startDate, endDate);
+        return trainRecordMapper.page(pageReqDTO.of(), dataType,startDate, endDate);
     }
 
     @Override

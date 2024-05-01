@@ -22,7 +22,7 @@ public interface TrainRecordService {
      * @param pageReqDTO 分页参数
      * @return 班组培训情况列表
      */
-    Page<TrainRecordResDTO> page(String startDate, String endDate, PageReqDTO pageReqDTO);
+    Page<TrainRecordResDTO> page(String dataType,String startDate, String endDate, PageReqDTO pageReqDTO);
 
     /**
      * 获取班组培训情况详情
