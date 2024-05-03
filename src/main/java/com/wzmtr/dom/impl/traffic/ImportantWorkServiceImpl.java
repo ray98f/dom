@@ -41,9 +41,9 @@ public class ImportantWorkServiceImpl implements ImportantWorkService {
 
     @Override
     public void add(CurrentLoginUser currentLoginUser, ImportantWorkReqDTO importantWorkReqDTO) {
-        if(currentLoginUser.getStationCode() == null){
-            throw new CommonException(ErrorCode.USER_NOT_BIND_STATION);
-        }
+//        if(currentLoginUser.getStationCode() == null){
+//            throw new CommonException(ErrorCode.USER_NOT_BIND_STATION);
+//        }
         int existFlag = importantWorkMapper.checkExist(importantWorkReqDTO.getDataType(),
                 importantWorkReqDTO.getStartDate(),
                 importantWorkReqDTO.getEndDate());

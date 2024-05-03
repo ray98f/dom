@@ -41,9 +41,9 @@ public class MainWorkServiceImpl implements MainWorkService {
 
     @Override
     public void add(CurrentLoginUser currentLoginUser, MainWorkReqDTO mainWorkReqDTO) {
-        if(currentLoginUser.getStationCode() == null){
-            throw new CommonException(ErrorCode.USER_NOT_BIND_STATION);
-        }
+//        if(currentLoginUser.getStationCode() == null){
+//            throw new CommonException(ErrorCode.USER_NOT_BIND_STATION);
+//        }
         int existFlag = mainWorkMapper.checkExist(mainWorkReqDTO.getDataType(),
                 mainWorkReqDTO.getStartDate(),
                 mainWorkReqDTO.getEndDate());
