@@ -83,6 +83,15 @@ public class HotLineSummaryServiceImpl implements HotLineSummaryService {
         if (result == 0) {
             throw new CommonException(ErrorCode.NORMAL_ERROR, "当前数据已被编辑，请刷新列表并重新编辑数据");
         }
+
+        //接听总量=咨询+求助+建议+总投诉+热线表演+S1转接+其他
+        incomeRecordDO.setAnswerTotal(incomeRecordDO.getConsult()
+                + incomeRecordDO.getResort()
+                + incomeRecordDO.getSuggest()
+                + incomeRecordDO.getComplaintTotal()
+                + incomeRecordDO.getType1Praise()
+                + incomeRecordDO.getS1Switch()
+                + incomeRecordDO.getOther());
         incomeRecordDO.setUpdateBy(TokenUtils.getCurrentPersonId());
         incomeRecordDO.setVersion(String.valueOf(Integer.parseInt(now.getVersion()) + 1));
         hotLineSummaryMapper.updateById(incomeRecordDO);
