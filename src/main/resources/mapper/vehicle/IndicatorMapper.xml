@@ -30,7 +30,7 @@
     </select>
 
     <select id="queryInfoById" resultType="com.wzmtr.dom.dto.res.vehicle.IndicatorResDTO">
-        SELECT ID, TRAIN_COUNT, CONSTRUCT_COUNT, DELAY_COUNT, VERSION
+        SELECT ID, TRAIN_COUNT, CONSTRUCT_COUNT, DELAY_COUNT, VERSION,DATA_TYPE,DATA_DATE,START_DATE, CREATE_DATE,END_DATE, UPDATE_DATE
         FROM VEHICLE_IMPORTANT_INDICATOR
         WHERE ID=#{id} AND DEL_FLAG = '0'
     </select>
@@ -97,6 +97,16 @@
         CONSTRUCT_COUNT=(SELECT CASE WHEN t1.B_PLAN_SUM>0 THEN (ROUND(t1.B_COMPLETE_SUM/t1.B_PLAN_SUM,2))*100 ELSE 0 END FROM (SELECT SUM(B_COMPLETE) AS B_COMPLETE_SUM,SUM(B_PLAN) AS B_PLAN_SUM FROM VEHICLE_CONSTRUCT_RECORD WHERE DEL_FLAG = '0' AND DATA_TYPE = '1' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE) t1),
         UPDATE_DATE=sysdate
         WHERE ID=#{id}
+    </update>
+
+    <update id="modifyCount2">
+        UPDATE VEHICLE_IMPORTANT_INDICATOR SET
+        TRAIN_COUNT=(SELECT CASE WHEN t0.PLAN_SUM>0 THEN (ROUND(t0.REAL_SUM/t0.PLAN_SUM,2))*100 ELSE 0 END FROM(SELECT SUM(REAL_DEPARTURE+REAL_RECEIVE) AS REAL_SUM,SUM(PLAN_DEPARTURE+PLAN_RECEIVE) AS PLAN_SUM FROM VEHICLE_DRIVING_DEPOT WHERE DEL_FLAG = '0' AND DATA_TYPE = '1' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE) t0),
+        CONSTRUCT_COUNT=(SELECT CASE WHEN t1.B_PLAN_SUM>0 THEN (ROUND(t1.B_COMPLETE_SUM/t1.B_PLAN_SUM,2))*100 ELSE 0 END FROM (SELECT SUM(B_COMPLETE) AS B_COMPLETE_SUM,SUM(B_PLAN) AS B_PLAN_SUM FROM VEHICLE_CONSTRUCT_RECORD WHERE DEL_FLAG = '0' AND DATA_TYPE = '1' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE) t1),
+        UPDATE_DATE=sysdate
+        WHERE DEL_FLAG = '0'
+        AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
     </update>
 
     <delete id="delete">

@@ -82,10 +82,24 @@ public class IndicatorServiceImpl implements IndicatorService {
 
     @Override
     public void modify(CurrentLoginUser currentLoginUser, IndicatorReqDTO indicatorReqDTO) {
+        IndicatorResDTO indicator = indicatorMapper.queryInfoById(indicatorReqDTO.getId());
         indicatorReqDTO.setUpdateBy(currentLoginUser.getPersonId());
         int res = indicatorMapper.modify(indicatorReqDTO);
         if( res <= 0){
             throw new CommonException(ErrorCode.UPDATE_ERROR);
+        }
+
+        //日报情况下，更新周报/月报统计数据
+        if(CommonConstants.ONE_STRING.equals(indicator.getDataType())){
+            //TODO
+            Date dataDate = indicator.getDataDate();
+            Date monday = DateUtil.beginOfWeek(dataDate);
+            Date sunday = DateUtil.endOfWeek(dataDate);
+            Date monthStart = DateUtil.beginOfMonth(dataDate);
+            Date monthEnd = DateUtil.endOfMonth(dataDate);
+            //更新周报、月报统计数据
+            indicatorMapper.modifyCount2(DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
+            indicatorMapper.modifyCount2(DateUtil.formatDate(monthStart),DateUtil.formatDate(monthEnd));
         }
     }
 
