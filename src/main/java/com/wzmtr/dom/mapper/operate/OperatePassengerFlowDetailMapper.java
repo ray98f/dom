@@ -19,6 +19,15 @@ public interface OperatePassengerFlowDetailMapper extends BaseMapper<OperatePass
 
     OperatePassengerFlowDetailDO info(String id, String startDate, String endDate);
 
+    /**
+     * 校验数据是否存在
+     * @param dataType 入参数
+     * @param startDate 入参数
+     * @param endDate 入参数
+     * @return IndicatorResDTO
+     */
+    int checkExist(String dataType,String startDate,String endDate);
+
     void add(PassengerFlowAddReqDTO addReqDTO);
 
     int modify(PassengerFlowAddReqDTO req);

@@ -119,6 +119,13 @@ public class OperatePassengerFlowServiceImpl implements OperatePassengerFlowServ
 
     @Override
     public void add(CurrentLoginUser currentLoginUser, PassengerFlowAddReqDTO addReqDTO) {
+
+        int existFlag = passengerFlowDetailMapper.checkExist(addReqDTO.getDataType(),
+                addReqDTO.getStartDate(),addReqDTO.getEndDate());
+        if(existFlag > 0){
+            throw new CommonException(ErrorCode.DATA_EXIST);
+        }
+
         // 日报类型
         if (CommonConstants.DATA_TYPE_DAILY.equals(addReqDTO.getDataType())) {
             // 日期校验

@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wzmtr.dom.mapper.operate.OperatePassengerFlowDetailMapper">
+
+    <select id="checkExist" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM OPERATE_PASSENGER_FLOW_DETAIL
+        WHERE DEL_FLAG = '0'
+        AND DATA_TYPE=#{dataType}
+        <if test="startDate != null">
+            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+    </select>
+
     <insert id="add">
         INSERT INTO OPERATE_PASSENGER_FLOW_DETAIL (ID,DATA_TYPE,
         <if test="dataDate!=null">
