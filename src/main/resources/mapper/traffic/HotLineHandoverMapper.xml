@@ -1,49 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wzmtr.dom.mapper.traffic.HotLineHandoverMapper">
-    <insert id="insertList" parameterType="java.util.List">
-        INSERT INTO "DOM"."TRAFFIC_HOTLINE_HANDOVER" (
-        "ID", "MAIN_CONTENT", "SOURCE", "COUNT", "DATA_DATE", "DATA_TYPE",
-        "START_DATE", "END_DATE", "DEL_FLAG", "VERSION", "CREATE_DATE",
-        "CREATE_BY", "UPDATE_DATE", "UPDATE_BY", "RESULT"
-        ) VALUES
-        <foreach collection="list" item="handover" separator=",">
-            (#{handover.id,jdbcType=VARCHAR}, #{handover.mainContent,jdbcType=VARCHAR},
-            #{handover.source,jdbcType=VARCHAR}, #{handover.count,jdbcType=NUMERIC}, #{handover.dataDate,jdbcType=DATE},
-            #{handover.dataType, jdbcType=VARCHAR}, #{handover.startDate,jdbcType=DATE},
-            #{handover.endDate,jdbcType=DATE}, #{handover.delFlag, jdbcType=VARCHAR}, #{handover.version, jdbcType=VARCHAR},
-            #{handover.createDate,jdbcType=DATE}, #{handover.createBy, jdbcType=VARCHAR}, #{handover.updateDate,jdbcType=DATE},
-            #{handover.updateBy, jdbcType=VARCHAR},
-            #{handover.result, jdbcType=VARCHAR})
-        </foreach>
-    </insert>
 
-    <select id="list" resultType="com.wzmtr.dom.dto.res.traffic.hotline.HotLineHandoverListResDTO">
-        SELECT t1.*,
-        (SELECT COUNT(*) FROM TRAFFIC_HOTLINE_HANDOVER t2
-        WHERE t2.DEL_FLAG='0'
-        AND t2.DATA_TYPE=#{req.dataType}
-        <if test="req.startDate != null and req.startDate != ''">
-            AND t2.START_DATE &gt;= TO_DATE(#{req.startDate}, 'YYYY-MM-DD HH24:MI:SS')
+    <select id="pageRecord" resultType="com.wzmtr.dom.dto.res.traffic.hotline.HotLineHandoverListResDTO">
+        SELECT *
+        FROM TRAFFIC_HANDOVER_RECORD
+        WHERE DEL_FLAG='0'
+        <if test="dataType!=null and dataType!=''">
+            AND DATA_TYPE=#{dataType}
         </if>
-        <if test="req.endDate != null and req.endDate != ''">
-            AND TO_DATE(#{req.endDate}, 'YYYY-MM-DD HH24:MI:SS') &gt;= t2.END_DATE
+        <if test="dataType=='1'.toString()">
+            <if test="startDate!=null and startDate!=''">
+                AND DATA_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+            </if>
+            <if test="endDate!=null and endDate!=''">
+                AND to_date(#{endDate},'YYYY-MM-DD')>=DATA_DATE
+            </if>
+            ORDER BY DATA_DATE desc
         </if>
-        ) AS needHandOverCount
-        FROM TRAFFIC_HOTLINE_HANDOVER t1
-        WHERE t1.DEL_FLAG='0'
-        AND t1.DATA_TYPE=#{req.dataType}
-        <if test="req.startDate != null and req.startDate != ''">
-            AND t1.START_DATE &gt;= TO_DATE(#{req.startDate}, 'YYYY-MM-DD HH24:MI:SS')
+        <if test="dataType!='1'.toString()">
+            <if test="startDate!=null and startDate!=''">
+                AND START_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+            </if>
+            <if test="endDate!=null and endDate!=''">
+                AND to_date(#{endDate},'YYYY-MM-DD')>=END_DATE
+            </if>
+            ORDER BY START_DATE desc
         </if>
-        <if test="req.endDate != null and req.endDate != ''">
-            AND TO_DATE(#{req.endDate}, 'YYYY-MM-DD HH24:MI:SS') &gt;= t1.END_DATE
-        </if>
-        ORDER BY t1.CREATE_DATE DESC
     </select>
 
-    <select id="selectIsExist" resultType="java.lang.Integer">
-        select count(1) from TRAFFIC_HOTLINE_HANDOVER
+    <select id="pageInfo" resultType="com.wzmtr.dom.dto.res.traffic.hotline.HotLineHandoverDetailResDTO">
+        SELECT hh.ID, hh.MAIN_CONTENT, hh.SOURCE, hh.COUNT, hh.RESULT, hh.VERSION
+        FROM TRAFFIC_HANDOVER_RECORD hr
+        LEFT JOIN TRAFFIC_HOTLINE_HANDOVER hh ON hh.RECORD_ID=hr.ID AND hh.DEL_FLAG='0'
+        WHERE hh.DEL_FLAG='0'
+        <if test="id!=null and id!=''">
+            AND hr.ID=#{id}
+        </if>
+        <if test="dataType!=null and dataType!=''">
+            AND DATA_TYPE=#{dataType}
+        </if>
+        <if test="dataType=='1'.toString()">
+            <if test="startDate!=null and startDate!=''">
+                AND hr.DATA_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+            </if>
+            <if test="endDate!=null and endDate!=''">
+                AND to_date(#{endDate},'YYYY-MM-DD')>=hr.DATA_DATE
+            </if>
+        </if>
+        <if test="dataType!='1'.toString()">
+            <if test="startDate!=null and startDate!=''">
+                AND hr.START_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+            </if>
+            <if test="endDate!=null and endDate!=''">
+                AND to_date(#{endDate},'YYYY-MM-DD')>=hr.END_DATE
+            </if>
+        </if>
+        ORDER BY hh.CREATE_DATE ASC
+    </select>
+
+    <select id="getRecordDetail" resultType="com.wzmtr.dom.dto.res.traffic.hotline.HotLineHandoverListResDTO">
+        SELECT ID, TRAFFIC_HANDOVER_RECORD, VERSION, DATA_DATE, DATA_TYPE, START_DATE, END_DATE
+        FROM TRAFFIC_HANDOVER_RECORD
+        WHERE DEL_FLAG='0' AND ID=#{id}
+    </select>
+
+    <select id="getInfoDetail" resultType="com.wzmtr.dom.dto.res.traffic.hotline.HotLineHandoverDetailResDTO">
+        SELECT ID, RECORD_ID, MAIN_CONTENT, SOURCE, COUNT, RESULT, VERSION
+        FROM TRAFFIC_HOTLINE_HANDOVER
+        WHERE DEL_FLAG='0' AND ID=#{id}
+    </select>
+
+    <select id="selectRecordIsExist" resultType="java.lang.Integer">
+        select count(1) from TRAFFIC_HANDOVER_RECORD
         WHERE
         <if test="dataType=='1'.toString()">
             DATA_DATE=#{dataDate,jdbcType=TIMESTAMP}
@@ -57,24 +86,138 @@
         AND DEL_FLAG='0' AND rownum=1
     </select>
 
-    <select id="selectListByDate" resultType="com.wzmtr.dom.dto.res.traffic.hotline.HotLineHandoverDetailResDTO">
-        select *
-        from TRAFFIC_HOTLINE_HANDOVER
-        WHERE DEL_FLAG='0'
-        <if test="startDate!=null and startDate!=''">
-            AND START_DATE=#{startDate,jdbcType=VARCHAR}
-        </if>
-        <if test="endDate!=null and endDate!=''">
-            AND END_DATE=#{endDate,jdbcType=VARCHAR}
-        </if>
-        <if test="dataType!=null and dataType!=''">
-            AND DATA_TYPE=#{dataType}
-        </if>
-        <if test="date!=null and date!=''">
-            AND DATA_DATE=TO_DATE(#{date}, 'YYYY-MM-DD HH24:MI:SS')
-        </if>
-        <if test="id!=null and id!=''">
-            AND ID=#{id}
+    <select id="selectInfoIsExist" resultType="java.lang.Integer">
+        select count(1) from TRAFFIC_HOTLINE_HANDOVER
+        WHERE ID=#{id} AND DEL_FLAG='0' AND rownum=1
+        <if test="version!=null and version!=''">
+            AND VERSION=#{version}
         </if>
     </select>
+
+    <insert id="addRecord">
+        INSERT INTO TRAFFIC_HANDOVER_RECORD
+        (ID,
+        <if test="handoverCount!=null">
+            HANDOVER_COUNT,
+        </if>
+        <if test="dataType!=null and dataType!=''">
+            DATA_TYPE,
+        </if>
+        <if test="startDate!=null">
+            START_DATE,
+        </if>
+        <if test="endDate!=null">
+            END_DATE,
+        </if>
+        <if test="dataDate!=null">
+            DATA_DATE,
+        </if>
+        CREATE_BY, CREATE_DATE)
+        VALUES (#{id},
+        <if test="handoverCount!=null">
+            #{handoverCount},
+        </if>
+        <if test="dataType!=null and dataType!=''">
+            #{dataType},
+        </if>
+        <if test="startDate!=null">
+            #{startDate},
+        </if>
+        <if test="endDate!=null">
+            #{endDate},
+        </if>
+        <if test="dataDate!=null">
+            #{dataDate},
+        </if>
+        #{createBy}, sysdate)
+    </insert>
+
+    <insert id="addInfo">
+        INSERT INTO TRAFFIC_HOTLINE_HANDOVER
+        (ID, RECORD_ID,
+        <if test="mainContent!=null and mainContent!=''">
+            MAIN_CONTENT,
+        </if>
+        <if test="source!=null and source!=''">
+            SOURCE,
+        </if>
+        <if test="count!=null">
+            COUNT,
+        </if>
+        <if test="result!=null and result!=''">
+            RESULT,
+        </if>
+        CREATE_BY, CREATE_DATE)
+        VALUES (#{id}, #{recordId},
+        <if test="mainContent!=null and mainContent!=''">
+            #{mainContent},
+        </if>
+        <if test="source!=null and source!=''">
+            #{source},
+        </if>
+        <if test="count!=null">
+            #{count},
+        </if>
+        <if test="result!=null and result!=''">
+            #{result},
+        </if>
+        #{createBy}, sysdate)
+    </insert>
+
+    <update id="modifyRecord">
+        UPDATE TRAFFIC_HANDOVER_RECORD SET
+        HANDOVER_COUNT=(SELECT COUNT(*) FROM TRAFFIC_HOTLINE_HANDOVER WHERE RECORD_ID=#{id} AND DEL_FLAG='0'),
+        VERSION=VERSION+1,
+        UPDATE_BY=#{updateBy},
+        UPDATE_DATE=sysdate
+        WHERE ID=#{id}
+    </update>
+
+    <update id="modifyInfo">
+        UPDATE TRAFFIC_HOTLINE_HANDOVER SET
+        <if test="mainContent!=null">
+            MAIN_CONTENT=#{mainContent},
+        </if>
+        <if test="source!=null">
+            SOURCE=#{source},
+        </if>
+        <if test="count!=null">
+            COUNT=#{count},
+        </if>
+        <if test="result!=null">
+            RESULT=#{result},
+        </if>
+        VERSION=VERSION+1, UPDATE_BY=#{updateBy}, UPDATE_DATE=sysdate
+        WHERE ID=#{id} and VERSION=#{version}
+    </update>
+
+    <update id="deleteRecord">
+        UPDATE TRAFFIC_HANDOVER_RECORD SET
+        DEL_FLAG='1', UPDATE_BY=#{userId}, UPDATE_DATE=sysdate
+        WHERE ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+
+    <update id="deleteInfo">
+        UPDATE TRAFFIC_HOTLINE_HANDOVER SET
+        DEL_FLAG='1', UPDATE_BY=#{userId}, UPDATE_DATE=sysdate
+        <if test="recordIds!=null and recordIds.size()>0">
+            WHERE RECORD_ID IN (
+            <foreach collection="recordIds" index="index" item="recordId" separator=",">
+                #{recordId}
+            </foreach>
+            )
+        </if>
+        <if test="ids!=null and ids.size()>0">
+            WHERE ID IN (
+            <foreach collection="ids" index="index" item="id" separator=",">
+                #{id}
+            </foreach>
+            )
+        </if>
+    </update>
+
 </mapper>

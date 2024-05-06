@@ -272,9 +272,10 @@ public class ProductionServiceImpl implements ProductionService {
     }
 
     @Override
-    public Page<ProductionInfoResDTO> eventList(String stationCode, String productionType, String startDate, String endDate, PageReqDTO pageReqDTO) {
+    public Page<ProductionInfoResDTO> eventList(String stationCode, String productionType, String dataType,
+                                                String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return productionMapper.eventList(pageReqDTO.of(), stationCode, productionType, startDate, endDate);
+        return productionMapper.eventList(pageReqDTO.of(), stationCode, productionType, dataType, startDate, endDate);
     }
 
     @Override

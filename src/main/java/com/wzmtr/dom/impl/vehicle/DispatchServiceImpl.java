@@ -88,14 +88,14 @@ public class DispatchServiceImpl implements DispatchService {
     public void deleteRecord(List<String> ids) {
         if (StringUtils.isNotEmpty(ids)) {
             dispatchMapper.deleteRecord(ids, TokenUtils.getCurrentPersonId());
-            dispatchMapper.deleteOrder(ids, TokenUtils.getCurrentPersonId());
+            dispatchMapper.deleteOrder(ids, null, TokenUtils.getCurrentPersonId());
         }
     }
 
     @Override
     public void deleteOrder(List<String> ids) {
         if (StringUtils.isNotEmpty(ids)) {
-            dispatchMapper.deleteOrder(ids, TokenUtils.getCurrentPersonId());
+            dispatchMapper.deleteOrder(null, ids, TokenUtils.getCurrentPersonId());
             DispatchOrderResDTO res = dispatchMapper.getOrderDetail(ids.get(0));
             DispatchRecordReqDTO req = new DispatchRecordReqDTO();
             req.setId(res.getRecordId());

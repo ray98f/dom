@@ -118,6 +118,7 @@ public class ProductionController {
      * 安全生产事件-列表
      * @param stationCode 车站编码
      * @param productionType 事件类型
+     * @param dataType 数据类型 1日报 2周报 3月报
      * @param startDate 起始日期
      * @param endDate 终止日期
      * @param pageReqDTO 分页参数
@@ -127,10 +128,11 @@ public class ProductionController {
     @ApiOperation(value = "正线/车场事件信息-列表")
     public PageResponse<ProductionInfoResDTO> eventList(@RequestParam String stationCode,
                                                         @RequestParam(required = false) String productionType,
-                                                        @RequestParam String startDate,
-                                                        @RequestParam String endDate,
+                                                        @RequestParam(required = false) String dataType,
+                                                        @RequestParam(required = false) String startDate,
+                                                        @RequestParam(required = false) String endDate,
                                                         @Valid PageReqDTO pageReqDTO) {
-        return PageResponse.of(productionService.eventList(stationCode,productionType,startDate,endDate,pageReqDTO));
+        return PageResponse.of(productionService.eventList(stationCode, productionType, dataType, startDate, endDate, pageReqDTO));
     }
 
     /**

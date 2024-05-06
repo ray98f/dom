@@ -99,8 +99,16 @@
     <select id="selectByDate" resultType="com.wzmtr.dom.dto.res.traffic.hotline.HotLineImportantDetailResDTO">
         select *
         from TRAFFIC_HOTLINE_IMPORTANT
-        where DATA_DATE =
-              to_date(#{date}, 'yyyy-mm-dd hh24:mi:ss')
-          AND DATA_TYPE=#{dataType}
+        WHERE DEL_FLAG='0'
+        <if test="dataType!=null and dataType!=''">
+            AND DATA_TYPE=#{dataType}
+        </if>
+        <if test="dataType=='1'.toString()">
+            AND DATA_DATE=to_date(#{date}, 'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="dataType!='1'.toString()">
+            AND START_DATE=to_date(#{startDate}, 'yyyy-mm-dd hh24:mi:ss')
+            AND END_DATE=to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss')
+        </if>
     </select>
 </mapper>

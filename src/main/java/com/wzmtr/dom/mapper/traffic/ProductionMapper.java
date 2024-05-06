@@ -4,11 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.traffic.ProductionApprovalReqDTO;
 import com.wzmtr.dom.dto.req.traffic.ProductionInfoReqDTO;
 import com.wzmtr.dom.dto.req.traffic.ProductionRecordReqDTO;
-import com.wzmtr.dom.dto.req.traffic.ProductionSummaryRecordReqDTO;
-import com.wzmtr.dom.dto.req.vehicle.LineEventInfoReqDTO;
 import com.wzmtr.dom.dto.res.traffic.*;
-import com.wzmtr.dom.dto.res.vehicle.LineEventInfoResDTO;
-import com.wzmtr.dom.dto.res.vehicle.LineEventResDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -168,12 +164,14 @@ public interface ProductionMapper {
      * 事件信息-列表
      * @param page 分页参数
      * @param productionType 查询参数
+     * @param dataType 数据类型 1日报 2周报 3月报
      * @param stationCode 查询参数
      * @param startDate 查询参数
      * @param endDate 查询参数
      * @return 列表
      */
-    Page<ProductionInfoResDTO> eventList(Page<ProductionInfoResDTO> page, String stationCode,String productionType,String startDate, String endDate);
+    Page<ProductionInfoResDTO> eventList(Page<ProductionInfoResDTO> page, String stationCode, String productionType,
+                                         String dataType, String startDate, String endDate);
 
     /**
      * 事件信息-日期范围
