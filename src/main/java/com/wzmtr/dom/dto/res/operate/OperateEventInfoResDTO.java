@@ -134,6 +134,11 @@ public class OperateEventInfoResDTO extends BaseEntity {
     private Integer powerFaultCount;
 
     /**
+     * 记录内容
+     */
+    private String eventContent;
+
+    /**
      * 是否闭环
      * */
     @ApiModelProperty(value = "是否闭环")
