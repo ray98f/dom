@@ -1,13 +1,11 @@
 package com.wzmtr.dom.controller.traffic;
 
-import com.wzmtr.dom.config.annotation.CurrUser;
-import com.wzmtr.dom.constant.ValidationGroup;
-import com.wzmtr.dom.dto.req.common.SidReqDTO;
+import com.wzmtr.dom.dto.req.traffic.hotline.HandoverAddDataReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineHandoverAddReqDTO;
-import com.wzmtr.dom.dto.req.traffic.hotline.HotLineHandoverListReqDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineHandoverDetailResDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineHandoverListResDTO;
-import com.wzmtr.dom.entity.CurrentLoginUser;
+import com.wzmtr.dom.entity.BaseIdsEntity;
+import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.entity.response.PageResponse;
 import com.wzmtr.dom.service.traffic.HotLineHandoverService;
@@ -18,12 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.validation.Valid;
 
 /**
  * 客运部-需转交其他部门做处理事项
- * @Author: Li.Wang
- * Date: 2024/3/22 16:41
+ * @author  Ray
+ * @version 1.0
+ * @date 2024/05/06
  */
 @RestController
 @RequestMapping("/traffic/hotline/handover")
@@ -34,55 +33,100 @@ public class HotLineHandoverController {
     private HotLineHandoverService hotLineHandoverService;
 
     /**
-     * 需转交其他部门做处理事项-列表
-     * @return 需转交其他部门做处理事项
+     * 分页查询需转交其他部门做处理事项记录列表
+     * @param startDate  开始时间
+     * @param endDate    结束时间
+     * @param dataType   数据类型 1:日报 2:周报 3:月报
+     * @param pageReqDTO 分页参数
+     * @return 需转交其他部门做处理事项记录列表
      */
-    @PostMapping("/list")
-    @ApiOperation(value = "需转交其他部门做处理事项-列表")
-    public PageResponse<HotLineHandoverListResDTO> page(@RequestBody HotLineHandoverListReqDTO reqDTO) {
-        return PageResponse.of(hotLineHandoverService.list(reqDTO));
+    @GetMapping("/record/page")
+    @ApiOperation(value = "分页查询需转交其他部门做处理事项记录列表")
+    public PageResponse<HotLineHandoverListResDTO> pageRecord(@RequestParam(required = false) String startDate,
+                                                              @RequestParam(required = false) String endDate,
+                                                              @RequestParam String dataType,
+                                                              @Valid PageReqDTO pageReqDTO) {
+        return PageResponse.of(hotLineHandoverService.pageRecord(startDate, endDate, dataType, pageReqDTO));
     }
 
     /**
-     * 需转交其他部门做处理事项-详情
-     * @return 需转交其他部门做处理事项
+     * 分页查询需转交其他部门做处理事项详情列表
+     * @param id         id
+     * @param date       日期
+     * @param startDate  开始时间
+     * @param endDate    结束时间
+     * @param dataType   数据类型 1:日报 2:周报 3:月报
+     * @param pageReqDTO 分页参数
+     * @return 需转交其他部门做处理事项详情列表
      */
-    @GetMapping("/detail")
-    @ApiOperation(value = "需转交其他部门做处理事项详情")
-    public DataResponse<List<HotLineHandoverDetailResDTO>> detail(@RequestParam(required = false) String id,
-                                                                  @RequestParam(required = false) String date,
-                                                                  @RequestParam(required = false) String startDate,
-                                                                  @RequestParam(required = false) String endDate,
-                                                                  @RequestParam String dataType) {
-        return DataResponse.of(hotLineHandoverService.detail(id, date, dataType, startDate, endDate));
-    }
-
-    @PostMapping("/acc")
-    @ApiOperation(value = "需转交其他部门做处理事项")
-    public DataResponse<HotLineHandoverDetailResDTO> acc(@RequestBody SidReqDTO reqDTO) {
-        return DataResponse.of(hotLineHandoverService.acc(reqDTO));
+    @GetMapping("/info/page")
+    @ApiOperation(value = "分页查询需转交其他部门做处理事项详情列表")
+    public PageResponse<HotLineHandoverDetailResDTO> pageInfo(@RequestParam(required = false) String id,
+                                                              @RequestParam(required = false) String date,
+                                                              @RequestParam(required = false) String startDate,
+                                                              @RequestParam(required = false) String endDate,
+                                                              @RequestParam String dataType,
+                                                              @Valid PageReqDTO pageReqDTO) {
+        return PageResponse.of(hotLineHandoverService.pageInfo(id, date, dataType, startDate, endDate, pageReqDTO));
     }
 
     /**
-     * 需转交其他部门做处理事项-新增
+     * 新增需转交其他部门做处理事项记录
+     * @param handoverAddReqDTO 需转交其他部门做处理事项记录
+     * @return 成功
      */
-    @PostMapping("/add")
-    @ApiOperation(value = "需转交其他部门做处理事项-新增")
-    public DataResponse<T> add(@RequestBody HotLineHandoverAddReqDTO reqDTO) {
-        hotLineHandoverService.add(reqDTO);
+    @PostMapping("/record/add")
+    @ApiOperation(value = "新增需转交其他部门做处理事项记录")
+    public DataResponse<T> addRecord(@RequestBody HotLineHandoverAddReqDTO handoverAddReqDTO) {
+        hotLineHandoverService.addRecord(handoverAddReqDTO);
         return DataResponse.success();
     }
 
     /**
-     * 需转交其他部门做处理事项-编辑
+     * 新增需转交其他部门做处理事项详情
+     * @param handoverAddDataReqDTO 需转交其他部门做处理事项详情
      * @return 成功
      */
-    @PostMapping("/modify")
-    @ApiOperation(value = "需转交其他部门做处理事项-编辑")
-    public DataResponse<T> modify(@CurrUser CurrentLoginUser currentLoginUser,
-                                  @Validated({ValidationGroup.modify.class})
-                                  @RequestBody HotLineHandoverAddReqDTO req) {
-        hotLineHandoverService.modify(currentLoginUser, req);
+    @PostMapping("/info/add")
+    @ApiOperation(value = "新增需转交其他部门做处理事项记录")
+    public DataResponse<T> addInfo(@RequestBody HandoverAddDataReqDTO handoverAddDataReqDTO) {
+        hotLineHandoverService.addInfo(handoverAddDataReqDTO);
+        return DataResponse.success();
+    }
+
+    /**
+     * 编辑需转交其他部门做处理事项详情
+     * @param handoverAddDataReqDTO 需转交其他部门做处理事项详情参数
+     * @return 成功
+     */
+    @PostMapping("/info/modify")
+    @ApiOperation(value = "编辑需转交其他部门做处理事项详情")
+    public DataResponse<T> modifyInfo(@RequestBody HandoverAddDataReqDTO handoverAddDataReqDTO) {
+        hotLineHandoverService.modifyInfo(handoverAddDataReqDTO);
+        return DataResponse.success();
+    }
+
+    /**
+     * 删除需转交其他部门做处理事项记录
+     * @param baseIdsEntity ids
+     * @return 成功
+     */
+    @PostMapping("/record/delete")
+    @ApiOperation(value = "删除调度命令记录")
+    public DataResponse<T> deleteRecord(@RequestBody BaseIdsEntity baseIdsEntity) {
+        hotLineHandoverService.deleteRecord(baseIdsEntity.getIds());
+        return DataResponse.success();
+    }
+
+    /**
+     * 删除需转交其他部门做处理事项详情
+     * @param baseIdsEntity ids
+     * @return 成功
+     */
+    @PostMapping("/order/delete")
+    @ApiOperation(value = "删除调度命令详情")
+    public DataResponse<T> deleteOrder(@RequestBody BaseIdsEntity baseIdsEntity) {
+        hotLineHandoverService.deleteOrder(baseIdsEntity.getIds());
         return DataResponse.success();
     }
 }

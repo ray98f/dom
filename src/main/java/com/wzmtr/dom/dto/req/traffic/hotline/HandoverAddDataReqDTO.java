@@ -1,20 +1,22 @@
 package com.wzmtr.dom.dto.req.traffic.hotline;
 
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.wzmtr.dom.entity.BaseEntity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @Author: Li.Wang
  * Date: 2024/3/27 15:46
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class HandoverAddData {
+public class HandoverAddDataReqDTO extends BaseEntity {
     /**
-     * id
+     * 记录ID
      */
-    @TableId("ID")
-    private String id;
+    @ApiModelProperty("记录ID")
+    private String recordId;
     /**
      * 主要内容
      */

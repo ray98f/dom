@@ -20,7 +20,7 @@ public class HotLineHandoverListResDTO {
      * 数量
      */
     @ApiModelProperty("数量")
-    private Integer needHandOverCount;
+    private Long handoverCount;
 
     /**
      * 数据所属日期
