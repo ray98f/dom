@@ -69,6 +69,44 @@ public class OperateIndicatorServiceImpl implements OperateIndicatorService {
         IndicatorDetailResDTO detail = operateIndicatorMapper.queryInfoById(id, startDate, endDate);
         if (StringUtils.isNotNull(detail)) {
             List<IndicatorInfoResDTO> indicatorList = operateIndicatorMapper.infoList(id, startDate, endDate);
+
+            //固定两条标准
+            IndicatorInfoResDTO constant1 = new IndicatorInfoResDTO(
+                    id,
+                    CommonConstants.THREE_STRING,
+                    "≥98.5%",
+                    "≥99%",
+                    "≥8",
+                    "≤0.4",
+                    "≤4",
+                    "≤0.8",
+                    "≤0.6",
+                    "≤0.8",
+                    detail.getVersion(),
+                    detail.getEditFlag(),
+                    detail.getDataDate(),
+                    detail.getDataType(),
+                    detail.getStartDate(),
+                    detail.getEndDate());
+            IndicatorInfoResDTO constant2 = new IndicatorInfoResDTO(
+                    id,
+                    CommonConstants.THREE_STRING,
+                    "≥99.9%",
+                    "≥99.9%",
+                    "≥30",
+                    "≤0.1",
+                    "≤4",
+                    "≤0.8",
+                    "≤0.6",
+                    "≤0.8",
+                    detail.getVersion(),
+                    detail.getEditFlag(),
+                    detail.getDataDate(),
+                    detail.getDataType(),
+                    detail.getStartDate(),
+                    detail.getEndDate());
+            indicatorList.add(constant1);
+            indicatorList.add(constant2);
             IndicatorPowerResDTO indicatorPower = operateIndicatorMapper.queryPower(id, startDate, endDate);
             detail.setIndicatorList(indicatorList);
             detail.setIndicatorPower(indicatorPower);

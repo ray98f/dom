@@ -196,7 +196,7 @@ public class CommonConstants {
     public static final String OPERATE_MONTHLY_NODE1 ="operate_monthly_node1";
 
     // " 八项指标类型:1件数/次数,2指标值,3指标值(国标)4运营服务指标
-    public static final String[] OPERATE_INDICATOR_TYPE = {"1","2","3","4"};
+    public static final String[] OPERATE_INDICATOR_TYPE = {"1","2"};
 
     public static final String OPERATE_CONSTRUCT_REMARK_TPL = "（1）本周正线施工计划A、C类施工（周施工计划和日补充计划）共{1}件，临时补修计划{2}件；其中删除计划共计{3}件，擅自取消施工共计{4}件，修改计划共计{5}件，增加计划共计{6}件，实际完成施工共计{7}件。因天气影响等导致施工被迫取消共计{8}件，施工延点（行调同意）共计{9}件;\n" +
             "（2）本周车场施工计划 B 类施工（周施工计划和日补充计划）共{10}件，临时补修计划{11}件；其中删除计划共计{12}件，擅自取消施工共计{13}件，修改计划共计 {14}件，增加计划共计{15}件，实际完成施工共计{16}件。因天气影响等被迫取消共计{17}件，施工延点（场调同意）共计{18}件;\n" +
