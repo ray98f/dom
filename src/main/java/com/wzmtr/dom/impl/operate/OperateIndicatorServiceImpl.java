@@ -2,7 +2,7 @@ package com.wzmtr.dom.impl.operate;
 
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.operate.IndicatorInfoReqDTO;
 import com.wzmtr.dom.dto.req.operate.IndicatorPowerReqDTO;
@@ -42,7 +42,7 @@ public class OperateIndicatorServiceImpl implements OperateIndicatorService {
 
     @Override
     public Page<IndicatorRecordResDTO> list(String dataType, String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         Page<IndicatorRecordResDTO> list = operateIndicatorMapper.list(pageReqDTO.of(), dataType, startDate, endDate);
         List<IndicatorRecordResDTO> records = list.getRecords();
         if (CollectionUtils.isEmpty(records)) {

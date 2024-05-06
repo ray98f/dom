@@ -4,7 +4,6 @@ import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.page.PageMethod;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.vehicle.DepotConstructPlanBatchReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.DepotConstructPlanReqDTO;
@@ -61,7 +60,7 @@ public class DepotConstructServiceImpl implements DepotConstructService {
 
     @Override
     public Page<DepotConstructRecordResDTO> list(String depotCode,String dataType, String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return depotConstructMapper.list(pageReqDTO.of(),depotCode,dataType,startDate,endDate);
     }
 
@@ -192,7 +191,7 @@ public class DepotConstructServiceImpl implements DepotConstructService {
 
     @Override
     public Page<DepotConstructPlanResDTO> planList(String depotCode, String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return depotConstructMapper.planList(pageReqDTO.of(),depotCode,startDate,endDate);
     }
 

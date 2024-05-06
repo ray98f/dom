@@ -2,7 +2,7 @@ package com.wzmtr.dom.impl.vehicle;
 
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.vehicle.CrewEventInfoReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.CrewEventSummaryReqDTO;
@@ -39,7 +39,7 @@ public class CrewEventServiceImpl implements CrewEventService {
 
     @Override
     public Page<CrewEventSummaryResDTO> list(String dataType, String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return crewEventMapper.list(pageReqDTO.of(),dataType,startDate,endDate);
     }
 
@@ -85,7 +85,7 @@ public class CrewEventServiceImpl implements CrewEventService {
 
     @Override
     public Page<CrewEventInfoResDTO> eventList(String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return crewEventMapper.eventList(pageReqDTO.of(),startDate,endDate);
     }
 

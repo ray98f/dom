@@ -126,7 +126,7 @@ public class ProductionController {
      */
     @GetMapping("/eventList")
     @ApiOperation(value = "正线/车场事件信息-列表")
-    public PageResponse<ProductionInfoResDTO> eventList(@RequestParam String stationCode,
+    public PageResponse<ProductionInfoResDTO> eventList(@RequestParam(required = false) String stationCode,
                                                         @RequestParam(required = false) String productionType,
                                                         @RequestParam(required = false) String dataType,
                                                         @RequestParam(required = false) String startDate,

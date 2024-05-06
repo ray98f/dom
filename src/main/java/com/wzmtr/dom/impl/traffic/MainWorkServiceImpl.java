@@ -1,7 +1,7 @@
 package com.wzmtr.dom.impl.traffic;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.traffic.MainWorkReqDTO;
 import com.wzmtr.dom.dto.res.traffic.MainWorkResDTO;
@@ -30,7 +30,7 @@ public class MainWorkServiceImpl implements MainWorkService {
 
     @Override
     public Page<MainWorkResDTO> list(String dataType, String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return mainWorkMapper.list(pageReqDTO.of(),dataType,startDate,endDate);
     }
 

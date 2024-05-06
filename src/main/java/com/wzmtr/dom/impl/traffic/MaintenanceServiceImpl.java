@@ -2,7 +2,7 @@ package com.wzmtr.dom.impl.traffic;
 
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.traffic.MaintenanceInfoReqDTO;
 import com.wzmtr.dom.dto.req.traffic.MaintenanceRecordReqDTO;
@@ -35,7 +35,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 
     @Override
     public Page<MaintenanceRecordResDTO> list(String dataType, String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return maintenanceMapper.list(pageReqDTO.of(), dataType, startDate, endDate);
     }
 
@@ -72,7 +72,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 
     @Override
     public Page<MaintenanceInfoResDTO> eventList(String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return maintenanceMapper.eventList(pageReqDTO.of(), startDate, endDate);
     }
 

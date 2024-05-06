@@ -1,7 +1,7 @@
 package com.wzmtr.dom.impl.common;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.res.common.MemberResDTO;
 import com.wzmtr.dom.entity.CompanyStructureTree;
@@ -55,7 +55,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public Page<MemberResDTO> pageMember(String id, String name, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         Page<MemberResDTO> page;
         String newId = organizationMapper.getIdByAreaId(id);
         if (!Objects.isNull(newId)) {

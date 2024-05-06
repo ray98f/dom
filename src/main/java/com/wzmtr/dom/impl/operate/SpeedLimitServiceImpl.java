@@ -1,7 +1,7 @@
 package com.wzmtr.dom.impl.operate;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.dto.req.operate.SpeedLimitInfoReqDTO;
 import com.wzmtr.dom.dto.req.operate.SpeedLimitRecordReqDTO;
 import com.wzmtr.dom.dto.res.operate.SpeedLimitInfoResDTO;
@@ -32,13 +32,13 @@ public class SpeedLimitServiceImpl implements SpeedLimitService {
 
     @Override
     public Page<SpeedLimitRecordResDTO> recordPage(String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return speedLimitMapper.recordPage(pageReqDTO.of(), startDate, endDate);
     }
 
     @Override
     public Page<SpeedLimitInfoResDTO> infoPage(String id,String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return speedLimitMapper.infoPage(pageReqDTO.of(), startDate, endDate, id);
     }
 

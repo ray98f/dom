@@ -1,7 +1,7 @@
 package com.wzmtr.dom.impl.traffic;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.system.ApprovalReqDTO;
 import com.wzmtr.dom.dto.req.system.ReportUpdateReqDTO;
@@ -45,7 +45,7 @@ public class TrafficReportServiceImpl implements TrafficReportService {
 
     @Override
     public Page<DailyReportResDTO> dailyList(String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return trafficReportMapper.dailyList(pageReqDTO.of(), startDate, endDate);
     }
 
@@ -177,7 +177,7 @@ public class TrafficReportServiceImpl implements TrafficReportService {
 
     @Override
     public Page<WeeklyReportResDTO> weeklyList(String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return trafficReportMapper.weeklyList(pageReqDTO.of(), startDate, endDate);
     }
 
@@ -301,7 +301,7 @@ public class TrafficReportServiceImpl implements TrafficReportService {
 
     @Override
     public Page<MonthlyReportResDTO> monthlyList(String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return trafficReportMapper.monthlyList(pageReqDTO.of(), startDate, endDate);
     }
 

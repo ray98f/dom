@@ -2,7 +2,7 @@ package com.wzmtr.dom.impl.system;
 
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.system.ApprovalReqDTO;
 import com.wzmtr.dom.dto.req.system.ReportUpdateReqDTO;
@@ -55,7 +55,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
 
     @Override
     public Page<TodoResDTO> todoPage(String type, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return workbenchMapper.todoPage(pageReqDTO.of(), type, TokenUtils.getCurrentPersonId());
     }
 

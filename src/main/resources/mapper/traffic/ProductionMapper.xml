@@ -223,7 +223,9 @@
         DATA_TYPE,VERSION
         FROM TRAFFIC_PRODUCTION_INFO
         WHERE DEL_FLAG='0'
-        AND STATION_CODE=#{stationCode}
+        <if test="stationCode!=null and stationCode!=''">
+            AND STATION_CODE=#{stationCode}
+        </if>
         <if test="productionType!=null and productionType!=''">
             AND PRODUCTION_TYPE=#{productionType}
         </if>

@@ -1,7 +1,7 @@
 package com.wzmtr.dom.impl.operate;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.operate.OperateFaultStatisticsReqDTO;
 import com.wzmtr.dom.dto.res.operate.fault.FaultStatisticsResDTO;
@@ -35,7 +35,7 @@ public class OperateFaultStatisticsServiceImpl implements OperateFaultStatistics
 
     @Override
     public Page<FaultStatisticsResDTO> list(String dataType, String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         Page<FaultStatisticsResDTO> list = operateFaultStatisticsMapper.list(pageReqDTO.of(), dataType, startDate, endDate);
         List<FaultStatisticsResDTO> records = list.getRecords();
         if (CollectionUtils.isEmpty(records)) {

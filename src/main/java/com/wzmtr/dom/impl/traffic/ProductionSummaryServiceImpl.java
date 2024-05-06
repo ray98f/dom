@@ -2,7 +2,7 @@ package com.wzmtr.dom.impl.traffic;
 
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.traffic.ProductionSummaryRecordReqDTO;
 import com.wzmtr.dom.dto.res.traffic.ProductionSummaryResDTO;
@@ -32,7 +32,7 @@ public class ProductionSummaryServiceImpl implements ProductionSummaryService {
 
     @Override
     public Page<ProductionSummaryResDTO> list(String dataType, String stationCode, String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return productionSummaryMapper.list(pageReqDTO.of(), dataType, stationCode, startDate, endDate);
     }
 

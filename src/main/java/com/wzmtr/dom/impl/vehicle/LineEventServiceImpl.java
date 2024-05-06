@@ -2,11 +2,13 @@ package com.wzmtr.dom.impl.vehicle;
 
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.vehicle.LineEventInfoReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.LineEventRecordReqDTO;
-import com.wzmtr.dom.dto.res.vehicle.*;
+import com.wzmtr.dom.dto.res.vehicle.LineEventDetailResDTO;
+import com.wzmtr.dom.dto.res.vehicle.LineEventInfoResDTO;
+import com.wzmtr.dom.dto.res.vehicle.LineEventResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.ErrorCode;
@@ -36,7 +38,7 @@ public class LineEventServiceImpl implements LineEventService {
 
     @Override
     public Page<LineEventResDTO> list(String dataType, String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return lineEventMapper.list(pageReqDTO.of(),dataType,startDate,endDate);
     }
 
@@ -79,7 +81,7 @@ public class LineEventServiceImpl implements LineEventService {
 
     @Override
     public Page<LineEventInfoResDTO> eventList(String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return lineEventMapper.eventList(pageReqDTO.of(),startDate,endDate);
     }
 

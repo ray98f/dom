@@ -1,7 +1,7 @@
 package com.wzmtr.dom.impl.vehicle;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.dto.req.vehicle.CrewSummaryReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.CrewSummaryResDTO;
 import com.wzmtr.dom.entity.PageReqDTO;
@@ -30,7 +30,7 @@ public class CrewSummaryServiceImpl implements CrewSummaryService {
 
     @Override
     public Page<CrewSummaryResDTO> page(String startDate, String endDate, String dataType, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return crewSummaryMapper.page(pageReqDTO.of(), startDate, endDate, dataType);
     }
 

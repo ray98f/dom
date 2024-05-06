@@ -1,7 +1,7 @@
 package com.wzmtr.dom.impl.common;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.dto.req.common.RoleReqDTO;
 import com.wzmtr.dom.dto.req.common.UserRoleReqDTO;
 import com.wzmtr.dom.dto.res.common.PersonListResDTO;
@@ -40,7 +40,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Page<Role> listRole(String roleName, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return roleMapper.listRole(pageReqDTO.of(), roleName);
     }
 

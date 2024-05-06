@@ -1,7 +1,7 @@
 package com.wzmtr.dom.impl.vehicle;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.dto.req.vehicle.PersonRecordReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.PersonRecordResDTO;
 import com.wzmtr.dom.entity.PageReqDTO;
@@ -30,7 +30,7 @@ public class PersonRecordServiceImpl implements PersonRecordService {
 
     @Override
     public Page<PersonRecordResDTO> page(String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return trainRecordMapper.page(pageReqDTO.of(), startDate, endDate);
     }
 

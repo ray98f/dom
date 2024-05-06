@@ -3,13 +3,13 @@
 <mapper namespace="com.wzmtr.dom.mapper.common.UserAccountMapper">
 
     <select id="listUserAccount" resultType="com.wzmtr.dom.dto.res.common.UserAccountResDTO">
-        select ID, LOGIN_NAME, NO, NAME, EMAIL, PHONE, MOBILE, HIRE_DATE, ROOM, DISABLED
-        from SYS_USER
-        where DEL_FLAG=0 and EXPIRED=0
+        SELECT ID, LOGIN_NAME, NO, NAME, EMAIL, PHONE, MOBILE, HIRE_DATE, ROOM, DISABLED
+        FROM SYS_USER
+        WHERE DEL_FLAG=0 AND EXPIRED=0
         <if test="searchKey!=null and searchKey!=''">
-            and ((NAME like '%' || #{searchKey} || '%') or (MOBILE like '%' || #{searchKey} || '%'))
+            AND ((NAME like '%' || #{searchKey} || '%') OR (MOBILE like '%' || #{searchKey} || '%'))
         </if>
-        order by ORDER_NUM asc
+        ORDER BY ORDER_NUM ASC, ID ASC
     </select>
 
     <select id="selectUserAccountById" resultType="com.wzmtr.dom.dto.res.common.UserAccountResDTO">

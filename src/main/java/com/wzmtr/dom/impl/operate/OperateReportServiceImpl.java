@@ -1,7 +1,7 @@
 package com.wzmtr.dom.impl.operate;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.operate.DailyReportReqDTO;
 import com.wzmtr.dom.dto.req.operate.MonthlyReportReqDTO;
@@ -44,7 +44,7 @@ public class OperateReportServiceImpl implements OperateReportService {
 
     @Override
     public Page<DailyReportResDTO> pageDaily(String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return operateReportMapper.pageDaily(pageReqDTO.of(), startDate, endDate);
     }
 
@@ -85,7 +85,7 @@ public class OperateReportServiceImpl implements OperateReportService {
 
     @Override
     public Page<WeeklyReportResDTO> pageWeekly(String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return operateReportMapper.pageWeekly(pageReqDTO.of(), startDate, endDate);
     }
 
@@ -126,7 +126,7 @@ public class OperateReportServiceImpl implements OperateReportService {
 
     @Override
     public Page<MonthlyReportResDTO> pageMonthly(String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return operateReportMapper.pageMonthly(pageReqDTO.of(), startDate, endDate);
     }
 
