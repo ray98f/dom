@@ -10,7 +10,6 @@ import com.wzmtr.dom.dto.res.traffic.ProductionInfoResDTO;
 import com.wzmtr.dom.dto.res.traffic.ProductionRecordResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -73,12 +72,14 @@ public interface ProductionService {
      * 事件信息-列表
      * @param stationCode 查询参数
      * @param productionType 查询参数
+     * @param dataType 数据类型 1日报 2周报 3月报
      * @param startDate 查询参数
      * @param endDate 查询参数
      * @param pageReqDTO 分页参数
      * @return 事件信息列表
      */
-    Page<ProductionInfoResDTO> eventList(String stationCode,String productionType,String startDate, String endDate, PageReqDTO pageReqDTO);
+    Page<ProductionInfoResDTO> eventList(String stationCode, String productionType, String dataType,
+                                         String startDate, String endDate, PageReqDTO pageReqDTO);
 
     /**
      * 事件信息-新增
