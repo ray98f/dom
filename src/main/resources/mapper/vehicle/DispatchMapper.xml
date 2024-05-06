@@ -16,7 +16,7 @@
             <if test="endDate!=null and endDate!=''">
                 AND to_date(#{endDate},'YYYY-MM-DD')>=DATA_DATE
             </if>
-            ORDER BY DATA_DATE desc
+            ORDER BY START_DATE desc
         </if>
         <if test="dataType!='1'.toString()">
             <if test="startDate!=null and startDate!=''">
