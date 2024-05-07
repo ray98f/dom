@@ -217,38 +217,68 @@
         AND APPROVAL_STATUS='0'
     </update>
 
-    <select id="eventList" resultType="com.wzmtr.dom.dto.res.traffic.ProductionInfoResDTO">
-        SELECT ID, RECORD_ID,STATION_CODE,PRODUCTION_TYPE,TITLE,WORK_TIME,WORK_DEPT,WORK_CONTENT,
-        EVENT_TIME,EVENT_DESC,EVENT_AFFECT,EVENT_HANDLE,PIC_URL,IS_CLOSE,
-        DATA_TYPE,VERSION
-        FROM TRAFFIC_PRODUCTION_INFO
-        WHERE DEL_FLAG='0'
+    <select id="eventPage" resultType="com.wzmtr.dom.dto.res.traffic.ProductionInfoResDTO">
+        SELECT t1.ID, t1.RECORD_ID,t1.STATION_CODE,t1.PRODUCTION_TYPE,t1.TITLE,t1.WORK_TIME,t1.WORK_DEPT,t1.WORK_CONTENT,
+        t1.EVENT_TIME,t1.EVENT_DESC,t1.EVENT_AFFECT,t1.EVENT_HANDLE,t1.PIC_URL,t1.IS_CLOSE,t1.RESULT,t2.STATION_NAME,
+        t1.DATA_TYPE,t1.VERSION
+        FROM TRAFFIC_PRODUCTION_INFO t1
+        LEFT JOIN SYS_STATION t2 ON t1.STATION_CODE=t2.STATION_CODE AND t2.OPEN_FLAG='1'
+        WHERE t1.DEL_FLAG='0'
         <if test="stationCode!=null and stationCode!=''">
-            AND STATION_CODE=#{stationCode}
+            AND t1.STATION_CODE=#{stationCode}
         </if>
         <if test="productionType!=null and productionType!=''">
-            AND PRODUCTION_TYPE=#{productionType}
+            AND t1.PRODUCTION_TYPE=#{productionType}
         </if>
         <if test="dataType!=null and dataType!=''">
-            AND DATA_TYPE=#{dataType}
+            AND t1.DATA_TYPE=#{dataType}
         </if>
         <if test="dataType=='1'.toString()">
             <if test="startDate!=null">
-                AND DATA_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+                AND t1.DATA_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
             </if>
             <if test="endDate!=null">
-                AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=DATA_DATE
+                AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=t1.DATA_DATE
             </if>
         </if>
         <if test="dataType!='1'.toString()">
             <if test="startDate!=null">
-                AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+                AND t1.START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
             </if>
             <if test="endDate!=null">
-                AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+                AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=t1.END_DATE
             </if>
         </if>
-        ORDER BY CREATE_DATE desc
+        ORDER BY t1.CREATE_DATE desc
+    </select>
+
+    <select id="listWeeklyRecord" resultType="com.wzmtr.dom.dto.res.traffic.ProductionRecordResDTO">
+        SELECT t1.ID, t1.STATION_CODE, t1.START_DATE, t1.END_DATE
+        FROM TRAFFIC_PRODUCTION_RECORD t1
+        LEFT JOIN SYS_STATION t2 ON t1.STATION_CODE=t2.STATION_CODE AND t2.OPEN_FLAG='1'
+        WHERE t1.DEL_FLAG='0' AND t1.DATA_TYPE='2'
+        <if test="startDate!=null">
+            AND t1.START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate!=null">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=t1.END_DATE
+        </if>
+        ORDER BY t1.CREATE_DATE desc
+    </select>
+
+    <select id="listProductionTwo" resultType="com.wzmtr.dom.dto.res.traffic.ProductionInfoWeeklyResDTO$ProductionTwo">
+        SELECT b.DAY_TIME as TIME, nvl(a.EVENT_DESC,'') as EVENT_DESC
+        FROM (
+        SELECT to_char(t.DATA_DATE,'yyyy-MM-dd') DATA_DATE, t.EVENT_DESC
+        FROM TRAFFIC_PRODUCTION_INFO t WHERE t.DATA_TYPE='1' AND t.STATION_CODE=#{stationCode} AND t.PRODUCTION_TYPE='2'
+        ORDER BY to_char(t.DATA_DATE,'yyyy-MM-dd')  asc
+        ) a
+        RIGHT JOIN (
+        SELECT TO_CHAR(TO_DATE(#{startDate},'yyyy-mm-dd hh24:mi:ss')+ROWNUM-1, 'YYYY-MM-DD') DAY_TIME
+        FROM DUAL
+        CONNECT BY TO_DATE(#{endDate},'yyyy-mm-dd hh24:mi:ss')-TO_DATE(#{startDate},'yyyy-mm-dd hh24:mi:ss')>=ROWNUM
+        ) b ON a.DATA_DATE = b.DAY_TIME
+        ORDER BY b.DAY_TIME
     </select>
 
     <select id="queryDateRange" resultType="com.wzmtr.dom.dto.res.traffic.ProductionInfoResDTO">
@@ -293,6 +323,9 @@
         <if test="isClose!=null and isClose!=''">
             IS_CLOSE,
         </if>
+        <if test="result!=null and result!=''">
+            RESULT,
+        </if>
         DATA_TYPE,
         <if test="dataDate!=null">
             DATA_DATE,
@@ -330,6 +363,9 @@
         </if>
         <if test="isClose!=null and isClose!=''">
             #{isClose},
+        </if>
+        <if test="result!=null and result!=''">
+            #{result},
         </if>
         #{dataType},
         <if test="dataDate!=null">
@@ -374,6 +410,9 @@
         </if>
         <if test="isClose!=null and isClose!=''">
             IS_CLOSE=#{isClose},
+        </if>
+        <if test="result!=null and result!=''">
+            RESULT=#{result},
         </if>
         VERSION=VERSION+1,
         UPDATE_BY=#{updateBy},

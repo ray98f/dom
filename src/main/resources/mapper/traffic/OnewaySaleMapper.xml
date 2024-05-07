@@ -7,11 +7,14 @@
         FROM TRAFFIC_ONEWAY_SALE
         WHERE DEL_FLAG='0'
         AND DATA_TYPE=#{dataType}
-        <if test="startDate!=null">
-            AND START_DATE=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        <if test="dataType=='1'.toString()">
+            DATA_DATE=#{dataDate,jdbcType=TIMESTAMP}
         </if>
-        <if test="endDate!=null">
-            AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        <if test="dataType!='1'.toString()">
+            START_DATE=#{startDate,jdbcType=TIMESTAMP} AND END_DATE=#{endDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="version!=null and version!=''">
+            AND VERSION=#{version,jdbcType=VARCHAR}
         </if>
     </select>
 

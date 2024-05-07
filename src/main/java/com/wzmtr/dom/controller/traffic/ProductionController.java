@@ -5,10 +5,7 @@ import com.wzmtr.dom.constant.ValidationGroup;
 import com.wzmtr.dom.dto.req.traffic.ProductionApprovalReqDTO;
 import com.wzmtr.dom.dto.req.traffic.ProductionInfoReqDTO;
 import com.wzmtr.dom.dto.req.traffic.ProductionRecordReqDTO;
-import com.wzmtr.dom.dto.res.traffic.ProductionApprovalResDTO;
-import com.wzmtr.dom.dto.res.traffic.ProductionDetailResDTO;
-import com.wzmtr.dom.dto.res.traffic.ProductionInfoResDTO;
-import com.wzmtr.dom.dto.res.traffic.ProductionRecordResDTO;
+import com.wzmtr.dom.dto.res.traffic.*;
 import com.wzmtr.dom.entity.BaseIdsEntity;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
@@ -33,7 +30,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/traffic/production")
-@Api(tags = "客运部-安全生产情况汇总")
+@Api(tags = "客运部-安全生产情况")
 @Validated
 public class ProductionController {
 
@@ -133,6 +130,27 @@ public class ProductionController {
                                                         @RequestParam(required = false) String endDate,
                                                         @Valid PageReqDTO pageReqDTO) {
         return PageResponse.of(productionService.eventList(stationCode, productionType, dataType, startDate, endDate, pageReqDTO));
+    }
+
+    /**
+     * 安全生产事件-施工异常-列表-周报
+     * @param stationCode 车站编码
+     * @param productionType 事件类型
+     * @param dataType 数据类型 1日报 2周报 3月报
+     * @param startDate 起始日期
+     * @param endDate 终止日期
+     * @param pageReqDTO 分页参数
+     * @return 安全生产事件-施工异常-列表-周报
+     */
+    @GetMapping("/weekly/eventList")
+    @ApiOperation(value = "安全生产事件-施工异常-列表-周报")
+    public PageResponse<ProductionInfoWeeklyResDTO> weeklyEventList(@RequestParam(required = false) String stationCode,
+                                                                    @RequestParam(required = false) String productionType,
+                                                                    @RequestParam(required = false) String dataType,
+                                                                    @RequestParam(required = false) String startDate,
+                                                                    @RequestParam(required = false) String endDate,
+                                                                    @Valid PageReqDTO pageReqDTO) {
+        return PageResponse.of(productionService.weeklyEventList(stationCode, productionType, dataType, startDate, endDate, pageReqDTO));
     }
 
     /**

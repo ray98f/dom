@@ -275,7 +275,32 @@ public class ProductionServiceImpl implements ProductionService {
     public Page<ProductionInfoResDTO> eventList(String stationCode, String productionType, String dataType,
                                                 String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return productionMapper.eventList(pageReqDTO.of(), stationCode, productionType, dataType, startDate, endDate);
+        return productionMapper.eventPage(pageReqDTO.of(), stationCode, productionType, dataType, startDate, endDate);
+    }
+
+    @Override
+    public Page<ProductionInfoWeeklyResDTO> weeklyEventList(String stationCode, String productionType, String dataType,
+                                                            String startDate, String endDate, PageReqDTO pageReqDTO) {
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        Page<ProductionInfoWeeklyResDTO> resPage = new Page<>();
+        List<ProductionInfoWeeklyResDTO> resList = new ArrayList<>();
+        Page<ProductionRecordResDTO> page = productionMapper.listWeeklyRecord(pageReqDTO.of(), startDate, endDate);
+        List<ProductionRecordResDTO> list = page.getRecords();
+        if (StringUtils.isNotEmpty(list)) {
+            for (ProductionRecordResDTO record : list) {
+                ProductionInfoWeeklyResDTO res = new ProductionInfoWeeklyResDTO();
+                res.setStationCode(record.getStationCode());
+                res.setStationName(record.getStationName());
+                res.setProductionTwoList(productionMapper.listProductionTwo(record.getStationCode(), startDate + "00:00:00", endDate + " 23:59:59"));
+                resList.add(res);
+            }
+        }
+        resPage.setRecords(resList);
+        resPage.setPages(page.getPages());
+        resPage.setTotal(page.getTotal());
+        resPage.setSize(page.getSize());
+        resPage.setCurrent(page.getCurrent());
+        return resPage;
     }
 
     @Override
