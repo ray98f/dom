@@ -1,7 +1,7 @@
 package com.wzmtr.dom.impl.vehicle;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.system.ApprovalReqDTO;
 import com.wzmtr.dom.dto.req.system.ReportUpdateReqDTO;
@@ -44,7 +44,7 @@ public class VehicleReportServiceImpl implements VehicleReportService {
 
     @Override
     public Page<DailyReportResDTO> pageDaily(String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return vehicleReportMapper.pageDaily(pageReqDTO.of(), startDate, endDate);
     }
 
@@ -91,7 +91,7 @@ public class VehicleReportServiceImpl implements VehicleReportService {
 
     @Override
     public Page<WeeklyReportResDTO> pageWeekly(String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return vehicleReportMapper.pageWeekly(pageReqDTO.of(), startDate, endDate);
     }
 
@@ -132,7 +132,7 @@ public class VehicleReportServiceImpl implements VehicleReportService {
 
     @Override
     public Page<MonthlyReportResDTO> pageMonthly(String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return vehicleReportMapper.pageMonthly(pageReqDTO.of(), startDate, endDate);
     }
 

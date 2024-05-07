@@ -1,7 +1,7 @@
 package com.wzmtr.dom.impl.system;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.dto.req.system.StationRoleReqDTO;
 import com.wzmtr.dom.dto.res.system.StationRoleResDTO;
 import com.wzmtr.dom.entity.PageReqDTO;
@@ -28,7 +28,7 @@ public class StationRoleServiceImpl implements StationRoleService {
 
     @Override
     public Page<StationRoleResDTO> page(PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return stationRoleMapper.page(pageReqDTO.of());
     }
 

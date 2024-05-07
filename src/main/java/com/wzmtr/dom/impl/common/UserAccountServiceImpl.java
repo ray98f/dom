@@ -1,7 +1,7 @@
 package com.wzmtr.dom.impl.common;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.dto.res.common.UserAccountResDTO;
 import com.wzmtr.dom.dto.res.common.UserCenterInfoResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
@@ -38,7 +38,7 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     @Override
     public Page<UserAccountResDTO> listUserAccount(String searchKey, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return userAccountMapper.listUserAccount(pageReqDTO.of(), searchKey);
     }
 

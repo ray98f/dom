@@ -170,8 +170,26 @@ public interface ProductionMapper {
      * @param endDate 查询参数
      * @return 列表
      */
-    Page<ProductionInfoResDTO> eventList(Page<ProductionInfoResDTO> page, String stationCode, String productionType,
+    Page<ProductionInfoResDTO> eventPage(Page<ProductionInfoResDTO> page, String stationCode, String productionType,
                                          String dataType, String startDate, String endDate);
+
+    /**
+     * 周报获取安全生产具体情况记录
+     * @param page 分页参数
+     * @param startDate 查询参数
+     * @param endDate 查询参数
+     * @return 列表
+     */
+    Page<ProductionRecordResDTO> listWeeklyRecord(Page<ProductionRecordResDTO> page, String startDate, String endDate);
+
+    /**
+     * 获取安全生产具体情况施工异常详情
+     * @param stationCode 车站编号
+     * @param startDate 开始时间
+     * @param endDate 结束时间
+     * @return 安全生产具体情况施工异常详情
+     */
+    List<ProductionInfoWeeklyResDTO.ProductionTwo> listProductionTwo(String stationCode, String startDate, String endDate);
 
     /**
      * 事件信息-日期范围

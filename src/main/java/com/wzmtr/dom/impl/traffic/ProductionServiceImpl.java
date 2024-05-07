@@ -2,7 +2,7 @@ package com.wzmtr.dom.impl.traffic;
 
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.traffic.ProductionApprovalReqDTO;
 import com.wzmtr.dom.dto.req.traffic.ProductionInfoReqDTO;
@@ -49,7 +49,7 @@ public class ProductionServiceImpl implements ProductionService {
 
     @Override
     public Page<ProductionRecordResDTO> list(String dataType, String stationCode, String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return productionMapper.list(pageReqDTO.of(), dataType, stationCode, startDate, endDate);
     }
 
@@ -274,8 +274,34 @@ public class ProductionServiceImpl implements ProductionService {
     @Override
     public Page<ProductionInfoResDTO> eventList(String stationCode, String productionType, String dataType,
                                                 String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return productionMapper.eventList(pageReqDTO.of(), stationCode, productionType, dataType, startDate, endDate);
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        return productionMapper.eventPage(pageReqDTO.of(), stationCode, productionType, dataType, startDate, endDate);
+    }
+
+    @Override
+    public Page<ProductionInfoWeeklyResDTO> weeklyEventList(String stationCode, String productionType, String dataType,
+                                                            String startDate, String endDate, PageReqDTO pageReqDTO) {
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        Page<ProductionInfoWeeklyResDTO> resPage = new Page<>();
+        List<ProductionInfoWeeklyResDTO> resList = new ArrayList<>();
+        Page<ProductionRecordResDTO> page = productionMapper.listWeeklyRecord(pageReqDTO.of(), startDate, endDate);
+        List<ProductionRecordResDTO> list = page.getRecords();
+        if (StringUtils.isNotEmpty(list)) {
+            for (ProductionRecordResDTO record : list) {
+                ProductionInfoWeeklyResDTO res = new ProductionInfoWeeklyResDTO();
+                res.setStationCode(record.getStationCode());
+                res.setStationName(record.getStationName());
+                res.setProductionTwoList(productionMapper.listProductionTwo(record.getStationCode(),
+                        startDate + " 00:00:00", endDate + " 23:59:59"));
+                resList.add(res);
+            }
+        }
+        resPage.setRecords(resList);
+        resPage.setPages(page.getPages());
+        resPage.setTotal(page.getTotal());
+        resPage.setSize(page.getSize());
+        resPage.setCurrent(page.getCurrent());
+        return resPage;
     }
 
     @Override
@@ -326,7 +352,7 @@ public class ProductionServiceImpl implements ProductionService {
 
     @Override
     public Page<ProductionApprovalResDTO> queryApproval(CurrentLoginUser currentLoginUser, String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return productionMapper.queryApproval(pageReqDTO.of(), startDate, endDate);
     }
 

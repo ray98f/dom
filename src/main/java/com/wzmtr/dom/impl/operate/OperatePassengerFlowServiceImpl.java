@@ -6,7 +6,7 @@ import cn.hutool.core.util.HexUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dataobject.operate.OperatePassengerFlowDetailDO;
@@ -65,7 +65,7 @@ public class OperatePassengerFlowServiceImpl implements OperatePassengerFlowServ
 
     @Override
     public Page<PassengerFlowListResDTO> list(String dataType, String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         Page<PassengerFlowListResDTO> list = passengerFlowDetailMapper.list(pageReqDTO.of(), dataType, startDate, endDate);
         // 周报月报则多返回两个列表
         if (!DataType.DAY.getCode().equals(dataType)) {

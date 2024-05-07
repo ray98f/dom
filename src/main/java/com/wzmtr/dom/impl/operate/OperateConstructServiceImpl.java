@@ -48,7 +48,7 @@ public class OperateConstructServiceImpl implements OperateConstructService {
 
     @Override
     public Page<ConstructRecordResDTO> list(String dataType, String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return operateConstructMapper.list(pageReqDTO.of(), dataType, startDate, endDate);
     }
 
@@ -140,7 +140,7 @@ public class OperateConstructServiceImpl implements OperateConstructService {
 
     @Override
     public Page<ConstructPlanResDTO> planList(String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return operateConstructMapper.planList(pageReqDTO.of(), startDate, endDate);
     }
 
@@ -175,7 +175,7 @@ public class OperateConstructServiceImpl implements OperateConstructService {
 
     @Override
     public Page<ConstructEventResDTO> eventList(String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return operateConstructMapper.eventList(pageReqDTO.of(), startDate, endDate);
     }
 

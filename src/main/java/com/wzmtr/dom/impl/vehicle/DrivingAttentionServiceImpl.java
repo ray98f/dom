@@ -1,7 +1,7 @@
 package com.wzmtr.dom.impl.vehicle;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.dto.req.vehicle.DrivingAttentionReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.DrivingAttentionResDTO;
 import com.wzmtr.dom.entity.PageReqDTO;
@@ -30,7 +30,7 @@ public class DrivingAttentionServiceImpl implements DrivingAttentionService {
 
     @Override
     public Page<DrivingAttentionResDTO> page(String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return dispatchHandoverMapper.page(pageReqDTO.of(), startDate, endDate);
     }
 

@@ -23,7 +23,6 @@ import javax.validation.Valid;
 
 /**
  * 运营日报-初期运营指标
- *
  * @author zhangxin
  * @version 1.0
  * @date 2024/3/25 19:19
@@ -39,19 +38,19 @@ public class OperateIndicatorController {
 
     /**
      * 初期运营指标-列表
-     * @param dataType 数据类型
-     * @param startDate 起始日期
-     * @param endDate 终止日期
+     * @param dataType   数据类型
+     * @param startDate  起始日期
+     * @param endDate    终止日期
      * @param pageReqDTO 分页参数
      * @return 初期运营指标-列表
      */
     @GetMapping("/list")
     @ApiOperation(value = "初期运营指标-列表")
-    public PageResponse<IndicatorRecordResDTO> list(@RequestParam  String dataType,
+    public PageResponse<IndicatorRecordResDTO> list(@RequestParam String dataType,
                                                     @RequestParam(required = false) String startDate,
                                                     @RequestParam(required = false) String endDate,
                                                     @Valid PageReqDTO pageReqDTO) {
-        return PageResponse.of(indicatorService.list(dataType,startDate,endDate,pageReqDTO));
+        return PageResponse.of(indicatorService.list(dataType, startDate, endDate, pageReqDTO));
     }
 
     /**
@@ -64,7 +63,7 @@ public class OperateIndicatorController {
     public DataResponse<IndicatorDetailResDTO> add(@RequestParam(required = false) String id,
                                                    @RequestParam(required = false) String startDate,
                                                    @RequestParam(required = false) String endDate) {
-        return DataResponse.of(indicatorService.detail(id,startDate,endDate));
+        return DataResponse.of(indicatorService.detail(id, startDate, endDate));
     }
 
     /**
@@ -77,7 +76,7 @@ public class OperateIndicatorController {
     public DataResponse<T> add(@CurrUser CurrentLoginUser currentLoginUser,
                                @Validated({ValidationGroup.create.class})
                                @RequestBody IndicatorRecordReqDTO indicatorRecordReqDTO) {
-        indicatorService.add(currentLoginUser,indicatorRecordReqDTO);
+        indicatorService.add(currentLoginUser, indicatorRecordReqDTO);
         return DataResponse.success();
     }
 
@@ -89,9 +88,9 @@ public class OperateIndicatorController {
     @PostMapping("/modify")
     @ApiOperation(value = "初期运营指标-编辑")
     public DataResponse<T> modify(@CurrUser CurrentLoginUser currentLoginUser,
-                               @Validated({ValidationGroup.create.class})
-                               @RequestBody IndicatorRecordReqDTO indicatorRecordReqDTO) {
-        indicatorService.modify(currentLoginUser,indicatorRecordReqDTO);
+                                  @Validated({ValidationGroup.create.class})
+                                  @RequestBody IndicatorRecordReqDTO indicatorRecordReqDTO) {
+        indicatorService.modify(currentLoginUser, indicatorRecordReqDTO);
         return DataResponse.success();
     }
 
@@ -105,7 +104,7 @@ public class OperateIndicatorController {
     public DataResponse<T> modify(@CurrUser CurrentLoginUser currentLoginUser,
                                   @Validated({ValidationGroup.create.class})
                                   @RequestBody IndicatorInfoReqDTO indicatorInfoReqDTO) {
-        indicatorService.modifyInfo(currentLoginUser,indicatorInfoReqDTO);
+        indicatorService.modifyInfo(currentLoginUser, indicatorInfoReqDTO);
         return DataResponse.success();
     }
 
@@ -119,7 +118,7 @@ public class OperateIndicatorController {
     public DataResponse<T> modify(@CurrUser CurrentLoginUser currentLoginUser,
                                   @Validated({ValidationGroup.create.class})
                                   @RequestBody IndicatorPowerReqDTO indicatorPowerReqDTO) {
-        indicatorService.modifyPower(currentLoginUser,indicatorPowerReqDTO);
+        indicatorService.modifyPower(currentLoginUser, indicatorPowerReqDTO);
         return DataResponse.success();
     }
 

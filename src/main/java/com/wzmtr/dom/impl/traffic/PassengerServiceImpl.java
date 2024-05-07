@@ -5,7 +5,7 @@ import cn.hutool.core.util.HexUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.traffic.PassengerInfoReqDTO;
 import com.wzmtr.dom.dto.req.traffic.PassengerRecordReqDTO;
@@ -58,7 +58,7 @@ public class PassengerServiceImpl implements PassengerService {
 
     @Override
     public Page<PassengerResDTO> list(String dataType, String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return passengerMapper.list(pageReqDTO.of(), dataType, startDate, endDate);
     }
 

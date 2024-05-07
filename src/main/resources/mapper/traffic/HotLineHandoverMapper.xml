@@ -38,7 +38,7 @@
             AND hr.ID=#{id}
         </if>
         <if test="dataType!=null and dataType!=''">
-            AND DATA_TYPE=#{dataType}
+            AND hr.DATA_TYPE=#{dataType}
         </if>
         <if test="dataType=='1'.toString()">
             <if test="startDate!=null and startDate!=''">
