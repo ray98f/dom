@@ -291,7 +291,8 @@ public class ProductionServiceImpl implements ProductionService {
                 ProductionInfoWeeklyResDTO res = new ProductionInfoWeeklyResDTO();
                 res.setStationCode(record.getStationCode());
                 res.setStationName(record.getStationName());
-                res.setProductionTwoList(productionMapper.listProductionTwo(record.getStationCode(), startDate + "00:00:00", endDate + " 23:59:59"));
+                res.setProductionTwoList(productionMapper.listProductionTwo(record.getStationCode(),
+                        startDate + " 00:00:00", endDate + " 23:59:59"));
                 resList.add(res);
             }
         }

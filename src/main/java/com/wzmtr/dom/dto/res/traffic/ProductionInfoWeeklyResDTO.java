@@ -1,11 +1,8 @@
 package com.wzmtr.dom.dto.res.traffic;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -42,12 +39,7 @@ public class ProductionInfoWeeklyResDTO {
          * 施工作业时间
          */
         @ApiModelProperty(value = "施工作业时间")
-        @DateTimeFormat(pattern = "yyyy-MM-dd")
-        @JsonFormat(
-                pattern = "yyyy-MM-dd",
-                timezone = "GMT+8"
-        )
-        private Date time;
+        private String eventTime;
         /**
          * 事件描述
          */

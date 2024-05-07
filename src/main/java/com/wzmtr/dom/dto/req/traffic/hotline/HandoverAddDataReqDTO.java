@@ -37,4 +37,9 @@ public class HandoverAddDataReqDTO extends BaseEntity {
      */
     @ApiModelProperty("处理结果")
     private String result;
+    /**
+     * 版本号(乐观锁)
+     */
+    @ApiModelProperty("版本号(乐观锁)")
+    private String version;
 }

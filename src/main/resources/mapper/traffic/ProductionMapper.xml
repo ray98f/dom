@@ -267,7 +267,7 @@
     </select>
 
     <select id="listProductionTwo" resultType="com.wzmtr.dom.dto.res.traffic.ProductionInfoWeeklyResDTO$ProductionTwo">
-        SELECT b.DAY_TIME as TIME, nvl(a.EVENT_DESC,'') as EVENT_DESC
+        SELECT b.DAY_TIME as EVENT_TIME, nvl(a.EVENT_DESC,'') as EVENT_DESC
         FROM (
         SELECT to_char(t.DATA_DATE,'yyyy-MM-dd') DATA_DATE, t.EVENT_DESC
         FROM TRAFFIC_PRODUCTION_INFO t WHERE t.DATA_TYPE='1' AND t.STATION_CODE=#{stationCode} AND t.PRODUCTION_TYPE='2'
