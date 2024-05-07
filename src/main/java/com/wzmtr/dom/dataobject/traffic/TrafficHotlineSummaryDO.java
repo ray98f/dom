@@ -2,8 +2,10 @@ package com.wzmtr.dom.dataobject.traffic;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -96,6 +98,11 @@ public class TrafficHotlineSummaryDO implements Serializable {
      * 数据所属日期
      */
     @ApiModelProperty("数据所属日期")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd",
+            timezone = "GMT+8"
+    )
     private Date dataDate;
     /**
      * 数据类型 1日报 2周报 3月报
@@ -106,11 +113,21 @@ public class TrafficHotlineSummaryDO implements Serializable {
      * 数据起始日期
      */
     @ApiModelProperty("数据起始日期")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd",
+            timezone = "GMT+8"
+    )
     private Date startDate;
     /**
      * 数据结束日期
      */
     @ApiModelProperty("数据结束日期")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd",
+            timezone = "GMT+8"
+    )
     private Date endDate;
     /**
      * 删除标识

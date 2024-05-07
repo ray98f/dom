@@ -42,8 +42,9 @@ public class TrainRecordController {
     @ApiOperation(value = "班组培训情况列表(分页)")
     public PageResponse<TrainRecordResDTO> page(@RequestParam(required = false) String startDate,
                                                 @RequestParam(required = false) String endDate,
+                                                @RequestParam String dataType,
                                                 @Valid PageReqDTO pageReqDTO) {
-        return PageResponse.of(trainRecordService.page(startDate, endDate, pageReqDTO));
+        return PageResponse.of(trainRecordService.page(dataType,startDate, endDate, pageReqDTO));
     }
 
     /**

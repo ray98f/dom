@@ -6,7 +6,7 @@
         SELECT *
         FROM OPERATE_CONSTRUCT_RECORD
         WHERE DEL_FLAG='0'
-        AND DATA_TYPE = #{dataType}
+        AND DATA_TYPE=#{dataType}
         <if test="startDate != null and startDate!=''">
             AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
@@ -19,14 +19,23 @@
     <select id="queryInfoById" resultType="com.wzmtr.dom.dto.res.operate.ConstructRecordResDTO">
         SELECT *
         FROM OPERATE_CONSTRUCT_RECORD
-        WHERE ID=#{id} AND DEL_FLAG = '0'
+        WHERE DEL_FLAG = '0'
+        <if test="id != null">
+            AND ID=#{id}
+        </if>
+        <if test="startDate != null">
+            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
     </select>
 
     <select id="checkExist" resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM OPERATE_CONSTRUCT_RECORD
         WHERE DEL_FLAG = '0'
-        AND DATA_TYPE = #{dataType}
+        AND DATA_TYPE=#{dataType}
         <if test="startDate != null">
             AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
@@ -115,7 +124,7 @@
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate
         WHERE ID=#{id}
-        AND VERSION = #{version}
+        AND VERSION=#{version}
     </update>
 
     <select id="planList" resultType="com.wzmtr.dom.dto.res.operate.ConstructPlanResDTO">
@@ -399,7 +408,7 @@
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate
         WHERE ID=#{id}
-        AND VERSION = #{version}
+        AND VERSION=#{version}
     </update>
 
     <delete id="deleteEvent">

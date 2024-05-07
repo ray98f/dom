@@ -30,43 +30,78 @@ public class OperateFaultStatisticsReqDTO extends BaseEntity {
     @ApiModelProperty(value = "数据终止日期")
     private String endDate;
     /**
-     * 车辆故障数量
+     * 变配电
      */
-    @ApiModelProperty("车辆故障数量")
-    private Integer vehicleNum;
+    @ApiModelProperty("变配电")
+    private Integer changeDistributionNum;
     /**
-     * 供电
+     * 接触网
      */
-    @ApiModelProperty("供电")
-    private Integer powerNum;
-    /**
-     * 信号
-     */
-    @ApiModelProperty("信号")
-    private Integer signalNum;
+    @ApiModelProperty("接触网")
+    private Integer contactNetworkNum;
     /**
      * 通信
      */
     @ApiModelProperty("通信")
     private Integer communicationNum;
     /**
-     * 工建
+     * 信号
      */
-    @ApiModelProperty("工建")
-    private Integer industryNum;
+    @ApiModelProperty("信号")
+    private Integer signalNum;
     /**
-     * 机电
+     * 站台门
      */
-    @ApiModelProperty("机电")
-    private Integer mechanismNum;
+    @ApiModelProperty("站台门")
+    private Integer platformDoorsNum;
+    /**
+     * 风水电
+     */
+    @ApiModelProperty("风水电")
+    private Integer hydropowerNum;
+    /**
+     * 房建
+     */
+    @ApiModelProperty("房建")
+    private Integer buildingConstructionNum;
+    /**
+     * 综合监控
+     */
+    @ApiModelProperty("综合监控")
+    private Integer monitorNum;
     /**
      * AFC
      */
     @ApiModelProperty("AFC")
     private Integer afcNum;
     /**
-     * 其他
+     * FAS
      */
-    @ApiModelProperty("其他")
-    private Integer elseNum;
+    @ApiModelProperty("FAS")
+    private Integer fasNum;
+    /**
+     * 电扶梯
+     */
+    @ApiModelProperty("电扶梯")
+    private Integer escalatorNum;
+    /**
+     * 公务
+     */
+    @ApiModelProperty("公务")
+    private Integer officialDutiesNum;
+    /**
+     * 桥隧
+     */
+    @ApiModelProperty("桥隧")
+    private Integer bridgeTunnelNum;
+    /**
+     * 工程车
+     */
+    @ApiModelProperty("工程车")
+    private Integer engineeringVehicleNum;
+    /**
+     * 车辆
+     */
+    @ApiModelProperty("车辆")
+    private Integer vehicleNum;
 }

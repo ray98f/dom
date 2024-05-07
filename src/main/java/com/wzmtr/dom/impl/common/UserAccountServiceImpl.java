@@ -1,7 +1,7 @@
 package com.wzmtr.dom.impl.common;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.dto.res.common.UserAccountResDTO;
 import com.wzmtr.dom.dto.res.common.UserCenterInfoResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
@@ -12,6 +12,7 @@ import com.wzmtr.dom.mapper.common.UserAccountMapper;
 import com.wzmtr.dom.service.common.UserAccountService;
 import com.wzmtr.dom.shiro.model.Person;
 import com.wzmtr.dom.shiro.service.IPersonService;
+import com.wzmtr.dom.utils.StringUtils;
 import com.wzmtr.dom.utils.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     @Override
     public Page<UserAccountResDTO> listUserAccount(String searchKey, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return userAccountMapper.listUserAccount(pageReqDTO.of(), searchKey);
     }
 
@@ -50,7 +51,7 @@ public class UserAccountServiceImpl implements UserAccountService {
     public String getToken(String no) {
         CurrentLoginUser person = new CurrentLoginUser();
             Person p = personService.searchPersonByNo(no);
-            if (p != null) {
+            if (StringUtils.isNotNull(p)) {
                 person.setPersonId(p.getId());
                 person.setPersonNo(p.getNo());
                 person.setPersonName(p.getName());
@@ -64,6 +65,7 @@ public class UserAccountServiceImpl implements UserAccountService {
                 person.setOfficeName(p.getOfficeName());
                 person.setOfficeAreaId(p.getOfficeAreaId());
                 person.setNames(p.getNames());
+                person.setStationCode(p.getStationCode());
             } else {
                 throw new CommonException(ErrorCode.USER_NOT_EXIST);
             }

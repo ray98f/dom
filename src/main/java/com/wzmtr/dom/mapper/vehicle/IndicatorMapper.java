@@ -76,6 +76,13 @@ public interface IndicatorMapper {
     void modifyCount(String id,String startDate,String endDate);
 
     /**
+     * 周报/月报-更新统计数据
+     * @param startDate 入参数
+     * @param endDate 入参数
+     */
+    void modifyCount2(String startDate,String endDate);
+
+    /**
      * 删除
      * @param ids ids
      * @param userId 用户id

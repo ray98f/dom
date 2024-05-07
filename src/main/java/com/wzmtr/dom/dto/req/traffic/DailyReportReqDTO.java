@@ -6,8 +6,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- *  客运部日报请求类
- * @author  Ray
+ * 客运部日报请求类
+ * @author zhangxin
  * @version 1.0
  * @date 2024/03/14
  */

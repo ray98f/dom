@@ -8,16 +8,13 @@ import com.wzmtr.dom.dto.res.operate.IndicatorDetailResDTO;
 import com.wzmtr.dom.dto.res.operate.IndicatorInfoResDTO;
 import com.wzmtr.dom.dto.res.operate.IndicatorPowerResDTO;
 import com.wzmtr.dom.dto.res.operate.IndicatorRecordResDTO;
-import com.wzmtr.dom.dto.res.vehicle.IndicatorResDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
 import java.util.List;
 
 /**
  * 运营日报-初期运营指标
- *
  * @author zhangxin
  * @version 1.0
  * @date 2024/3/11 16:25
@@ -41,21 +38,21 @@ public interface OperateIndicatorMapper {
      * @param id 入参数
      * @return LineEventResDTO
      */
-    IndicatorDetailResDTO queryInfoById(String id);
+    IndicatorDetailResDTO queryInfoById(String id,String startDate, String endDate);
 
     /**
      * 详情
      * @param recordId 入参数
       @return LineEventResDTO
      */
-    List<IndicatorInfoResDTO> infoList(String recordId);
+    List<IndicatorInfoResDTO> infoList(String recordId,String startDate, String endDate);
 
     /**
      * 详情
      * @param recordId 入参数
      @return LineEventResDTO
      */
-    IndicatorPowerResDTO queryPower(String recordId);
+    IndicatorPowerResDTO queryPower(String recordId,String startDate, String endDate);
     IndicatorPowerResDTO queryPowerByDate(String startDate, String endDate, String dataType);
 
     /**

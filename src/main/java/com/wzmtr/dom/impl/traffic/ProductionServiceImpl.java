@@ -2,7 +2,7 @@ package com.wzmtr.dom.impl.traffic;
 
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.traffic.ProductionApprovalReqDTO;
 import com.wzmtr.dom.dto.req.traffic.ProductionInfoReqDTO;
@@ -26,13 +26,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 客运部-安全生产情况
- *
  * @author zhangxin
  * @version 1.0
  * @date 2024/3/19 17:23
@@ -52,17 +49,17 @@ public class ProductionServiceImpl implements ProductionService {
 
     @Override
     public Page<ProductionRecordResDTO> list(String dataType, String stationCode, String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return productionMapper.list(pageReqDTO.of(),dataType,stationCode,startDate,endDate);
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        return productionMapper.list(pageReqDTO.of(), dataType, stationCode, startDate, endDate);
     }
 
     @Override
-    public ProductionDetailResDTO detail(String id) {
-        ProductionDetailResDTO detail = productionMapper.queryInfoById(id);
-        ProductionSummaryResDTO summaryRes = productionSummaryMapper.queryInfoByDate(detail.getStationCode(),detail.getDataType(),
-                DateUtil.formatDate(detail.getStartDate()),DateUtil.formatDate(detail.getEndDate()));
+    public ProductionDetailResDTO detail(String id, String startDate, String endDate) {
+        ProductionDetailResDTO detail = productionMapper.queryInfoById(id, startDate, endDate);
+        ProductionSummaryResDTO summaryRes = productionSummaryMapper.queryInfoByDate(detail.getStationCode(), detail.getDataType(),
+                DateUtil.formatDate(detail.getStartDate()), DateUtil.formatDate(detail.getEndDate()));
 
-        if(summaryRes != null){
+        if (summaryRes != null) {
             detail.setType1Desc(summaryRes.getType1Desc());
             detail.setType2Desc(summaryRes.getType2Desc());
             detail.setType3Desc(summaryRes.getType3Desc());
@@ -72,9 +69,9 @@ public class ProductionServiceImpl implements ProductionService {
         }
 
         //获取前一日/周/月数据
-        ProductionSummaryResDTO preSummaryRes = productionSummaryMapper.queryPreInfoByDate(detail.getStationCode(),detail.getDataType(),
-                DateUtil.formatDate(detail.getStartDate()),DateUtil.formatDate(detail.getEndDate()));
-        if(preSummaryRes != null){
+        ProductionSummaryResDTO preSummaryRes = productionSummaryMapper.queryPreInfoByDate(detail.getStationCode(), detail.getDataType(),
+                DateUtil.formatDate(detail.getStartDate()), DateUtil.formatDate(detail.getEndDate()));
+        if (preSummaryRes != null) {
             detail.setType1PreCount(preSummaryRes.getType1Count());
             detail.setType2PreCount(preSummaryRes.getType2Count());
             detail.setType3PreCount(preSummaryRes.getType3Count());
@@ -87,14 +84,14 @@ public class ProductionServiceImpl implements ProductionService {
     }
 
     @Override
-    public ProductionDetailResDTO queryInfo(String dataType,String stationCode, String startDate,
+    public ProductionDetailResDTO queryInfo(String dataType, String stationCode, String startDate,
                                             String endDate) {
-        ProductionDetailResDTO detail = productionMapper.queryInfoByStation(dataType,stationCode,startDate,endDate);
-        if(detail != null){
-            ProductionSummaryResDTO summaryRes = productionSummaryMapper.queryInfoByDate(detail.getStationCode(),detail.getDataType(),
-                    DateUtil.formatDate(detail.getStartDate()),DateUtil.formatDate(detail.getEndDate()));
+        ProductionDetailResDTO detail = productionMapper.queryInfoByStation(dataType, stationCode, startDate, endDate);
+        if (detail != null) {
+            ProductionSummaryResDTO summaryRes = productionSummaryMapper.queryInfoByDate(detail.getStationCode(), detail.getDataType(),
+                    DateUtil.formatDate(detail.getStartDate()), DateUtil.formatDate(detail.getEndDate()));
 
-            if(summaryRes != null){
+            if (summaryRes != null) {
                 detail.setType1Desc(summaryRes.getType1Desc());
                 detail.setType2Desc(summaryRes.getType2Desc());
                 detail.setType3Desc(summaryRes.getType3Desc());
@@ -104,9 +101,9 @@ public class ProductionServiceImpl implements ProductionService {
             }
 
             //获取前一日/周/月数据
-            ProductionSummaryResDTO preSummaryRes = productionSummaryMapper.queryPreInfoByDate(detail.getStationCode(),detail.getDataType(),
-                    DateUtil.formatDate(detail.getStartDate()),DateUtil.formatDate(detail.getEndDate()));
-            if(preSummaryRes != null){
+            ProductionSummaryResDTO preSummaryRes = productionSummaryMapper.queryPreInfoByDate(detail.getStationCode(), detail.getDataType(),
+                    DateUtil.formatDate(detail.getStartDate()), DateUtil.formatDate(detail.getEndDate()));
+            if (preSummaryRes != null) {
                 detail.setType1PreCount(preSummaryRes.getType1Count());
                 detail.setType2PreCount(preSummaryRes.getType2Count());
                 detail.setType3PreCount(preSummaryRes.getType3Count());
@@ -121,22 +118,22 @@ public class ProductionServiceImpl implements ProductionService {
 
     @Override
     public void add(CurrentLoginUser currentLoginUser, ProductionRecordReqDTO productionRecordReqDTO) {
-        if(currentLoginUser.getStationCode() == null){
+        if (currentLoginUser.getStationCode() == null) {
             throw new CommonException(ErrorCode.USER_NOT_BIND_STATION);
         }
         int existFlag = productionMapper.checkExist(productionRecordReqDTO.getDataType(),
                 currentLoginUser.getStationCode(),
                 productionRecordReqDTO.getStartDate(),
                 productionRecordReqDTO.getEndDate());
-        if(existFlag > 0){
+        if (existFlag > 0) {
             throw new CommonException(ErrorCode.DATA_EXIST);
         }
 
         //日报类型
-        if(CommonConstants.DATA_TYPE_DAILY.equals(productionRecordReqDTO.getDataType())){
+        if (CommonConstants.DATA_TYPE_DAILY.equals(productionRecordReqDTO.getDataType())) {
 
             //日期校验
-            if(!productionRecordReqDTO.getStartDate().equals(productionRecordReqDTO.getEndDate())){
+            if (!productionRecordReqDTO.getStartDate().equals(productionRecordReqDTO.getEndDate())) {
                 throw new CommonException(ErrorCode.DATE_ERROR);
             }
 
@@ -147,15 +144,15 @@ public class ProductionServiceImpl implements ProductionService {
         productionRecordReqDTO.setCreateBy(currentLoginUser.getPersonId());
         productionRecordReqDTO.setUpdateBy(currentLoginUser.getPersonId());
         productionRecordReqDTO.setId(TokenUtils.getUuId());
-        try{
+        try {
             productionMapper.add(productionRecordReqDTO);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CommonException(ErrorCode.INSERT_ERROR);
         }
 
         //更新周、月统计数
-        if(CommonConstants.DATA_TYPE_MONTHLY.equals(productionRecordReqDTO.getDataType())
-                || CommonConstants.DATA_TYPE_WEEKLY.equals(productionRecordReqDTO.getDataType())){
+        if (CommonConstants.DATA_TYPE_MONTHLY.equals(productionRecordReqDTO.getDataType())
+                || CommonConstants.DATA_TYPE_WEEKLY.equals(productionRecordReqDTO.getDataType())) {
             productionMapper.modifyRecordCount(productionRecordReqDTO.getId(),
                     productionRecordReqDTO.getStationCode(),
                     productionRecordReqDTO.getStartDate(),
@@ -173,15 +170,15 @@ public class ProductionServiceImpl implements ProductionService {
         try {
             //查询本日是否已有审核记录
             ProductionApprovalResDTO approvalRes = productionMapper.queryApprovalByDate(productionRecordReqDTO.getDataType(),
-                    productionRecordReqDTO.getStartDate(),productionRecordReqDTO.getEndDate());
-            String approvalId="";
+                    productionRecordReqDTO.getStartDate(), productionRecordReqDTO.getEndDate());
+            String approvalId = "";
 
-            if(approvalRes == null){
+            if (approvalRes == null) {
 
                 //获取当前审核站
                 StationRoleResDTO stationRoleRes = stationRoleMapper.getCurrentStation();
 
-               //先创建本日审核记录
+                //先创建本日审核记录
                 ProductionApprovalReqDTO approvalReq = new ProductionApprovalReqDTO();
                 approvalReq.setId(TokenUtils.getUuId());
                 approvalReq.setTitle(CommonConstants.DEFAULT_PRODUCTION_TITLE);
@@ -195,15 +192,15 @@ public class ProductionServiceImpl implements ProductionService {
                 productionMapper.createProductionApproval(approvalReq);
                 approvalId = approvalReq.getId();
 
-            }else{
+            } else {
                 approvalId = approvalRes.getId();
 
                 // 已提交车站
                 String submitStation = approvalRes.getSubmitStation();
                 List<String> stationList = Arrays.asList(submitStation.split(CommonConstants.COMMA));
-                if(!stationList.contains(productionRecordReqDTO.getStationCode())){
+                if (!stationList.contains(productionRecordReqDTO.getStationCode())) {
                     stationList.add(productionRecordReqDTO.getStationCode());
-                    submitStation = stationList.stream().collect(Collectors.joining(CommonConstants.COMMA));
+                    submitStation = String.join(CommonConstants.COMMA, stationList);
                 }
                 ProductionApprovalReqDTO approvalReq = new ProductionApprovalReqDTO();
                 approvalReq.setId(approvalId);
@@ -211,12 +208,12 @@ public class ProductionServiceImpl implements ProductionService {
                 productionMapper.modifyProductionApproval(approvalReq);
             }
 
-            productionMapper.createProductionApprovalRelation(TokenUtils.getUuId(),productionRecordReqDTO.getId(),approvalId,currentLoginUser.getPersonId());
+            productionMapper.createProductionApprovalRelation(TokenUtils.getUuId(), productionRecordReqDTO.getId(), approvalId, currentLoginUser.getPersonId());
             int res = productionMapper.modify(productionRecordReqDTO);
-            if( res <= 0){
+            if (res <= 0) {
                 throw new CommonException(ErrorCode.UPDATE_ERROR);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
 
@@ -232,7 +229,7 @@ public class ProductionServiceImpl implements ProductionService {
             productionRecordReqDTO.setId(productionApprovalReqDTO.getRecordId());
 
             // 驳回操作
-            if(CommonConstants.ONE_STRING.equals(productionApprovalReqDTO.getApprovalStatus())){
+            if (CommonConstants.ONE_STRING.equals(productionApprovalReqDTO.getApprovalStatus())) {
                 productionRecordReqDTO.setStatus(CommonConstants.ZERO_STRING);
 
                 //更新已提交车站
@@ -240,18 +237,12 @@ public class ProductionServiceImpl implements ProductionService {
                         productionApprovalReqDTO.getRecordId());
                 String submitStation = approvalRelationRes.getSubmitStation();
 
-                if(StringUtils.isNotEmpty(submitStation)){
+                if (StringUtils.isNotEmpty(submitStation)) {
                     List<String> submitStationList = Arrays.asList(submitStation.split(CommonConstants.COMMA));
 
                     // 已提交车站中删除该车站
-                    Iterator<String> iterator = submitStationList.iterator();
-                    while (iterator.hasNext()) {
-                        String item = iterator.next();
-                        if (item.equals(approvalRelationRes.getSubmitStation())) {
-                            iterator.remove();
-                        }
-                    }
-                    submitStation = submitStationList.stream().collect(Collectors.joining(CommonConstants.COMMA));
+                    submitStationList.removeIf(item -> item.equals(approvalRelationRes.getSubmitStation()));
+                    submitStation = String.join(CommonConstants.COMMA, submitStationList);
                 }
 
                 ProductionApprovalReqDTO approvalReq = new ProductionApprovalReqDTO();
@@ -259,8 +250,8 @@ public class ProductionServiceImpl implements ProductionService {
                 approvalReq.setSubmitStation(submitStation);
                 productionMapper.modifyProductionApproval(approvalReq);
 
-            //通过
-            }else{
+                //通过
+            } else {
                 productionRecordReqDTO.setStatus(CommonConstants.TWO_STRING);
             }
 
@@ -270,46 +261,68 @@ public class ProductionServiceImpl implements ProductionService {
                     productionApprovalReqDTO.getApprovalStatus(),
                     currentLoginUser.getPersonId());
             productionMapper.modify(productionRecordReqDTO);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
 
         //通知车站修改
-        if(CommonConstants.ONE_STRING.equals(productionApprovalReqDTO.getApprovalStatus())){
+        if (CommonConstants.ONE_STRING.equals(productionApprovalReqDTO.getApprovalStatus())) {
             //TODO
         }
     }
 
     @Override
-    public Page<ProductionInfoResDTO> eventList(String stationCode,String productionType, String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return productionMapper.eventList(pageReqDTO.of(),stationCode,productionType,startDate,endDate);
+    public Page<ProductionInfoResDTO> eventList(String stationCode, String productionType, String dataType,
+                                                String startDate, String endDate, PageReqDTO pageReqDTO) {
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        return productionMapper.eventPage(pageReqDTO.of(), stationCode, productionType, dataType, startDate, endDate);
+    }
+
+    @Override
+    public Page<ProductionInfoWeeklyResDTO> weeklyEventList(String stationCode, String productionType, String dataType,
+                                                            String startDate, String endDate, PageReqDTO pageReqDTO) {
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        Page<ProductionInfoWeeklyResDTO> resPage = new Page<>();
+        List<ProductionInfoWeeklyResDTO> resList = new ArrayList<>();
+        Page<ProductionRecordResDTO> page = productionMapper.listWeeklyRecord(pageReqDTO.of(), startDate, endDate);
+        List<ProductionRecordResDTO> list = page.getRecords();
+        if (StringUtils.isNotEmpty(list)) {
+            for (ProductionRecordResDTO record : list) {
+                ProductionInfoWeeklyResDTO res = new ProductionInfoWeeklyResDTO();
+                res.setStationCode(record.getStationCode());
+                res.setStationName(record.getStationName());
+                res.setProductionTwoList(productionMapper.listProductionTwo(record.getStationCode(),
+                        startDate + " 00:00:00", endDate + " 23:59:59"));
+                resList.add(res);
+            }
+        }
+        resPage.setRecords(resList);
+        resPage.setPages(page.getPages());
+        resPage.setTotal(page.getTotal());
+        resPage.setSize(page.getSize());
+        resPage.setCurrent(page.getCurrent());
+        return resPage;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void createEvent(CurrentLoginUser currentLoginUser, ProductionInfoReqDTO productionInfoReqDTO) {
-        try{
-            if(CommonConstants.DATA_TYPE_DAILY.equals(productionInfoReqDTO.getDataType())){
-                productionInfoReqDTO.setDataDate(productionInfoReqDTO.getStartDate());
-            }
-            productionInfoReqDTO.setId(TokenUtils.getUuId());
-            productionInfoReqDTO.setCreateBy(currentLoginUser.getPersonId());
-            productionInfoReqDTO.setUpdateBy(currentLoginUser.getPersonId());
-            productionMapper.createEvent(productionInfoReqDTO);
-        }catch (Exception e){
-            throw new CommonException(ErrorCode.INSERT_ERROR);
+        if (CommonConstants.DATA_TYPE_DAILY.equals(productionInfoReqDTO.getDataType())) {
+            productionInfoReqDTO.setDataDate(productionInfoReqDTO.getStartDate());
         }
-
+        productionInfoReqDTO.setId(TokenUtils.getUuId());
+        productionInfoReqDTO.setCreateBy(currentLoginUser.getPersonId());
+        productionInfoReqDTO.setUpdateBy(currentLoginUser.getPersonId());
+        productionMapper.createEvent(productionInfoReqDTO);
         //更新事件统计
-        updateSummaryCount(productionInfoReqDTO.getStationCode(),productionInfoReqDTO.getStartDate(),productionInfoReqDTO.getEndDate());
+        updateSummaryCount(productionInfoReqDTO.getStationCode(), productionInfoReqDTO.getStartDate(), productionInfoReqDTO.getEndDate());
     }
 
     @Override
     public void modifyEvent(CurrentLoginUser currentLoginUser, ProductionInfoReqDTO productionInfoReqDTO) {
         productionInfoReqDTO.setUpdateBy(currentLoginUser.getPersonId());
         int res = productionMapper.modifyEvent(productionInfoReqDTO);
-        if( res <= 0){
+        if (res <= 0) {
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
 
@@ -318,40 +331,40 @@ public class ProductionServiceImpl implements ProductionService {
         ids.add(productionInfoReqDTO.getId());
         ProductionInfoResDTO eventInfo = productionMapper.queryDateRange(ids);
         updateSummaryCount(eventInfo.getStationCode(),
-                DateUtil.formatDate(eventInfo.getStartDate()),DateUtil.formatDate(eventInfo.getEndDate()));
+                DateUtil.formatDate(eventInfo.getStartDate()), DateUtil.formatDate(eventInfo.getEndDate()));
     }
 
     @Override
     public void deleteEvent(List<String> ids) {
         if (StringUtils.isNotEmpty(ids)) {
             ProductionInfoResDTO eventInfo = productionMapper.queryDateRange(ids);
-            try{
+            try {
                 productionMapper.deleteEvent(ids, TokenUtils.getCurrentPersonId());
-            }catch (Exception e){
+            } catch (Exception e) {
                 throw new CommonException(ErrorCode.DELETE_ERROR);
             }
 
             //更新事件统计
             updateSummaryCount(eventInfo.getStationCode(),
-                    DateUtil.formatDate(eventInfo.getStartDate()),DateUtil.formatDate(eventInfo.getEndDate()));
+                    DateUtil.formatDate(eventInfo.getStartDate()), DateUtil.formatDate(eventInfo.getEndDate()));
         }
     }
 
     @Override
     public Page<ProductionApprovalResDTO> queryApproval(CurrentLoginUser currentLoginUser, String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return productionMapper.queryApproval(pageReqDTO.of(),startDate,endDate);
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        return productionMapper.queryApproval(pageReqDTO.of(), startDate, endDate);
     }
 
     /**
      * 事件统计更新
-     * */
+     */
     @Transactional(rollbackFor = Exception.class)
-    private void updateSummaryCount(String stationCode,String startDate,String endDate){
-        try{
-            List<ProductionRecordResDTO> res =  productionMapper.listAll(stationCode,startDate,endDate);
-            if(res != null && res.size() > 0){
-                for(ProductionRecordResDTO item:res){
+    private void updateSummaryCount(String stationCode, String startDate, String endDate) {
+        try {
+            List<ProductionRecordResDTO> res = productionMapper.listAll(stationCode, startDate, endDate);
+            if (StringUtils.isNotEmpty(res)) {
+                for (ProductionRecordResDTO item : res) {
                     //更新记录统计数据
                     productionMapper.modifyRecordCount(item.getId(),
                             stationCode,
@@ -365,7 +378,7 @@ public class ProductionServiceImpl implements ProductionService {
                             DateUtil.formatDate(item.getEndDate()));
                 }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
 

@@ -2,7 +2,7 @@ package com.wzmtr.dom.impl.vehicle;
 
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.vehicle.DrivingCountReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.DrivingDepotReqDTO;
@@ -16,13 +16,12 @@ import com.wzmtr.dom.exception.CommonException;
 import com.wzmtr.dom.mapper.vehicle.DrivingMapper;
 import com.wzmtr.dom.mapper.vehicle.IndicatorMapper;
 import com.wzmtr.dom.service.vehicle.DrivingService;
-import com.wzmtr.dom.utils.DateUtils;
+import com.wzmtr.dom.utils.StringUtils;
 import com.wzmtr.dom.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -44,24 +43,20 @@ public class DrivingServiceImpl implements DrivingService {
 
     @Override
     public Page<DrivingRecordResDTO> list(String dataType,String startDate,String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return drivingMapper.list(pageReqDTO.of(),dataType,startDate,endDate);
     }
 
     @Override
-    public DrivingRecordDetailResDTO detail(String recordId) {
-
-        //获取详情
-        DrivingRecordDetailResDTO  detail = drivingMapper.queryInfoById(recordId);
-
-        //车场情况
-        List<DrivingDepotResDTO> depotList = drivingMapper.depot(recordId);
-        detail.setDepotList(depotList);
-
-        //司机驾驶情况
-        DrivingInfoResDTO driveInfo = drivingMapper.driveInfo(recordId);
-        detail.setDriveInfo(driveInfo);
-
+    public DrivingRecordDetailResDTO detail(String recordId, String dataType, String startDate, String endDate) {
+        // 获取详情
+        DrivingRecordDetailResDTO detail = drivingMapper.queryInfoById(recordId, dataType, startDate, endDate);
+        if (StringUtils.isNotNull(detail)) {
+            // 车场情况
+            detail.setDepotList(drivingMapper.depot(detail.getId()));
+            // 司机驾驶情况
+            detail.setDriveInfo(drivingMapper.driveInfo(detail.getId()));
+        }
         return detail;
     }
 
@@ -139,11 +134,12 @@ public class DrivingServiceImpl implements DrivingService {
         if( res <= 0){
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
+
     }
 
     @Override
     public void syncData(CurrentLoginUser currentLoginUser,String recordId) {
-        DrivingRecordDetailResDTO  detail = drivingMapper.queryInfoById(recordId);
+        DrivingRecordDetailResDTO  detail = drivingMapper.queryInfoById(recordId, null, null, null);
 
         //TODO 行车调度 乘务系统 数据接口
         SyncOdmDepotResDTO syncOdmDepotResDTO = syncOdmDepot(recordId);
@@ -171,12 +167,32 @@ public class DrivingServiceImpl implements DrivingService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void depotModify(CurrentLoginUser currentLoginUser, DrivingDepotReqDTO drivingDepotReqDTO) {
         drivingDepotReqDTO.setUpdateBy(currentLoginUser.getPersonId());
 
-        int res = drivingMapper.modifyDepotData(drivingDepotReqDTO);
-        if( res <= 0){
-            throw new CommonException(ErrorCode.UPDATE_ERROR);
+        drivingMapper.modifyDepotData(drivingDepotReqDTO);
+        // 更新列表数据
+        String depotCode = drivingDepotReqDTO.getDepotCode();
+        if (StringUtils.isNotEmpty(depotCode)) {
+            DrivingCountReqDTO drivingCountReqDTO = new DrivingCountReqDTO();
+            drivingCountReqDTO.setId(drivingDepotReqDTO.getRecordId());
+            switch (depotCode) {
+                case CommonConstants.STATION_280:
+                    drivingCountReqDTO.setTrainCount1(drivingDepotReqDTO.getRealDeparture());
+                    break;
+                case CommonConstants.STATION_281:
+                    drivingCountReqDTO.setTrainCount2(drivingDepotReqDTO.getRealDeparture());
+                    break;
+                default:
+                    break;
+            }
+            drivingMapper.modifyDayCount(drivingCountReqDTO);
+        }
+
+        //更新统计
+        if(StringUtils.isNotEmpty(drivingDepotReqDTO.getRecordId())){
+            updateRecordCount(drivingDepotReqDTO.getRecordId());
         }
     }
 
@@ -212,6 +228,11 @@ public class DrivingServiceImpl implements DrivingService {
             }
         }catch (Exception e){
             throw new CommonException(ErrorCode.UPDATE_ERROR);
+        }
+
+        //更新统计
+        if(StringUtils.isNotEmpty(drivingInfoReqDTO.getRecordId())){
+            updateRecordCount(drivingInfoReqDTO.getRecordId());
         }
 
     }

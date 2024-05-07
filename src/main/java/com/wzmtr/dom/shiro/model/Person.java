@@ -33,4 +33,6 @@ public class Person implements Serializable {
 
     private String names;
 
+    private String stationCode;
+
 }

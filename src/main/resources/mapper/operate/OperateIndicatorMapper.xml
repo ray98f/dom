@@ -6,7 +6,7 @@
         SELECT *
         FROM OPERATE_INDICATOR_RECORD
         WHERE DEL_FLAG='0'
-        AND DATA_TYPE = #{dataType}
+        AND DATA_TYPE=#{dataType}
         <if test="startDate != null and startDate!=''">
             AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
@@ -19,14 +19,23 @@
     <select id="queryInfoById" resultType="com.wzmtr.dom.dto.res.operate.IndicatorDetailResDTO">
         SELECT *
         FROM OPERATE_INDICATOR_RECORD
-        WHERE ID=#{id} AND DEL_FLAG = '0'
+        WHERE DEL_FLAG = '0'
+        <if test="id != null">
+            AND ID=#{id}
+        </if>
+        <if test="startDate != null">
+            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>END_DATE
+        </if>
     </select>
 
     <select id="checkExist" resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM OPERATE_INDICATOR_RECORD
         WHERE DEL_FLAG = '0'
-        AND DATA_TYPE = #{dataType}
+        AND DATA_TYPE=#{dataType}
         <if test="startDate != null">
             AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
@@ -39,8 +48,15 @@
         SELECT *
         FROM OPERATE_INDICATOR_INFO
         WHERE DEL_FLAG='0'
-        AND RECORD_ID = #{recordId}
-
+        <if test="recordId != null">
+            AND RECORD_ID=#{recordId}
+        </if>
+        <if test="startDate != null">
+            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>END_DATE
+        </if>
         ORDER BY START_DATE desc
     </select>
 
@@ -48,33 +64,40 @@
         SELECT *
         FROM OPERATE_INDICATOR_POWER
         WHERE DEL_FLAG='0'
-        AND RECORD_ID = #{recordId}
-
+        <if test="recordId != null">
+            AND RECORD_ID=#{recordId}
+        </if>
+        <if test="startDate != null">
+            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>END_DATE
+        </if>
         ORDER BY START_DATE desc
     </select>
     <select id="queryInfoByDate" resultType="com.wzmtr.dom.dto.res.operate.IndicatorInfoResDTO">
         select * from  OPERATE_INDICATOR_INFO
         WHERE DEL_FLAG = '0'
-        AND DATA_TYPE = #{dataType}
+        AND DATA_TYPE=#{dataType}
         <if test="startDate != null">
-            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
         <if test="endDate != null">
-            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
         </if>
         <if test="indicatorType != null">
-            AND INDICATOR_TYPE = #{indicatorType}
+            AND INDICATOR_TYPE=#{indicatorType}
         </if>
     </select>
     <select id="queryPowerByDate" resultType="com.wzmtr.dom.dto.res.operate.IndicatorPowerResDTO">
         select * from OPERATE_INDICATOR_POWER
         WHERE DEL_FLAG = '0'
-        AND DATA_TYPE = #{dataType}
+        AND DATA_TYPE=#{dataType}
         <if test="startDate != null">
-            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
         <if test="endDate != null">
-            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
         </if>
     </select>
     <insert id="add">
@@ -156,12 +179,11 @@
         <if test="run2Kilometer != null">
             RUN2_KILOMETER=#{run2Kilometer},
         </if>
-
         VERSION = VERSION+1,
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate
         WHERE ID=#{id}
-        AND VERSION = #{version}
+        AND VERSION=#{version}
     </update>
 
     <insert id="addInfo">
@@ -214,7 +236,7 @@
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate
         WHERE ID=#{id}
-        AND VERSION = #{version}
+        AND VERSION=#{version}
     </update>
 
     <insert id="addPower">
@@ -275,12 +297,14 @@
         <if test="lightRate != null and lightRate !=''">
             LIGHT_RATE=#{lightRate},
         </if>
-
+        <if test="remark != null and remark !=''">
+            REMARK=#{remark},
+        </if>
         VERSION = VERSION+1,
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate
         WHERE ID=#{id}
-        AND VERSION = #{version}
+        AND VERSION=#{version}
     </update>
 
 </mapper>

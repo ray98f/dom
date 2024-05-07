@@ -23,45 +23,9 @@ public class TrainRecordResDTO {
     private String id;
 
     /**
-     * 一组
+     * 整体培训情况
      */
-    @ApiModelProperty(value = "一组")
-    private String groupOne;
-
-    /**
-     * 二组
-     */
-    @ApiModelProperty(value = "二组")
-    private String groupTwo;
-
-    /**
-     * 三组
-     */
-    @ApiModelProperty(value = "三组")
-    private String groupThree;
-
-    /**
-     * 四组
-     */
-    @ApiModelProperty(value = "四组")
-    private String groupFour;
-
-    /**
-     * 车场组
-     */
-    @ApiModelProperty(value = "车场组")
-    private String groupPark;
-
-    /**
-     * 脱产培训司机
-     */
-    @ApiModelProperty(value = "脱产培训司机")
-    private String trainDriver;
-
-    /**
-     * 备注
-     */
-    @ApiModelProperty(value = "备注")
+    @ApiModelProperty(value = "整体培训情况")
     private String remark;
 
     /**
@@ -69,6 +33,8 @@ public class TrainRecordResDTO {
      */
     @ApiModelProperty(value = "版本号(乐观锁)")
     private String version;
+
+    private String dataType;
 
     /**
      * 所属日期
@@ -80,4 +46,26 @@ public class TrainRecordResDTO {
             timezone = "GMT+8"
     )
     private Date dataDate;
+
+    /**
+     * 所属日期
+     */
+    @ApiModelProperty(value = "所属日期")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd",
+            timezone = "GMT+8"
+    )
+    private Date startDate;
+
+    /**
+     * 所属日期
+     */
+    @ApiModelProperty(value = "所属日期")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd",
+            timezone = "GMT+8"
+    )
+    private Date endDate;
 }

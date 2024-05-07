@@ -2,7 +2,7 @@ package com.wzmtr.dom.impl.vehicle;
 
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.vehicle.IndicatorReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.IndicatorResDTO;
@@ -12,14 +12,12 @@ import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
 import com.wzmtr.dom.mapper.vehicle.IndicatorMapper;
 import com.wzmtr.dom.service.vehicle.IndicatorService;
-import com.wzmtr.dom.utils.DateUtils;
 import com.wzmtr.dom.utils.StringUtils;
 import com.wzmtr.dom.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -37,7 +35,7 @@ public class IndicatorServiceImpl implements IndicatorService {
 
     @Override
     public Page<IndicatorResDTO> list(String dataType,String startDate,String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return indicatorMapper.list(pageReqDTO.of(),dataType,startDate,endDate);
     }
 
@@ -82,10 +80,24 @@ public class IndicatorServiceImpl implements IndicatorService {
 
     @Override
     public void modify(CurrentLoginUser currentLoginUser, IndicatorReqDTO indicatorReqDTO) {
+        IndicatorResDTO indicator = indicatorMapper.queryInfoById(indicatorReqDTO.getId());
         indicatorReqDTO.setUpdateBy(currentLoginUser.getPersonId());
         int res = indicatorMapper.modify(indicatorReqDTO);
         if( res <= 0){
             throw new CommonException(ErrorCode.UPDATE_ERROR);
+        }
+
+        //日报情况下，更新周报/月报统计数据
+        if(CommonConstants.ONE_STRING.equals(indicator.getDataType())){
+            //TODO
+            Date dataDate = indicator.getDataDate();
+            Date monday = DateUtil.beginOfWeek(dataDate);
+            Date sunday = DateUtil.endOfWeek(dataDate);
+            Date monthStart = DateUtil.beginOfMonth(dataDate);
+            Date monthEnd = DateUtil.endOfMonth(dataDate);
+            //更新周报、月报统计数据
+            indicatorMapper.modifyCount2(DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
+            indicatorMapper.modifyCount2(DateUtil.formatDate(monthStart),DateUtil.formatDate(monthEnd));
         }
     }
 

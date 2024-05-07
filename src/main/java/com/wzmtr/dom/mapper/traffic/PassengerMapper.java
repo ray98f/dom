@@ -47,7 +47,7 @@ public interface PassengerMapper {
      * @param id 入参数
      * @return PassengerDetailResDTO
      */
-    PassengerDetailResDTO queryInfoById(String id);
+    PassengerDetailResDTO queryInfoById(String id,String startDate,String endDate);
 
     /**
      * 新增

@@ -3,10 +3,9 @@ package com.wzmtr.dom.mapper.traffic;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dataobject.traffic.IncomeRecordDO;
-import com.wzmtr.dom.dto.req.common.SidReqDTO;
+import com.wzmtr.dom.dto.req.traffic.income.IncomeAddReqDTO;
+import com.wzmtr.dom.dto.req.traffic.income.IncomeDetailReqDTO;
 import com.wzmtr.dom.dto.req.traffic.income.IncomeListReqDTO;
-import com.wzmtr.dom.dto.res.traffic.PassengerResDTO;
-import com.wzmtr.dom.dto.res.traffic.income.IncomeDetailResDTO;
 import com.wzmtr.dom.dto.res.traffic.income.IncomeListResDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -19,8 +18,16 @@ import org.springframework.stereotype.Repository;
 @Mapper
 @Repository
 public interface IncomeRecordMapper extends BaseMapper<IncomeRecordDO> {
-    Page<IncomeListResDTO> list(Page<PassengerResDTO> page,@Param("req") IncomeListReqDTO reqDTO);
+    Page<IncomeListResDTO> list(Page<Object> page, @Param("req") IncomeListReqDTO reqDTO);
 
-    IncomeRecordDO selectDetailById(SidReqDTO reqDTO);
+    /**
+     * 判断收益总体情况是否已存在
+     * @param reqDTO 收益总体情况参数
+     * @return 是否已存在
+     */
+    Integer checkExist(IncomeAddReqDTO reqDTO);
 
+    IncomeRecordDO selectDetailById(IncomeDetailReqDTO reqDTO);
+
+    void add(IncomeAddReqDTO req);
 }

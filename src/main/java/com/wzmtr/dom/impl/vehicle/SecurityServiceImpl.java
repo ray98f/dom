@@ -1,7 +1,7 @@
 package com.wzmtr.dom.impl.vehicle;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.vehicle.SecurityReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.SecurityResDTO;
@@ -9,7 +9,6 @@ import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
-import com.wzmtr.dom.mapper.vehicle.IndicatorMapper;
 import com.wzmtr.dom.mapper.vehicle.SecurityMapper;
 import com.wzmtr.dom.service.vehicle.SecurityService;
 import com.wzmtr.dom.utils.TokenUtils;
@@ -31,7 +30,7 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     public Page<SecurityResDTO> list(String dataType, String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return securityMapper.list(pageReqDTO.of(),dataType,startDate,endDate);
     }
 

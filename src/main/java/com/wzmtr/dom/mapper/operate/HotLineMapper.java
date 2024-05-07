@@ -34,14 +34,14 @@ public interface HotLineMapper {
      * @param id id
      * @return 服务热线汇总详情
      */
-    HotLineSummaryDetailResDTO detailSummary(String id);
+    HotLineSummaryDetailResDTO detailSummary(String id, String startDate, String endDate);
 
     /**
      * 获取热线重要内容列表
      * @param id id
      * @return 热线重要内容列表
      */
-    List<HotLineImportantDetailResDTO> detailImportant(String id);
+    List<HotLineImportantDetailResDTO> detailImportant(String id ,String startDate, String endDate);
 
     /**
      * 查询当天服务热线情况是否已存在

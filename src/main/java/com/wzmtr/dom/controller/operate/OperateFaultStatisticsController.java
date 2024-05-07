@@ -2,14 +2,9 @@ package com.wzmtr.dom.controller.operate;
 
 import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.constant.ValidationGroup;
-import com.wzmtr.dom.dto.req.operate.IndicatorInfoReqDTO;
-import com.wzmtr.dom.dto.req.operate.IndicatorPowerReqDTO;
-import com.wzmtr.dom.dto.req.operate.IndicatorRecordReqDTO;
 import com.wzmtr.dom.dto.req.operate.OperateFaultStatisticsReqDTO;
-import com.wzmtr.dom.dto.res.operate.IndicatorDetailResDTO;
-import com.wzmtr.dom.dto.res.operate.IndicatorRecordResDTO;
 import com.wzmtr.dom.dto.res.operate.fault.FaultStatisticsResDTO;
-import com.wzmtr.dom.entity.BaseIdEntity;
+import com.wzmtr.dom.dto.res.operate.fault.ReportFaultStatisticsResDTO;
 import com.wzmtr.dom.entity.BaseIdsEntity;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
@@ -26,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 /**
- * 运营日报-故障统计
+ * 运营-故障统计
  *
  * @author zhangxin
  * @version 1.0
@@ -34,7 +29,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/fault/statistics")
-@Api(tags = "运营日报-故障统计")
+@Api(tags = "运营-故障统计")
 @Validated
 public class OperateFaultStatisticsController {
 
@@ -54,7 +49,18 @@ public class OperateFaultStatisticsController {
                                                     @RequestParam(required = false) String startDate,
                                                     @RequestParam(required = false) String endDate,
                                                     @Valid PageReqDTO pageReqDTO) {
-        return PageResponse.of(faultStatisticsService.list(dataType,startDate,endDate,pageReqDTO));
+        return PageResponse.of(faultStatisticsService.list(dataType, startDate, endDate, pageReqDTO));
+    }
+
+    /**
+     * 故障统计-报表详情
+     * @param date 日期
+     * @return 报表详情
+     */
+    @GetMapping("/report")
+    @ApiOperation(value = "故障统计-报表详情")
+    public DataResponse<ReportFaultStatisticsResDTO> report(@RequestParam String date) {
+        return DataResponse.of(faultStatisticsService.report(date));
     }
 
 

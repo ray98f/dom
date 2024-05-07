@@ -5,12 +5,14 @@ import cn.hutool.core.lang.Assert;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.dataobject.traffic.IncomeRecordDO;
-import com.wzmtr.dom.dto.req.common.SidReqDTO;
 import com.wzmtr.dom.dto.req.traffic.income.IncomeAddReqDTO;
+import com.wzmtr.dom.dto.req.traffic.income.IncomeDetailReqDTO;
 import com.wzmtr.dom.dto.req.traffic.income.IncomeListReqDTO;
 import com.wzmtr.dom.dto.res.traffic.income.IncomeDetailResDTO;
 import com.wzmtr.dom.dto.res.traffic.income.IncomeListResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
+import com.wzmtr.dom.enums.ErrorCode;
+import com.wzmtr.dom.exception.CommonException;
 import com.wzmtr.dom.mapper.traffic.IncomeRecordMapper;
 import com.wzmtr.dom.service.traffic.IncomeService;
 import com.wzmtr.dom.utils.TokenUtils;
@@ -39,17 +41,21 @@ public class IncomeServiceImpl implements IncomeService {
     }
 
     @Override
-    public IncomeDetailResDTO detail(SidReqDTO req) {
+    public IncomeDetailResDTO detail(IncomeDetailReqDTO req) {
         IncomeRecordDO incomeRecordDO = incomeMapper.selectDetailById(req);
         return IncomeDetailResDTO.buildRes(incomeRecordDO);
     }
 
     @Override
     public void add(IncomeAddReqDTO reqDTO) {
-        IncomeRecordDO incomeRecordDO = reqDTO.toDO(reqDTO);
-        incomeRecordDO.setCreateBy(TokenUtils.getCurrentPersonId());
-        incomeRecordDO.setUpdateBy(TokenUtils.getCurrentPersonId());
-        incomeMapper.insert(incomeRecordDO);
+        Integer result = incomeMapper.checkExist(reqDTO);
+        if (result > 0) {
+            throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期收益总体情况数据已存在，无法重复新增");
+        }
+        reqDTO.setCreateBy(TokenUtils.getCurrentPersonId());
+        reqDTO.setUpdateBy(TokenUtils.getCurrentPersonId());
+        reqDTO.setId(TokenUtils.getUuId());
+        incomeMapper.add(reqDTO);
     }
 
 

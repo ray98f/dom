@@ -1,9 +1,10 @@
 package com.wzmtr.dom.impl.vehicle;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.system.ApprovalReqDTO;
+import com.wzmtr.dom.dto.req.system.ReportUpdateReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.DailyReportReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.MonthlyReportReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.WeeklyReportReqDTO;
@@ -43,7 +44,7 @@ public class VehicleReportServiceImpl implements VehicleReportService {
 
     @Override
     public Page<DailyReportResDTO> pageDaily(String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return vehicleReportMapper.pageDaily(pageReqDTO.of(), startDate, endDate);
     }
 
@@ -90,7 +91,7 @@ public class VehicleReportServiceImpl implements VehicleReportService {
 
     @Override
     public Page<WeeklyReportResDTO> pageWeekly(String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return vehicleReportMapper.pageWeekly(pageReqDTO.of(), startDate, endDate);
     }
 
@@ -131,7 +132,7 @@ public class VehicleReportServiceImpl implements VehicleReportService {
 
     @Override
     public Page<MonthlyReportResDTO> pageMonthly(String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return vehicleReportMapper.pageMonthly(pageReqDTO.of(), startDate, endDate);
     }
 
@@ -172,7 +173,7 @@ public class VehicleReportServiceImpl implements VehicleReportService {
 
     @Override
     public void commitDaily(CurrentLoginUser currentLoginUser, DailyReportReqDTO dailyReportReqDTO) {
-        //报表审核参数
+        // 报表审核参数
         ApprovalReqDTO approvalReqDTO = new ApprovalReqDTO();
         approvalReqDTO.setTitle("车辆部日报-请审批");
         approvalReqDTO.setReportId(dailyReportReqDTO.getId());
@@ -181,14 +182,15 @@ public class VehicleReportServiceImpl implements VehicleReportService {
         approvalReqDTO.setDataType(CommonConstants.DATA_TYPE_DAILY);
         approvalReqDTO.setProcessKey(BpmnFlowEnum.vehicle_daily.value());
         approvalReqDTO.setCurrentNode(CommonConstants.VEHICLE_DAILY_NODE1);
-
-        //提交流程
+        // 提交流程
         workbenchService.commitApproval(approvalReqDTO);
+        // 修改报表状态为审核中
+        underReviewReport(dailyReportReqDTO.getId(), "1");
     }
 
     @Override
     public void commitWeekly(CurrentLoginUser currentLoginUser, WeeklyReportReqDTO weeklyReportReqDTO) {
-        //报表审核参数
+        // 报表审核参数
         ApprovalReqDTO approvalReqDTO = new ApprovalReqDTO();
         approvalReqDTO.setTitle("车辆部周报-请审批");
         approvalReqDTO.setReportId(weeklyReportReqDTO.getId());
@@ -197,14 +199,15 @@ public class VehicleReportServiceImpl implements VehicleReportService {
         approvalReqDTO.setDataType(CommonConstants.DATA_TYPE_WEEKLY);
         approvalReqDTO.setProcessKey(BpmnFlowEnum.vehicle_weekly.value());
         approvalReqDTO.setCurrentNode(CommonConstants.VEHICLE_WEEKLY_NODE1);
-
-        //提交流程
+        // 提交流程
         workbenchService.commitApproval(approvalReqDTO);
+        // 修改报表状态为审核中
+        underReviewReport(weeklyReportReqDTO.getId(), "2");
     }
 
     @Override
     public void commitMonthly(CurrentLoginUser currentLoginUser, MonthlyReportReqDTO monthlyReportReqDTO) {
-        //报表审核参数
+        // 报表审核参数
         ApprovalReqDTO approvalReqDTO = new ApprovalReqDTO();
         approvalReqDTO.setTitle("车辆部月报-请审批");
         approvalReqDTO.setReportId(monthlyReportReqDTO.getId());
@@ -213,9 +216,29 @@ public class VehicleReportServiceImpl implements VehicleReportService {
         approvalReqDTO.setDataType(CommonConstants.DATA_TYPE_MONTHLY);
         approvalReqDTO.setProcessKey(BpmnFlowEnum.vehicle_monthly.value());
         approvalReqDTO.setCurrentNode(CommonConstants.VEHICLE_MONTHLY_NODE1);
-
-        //提交流程
+        // 提交流程
         workbenchService.commitApproval(approvalReqDTO);
+        // 修改报表状态为审核中
+        underReviewReport(monthlyReportReqDTO.getId(), "3");
+    }
+
+    /**
+     * 修改报表状态为审核中
+     * @param id 报表id
+     * @param type 类型 1日报2周报3月报
+     */
+    private void underReviewReport(String id, String type) {
+        ReportUpdateReqDTO reqDTO = new ReportUpdateReqDTO();
+        reqDTO.setId(id);
+        reqDTO.setUpdateBy(TokenUtils.getCurrentPersonId());
+        reqDTO.setStatus(CommonConstants.ONE_STRING);
+        if (CommonConstants.ONE_STRING.equals(type)) {
+            vehicleReportMapper.modifyDailyByFlow(reqDTO);
+        } else if (CommonConstants.TWO_STRING.equals(type)) {
+            vehicleReportMapper.modifyWeeklyByFlow(reqDTO);
+        } else if (CommonConstants.THREE_STRING.equals(type)) {
+            vehicleReportMapper.modifyMonthlyByFlow(reqDTO);
+        }
     }
 
 }

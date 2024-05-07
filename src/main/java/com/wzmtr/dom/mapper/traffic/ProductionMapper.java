@@ -4,11 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.traffic.ProductionApprovalReqDTO;
 import com.wzmtr.dom.dto.req.traffic.ProductionInfoReqDTO;
 import com.wzmtr.dom.dto.req.traffic.ProductionRecordReqDTO;
-import com.wzmtr.dom.dto.req.traffic.ProductionSummaryRecordReqDTO;
-import com.wzmtr.dom.dto.req.vehicle.LineEventInfoReqDTO;
 import com.wzmtr.dom.dto.res.traffic.*;
-import com.wzmtr.dom.dto.res.vehicle.LineEventInfoResDTO;
-import com.wzmtr.dom.dto.res.vehicle.LineEventResDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -60,7 +56,7 @@ public interface ProductionMapper {
      * @param id 入参数
      * @return ProductionDetailResDTO
      */
-    ProductionDetailResDTO queryInfoById(String id);
+    ProductionDetailResDTO queryInfoById(String id,String startDate,String endDate);
 
     /**
      * 详情
@@ -168,12 +164,32 @@ public interface ProductionMapper {
      * 事件信息-列表
      * @param page 分页参数
      * @param productionType 查询参数
+     * @param dataType 数据类型 1日报 2周报 3月报
      * @param stationCode 查询参数
      * @param startDate 查询参数
      * @param endDate 查询参数
      * @return 列表
      */
-    Page<ProductionInfoResDTO> eventList(Page<ProductionInfoResDTO> page, String stationCode,String productionType,String startDate, String endDate);
+    Page<ProductionInfoResDTO> eventPage(Page<ProductionInfoResDTO> page, String stationCode, String productionType,
+                                         String dataType, String startDate, String endDate);
+
+    /**
+     * 周报获取安全生产具体情况记录
+     * @param page 分页参数
+     * @param startDate 查询参数
+     * @param endDate 查询参数
+     * @return 列表
+     */
+    Page<ProductionRecordResDTO> listWeeklyRecord(Page<ProductionRecordResDTO> page, String startDate, String endDate);
+
+    /**
+     * 获取安全生产具体情况施工异常详情
+     * @param stationCode 车站编号
+     * @param startDate 开始时间
+     * @param endDate 结束时间
+     * @return 安全生产具体情况施工异常详情
+     */
+    List<ProductionInfoWeeklyResDTO.ProductionTwo> listProductionTwo(String stationCode, String startDate, String endDate);
 
     /**
      * 事件信息-日期范围

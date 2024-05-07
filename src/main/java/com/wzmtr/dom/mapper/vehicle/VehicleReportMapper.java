@@ -1,6 +1,7 @@
 package com.wzmtr.dom.mapper.vehicle;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wzmtr.dom.dto.req.system.ReportUpdateReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.DailyReportReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.MonthlyReportReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.WeeklyReportReqDTO;
@@ -149,38 +150,20 @@ public interface VehicleReportMapper {
     void deleteMonthly(List<String> ids, String userId);
 
     /**
-     * 编辑日报
-     * @param dailyReportReqDTO 日报参数
+     * 根据流程修改日报状态
+     * @param reqDTO 报表修改参数
      */
-    void modifyDailyByFlow(DailyReportReqDTO dailyReportReqDTO);
+    void modifyDailyByFlow(ReportUpdateReqDTO reqDTO);
 
     /**
-     * 编辑周报
-     * @param weeklyReportReqDTO 周报参数
+     * 根据流程修改周报状态
+     * @param reqDTO 报表修改参数
      */
-    void modifyWeeklyByFlow(WeeklyReportReqDTO weeklyReportReqDTO);
+    void modifyWeeklyByFlow(ReportUpdateReqDTO reqDTO);
 
     /**
-     * 编辑月报
-     * @param monthlyReportReqDTO 月报参数
+     * 根据流程修改月报状态
+     * @param reqDTO 报表修改参数
      */
-    void modifyMonthlyByFlow(MonthlyReportReqDTO monthlyReportReqDTO);
-
-    /**
-     * 编辑日报
-     * @param dailyReportReqDTO 日报参数
-     */
-    void dailyApprovalComplete(DailyReportReqDTO dailyReportReqDTO);
-
-    /**
-     * 编辑周报
-     * @param weeklyReportReqDTO 周报参数
-     */
-    void weeklyApprovalComplete(WeeklyReportReqDTO weeklyReportReqDTO);
-
-    /**
-     * 编辑月报
-     * @param monthlyReportReqDTO 月报参数
-     */
-    void monthlyApprovalComplete(MonthlyReportReqDTO monthlyReportReqDTO);
+    void modifyMonthlyByFlow(ReportUpdateReqDTO reqDTO);
 }

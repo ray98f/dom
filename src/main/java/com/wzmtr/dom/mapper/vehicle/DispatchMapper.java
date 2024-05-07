@@ -101,8 +101,9 @@ public interface DispatchMapper {
 
     /**
      * 删除调度命令详情
+     * @param recordIds 记录ids
      * @param ids ids
      * @param userId 用户id
      */
-    void deleteOrder(List<String> ids, String userId);
+    void deleteOrder(List<String> recordIds, List<String> ids, String userId);
 }

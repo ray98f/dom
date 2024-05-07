@@ -4,13 +4,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.traffic.ProductionApprovalReqDTO;
 import com.wzmtr.dom.dto.req.traffic.ProductionInfoReqDTO;
 import com.wzmtr.dom.dto.req.traffic.ProductionRecordReqDTO;
-import com.wzmtr.dom.dto.res.traffic.ProductionApprovalResDTO;
-import com.wzmtr.dom.dto.res.traffic.ProductionDetailResDTO;
-import com.wzmtr.dom.dto.res.traffic.ProductionInfoResDTO;
-import com.wzmtr.dom.dto.res.traffic.ProductionRecordResDTO;
+import com.wzmtr.dom.dto.res.traffic.*;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -39,7 +35,7 @@ public interface ProductionService {
      * @param id 入参数
      * @return 客流总体情况-详情
      */
-    ProductionDetailResDTO detail(String id);
+    ProductionDetailResDTO detail(String id,String startDate,String endDate);
 
     /**
      * 安全生产情况汇总-详情
@@ -73,12 +69,27 @@ public interface ProductionService {
      * 事件信息-列表
      * @param stationCode 查询参数
      * @param productionType 查询参数
+     * @param dataType 数据类型 1日报 2周报 3月报
      * @param startDate 查询参数
      * @param endDate 查询参数
      * @param pageReqDTO 分页参数
      * @return 事件信息列表
      */
-    Page<ProductionInfoResDTO> eventList(String stationCode,String productionType,String startDate, String endDate, PageReqDTO pageReqDTO);
+    Page<ProductionInfoResDTO> eventList(String stationCode, String productionType, String dataType,
+                                         String startDate, String endDate, PageReqDTO pageReqDTO);
+
+    /**
+     * 安全生产事件-施工异常-列表-周报
+     * @param stationCode 车站编码
+     * @param productionType 事件类型
+     * @param dataType 数据类型 1日报 2周报 3月报
+     * @param startDate 起始日期
+     * @param endDate 终止日期
+     * @param pageReqDTO 分页参数
+     * @return 安全生产事件-施工异常-列表-周报
+     */
+    Page<ProductionInfoWeeklyResDTO> weeklyEventList(String stationCode, String productionType, String dataType,
+                                                     String startDate, String endDate, PageReqDTO pageReqDTO);
 
     /**
      * 事件信息-新增

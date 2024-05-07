@@ -3,13 +3,13 @@
 <mapper namespace="com.wzmtr.dom.mapper.common.UserAccountMapper">
 
     <select id="listUserAccount" resultType="com.wzmtr.dom.dto.res.common.UserAccountResDTO">
-        select ID, LOGIN_NAME, NO, NAME, EMAIL, PHONE, MOBILE, HIRE_DATE, ROOM, DISABLED
-        from SYS_USER
-        where DEL_FLAG=0 and EXPIRED=0
+        SELECT ID, LOGIN_NAME, NO, NAME, EMAIL, PHONE, MOBILE, HIRE_DATE, ROOM, DISABLED
+        FROM SYS_USER
+        WHERE DEL_FLAG=0 AND EXPIRED=0
         <if test="searchKey!=null and searchKey!=''">
-            and ((NAME like '%' || #{searchKey} || '%') or (MOBILE like '%' || #{searchKey} || '%'))
+            AND ((NAME like '%' || #{searchKey} || '%') OR (MOBILE like '%' || #{searchKey} || '%'))
         </if>
-        order by ORDER_NUM asc
+        ORDER BY ORDER_NUM ASC, ID ASC
     </select>
 
     <select id="selectUserAccountById" resultType="com.wzmtr.dom.dto.res.common.UserAccountResDTO">
@@ -164,7 +164,7 @@
     </update>
 
     <update id="updatePersonPlus"   parameterType ="java.util.Map">
-        update SYS_USER set flagPosition = #{flagPosition},room = #{room}
+        update SYS_USER set flagPosition=#{flagPosition},room=#{room}
         where id =#{id}
     </update>
 
@@ -183,15 +183,11 @@
         t1.COMPANY_ID,
         t1.OFFICE_ID,
         t5.NAME AS COMPANY_NAME,
-        t4.NAME AS OFFICE_NAME,
-        concat(REPLACE(t6.BASEURL, 'http://10.11.70.38:8080', 'http://mbtt.wzmtr.com:4443'), t6.ORGINPHOTO) as PHOTO,
-        concat(REPLACE(t6.BASEURL, 'http://10.11.70.38:8080', 'http://mbtt.wzmtr.com:4443'), t6.BIGPHOTO) as BIG_PHOTO,
-        concat(REPLACE(t6.BASEURL, 'http://10.11.70.38:8080', 'http://mbtt.wzmtr.com:4443'), t6.SMALLPHOTO) as SMALL_PHOTO
+        t4.NAME AS OFFICE_NAME
         FROM SYS_USER t1
         LEFT JOIN SYS_ORG_USER t2 ON t2.USER_ID=t1.ID and t2.OFFICE_ID=t1.OFFICE_ID and t2.ACTIVESTATUS=1 AND t2.LEAVEDATE>=SYSDATE
         left join SYS_OFFICE t4 on t4.ID=t1.OFFICE_ID and t4.DEL_FLAG=0 and t4.USEABLE=1
         left join SYS_OFFICE t5 on t5.ID=t1.COMPANY_ID and t5.DEL_FLAG=0 and t5.USEABLE=1
-        left join (select CEMPID,max(BASEURL) AS BASEURL,max(ORGINPHOTO) AS ORGINPHOTO,max(BIGPHOTO) AS BIGPHOTO,max(SMALLPHOTO) AS SMALLPHOTO from SYS_PHOTO group by CEMPID) t6 on t6.CEMPID=t1.PERSON_ID
         WHERE t1.ID=#{userId} and t1.DEL_FLAG=0
         ) WHERE rownum=1
     </select>

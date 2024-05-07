@@ -25,6 +25,9 @@
         <if test="status!=null and status!=''">
             and STATUS=#{status}
         </if>
+        <if test="status==null">
+            and STATUS='0'
+        </if>
         ORDER BY SORT asc
     </select>
 

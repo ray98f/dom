@@ -40,8 +40,8 @@
         FROM TRAFFIC_DAILY_REPORT dr
         LEFT JOIN SYS_USER u ON u.ID=dr.CREATE_BY
         WHERE dr.DEL_FLAG='0'
-        AND dr.PARENT_ID=(SELECT PARENT_ID FROM TRAFFIC_DAILY_REPORT t WHERE ID = #{id})
-        ORDER BY dr.DAILY_DATE desc
+        AND dr.PARENT_ID=(SELECT PARENT_ID FROM TRAFFIC_DAILY_REPORT t WHERE ID=#{id})
+        ORDER BY dr.REPORT_TYPE desc, dr.REPORT_TYPE ASC
     </select>
 
     <select id="dailyDetail" resultType="com.wzmtr.dom.dto.res.traffic.DailyReportResDTO">
@@ -51,18 +51,27 @@
         dr.CREATE_DATE, u.NAME AS CREATE_BY
         FROM TRAFFIC_DAILY_REPORT dr
         LEFT JOIN SYS_USER u ON u.ID=dr.CREATE_BY
-        WHERE dr.DEL_FLAG='0' AND dr.ID=#{id}
+        WHERE dr.DEL_FLAG='0'
+        <if test="id != null">
+            and dr.ID=#{id}
+        </if>
+        <if test="startDate != null">
+            AND to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') >= dr.START_DATE
+        </if>
+        <if test="endDate != null">
+            AND dr.END_DATE >= to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
     </select>
 
     <select id="checkDailyExist" resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM TRAFFIC_DAILY_REPORT
-        WHERE DEL_FLAG='0' AND PARENT_ID = '0'
+        WHERE DEL_FLAG='0' AND PARENT_ID='0'
         <if test="startDate != null">
-            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+            AND START_DATE=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
         <if test="endDate != null">
-            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+            AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
     </select>
 
@@ -193,8 +202,8 @@
         STATUS='2',
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate
-        WHERE ID=(SELECT PARENT_ID FROM TRAFFIC_DAILY_REPORT WHERE ID = #{id})
-        OR PARENT_ID = (SELECT PARENT_ID FROM TRAFFIC_DAILY_REPORT WHERE ID = #{id})
+        WHERE ID=(SELECT PARENT_ID FROM TRAFFIC_DAILY_REPORT WHERE ID=#{id})
+        OR PARENT_ID=(SELECT PARENT_ID FROM TRAFFIC_DAILY_REPORT WHERE ID=#{id})
     </update>
 
 
@@ -272,8 +281,8 @@
         FROM TRAFFIC_WEEKLY_REPORT dr
         LEFT JOIN SYS_USER u ON u.ID=dr.CREATE_BY
         WHERE dr.DEL_FLAG='0'
-        AND dr.PARENT_ID=(SELECT PARENT_ID FROM TRAFFIC_WEEKLY_REPORT t WHERE ID = #{id})
-        ORDER BY dr.START_DATE desc
+        AND dr.PARENT_ID=(SELECT PARENT_ID FROM TRAFFIC_WEEKLY_REPORT t WHERE ID=#{id})
+        ORDER BY dr.START_DATE desc, dr.REPORT_TYPE ASC
     </select>
 
     <select id="queryWeeklyByParent" resultType="com.wzmtr.dom.dto.res.traffic.WeeklyReportResDTO">
@@ -291,12 +300,12 @@
     <select id="checkWeeklyExist" resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM TRAFFIC_WEEKLY_REPORT
-        WHERE DEL_FLAG='0' AND PARENT_ID = '0'
+        WHERE DEL_FLAG='0' AND PARENT_ID='0'
         <if test="startDate != null">
-            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+            AND START_DATE=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
         <if test="endDate != null">
-            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+            AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
     </select>
 
@@ -421,8 +430,8 @@
         STATUS='2',
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate
-        WHERE ID=(SELECT PARENT_ID FROM TRAFFIC_WEEKLY_REPORT WHERE ID = #{id})
-        OR PARENT_ID = (SELECT PARENT_ID FROM TRAFFIC_WEEKLY_REPORT WHERE ID = #{id})
+        WHERE ID=(SELECT PARENT_ID FROM TRAFFIC_WEEKLY_REPORT WHERE ID=#{id})
+        OR PARENT_ID=(SELECT PARENT_ID FROM TRAFFIC_WEEKLY_REPORT WHERE ID=#{id})
     </update>
 
     <update id="modifyMainWeekly">
@@ -499,8 +508,8 @@
         FROM TRAFFIC_MONTHLY_REPORT dr
         LEFT JOIN SYS_USER u ON u.ID=dr.CREATE_BY
         WHERE dr.DEL_FLAG='0'
-        AND dr.PARENT_ID=(SELECT PARENT_ID FROM TRAFFIC_MONTHLY_REPORT t WHERE ID = #{id})
-        ORDER BY dr.START_DATE desc
+        AND dr.PARENT_ID=(SELECT PARENT_ID FROM TRAFFIC_MONTHLY_REPORT t WHERE ID=#{id})
+        ORDER BY dr.START_DATE desc, dr.REPORT_TYPE ASC
     </select>
 
     <select id="queryMonthlyByParent" resultType="com.wzmtr.dom.dto.res.traffic.MonthlyReportResDTO">
@@ -518,12 +527,12 @@
     <select id="checkMonthlyExist" resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM TRAFFIC_MONTHLY_REPORT
-        WHERE DEL_FLAG='0' AND PARENT_ID = '0'
+        WHERE DEL_FLAG='0' AND PARENT_ID='0'
         <if test="startDate != null">
-            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+            AND START_DATE=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
         <if test="endDate != null">
-            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+            AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
     </select>
 
@@ -648,8 +657,8 @@
         STATUS='2',
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate
-        WHERE ID=(SELECT PARENT_ID FROM TRAFFIC_MONTHLY_REPORT WHERE ID = #{id})
-        OR PARENT_ID = (SELECT PARENT_ID FROM TRAFFIC_MONTHLY_REPORT WHERE ID = #{id})
+        WHERE ID=(SELECT PARENT_ID FROM TRAFFIC_MONTHLY_REPORT WHERE ID=#{id})
+        OR PARENT_ID=(SELECT PARENT_ID FROM TRAFFIC_MONTHLY_REPORT WHERE ID=#{id})
     </update>
 
     <update id="modifyMainMonthly">
@@ -687,5 +696,32 @@
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate
         WHERE ID=(SELECT PARENT_ID FROM TRAFFIC_MONTHLY_REPORT WHERE ID=#{id})
+    </update>
+
+    <update id="modifyDailyByFlow">
+        UPDATE OPERATE_DAILY_REPORT SET
+        <if test="status!=null">
+            STATUS=#{status},
+        </if>
+        UPDATE_DATE=sysdate, UPDATE_BY=#{updateBy}
+        WHERE ID=#{id}
+    </update>
+
+    <update id="modifyWeeklyByFlow">
+        UPDATE OPERATE_WEEKLY_REPORT SET
+        <if test="status!=null">
+            STATUS=#{status},
+        </if>
+        UPDATE_DATE=sysdate, UPDATE_BY=#{updateBy}
+        WHERE ID=#{id}
+    </update>
+
+    <update id="modifyMonthlyByFlow">
+        UPDATE OPERATE_MONTHLY_REPORT SET
+        <if test="status!=null">
+            STATUS=#{status},
+        </if>
+        UPDATE_DATE=sysdate, UPDATE_BY=#{updateBy}
+        WHERE ID=#{id}
     </update>
 </mapper>

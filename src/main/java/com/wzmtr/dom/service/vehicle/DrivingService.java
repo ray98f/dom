@@ -5,7 +5,6 @@ import com.wzmtr.dom.dto.req.vehicle.DrivingDepotReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.DrivingInfoReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.DrivingRecordReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.DrivingDepotResDTO;
-import com.wzmtr.dom.dto.res.vehicle.DrivingInfoResDTO;
 import com.wzmtr.dom.dto.res.vehicle.DrivingRecordDetailResDTO;
 import com.wzmtr.dom.dto.res.vehicle.DrivingRecordResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
@@ -36,7 +35,7 @@ public interface DrivingService {
      * @param recordId 入参数
      * @return 车场情况
      */
-    DrivingRecordDetailResDTO detail(String recordId);
+    DrivingRecordDetailResDTO detail(String recordId, String dataType, String startDate, String endDate);
 
     /**
      * 行车情况-新增

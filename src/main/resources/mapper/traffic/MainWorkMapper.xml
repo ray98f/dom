@@ -6,11 +6,11 @@
         SELECT *
         FROM TRAFFIC_MAIN_WORK
         WHERE DEL_FLAG='0'
-        AND DATA_TYPE = #{dataType}
-        <if test="startDate != null and startDate!=''">
+        AND DATA_TYPE=#{dataType}
+        <if test="startDate!=null and startDate!=''">
             AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
-        <if test="endDate != null and endDate!=''">
+        <if test="endDate!=null and endDate!=''">
             AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
         </if>
         ORDER BY CREATE_DATE desc
@@ -20,11 +20,11 @@
         SELECT COUNT(*)
         FROM TRAFFIC_MAIN_WORK
         WHERE DEL_FLAG = '0'
-        AND DATA_TYPE = #{dataType}
-        <if test="startDate != null">
+        AND DATA_TYPE=#{dataType}
+        <if test="startDate!=null">
             AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
-        <if test="endDate != null">
+        <if test="endDate!=null">
             AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
     </select>
@@ -37,7 +37,7 @@
 
     <insert id="add">
         INSERT INTO TRAFFIC_MAIN_WORK (ID,DATA_TYPE,
-        <if test="dataDate != null">
+        <if test="dataDate!=null">
             DATA_DATE,
         </if>
         START_DATE,
@@ -45,7 +45,7 @@
         CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
         VALUES
         (#{id}, #{dataType},
-        <if test="dataDate != null">
+        <if test="dataDate!=null">
             to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
         </if>
         to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
@@ -55,19 +55,19 @@
 
     <update id="modify">
         UPDATE TRAFFIC_MAIN_WORK SET
-        <if test="workDesc != null">
+        <if test="workDesc!=null">
             WORK_DESC=#{workDesc},
         </if>
-        <if test="problemDesc != null">
+        <if test="problemDesc!=null">
             PROBLEM_DESC=#{problemDesc},
         </if>
-        <if test="nextPlan != null">
+        <if test="nextPlan!=null">
             NEXT_PLAN=#{nextPlan},
         </if>
             VERSION = VERSION+1,
             UPDATE_BY=#{updateBy},
             UPDATE_DATE=sysdate
-        WHERE ID=#{id} and VERSION = #{version}
+        WHERE ID=#{id} and VERSION=#{version}
     </update>
 
 </mapper>

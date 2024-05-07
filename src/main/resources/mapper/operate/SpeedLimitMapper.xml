@@ -16,11 +16,21 @@
     </select>
 
     <select id="infoPage" resultType="com.wzmtr.dom.dto.res.operate.SpeedLimitInfoResDTO">
-        SELECT ID, SERIAL_NO, REASON, LIMIT_START_TIME, LIMIT_END_TIME, LIMIT_SECTION,
-        LIMIT_VALUE, APPLICATION_DEPT, APPLICATION_DEPT_NAME, DUTY, VERSION, RECORD_ID
-        FROM OPERATE_SPEED_LIMIT_INFO
-        WHERE DEL_FLAG='0' AND RECORD_ID=#{id}
-        ORDER BY SERIAL_NO ASC
+        SELECT li.ID, li.SERIAL_NO, li.REASON, li.LIMIT_START_TIME, li.LIMIT_END_TIME, li.LIMIT_SECTION,
+        li.LIMIT_VALUE, li.APPLICATION_DEPT, li.APPLICATION_DEPT_NAME, li.DUTY, li.VERSION, li.RECORD_ID
+        FROM OPERATE_SPEED_LIMIT_INFO li
+        LEFT JOIN OPERATE_SPEED_LIMIT_RECORD lr ON li.RECORD_ID=lr.ID AND lr.DEL_FLAG='0'
+        WHERE li.DEL_FLAG='0'
+        <if test="id!=null and id!=''">
+            AND li.RECORD_ID=#{id}
+        </if>
+        <if test="startDate!=null and startDate!=''">
+            AND lr.DATA_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'YYYY-MM-DD')>=lr.DATA_DATE
+        </if>
+        ORDER BY li.SERIAL_NO ASC
     </select>
 
     <select id="getInfoDetail" resultType="com.wzmtr.dom.dto.res.operate.SpeedLimitInfoResDTO">
@@ -128,7 +138,7 @@
     </insert>
 
     <update id="incrementRecord">
-        UPDATE OPERATE_SPEED_LIMIT_INFO SET
+        UPDATE OPERATE_SPEED_LIMIT_RECORD SET
         LIMIT_NUM=LIMIT_NUM+${num}
         WHERE ID=#{recordId}
     </update>

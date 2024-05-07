@@ -10,8 +10,6 @@ import com.wzmtr.dom.dto.res.traffic.WeeklyReportResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 
-import java.util.List;
-
 /**
  * 客运部-客运部报表
  * @author  zhangxin
@@ -34,7 +32,7 @@ public interface TrafficReportService {
      * @param id id
      * @return 日报详情
      */
-    DailyReportResDTO dailyDetail(String id);
+    DailyReportResDTO dailyDetail(String id,String startDate,String endDate);
 
     /**
      * 新增日报
@@ -50,14 +48,10 @@ public interface TrafficReportService {
 
     /**
      * 报审日报
+     * @param currentLoginUser 登录用户信息
      * @param dailyReportReqDTO 日报参数
      */
     void commitDaily(CurrentLoginUser currentLoginUser,DailyReportReqDTO dailyReportReqDTO);
-    /**
-     * 删除日报
-     * @param ids ids
-     */
-    void deleteDaily(List<String> ids);
 
     /**
      * 分页查询周报列表
@@ -90,6 +84,7 @@ public interface TrafficReportService {
 
     /**
      * 报审-周报
+     * @param currentLoginUser 登录用户信息
      * @param weeklyReportReqDTO 周报参数
      */
     void commitWeekly(CurrentLoginUser currentLoginUser,WeeklyReportReqDTO weeklyReportReqDTO);
@@ -125,6 +120,7 @@ public interface TrafficReportService {
 
     /**
      * 报审月报
+     * @param currentLoginUser 登录用户信息
      * @param monthlyReportReqDTO 月报参数
      */
     void commitMonthly(CurrentLoginUser currentLoginUser,MonthlyReportReqDTO monthlyReportReqDTO);

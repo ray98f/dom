@@ -1,7 +1,7 @@
 package com.wzmtr.dom.impl.traffic;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.traffic.ImportantWorkReqDTO;
 import com.wzmtr.dom.dto.res.traffic.ImportantWorkResDTO;
@@ -30,7 +30,7 @@ public class ImportantWorkServiceImpl implements ImportantWorkService {
 
     @Override
     public Page<ImportantWorkResDTO> list(String dataType, String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return importantWorkMapper.list(pageReqDTO.of(),dataType,startDate,endDate);
     }
 
@@ -41,9 +41,9 @@ public class ImportantWorkServiceImpl implements ImportantWorkService {
 
     @Override
     public void add(CurrentLoginUser currentLoginUser, ImportantWorkReqDTO importantWorkReqDTO) {
-        if(currentLoginUser.getStationCode() == null){
-            throw new CommonException(ErrorCode.USER_NOT_BIND_STATION);
-        }
+//        if(currentLoginUser.getStationCode() == null){
+//            throw new CommonException(ErrorCode.USER_NOT_BIND_STATION);
+//        }
         int existFlag = importantWorkMapper.checkExist(importantWorkReqDTO.getDataType(),
                 importantWorkReqDTO.getStartDate(),
                 importantWorkReqDTO.getEndDate());

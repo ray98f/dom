@@ -46,7 +46,7 @@ public interface MaintenanceMapper {
      * @param id 入参数
      * @return LineEventResDTO
      */
-    MaintenanceRecordResDTO queryInfoById(String id);
+    MaintenanceRecordResDTO queryInfoById(String id,String startDate, String endDate);
 
     /**
      * 校验数据是否存在

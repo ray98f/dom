@@ -41,13 +41,13 @@ public class DebugServiceImpl implements DebugService {
 
     @Override
     public Page<DebugRecordResDTO> recordPage(String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return debugMapper.recordPage(pageReqDTO.of(), startDate, endDate);
     }
 
     @Override
     public Page<DebugInfoResDTO> infoPage(String id, String dataType, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return debugMapper.infoPage(pageReqDTO.of(), id, dataType);
     }
 

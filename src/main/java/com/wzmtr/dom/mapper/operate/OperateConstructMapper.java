@@ -10,7 +10,6 @@ import java.util.List;
 
 /**
  * 运营日报-施工情况
- *
  * @author zhangxin
  * @version 1.0
  * @date 2024/3/11 16:25
@@ -34,7 +33,7 @@ public interface OperateConstructMapper {
      * @param id 入参数
      * @return LineEventResDTO
      */
-    ConstructRecordResDTO queryInfoById(String id);
+    ConstructRecordResDTO queryInfoById(String id,String startDate, String endDate);
 
     /**
      * 校验数据是否存在

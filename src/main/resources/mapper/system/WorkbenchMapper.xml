@@ -5,9 +5,10 @@
     <select id="todoPage" resultType="com.wzmtr.dom.dto.res.system.TodoResDTO">
         SELECT ah.ID, ah.PROCESS_KEY, ah.PARENT_PROCESS_KEY, ah.TODO_TYPE, ah.STATUS, ah.DATA_TYPE,
         ah.REPORT_ID, ah.REPORT_TABLE, ah.APPROVAL_USER, ah.APPROVAL_RESULT, ah.APPROVAL_STATUS,
-        ah.VERSION, ah.CREATE_DATE, u.NAME AS CREATE_BY, ah.CURRENT_NODE
+        ah.VERSION, ah.CREATE_DATE, u.NAME AS CREATE_BY, ah.CURRENT_NODE, ah.TITLE, fn.NODE_NAME AS CURRENT_NODE_NAME
         FROM DOM_APPROVAL_HISTORY ah
-        LEFT JOIN SYS_USER u on u.ID=ah.CREATE_BY
+        LEFT JOIN SYS_USER u ON u.ID=ah.CREATE_BY
+        LEFT JOIN DOM_FLOW_NODE fn ON fn.NODE_ID=ah.CURRENT_NODE AND ah.PROCESS_KEY=fn.FLOW_ID AND fn.DEL_FLAG='0'
         WHERE ah.DEL_FLAG='0' and ah.APPROVAL_USER=#{userId}
         <if test="type=='1'.toString()">
             and ah.TODO_TYPE='1' and ah.STATUS='0'
@@ -25,18 +26,20 @@
     </select>
 
     <select id="todoDetail" resultType="com.wzmtr.dom.dto.res.system.TodoResDTO">
-        SELECT ah.ID, ah.PROCESS_KEY, ah.PARENT_PROCESS_KEY, ah.TODO_TYPE, ah.STATUS, ah.DATA_TYPE,
-        ah.REPORT_ID, ah.REPORT_TABLE, ah.APPROVAL_USER, ah.APPROVAL_RESULT, ah.APPROVAL_STATUS,
-        ah.VERSION, ah.CREATE_DATE, u.NAME AS CREATE_BY, ah.CURRENT_NODE,ah.TITLE,ah.IS_HIDE,ah.PARENT_ID
+        SELECT ah.ID, ah.PROCESS_KEY, ah.PARENT_PROCESS_KEY, ah.TODO_TYPE,
+        ah.STATUS, ah.DATA_TYPE, ah.REPORT_ID, ah.REPORT_TABLE, ah.APPROVAL_USER,
+        ah.APPROVAL_RESULT, ah.APPROVAL_STATUS, ah.VERSION, ah.CREATE_DATE, u.NAME AS CREATE_BY,
+        ah.CURRENT_NODE,ah.TITLE,ah.IS_HIDE,ah.PARENT_ID,fn.NODE_NAME AS CURRENT_NODE_NAME
         FROM DOM_APPROVAL_HISTORY ah
         LEFT JOIN SYS_USER u on u.ID=ah.CREATE_BY
+        LEFT JOIN DOM_FLOW_NODE fn ON fn.NODE_ID=ah.CURRENT_NODE AND ah.PROCESS_KEY=fn.FLOW_ID AND fn.DEL_FLAG='0'
         WHERE ah.DEL_FLAG='0' AND ah.ID=#{id}
     </select>
 
     <select id="queryRoleByNode" resultType="java.lang.String">
         SELECT ROLE_ID
         FROM DOM_FLOW_NODE t1
-        WHERE t1.NODE_ID = #{nodeId}
+        WHERE t1.NODE_ID=#{nodeId}
     </select>
 
     <select id="queryUserByRole" resultType="java.lang.String">
@@ -50,11 +53,13 @@
     </select>
 
     <select id="queryTodoByNode" resultType="com.wzmtr.dom.dto.res.system.TodoResDTO">
-        SELECT ah.ID, ah.PROCESS_KEY, ah.PARENT_PROCESS_KEY, ah.TODO_TYPE, ah.STATUS, ah.DATA_TYPE,
-        ah.REPORT_ID, ah.REPORT_TABLE, ah.APPROVAL_USER, ah.APPROVAL_RESULT, ah.APPROVAL_STATUS,
-        ah.VERSION, ah.CREATE_DATE, u.NAME AS CREATE_BY, ah.CURRENT_NODE, ah.TITLE, ah.IS_HIDE, ah.PARENT_ID
+        SELECT ah.ID, ah.PROCESS_KEY, ah.PARENT_PROCESS_KEY, ah.TODO_TYPE,
+        ah.STATUS, ah.DATA_TYPE, ah.REPORT_ID, ah.REPORT_TABLE, ah.APPROVAL_USER,
+        ah.APPROVAL_RESULT, ah.APPROVAL_STATUS, ah.VERSION, ah.CREATE_DATE, u.NAME AS CREATE_BY,
+        ah.CURRENT_NODE,ah.TITLE,ah.IS_HIDE,ah.PARENT_ID,fn.NODE_NAME AS CURRENT_NODE_NAME
         FROM DOM_APPROVAL_HISTORY ah
         LEFT JOIN SYS_USER u on u.ID=ah.CREATE_BY
+        LEFT JOIN DOM_FLOW_NODE fn ON fn.NODE_ID=ah.CURRENT_NODE AND ah.PROCESS_KEY=fn.FLOW_ID AND fn.DEL_FLAG='0'
         WHERE ah.DEL_FLAG='0'
         AND ah.STATUS='0'
         AND ah.PROCESS_KEY=#{processKey}
@@ -67,13 +72,14 @@
     </select>
 
     <select id="queryTodoByParent" resultType="com.wzmtr.dom.dto.res.system.TodoResDTO">
-        SELECT ah.ID, ah.PROCESS_KEY, ah.PARENT_PROCESS_KEY, ah.TODO_TYPE, ah.STATUS, ah.DATA_TYPE,
-        ah.REPORT_ID, ah.REPORT_TABLE, ah.APPROVAL_USER, ah.APPROVAL_RESULT, ah.APPROVAL_STATUS,
-        ah.VERSION, ah.CREATE_DATE, u.NAME AS CREATE_BY, ah.CURRENT_NODE, ah.TITLE, ah.IS_HIDE, ah.PARENT_ID
+        SELECT ah.ID, ah.PROCESS_KEY, ah.PARENT_PROCESS_KEY, ah.TODO_TYPE,
+        ah.STATUS, ah.DATA_TYPE, ah.REPORT_ID, ah.REPORT_TABLE, ah.APPROVAL_USER,
+        ah.APPROVAL_RESULT, ah.APPROVAL_STATUS, ah.VERSION, ah.CREATE_DATE, u.NAME AS CREATE_BY,
+        ah.CURRENT_NODE,ah.TITLE,ah.IS_HIDE,ah.PARENT_ID,fn.NODE_NAME AS CURRENT_NODE_NAME
         FROM DOM_APPROVAL_HISTORY ah
         LEFT JOIN SYS_USER u on u.ID=ah.CREATE_BY
+        LEFT JOIN DOM_FLOW_NODE fn ON fn.NODE_ID=ah.CURRENT_NODE AND ah.PROCESS_KEY=fn.FLOW_ID AND fn.DEL_FLAG='0'
         WHERE ah.DEL_FLAG='0'
-        AND ah.STATUS='0'
         AND ah.PARENT_ID=#{parentId}
     </select>
 
@@ -81,37 +87,40 @@
         INSERT INTO DOM_APPROVAL_HISTORY (
         ID,
         PROCESS_KEY,
-        <if test="parentProcessKey != null and parentProcessKey!=''">
+        <if test="parentProcessKey!=null and parentProcessKey!=''">
             PARENT_PROCESS_KEY,
         </if>
-        <if test="todoType != null and todoType!=''">
+        <if test="todoType!=null and todoType!=''">
             TODO_TYPE,
         </if>
-        <if test="status != null and status!=''">
+        <if test="status!=null and status!=''">
             STATUS,
         </if>
-        <if test="dataType != null and dataType!=''">
+        <if test="dataType!=null and dataType!=''">
             DATA_TYPE,
         </if>
-        <if test="reportId != null and reportId!=''">
+        <if test="reportId!=null and reportId!=''">
             REPORT_ID,
         </if>
-        <if test="reportTable != null and reportTable!=''">
+        <if test="reportTable!=null and reportTable!=''">
             REPORT_TABLE,
         </if>
-        <if test="approvalUser != null and approvalUser!=''">
+        <if test="approvalUser!=null and approvalUser!=''">
             APPROVAL_USER,
         </if>
-        <if test="approvalResult != null and approvalResult!=''">
+        <if test="approvalResult!=null and approvalResult!=''">
             APPROVAL_RESULT,
         </if>
-        <if test="currentNode != null and currentNode!=''">
+        <if test="currentNode!=null and currentNode!=''">
             CURRENT_NODE,
         </if>
-        <if test="isHide != null and isHide!=''">
+        <if test="title!=null and title!=''">
+            TITLE,
+        </if>
+        <if test="isHide!=null and isHide!=''">
             IS_HIDE,
         </if>
-        <if test="parentId != null and parentId!=''">
+        <if test="parentId!=null and parentId!=''">
             PARENT_ID,
         </if>
         CREATE_DATE,
@@ -121,37 +130,40 @@
         VALUES
         (#{id},
         #{processKey},
-        <if test="parentProcessKey != null and parentProcessKey!=''">
+        <if test="parentProcessKey!=null and parentProcessKey!=''">
             #{parentProcessKey},
         </if>
-        <if test="todoType != null and todoType!=''">
+        <if test="todoType!=null and todoType!=''">
             #{todoType},
         </if>
-        <if test="status != null and status!=''">
+        <if test="status!=null and status!=''">
             #{status},
         </if>
-        <if test="dataType != null and dataType!=''">
+        <if test="dataType!=null and dataType!=''">
             #{dataType},
         </if>
-        <if test="reportId != null and reportId!=''">
+        <if test="reportId!=null and reportId!=''">
             #{reportId},
         </if>
-        <if test="reportTable != null and reportTable!=''">
+        <if test="reportTable!=null and reportTable!=''">
             #{reportTable},
         </if>
-        <if test="approvalUser != null and approvalUser!=''">
+        <if test="approvalUser!=null and approvalUser!=''">
             #{approvalUser},
         </if>
-        <if test="approvalResult != null and approvalResult!=''">
+        <if test="approvalResult!=null and approvalResult!=''">
             #{approvalResult},
         </if>
-        <if test="currentNode != null and currentNode!=''">
+        <if test="currentNode!=null and currentNode!=''">
             #{currentNode},
         </if>
-        <if test="isHide != null and isHide!=''">
+        <if test="title!=null and title!=''">
+            #{title},
+        </if>
+        <if test="isHide!=null and isHide!=''">
             #{isHide},
         </if>
-        <if test="parentId != null and parentId!=''">
+        <if test="parentId!=null and parentId!=''">
             #{parentId},
         </if>
         sysdate,
@@ -169,12 +181,35 @@
             APPROVAL_STATUS=#{approvalStatus},
         </if>
         STATUS='1', UPDATE_BY=#{updateBy}, UPDATE_DATE=sysdate
-        where ID=#{id}
+        WHERE ID=#{id}
     </update>
+
+    <update id="sameStageTodoDelete">
+        UPDATE DOM_APPROVAL_HISTORY SET
+        DEL_FLAG='1', UPDATE_BY=#{userId}, UPDATE_DATE=sysdate
+        WHERE PROCESS_KEY=#{res.processKey} AND REPORT_ID=#{res.reportId} AND REPORT_TABLE=#{res.reportTable}
+        AND CURRENT_NODE=#{res.currentNode} AND DATA_TYPE=#{res.todoType} AND STATUS='0' AND TODO_TYPE='1'
+        AND DEL_FLAG='0'
+    </update>
+
+    <select id="sameStageTodoIsExist" resultType="java.lang.Integer">
+        SELECT COUNT(1)
+        FROM DOM_APPROVAL_HISTORY
+        WHERE PROCESS_KEY=#{processKey} AND REPORT_ID=#{reportId} AND REPORT_TABLE=#{reportTable}
+        AND CURRENT_NODE=#{currentNode} AND DATA_TYPE=#{todoType} AND STATUS='0' AND TODO_TYPE='1'
+        AND DEL_FLAG='0'
+    </select>
 
     <select id="queryNextNode" resultType="java.lang.String">
         SELECT NEXT_NODE
         FROM DOM_FLOW_NODE
-        WHERE NODE_ID=#{nodeId}
+        WHERE NODE_ID=#{nodeId} AND DEL_FLAG='0'
+    </select>
+
+    <select id="nodeDetail" resultType="com.wzmtr.dom.dto.res.system.FlowNodeResDTO">
+        SELECT FLOW_ID, FLOW_NAME, NODE_ID, NODE_NAME, ROLE_ID,
+        PARENT_NODE, NODE_ORDER, NODE_TYPE, TODO_SHOW_FLAG, NEXT_NODE
+        FROM DOM_FLOW_NODE
+        WHERE NODE_ID=#{nodeId} AND DEL_FLAG='0'
     </select>
 </mapper>

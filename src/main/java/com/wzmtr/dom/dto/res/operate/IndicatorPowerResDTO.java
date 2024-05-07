@@ -97,6 +97,12 @@ public class IndicatorPowerResDTO extends BaseEntity {
     @ApiModelProperty(value = " 照明能耗占比")
     private String lightRate;
 
+    /**
+     * 备注
+     * */
+    @ApiModelProperty(value = " 备注")
+    private String remark;
+
     @ApiModelProperty(value = "版本号")
     private String version;
 

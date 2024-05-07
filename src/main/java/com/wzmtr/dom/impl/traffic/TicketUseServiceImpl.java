@@ -1,7 +1,7 @@
 package com.wzmtr.dom.impl.traffic;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.traffic.TicketUseReqDTO;
 import com.wzmtr.dom.dto.res.traffic.TicketUseResDTO;
@@ -32,13 +32,13 @@ public class TicketUseServiceImpl implements TicketUseService {
 
     @Override
     public Page<TicketUseResDTO> page(String startDate, String endDate, String dataType, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return ticketUseMapper.page(pageReqDTO.of(), startDate, endDate, dataType);
     }
 
     @Override
-    public TicketUseResDTO detail(String id) {
-        TicketUseResDTO res = ticketUseMapper.detail(id);
+    public TicketUseResDTO detail(String id, String startDate, String endDate) {
+        TicketUseResDTO res = ticketUseMapper.detail(id, startDate, endDate);
         if (Objects.isNull(res)) {
             throw new CommonException(ErrorCode.RESOURCE_NOT_EXIST);
         }
@@ -53,7 +53,7 @@ public class TicketUseServiceImpl implements TicketUseService {
     }
 
     @Override
-    public TicketUseResDTO acc(String date) {
+    public TicketUseResDTO acc(String dataType, String startDate, String endDate) {
         // todo 根据日期获取当天 ACC系统线 网车票过闸使用情况
         return new TicketUseResDTO();
     }

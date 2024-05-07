@@ -6,6 +6,9 @@
         SELECT ID, ORDER_NUM, VERSION, DATA_DATE, DATA_TYPE, START_DATE, END_DATE
         FROM VEHICLE_DISPATCH_RECORD
         WHERE DEL_FLAG='0'
+        <if test="dataType!=null and dataType!=''">
+            AND DATA_TYPE=#{dataType}
+        </if>
         <if test="dataType=='1'.toString()">
             <if test="startDate!=null and startDate!=''">
                 AND DATA_DATE>=to_date(#{startDate},'YYYY-MM-DD')
@@ -13,7 +16,7 @@
             <if test="endDate!=null and endDate!=''">
                 AND to_date(#{endDate},'YYYY-MM-DD')>=DATA_DATE
             </if>
-            ORDER BY DATA_DATE desc
+            ORDER BY START_DATE desc
         </if>
         <if test="dataType!='1'.toString()">
             <if test="startDate!=null and startDate!=''">
@@ -72,10 +75,10 @@
 
     <select id="selectOrderIsExist" resultType="java.lang.Integer">
         select count(1) from VEHICLE_DISPATCH_ORDER
-        <if test="record.version!=null and record.version!=''">
-            WHERE VERSION=#{version}
+        WHERE ID=#{id} AND DEL_FLAG='0' AND rownum=1
+        <if test="version!=null and version!=''">
+            AND VERSION=#{version}
         </if>
-        AND DEL_FLAG='0' AND rownum=1
     </select>
 
     <insert id="addRecord">
@@ -179,11 +182,20 @@
     <update id="deleteOrder">
         UPDATE VEHICLE_DISPATCH_ORDER SET
         DEL_FLAG='1', UPDATE_BY=#{userId}, UPDATE_DATE=sysdate
-        WHERE RECORD_ID IN (
-        <foreach collection="ids" index="index" item="id" separator=",">
-            #{id}
-        </foreach>
-        )
+        <if test="recordIds!=null and recordIds.size()>0">
+            WHERE RECORD_ID IN (
+            <foreach collection="recordIds" index="index" item="recordId" separator=",">
+                #{recordId}
+            </foreach>
+            )
+        </if>
+        <if test="ids!=null and ids.size()>0">
+            WHERE ID IN (
+            <foreach collection="ids" index="index" item="id" separator=",">
+                #{id}
+            </foreach>
+            )
+        </if>
     </update>
 
 </mapper>

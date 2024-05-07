@@ -20,6 +20,9 @@ public class DrivingInfoReqDTO extends BaseEntity {
     @ApiModelProperty(value = "行车情况记录ID")
     private String recordId;
 
+    @ApiModelProperty(value = "行车情况记录ID")
+    private String reamrk;
+
     @ApiModelProperty(value = "司机总人数")
     private Integer driverCount;
 

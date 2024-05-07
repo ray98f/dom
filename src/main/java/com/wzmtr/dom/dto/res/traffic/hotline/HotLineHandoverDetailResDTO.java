@@ -1,6 +1,5 @@
 package com.wzmtr.dom.dto.res.traffic.hotline;
 
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -14,9 +13,16 @@ import java.util.Date;
  */
 @Data
 public class HotLineHandoverDetailResDTO {
-
-    @TableId("ID")
+    /**
+     * ID
+     */
+    @ApiModelProperty("ID")
     private String id;
+    /**
+     * 记录id
+     */
+    @ApiModelProperty("记录id")
+    private String recordId;
     /**
      * 主要内容
      */

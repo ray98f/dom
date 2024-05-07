@@ -29,7 +29,7 @@ public interface UserAccountMapper {
      * @param searchKey 关键字
      * @return 用户信息列表
      */
-    Page<UserAccountResDTO> listUserAccount(Page<UserAccountResDTO> page, @Param("searchKey") String searchKey);
+    Page<UserAccountResDTO> listUserAccount(Page<UserAccountResDTO> page, String searchKey);
 
     /**
      * 根据ids获取用户信息列表

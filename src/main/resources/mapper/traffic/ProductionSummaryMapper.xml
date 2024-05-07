@@ -6,12 +6,14 @@
         SELECT *
         FROM TRAFFIC_PRODUCTION_SUMMARY
         WHERE DEL_FLAG='0'
-        AND DATA_TYPE = #{dataType}
-        AND STATION_CODE = #{stationCode}
-        <if test="startDate != null and startDate!=''">
-            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND DATA_TYPE=#{dataType}
+        <if test="stationCode!=null and stationCode!=''">
+            AND STATION_CODE=#{stationCode}
         </if>
-        <if test="endDate != null and endDate!=''">
+        <if test="startDate!=null and startDate!=''">
+            AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate!=null and endDate!=''">
             AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
         </if>
         ORDER BY CREATE_DATE desc
@@ -21,12 +23,12 @@
         SELECT COUNT(*)
         FROM TRAFFIC_PRODUCTION_SUMMARY
         WHERE DEL_FLAG = '0'
-        AND DATA_TYPE = #{dataType}
-        AND STATION_CODE = #{stationCode}
-        <if test="startDate != null">
+        AND DATA_TYPE=#{dataType}
+        AND STATION_CODE=#{stationCode}
+        <if test="startDate!=null">
             AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
-        <if test="endDate != null">
+        <if test="endDate!=null">
             AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
     </select>
@@ -35,14 +37,24 @@
         SELECT t1.*, t2.STATION_NAME
         FROM TRAFFIC_PRODUCTION_SUMMARY t1
         LEFT JOIN SYS_STATION t2 on t1.STATION_CODE = t2.STATION_CODE
-        WHERE t1.ID=#{id} AND t1.DEL_FLAG = '0'
+        WHERE  t1.DEL_FLAG = '0'
+        <if test="id!=null">
+            AND t1.ID=#{id}
+        </if>
+        <if test="startDate!=null">
+            AND to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')>= t1.START_DATE
+        </if>
+        <if test="endDate!=null">
+            AND  t1.END_DATE>=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+
     </select>
 
     <select id="queryInfoByDate" resultType="com.wzmtr.dom.dto.res.traffic.ProductionSummaryResDTO">
         SELECT *
         FROM TRAFFIC_PRODUCTION_SUMMARY
         WHERE DATA_TYPE=#{dataType}
-        AND STATION_CODE = #{stationCode}
+        AND STATION_CODE=#{stationCode}
         AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
         AND DEL_FLAG = '0'
@@ -52,7 +64,7 @@
         SELECT *
         FROM TRAFFIC_PRODUCTION_SUMMARY
         WHERE DATA_TYPE=#{dataType}
-        AND STATION_CODE = #{stationCode}
+        AND STATION_CODE=#{stationCode}
         <if test='dataType == "1"'>
             AND START_DATE = TRUNC(to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')-1)
         </if>
@@ -77,7 +89,7 @@
         TYPE6_COUNT,
         STATION_CODE,
         DATA_TYPE,
-        <if test="dataDate != null">
+        <if test="dataDate!=null">
             DATA_DATE,
         </if>
         START_DATE,
@@ -85,14 +97,14 @@
         CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
         VALUES
         (#{id},
-        (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND STATION_CODE=#{stationCode} AND PRODUCTION_TYPE = '1' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
-        (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND STATION_CODE=#{stationCode} AND PRODUCTION_TYPE = '2' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
-        (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND STATION_CODE=#{stationCode} AND PRODUCTION_TYPE = '3' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
-        (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND STATION_CODE=#{stationCode} AND PRODUCTION_TYPE = '4' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
-        (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND STATION_CODE=#{stationCode} AND PRODUCTION_TYPE = '5' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
-        (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND STATION_CODE=#{stationCode} AND PRODUCTION_TYPE = '6' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND STATION_CODE=#{stationCode} AND PRODUCTION_TYPE = '1' AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND STATION_CODE=#{stationCode} AND PRODUCTION_TYPE = '2' AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND STATION_CODE=#{stationCode} AND PRODUCTION_TYPE = '3' AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND STATION_CODE=#{stationCode} AND PRODUCTION_TYPE = '4' AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND STATION_CODE=#{stationCode} AND PRODUCTION_TYPE = '5' AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND STATION_CODE=#{stationCode} AND PRODUCTION_TYPE = '6' AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
         #{stationCode},#{dataType},
-        <if test="dataDate != null">
+        <if test="dataDate!=null">
             to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
         </if>
         to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
@@ -102,31 +114,31 @@
 
     <update id="modify">
         UPDATE TRAFFIC_PRODUCTION_SUMMARY SET
-        <if test="type1Desc != null">
+        <if test="type1Desc!=null">
             TYPE1_DESC=#{type1Desc},
         </if>
-        <if test="type2Desc != null">
+        <if test="type2Desc!=null">
             TYPE2_DESC=#{type2Desc},
         </if>
-        <if test="type3Desc != null">
+        <if test="type3Desc!=null">
             TYPE3_DESC=#{type3Desc},
         </if>
-        <if test="type4Desc != null">
+        <if test="type4Desc!=null">
             TYPE4_DESC=#{type4Desc},
         </if>
-        <if test="type5Desc != null">
+        <if test="type5Desc!=null">
             TYPE5_DESC=#{type5Desc},
         </if>
-        <if test="type6Desc != null">
+        <if test="type6Desc!=null">
             TYPE6_DESC=#{type6Desc},
         </if>
-        <if test="remark != null">
+        <if test="remark!=null">
             REMARK=#{remark},
         </if>
-            VERSION = VERSION+1,
-            UPDATE_BY=#{updateBy},
-            UPDATE_DATE=sysdate
-        WHERE ID=#{id} and VERSION = #{version}
+        VERSION = VERSION+1,
+        UPDATE_BY=#{updateBy},
+        UPDATE_DATE=sysdate
+        WHERE ID=#{id} and VERSION=#{version}
     </update>
 
 

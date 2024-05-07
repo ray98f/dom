@@ -12,6 +12,5 @@ import javax.validation.constraints.NotNull;
 @Data
 public class SidReqDTO {
     @ApiModelProperty("id")
-    @NotNull
     private String id;
 }

@@ -1,10 +1,11 @@
 package com.wzmtr.dom.impl.operate;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.operate.OperateFaultStatisticsReqDTO;
 import com.wzmtr.dom.dto.res.operate.fault.FaultStatisticsResDTO;
+import com.wzmtr.dom.dto.res.operate.fault.ReportFaultStatisticsResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.ErrorCode;
@@ -34,23 +35,36 @@ public class OperateFaultStatisticsServiceImpl implements OperateFaultStatistics
 
     @Override
     public Page<FaultStatisticsResDTO> list(String dataType, String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-
-        Page<FaultStatisticsResDTO> list = new Page<>();
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        Page<FaultStatisticsResDTO> list = operateFaultStatisticsMapper.list(pageReqDTO.of(), dataType, startDate, endDate);
         List<FaultStatisticsResDTO> records = list.getRecords();
         if (CollectionUtils.isEmpty(records)) {
             return list;
         }
-        // 日报需要给每一列返回总数
-        records.forEach(a -> {
-            long sum = getFaultSum(a);
-            a.setSum(sum);
-        });
+        records.forEach(a -> a.setSum(getFaultSum(a)));
         return list;
     }
 
+    @Override
+    public ReportFaultStatisticsResDTO report(String date) {
+        ReportFaultStatisticsResDTO res = new ReportFaultStatisticsResDTO();
+        FaultStatisticsResDTO today = operateFaultStatisticsMapper.getTodayDetail(date);
+        if (StringUtils.isNotNull(today)) {
+            res.setToday(today);
+        }
+        FaultStatisticsResDTO currentMonth =
+                operateFaultStatisticsMapper.getCurrentMonthDetail(date.substring(0, 7) + "01", date);
+        if (StringUtils.isNotNull(currentMonth)) {
+            res.setCurrentMonth(currentMonth);
+        }
+        return res;
+    }
+
     public static long getFaultSum(FaultStatisticsResDTO a) {
-        return a.getVehicleNum() + a.getPowerNum() + a.getSignalNum() + a.getCommunicationNum() + a.getIndustryNum() + a.getMechanismNum() + a.getAfcNum() + a.getElseNum();
+        return a.getChangeDistributionNum() + a.getContactNetworkNum() + a.getCommunicationNum() +
+                a.getSignalNum() + a.getPlatformDoorsNum() + a.getHydropowerNum() + a.getBuildingConstructionNum() +
+                a.getMonitorNum() + a.getAfcNum() + a.getFasNum() + a.getEscalatorNum() + a.getOfficialDutiesNum() +
+                a.getBridgeTunnelNum() + a.getEngineeringVehicleNum() + a.getVehicleNum();
     }
 
 

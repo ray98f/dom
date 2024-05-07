@@ -1,7 +1,7 @@
 package com.wzmtr.dom.impl.vehicle;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.dto.req.vehicle.CrewBusinessReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.CrewBusinessResDTO;
 import com.wzmtr.dom.entity.PageReqDTO;
@@ -30,7 +30,7 @@ public class CrewBusinessServiceImpl implements CrewBusinessService {
 
     @Override
     public Page<CrewBusinessResDTO> page(String startDate, String endDate, String dataType, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return crewBusinessMapper.page(pageReqDTO.of(), startDate, endDate, dataType);
     }
 

@@ -2,7 +2,7 @@ package com.wzmtr.dom.impl.operate;
 
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.operate.OperateEventInfoReqDTO;
 import com.wzmtr.dom.dto.req.operate.OperateEventReqDTO;
@@ -37,13 +37,13 @@ public class OperateEventServiceImpl implements OperateEventService {
 
     @Override
     public Page<OperateEventResDTO> list(String dataType, String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return operateEventMapper.list(pageReqDTO.of(),dataType,startDate,endDate);
     }
 
     @Override
-    public OperateEventResDTO detail(String id) {
-        return operateEventMapper.queryInfoById(id);
+    public OperateEventResDTO detail(String id,String startDate, String endDate) {
+        return operateEventMapper.queryInfoById(id,startDate,endDate);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class OperateEventServiceImpl implements OperateEventService {
 
     @Override
     public Page<OperateEventInfoResDTO> eventList(String startDate, String endDate, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return operateEventMapper.eventList(pageReqDTO.of(),startDate,endDate);
     }
 
@@ -136,7 +136,7 @@ public class OperateEventServiceImpl implements OperateEventService {
      * */
     private void updateSummaryCount(String startDate,String endDate){
         List<OperateEventResDTO> res =  operateEventMapper.listAll(startDate,endDate);
-        if(res != null && res.size() > 0){
+        if(StringUtils.isNotEmpty(res)){
             for(OperateEventResDTO item:res){
                 operateEventMapper.modifyCount(item.getId(), DateUtil.formatDate(item.getStartDate()),DateUtil.formatDate(item.getEndDate()));
             }

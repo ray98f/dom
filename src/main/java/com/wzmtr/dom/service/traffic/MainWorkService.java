@@ -32,7 +32,7 @@ public interface MainWorkService {
      * @param recordId 入参数
      * @return 主要工作情况-详情
      */
-    MainWorkResDTO detail(String recordId);
+    MainWorkResDTO detail(String recordId, String startDate, String endDate);
 
     /**
      * 主要工作情况-新增

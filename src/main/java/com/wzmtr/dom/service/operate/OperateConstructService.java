@@ -9,8 +9,7 @@ import com.wzmtr.dom.entity.PageReqDTO;
 import java.util.List;
 
 /**
- * 运营日报-运营事件
- *
+ * 运营日报-施工情况
  * @author zhangxin
  * @version 1.0
  * @date 2024/3/11 19:55
@@ -26,13 +25,6 @@ public interface OperateConstructService {
      * @return 运营事件记录列表
      */
     Page<ConstructRecordResDTO> list(String dataType, String startDate, String endDate, PageReqDTO pageReqDTO);
-
-    /**
-     * 正线/车场事件记录-详情
-     * @param id 入参数
-     * @return IndicatorResDTO
-     */
-    ConstructRecordResDTO detail(String id);
 
     /**
      * 正线/车场事件记录-新增
@@ -107,4 +99,10 @@ public interface OperateConstructService {
      * @param ids ids
      */
     void deleteEvent(List<String> ids);
+    /**
+     * 正线/车场事件记录-详情
+     * @param id 入参数
+     * @return IndicatorResDTO
+     */
+    ConstructRecordResDTO detail(String id, String startDate, String endDate);
 }

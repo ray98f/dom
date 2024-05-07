@@ -19,46 +19,12 @@ import java.util.Date;
 @Data
 public class TrainRecordReqDTO extends BaseEntity {
 
-    /**
-     * 一组
-     */
-    @ApiModelProperty(value = "一组")
-    private String groupOne;
+
 
     /**
-     * 二组
+     * 整体培训情况
      */
-    @ApiModelProperty(value = "二组")
-    private String groupTwo;
-
-    /**
-     * 三组
-     */
-    @ApiModelProperty(value = "三组")
-    private String groupThree;
-
-    /**
-     * 四组
-     */
-    @ApiModelProperty(value = "四组")
-    private String groupFour;
-
-    /**
-     * 车场组
-     */
-    @ApiModelProperty(value = "车场组")
-    private String groupPark;
-
-    /**
-     * 脱产培训司机
-     */
-    @ApiModelProperty(value = "脱产培训司机")
-    private String trainDriver;
-
-    /**
-     * 备注
-     */
-    @ApiModelProperty(value = "备注")
+    @ApiModelProperty(value = "整体培训情况")
     private String remark;
 
     /**
@@ -66,6 +32,12 @@ public class TrainRecordReqDTO extends BaseEntity {
      */
     @ApiModelProperty(value = "版本号(乐观锁)")
     private String version;
+
+    /**
+     * 数据类型 1:日报 2:周报 3:月报
+     */
+    @ApiModelProperty(value = "数据类型 1:日报 2:周报 3:月报")
+    private String dataType;
 
     /**
      * 所属日期
@@ -77,4 +49,26 @@ public class TrainRecordReqDTO extends BaseEntity {
             timezone = "GMT+8"
     )
     private Date dataDate;
+
+    /**
+     * 数据起始日期
+     */
+    @ApiModelProperty(value = "数据起始日期")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd",
+            timezone = "GMT+8"
+    )
+    private Date startDate;
+
+    /**
+     * 数据结束日期
+     */
+    @ApiModelProperty(value = "数据结束日期")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd",
+            timezone = "GMT+8"
+    )
+    private Date endDate;
 }

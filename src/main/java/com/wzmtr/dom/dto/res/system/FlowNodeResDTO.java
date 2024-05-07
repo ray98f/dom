@@ -13,56 +13,62 @@ import lombok.Data;
 public class FlowNodeResDTO {
 
     /**
-     * flowId
+     * 流程ID
      */
-    @ApiModelProperty(value = "flowId")
+    @ApiModelProperty(value = "流程ID")
     private String flowId;
 
     /**
-     * flowName
+     * 流程名称
      */
-    @ApiModelProperty(value = "flowName")
+    @ApiModelProperty(value = "流程名称")
     private String flowName;
 
     /**
-     * nodeId
+     * 节点ID
      */
-    @ApiModelProperty(value = "nodeId")
+    @ApiModelProperty(value = "节点ID")
     private String nodeId;
 
     /**
-     * nodeName
+     * 节点名称
      */
-    @ApiModelProperty(value = "nodeName")
+    @ApiModelProperty(value = "节点名称")
     private String nodeName;
 
     /**
-     * roleId
+     * 节点审批角色
      */
-    @ApiModelProperty(value = "roleId")
+    @ApiModelProperty(value = "节点审批角色")
     private String roleId;
 
     /**
-     * parentNode
+     * 上一节点
      */
-    @ApiModelProperty(value = "parentNode")
+    @ApiModelProperty(value = "上一节点")
     private String parentNode;
 
     /**
-     * nextNode
+     * 下一节点
      */
-    @ApiModelProperty(value = "nextNode")
+    @ApiModelProperty(value = "下一节点")
     private String nextNode;
 
     /**
-     * nodeOrder
+     * 节点序号
      */
-    @ApiModelProperty(value = "nodeOrder")
+    @ApiModelProperty(value = "节点序号")
     private Integer nodeOrder;
 
     /**
-     * nodeType
+     * 节点类型:1待办 2待阅
      */
-    @ApiModelProperty(value = "nodeType")
+    @ApiModelProperty(value = "节点类型:1待办 2待阅")
     private String nodeType;
+
+    /**
+     * 是否在待办列表显示: 0否,1是
+     */
+    @ApiModelProperty(value = "是否在待办列表显示: 0否,1是")
+    private String todoShowFlag;
 }

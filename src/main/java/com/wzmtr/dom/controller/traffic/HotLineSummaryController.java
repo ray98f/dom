@@ -4,6 +4,7 @@ import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.constant.ValidationGroup;
 import com.wzmtr.dom.dto.req.common.SidReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineSummaryAddReqDTO;
+import com.wzmtr.dom.dto.req.traffic.hotline.HotLineSummaryDetailReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineSummaryListReqDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineSummaryDetailResDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineSummaryListResDTO;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class HotLineSummaryController {
     @Autowired
     private HotLineSummaryService hotLineSummaryService;
+
     /**
      * 服务热线汇总-列表
      * @return 服务热线汇总
@@ -49,7 +51,7 @@ public class HotLineSummaryController {
      */
     @PostMapping("/detail")
     @ApiOperation(value = "服务热线汇总")
-    public DataResponse<HotLineSummaryDetailResDTO> detail(@RequestBody SidReqDTO reqDTO) {
+    public DataResponse<HotLineSummaryDetailResDTO> detail(@RequestBody HotLineSummaryDetailReqDTO reqDTO) {
         return DataResponse.of(hotLineSummaryService.detail(reqDTO));
     }
     @PostMapping("/acc")

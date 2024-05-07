@@ -3,8 +3,11 @@ package com.wzmtr.dom.dto.res.operate;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wzmtr.dom.entity.BaseEntity;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.apache.ibatis.annotations.ConstructorArgs;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
@@ -16,6 +19,7 @@ import java.util.Date;
  * @date 2024/3/12 08:25
  */
 @EqualsAndHashCode(callSuper = true)
+@AllArgsConstructor
 @Data
 public class IndicatorInfoResDTO extends BaseEntity {
 
@@ -50,16 +54,28 @@ public class IndicatorInfoResDTO extends BaseEntity {
     private String serviceReliability;
 
     /**
+     * 列车退出正线故障率
+     * */
+    @ApiModelProperty(value = " 列车退出正线故障率")
+    private String lineFaultRate;
+
+    /**
      * 车辆系统故障率
      * */
     @ApiModelProperty(value = " 车辆系统故障率")
-    private String lineFaultRate;
+    private String vehicleFaultRate;
 
     /**
      * 信号系统故障率
      * */
     @ApiModelProperty(value = " 信号系统故障率")
     private String signalFaultRate;
+
+    /**
+     * 供电系统故障率
+     * */
+    @ApiModelProperty(value = " 供电系统故障率")
+    private String powerFaultRate;
 
     /**
      * 站台门故障率

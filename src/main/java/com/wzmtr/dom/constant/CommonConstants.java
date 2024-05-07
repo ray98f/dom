@@ -109,12 +109,12 @@ public class CommonConstants {
     /**
      * 下塘停车场
      */
-    public static final String  STATION_280 = "280";
+    public static final String STATION_280 = "280";
 
     /**
      * 汀田车辆段
      */
-    public static final String  STATION_281 = "281";
+    public static final String STATION_281 = "281";
 
     /**
      * 汀田车辆段
@@ -124,69 +124,79 @@ public class CommonConstants {
     /**
      * 指定的日期格式
      */
-    public static final String  DATE_FORMAT = "yyyy-MM-dd";
+    public static final String DATE_FORMAT = "yyyy-MM-dd";
 
     /**
      * 指定数据获取时间
      */
-    public static final String  DEFAULT_TIME = " 05:00:00";
+    public static final String DEFAULT_TIME = " 05:00:00";
 
     /**
      * 类型:日报
      */
-    public static final String  DATA_TYPE_DAILY = "1";
+    public static final String DATA_TYPE_DAILY = "1";
 
     /**
      * 类型:周报
      */
-    public static final String  DATA_TYPE_WEEKLY = "2";
+    public static final String DATA_TYPE_WEEKLY = "2";
 
     /**
      * 类型:月报
      */
-    public static final String  DATA_TYPE_MONTHLY = "3";
+    public static final String DATA_TYPE_MONTHLY = "3";
 
     /**
      * 事件类型
      */
-    public static final String  EVENT_TYPE_1 = "1";
-    public static final String  EVENT_TYPE_2 = "2";
-    public static final String  EVENT_TYPE_3 = "3";
-    public static final String  EVENT_TYPE_4 = "4";
-    public static final String  EVENT_TYPE_5 = "5";
+    public static final String EVENT_TYPE_1 = "1";
+    public static final String EVENT_TYPE_2 = "2";
+    public static final String EVENT_TYPE_3 = "3";
+    public static final String EVENT_TYPE_4 = "4";
+    public static final String EVENT_TYPE_5 = "5";
+
+    public static final String HOTLINE_TYPE = "HOTLINE_TYPE";
 
     public static final String DEFAULT_PRODUCTION_TITLE = "安全生产情况";
     public static final String[] S2_STATION_ARRAY = {"231","232","233","234","235","236","237","238","239","240","241","242","243","244","245","246","247","248","249","250"};
 
-    public static final String  VEHICLE_DAILY_REPORT = "VEHICLE_DAILY_REPORT";
-    public static final String  VEHICLE_WEEKLY_REPORT = "VEHICLE_WEEKLY_REPORT";
-    public static final String  VEHICLE_MONTHLY_REPORT = "VEHICLE_MONTHLY_REPORT";
-    public static final String  VEHICLE_DAILY_NODE1 ="vehicle_daily_node1";
-    public static final String  VEHICLE_WEEKLY_NODE1 ="vehicle_weekly_node1";
-    public static final String  VEHICLE_MONTHLY_NODE1 ="vehicle_monthly_node1";
+    public static final String VEHICLE_DAILY_REPORT = "VEHICLE_DAILY_REPORT";
+    public static final String VEHICLE_WEEKLY_REPORT = "VEHICLE_WEEKLY_REPORT";
+    public static final String VEHICLE_MONTHLY_REPORT = "VEHICLE_MONTHLY_REPORT";
+    public static final String VEHICLE_CONTAINS = "vehicle_";
+    public static final String VEHICLE_DAILY_NODE1 ="vehicle_daily_node1";
+    public static final String VEHICLE_WEEKLY_NODE1 ="vehicle_weekly_node1";
+    public static final String VEHICLE_MONTHLY_NODE1 ="vehicle_monthly_node1";
 
     public static final String[] TRAFFIC_REPORT_TYPE = {"1","2","3"};
-    public static final String  TRAFFIC_DAILY_REPORT = "TRAFFIC_DAILY_REPORT";
+    public static final String TRAFFIC_DAILY_REPORT = "TRAFFIC_DAILY_REPORT";
 
     public static final String[] TRAFFIC_DAILY_NODE1_SUB = {"traffic_daily_node1_sub1","traffic_daily_node1_sub2","traffic_daily_node1_sub3"};
-    public static final String  TRAFFIC_DAILY_NODE1_SUB1 ="traffic_daily_node1_sub1";
-    public static final String  TRAFFIC_DAILY_NODE1_SUB2 ="traffic_daily_node1_sub2";
-    public static final String  TRAFFIC_DAILY_NODE1_SUB3 ="traffic_daily_node1_sub3";
+    public static final String TRAFFIC_DAILY_NODE1_SUB1 ="traffic_daily_node1_sub1";
+    public static final String TRAFFIC_DAILY_NODE1_SUB2 ="traffic_daily_node1_sub2";
+    public static final String TRAFFIC_DAILY_NODE1_SUB3 ="traffic_daily_node1_sub3";
 
-    public static final String  TRAFFIC_WEEKLY_REPORT = "TRAFFIC_WEEKLY_REPORT";
+    public static final String TRAFFIC_WEEKLY_REPORT = "TRAFFIC_WEEKLY_REPORT";
     public static final String[] TRAFFIC_WEEKLY_NODE1_SUB = {"traffic_weekly_node1_sub1","traffic_weekly_node1_sub2","traffic_weekly_node1_sub3"};
-    public static final String  TRAFFIC_WEEKLY_NODE1_SUB1 ="traffic_weekly_node1_sub1";
-    public static final String  TRAFFIC_WEEKLY_NODE1_SUB2 ="traffic_weekly_node1_sub2";
-    public static final String  TRAFFIC_WEEKLY_NODE1_SUB3 ="traffic_weekly_node1_sub3";
+    public static final String TRAFFIC_WEEKLY_NODE1_SUB1 ="traffic_weekly_node1_sub1";
+    public static final String TRAFFIC_WEEKLY_NODE1_SUB2 ="traffic_weekly_node1_sub2";
+    public static final String TRAFFIC_WEEKLY_NODE1_SUB3 ="traffic_weekly_node1_sub3";
 
-    public static final String  TRAFFIC_MONTHLY_REPORT = "TRAFFIC_MONTHLY_REPORT";
+    public static final String TRAFFIC_MONTHLY_REPORT = "TRAFFIC_MONTHLY_REPORT";
     public static final String[]  TRAFFIC_MONTHLY_NODE1_SUB = {"traffic_monthly_node1_sub1","traffic_monthly_node1_sub2","traffic_monthly_node1_sub3"};
-    public static final String  TRAFFIC_MONTHLY_NODE1_SUB1 ="traffic_monthly_node1_sub1";
-    public static final String  TRAFFIC_MONTHLY_NODE1_SUB2 ="traffic_monthly_node1_sub2";
-    public static final String  TRAFFIC_MONTHLY_NODE1_SUB3 ="traffic_monthly_node1_sub3";
+    public static final String TRAFFIC_MONTHLY_NODE1_SUB1 ="traffic_monthly_node1_sub1";
+    public static final String TRAFFIC_MONTHLY_NODE1_SUB2 ="traffic_monthly_node1_sub2";
+    public static final String TRAFFIC_MONTHLY_NODE1_SUB3 ="traffic_monthly_node1_sub3";
+
+    public static final String OPERATE_DAILY_REPORT = "OPERATE_DAILY_REPORT";
+    public static final String OPERATE_WEEKLY_REPORT = "OPERATE_WEEKLY_REPORT";
+    public static final String OPERATE_MONTHLY_REPORT = "OPERATE_MONTHLY_REPORT";
+    public static final String OPERATE_DAILY_NODE1 ="operate_daily_node1";
+    public static final String OPERATE_WEEKLY_NODE1 ="operate_weekly_node1";
+    public static final String OPERATE_MONTHLY_NODE1 ="operate_monthly_node1";
 
     // " 八项指标类型:1件数/次数,2指标值,3指标值(国标)4运营服务指标
-    public static final String[] OPERATE_INDICATOR_TYPE = {"1","2","3","4"};
+    public static final String[] OPERATE_INDICATOR_TYPE = {"1","2"};
 
     public static final String OPERATE_CONSTRUCT_REMARK_TPL = "（1）本周正线施工计划A、C类施工（周施工计划和日补充计划）共{1}件，临时补修计划{2}件；其中删除计划共计{3}件，擅自取消施工共计{4}件，修改计划共计{5}件，增加计划共计{6}件，实际完成施工共计{7}件。因天气影响等导致施工被迫取消共计{8}件，施工延点（行调同意）共计{9}件;\n" +
             "（2）本周车场施工计划 B 类施工（周施工计划和日补充计划）共{10}件，临时补修计划{11}件；其中删除计划共计{12}件，擅自取消施工共计{13}件，修改计划共计 {14}件，增加计划共计{15}件，实际完成施工共计{16}件。因天气影响等被迫取消共计{17}件，施工延点（场调同意）共计{18}件;\n" +

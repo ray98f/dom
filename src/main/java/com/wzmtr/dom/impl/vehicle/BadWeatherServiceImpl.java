@@ -1,7 +1,7 @@
 package com.wzmtr.dom.impl.vehicle;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.dto.req.vehicle.BadWeatherReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.BadWeatherResDTO;
 import com.wzmtr.dom.entity.PageReqDTO;
@@ -30,12 +30,12 @@ public class BadWeatherServiceImpl implements BadWeatherService {
 
     @Override
     public Page<BadWeatherResDTO> page(String startDate, String endDate, String dataType, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return badWeatherMapper.page(pageReqDTO.of(), startDate, endDate, dataType);
     }
 
     @Override
-    public BadWeatherResDTO detail(String id) {
+    public BadWeatherResDTO detail(String id,String startDate, String endDate) {
         return badWeatherMapper.detail(id);
     }
 

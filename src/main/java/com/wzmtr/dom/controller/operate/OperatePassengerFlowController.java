@@ -29,7 +29,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/operate/passenger/flow")
-@Api(tags = "运营日报-客流")
+@Api(tags = "运营-客流")
 @Validated
 public class OperatePassengerFlowController {
 
@@ -62,8 +62,9 @@ public class OperatePassengerFlowController {
      */
     @GetMapping("/detail")
     @ApiOperation(value = "客流记录详情")
-    public DataResponse<PassengerFlowDetailResDTO> add(@RequestParam String id) {
-        return DataResponse.of(operatePassengerFlowService.detail(id));
+    public DataResponse<PassengerFlowDetailResDTO> add(@RequestParam(required = false) String id,@RequestParam(required = false) String startDate,
+                                                       @RequestParam(required = false) String endDate) {
+        return DataResponse.of(operatePassengerFlowService.detail(id,startDate,endDate));
     }
 
     /**

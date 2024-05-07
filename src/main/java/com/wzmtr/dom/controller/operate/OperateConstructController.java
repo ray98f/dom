@@ -2,17 +2,18 @@ package com.wzmtr.dom.controller.operate;
 
 import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.constant.ValidationGroup;
-import com.wzmtr.dom.dto.req.operate.*;
-import com.wzmtr.dom.dto.req.vehicle.DepotConstructPlanBatchReqDTO;
-import com.wzmtr.dom.dto.res.operate.*;
-import com.wzmtr.dom.dto.res.vehicle.DepotConstructPlanResDTO;
+import com.wzmtr.dom.dto.req.operate.ConstructEventReqDTO;
+import com.wzmtr.dom.dto.req.operate.ConstructPlanBatchReqDTO;
+import com.wzmtr.dom.dto.req.operate.ConstructRecordReqDTO;
+import com.wzmtr.dom.dto.res.operate.ConstructEventResDTO;
+import com.wzmtr.dom.dto.res.operate.ConstructPlanResDTO;
+import com.wzmtr.dom.dto.res.operate.ConstructRecordResDTO;
 import com.wzmtr.dom.entity.BaseIdsEntity;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.entity.response.PageResponse;
 import com.wzmtr.dom.service.operate.OperateConstructService;
-import com.wzmtr.dom.service.operate.OperateEventService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.poi.ss.formula.functions.T;
@@ -21,18 +22,16 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * 运营日报-施工情况
- *
  * @author zhangxin
  * @version 1.0
  * @date 2024/3/25 19:19
  */
 @RestController
 @RequestMapping("/operate/construct")
-@Api(tags = "运营日报-施工情况 ")
+@Api(tags = "运营-施工情况")
 @Validated
 public class OperateConstructController {
 
@@ -41,19 +40,19 @@ public class OperateConstructController {
 
     /**
      * 施工情况-列表
-     * @param dataType 数据类型
-     * @param startDate 起始日期
-     * @param endDate 终止日期
+     * @param dataType   数据类型
+     * @param startDate  起始日期
+     * @param endDate    终止日期
      * @param pageReqDTO 分页参数
      * @return 施工情况-列表
      */
     @GetMapping("/list")
     @ApiOperation(value = "施工情况-列表")
-    public PageResponse<ConstructRecordResDTO> list(@RequestParam  String dataType,
-                                                 @RequestParam(required = false) String startDate,
-                                                 @RequestParam(required = false) String endDate,
-                                                 @Valid PageReqDTO pageReqDTO) {
-        return PageResponse.of(operateConstructService.list(dataType,startDate,endDate,pageReqDTO));
+    public PageResponse<ConstructRecordResDTO> list(@RequestParam String dataType,
+                                                    @RequestParam(required = false) String startDate,
+                                                    @RequestParam(required = false) String endDate,
+                                                    @Valid PageReqDTO pageReqDTO) {
+        return PageResponse.of(operateConstructService.list(dataType, startDate, endDate, pageReqDTO));
     }
 
     /**
@@ -63,8 +62,10 @@ public class OperateConstructController {
      */
     @GetMapping("/detail")
     @ApiOperation(value = "施工情况详情")
-    public DataResponse<ConstructRecordResDTO> add(@RequestParam String id) {
-        return DataResponse.of(operateConstructService.detail(id));
+    public DataResponse<ConstructRecordResDTO> add(@RequestParam(required = false) String id,
+                                                   @RequestParam(required = false) String startDate,
+                                                   @RequestParam(required = false) String endDate) {
+        return DataResponse.of(operateConstructService.detail(id, startDate, endDate));
     }
 
     /**
@@ -77,7 +78,7 @@ public class OperateConstructController {
     public DataResponse<T> add(@CurrUser CurrentLoginUser currentLoginUser,
                                @Validated({ValidationGroup.create.class})
                                @RequestBody ConstructRecordReqDTO constructRecordReqDTO) {
-        operateConstructService.add(currentLoginUser,constructRecordReqDTO);
+        operateConstructService.add(currentLoginUser, constructRecordReqDTO);
         return DataResponse.success();
     }
 
@@ -89,16 +90,16 @@ public class OperateConstructController {
     @PostMapping("/modify")
     @ApiOperation(value = "施工情况-编辑")
     public DataResponse<T> modify(@CurrUser CurrentLoginUser currentLoginUser,
-                               @Validated({ValidationGroup.create.class})
-                               @RequestBody ConstructRecordReqDTO constructRecordReqDTO) {
-        operateConstructService.modify(currentLoginUser,constructRecordReqDTO);
+                                  @Validated({ValidationGroup.create.class})
+                                  @RequestBody ConstructRecordReqDTO constructRecordReqDTO) {
+        operateConstructService.modify(currentLoginUser, constructRecordReqDTO);
         return DataResponse.success();
     }
 
     /**
      * 选择施工计划(查询施工调度系统)-列表
-     * @param startDate 起始日期
-     * @param endDate 终止日期
+     * @param startDate  起始日期
+     * @param endDate    终止日期
      * @param pageReqDTO 分页参数
      * @return 施工计划列表
      */
@@ -107,22 +108,22 @@ public class OperateConstructController {
     public PageResponse<ConstructPlanResDTO> getCsmConstructPlan(@RequestParam String startDate,
                                                                  @RequestParam String endDate,
                                                                  @Valid PageReqDTO pageReqDTO) {
-        return PageResponse.of(operateConstructService.getCsmConstructPlan(startDate,endDate,pageReqDTO));
+        return PageResponse.of(operateConstructService.getCsmConstructPlan(startDate, endDate, pageReqDTO));
     }
 
     /**
      * 施工计划-列表
-     * @param startDate 起始日期
-     * @param endDate 终止日期
+     * @param startDate  起始日期
+     * @param endDate    终止日期
      * @param pageReqDTO 分页参数
      * @return 施工计划列表
      */
     @GetMapping("/planList")
     @ApiOperation(value = "施工计划-列表")
     public PageResponse<ConstructPlanResDTO> planList(@RequestParam String startDate,
-                                                           @RequestParam String endDate,
-                                                           @Valid PageReqDTO pageReqDTO) {
-        return PageResponse.of(operateConstructService.planList(startDate,endDate,pageReqDTO));
+                                                      @RequestParam String endDate,
+                                                      @Valid PageReqDTO pageReqDTO) {
+        return PageResponse.of(operateConstructService.planList(startDate, endDate, pageReqDTO));
     }
 
     /**
@@ -134,7 +135,7 @@ public class OperateConstructController {
     @ApiOperation(value = "施工计划-新增")
     public DataResponse<T> createPlan(@CurrUser CurrentLoginUser currentLoginUser,
                                       @RequestBody ConstructPlanBatchReqDTO constructPlanBatchReqDTO) {
-        operateConstructService.createPlan(currentLoginUser,constructPlanBatchReqDTO);
+        operateConstructService.createPlan(currentLoginUser, constructPlanBatchReqDTO);
         return DataResponse.success();
     }
 
@@ -152,8 +153,8 @@ public class OperateConstructController {
 
     /**
      * 施工情况-列表
-     * @param startDate 起始日期
-     * @param endDate 终止日期
+     * @param startDate  起始日期
+     * @param endDate    终止日期
      * @param pageReqDTO 分页参数
      * @return 施工情况列表
      */
@@ -162,7 +163,7 @@ public class OperateConstructController {
     public PageResponse<ConstructEventResDTO> eventList(@RequestParam String startDate,
                                                         @RequestParam String endDate,
                                                         @Valid PageReqDTO pageReqDTO) {
-        return PageResponse.of(operateConstructService.eventList(startDate,endDate,pageReqDTO));
+        return PageResponse.of(operateConstructService.eventList(startDate, endDate, pageReqDTO));
     }
 
     /**
@@ -173,8 +174,8 @@ public class OperateConstructController {
     @PostMapping("/createEvent")
     @ApiOperation(value = "事件信息-新增")
     public DataResponse<T> createEvent(@CurrUser CurrentLoginUser currentLoginUser,
-                               @RequestBody ConstructEventReqDTO constructEventReqDTO) {
-        operateConstructService.createEvent(currentLoginUser,constructEventReqDTO);
+                                       @RequestBody ConstructEventReqDTO constructEventReqDTO) {
+        operateConstructService.createEvent(currentLoginUser, constructEventReqDTO);
         return DataResponse.success();
     }
 
@@ -187,7 +188,7 @@ public class OperateConstructController {
     @ApiOperation(value = "事件信息-新增")
     public DataResponse<T> modifyEvent(@CurrUser CurrentLoginUser currentLoginUser,
                                        @RequestBody ConstructEventReqDTO constructEventReqDTO) {
-        operateConstructService.modifyEvent(currentLoginUser,constructEventReqDTO);
+        operateConstructService.modifyEvent(currentLoginUser, constructEventReqDTO);
         return DataResponse.success();
     }
 

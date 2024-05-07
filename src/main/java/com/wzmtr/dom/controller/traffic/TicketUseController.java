@@ -55,19 +55,24 @@ public class TicketUseController {
      */
     @GetMapping("/detail")
     @ApiOperation(value = "线网车票过闸使用情况详情")
-    public DataResponse<TicketUseResDTO> detail(@RequestParam String id) {
-        return DataResponse.of(ticketUseService.detail(id));
+    public DataResponse<TicketUseResDTO> detail(@RequestParam(required = false) String id,@RequestParam(required = false) String startDate,
+                                                @RequestParam(required = false) String endDate) {
+        return DataResponse.of(ticketUseService.detail(id,startDate,endDate));
     }
 
     /**
      * 获取ACC系统线网车票过闸使用情况
-     * @param date 日期
+     * @param dataType 数据类型
+     * @param startDate 开始日期
+     * @param endDate 结束日期
      * @return 线网车票过闸使用情况
      */
     @GetMapping("/acc")
     @ApiOperation(value = "获取ACC系统线网车票过闸使用情况")
-    public DataResponse<TicketUseResDTO> acc(@RequestParam String date) {
-        return DataResponse.of(ticketUseService.acc(date));
+    public DataResponse<TicketUseResDTO> acc(@RequestParam String dataType,
+                                             @RequestParam String startDate,
+                                             @RequestParam String endDate) {
+        return DataResponse.of(ticketUseService.acc(dataType, startDate, endDate));
     }
 
     /**

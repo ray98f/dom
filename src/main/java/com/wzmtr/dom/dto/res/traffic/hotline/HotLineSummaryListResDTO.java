@@ -47,8 +47,18 @@ public class HotLineSummaryListResDTO {
     )
     private Date dataDate;
     @ApiModelProperty(value = "数据起始日期")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd",
+            timezone = "GMT+8"
+    )
     private Date startDate;
     @ApiModelProperty(value = "数据终止日期")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd",
+            timezone = "GMT+8"
+    )
     private Date endDate;
     /**
      * 热线重要内容列表

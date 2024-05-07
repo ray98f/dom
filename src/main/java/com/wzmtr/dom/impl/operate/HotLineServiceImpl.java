@@ -1,7 +1,7 @@
 package com.wzmtr.dom.impl.operate;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.pagehelper.page.PageMethod;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.dto.req.operate.HotLineReqDTO;
 import com.wzmtr.dom.dto.res.operate.HotLineResDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineSummaryDetailResDTO;
@@ -31,15 +31,15 @@ public class HotLineServiceImpl implements HotLineService {
 
     @Override
     public Page<HotLineSummaryDetailResDTO> page(String startDate, String endDate, String dataType, PageReqDTO pageReqDTO) {
-        PageMethod.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
+        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return hotLineMapper.page(pageReqDTO.of(), startDate, endDate, dataType);
     }
 
     @Override
-    public HotLineResDTO detail(String id) {
+    public HotLineResDTO detail(String id, String startDate, String endDate) {
         HotLineResDTO res = new HotLineResDTO();
-        res.setHotLineSummary(hotLineMapper.detailSummary(id));
-        res.setHotLineImportant(hotLineMapper.detailImportant(id));
+        res.setHotLineSummary(hotLineMapper.detailSummary(id,startDate,endDate));
+        res.setHotLineImportant(hotLineMapper.detailImportant(id,startDate,endDate));
         return res;
     }
 

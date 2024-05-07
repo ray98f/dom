@@ -1,15 +1,8 @@
 package com.wzmtr.dom.controller.system;
 
-import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.dto.res.system.AllStationResDTO;
-import com.wzmtr.dom.dto.res.system.StationResDTO;
-import com.wzmtr.dom.dto.res.traffic.ProductionRecordResDTO;
-import com.wzmtr.dom.entity.CurrentLoginUser;
-import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
-import com.wzmtr.dom.entity.response.PageResponse;
 import com.wzmtr.dom.service.system.StationService;
-import com.wzmtr.dom.service.traffic.ProductionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
-import java.util.List;
 
 /**
  * 车站管理
@@ -31,7 +21,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/sys/station")
-@Api(tags = "系统参数-车站管理")
+@Api(tags = "系统-车站管理")
 @Validated
 public class StationController {
 
