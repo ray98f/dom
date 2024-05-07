@@ -267,7 +267,7 @@
     </select>
 
     <select id="listProductionTwo" resultType="com.wzmtr.dom.dto.res.traffic.ProductionInfoWeeklyResDTO$ProductionTwo">
-        SELECT b.DAY_TIME as EVENT_TIME, nvl(a.EVENT_DESC,'') as EVENT_DESC
+        SELECT b.DAY_TIME as EVENT_TIME, LISTAGG(a.EVENT_DESC, ', ') WITHIN GROUP (ORDER BY b.DAY_TIME) AS EVENT_DESC
         FROM (
         SELECT to_char(t.DATA_DATE,'yyyy-MM-dd') DATA_DATE, t.EVENT_DESC
         FROM TRAFFIC_PRODUCTION_INFO t WHERE t.DATA_TYPE='1' AND t.STATION_CODE=#{stationCode} AND t.PRODUCTION_TYPE='2'
@@ -278,6 +278,7 @@
         FROM DUAL
         CONNECT BY TO_DATE(#{endDate},'yyyy-mm-dd hh24:mi:ss')-TO_DATE(#{startDate},'yyyy-mm-dd hh24:mi:ss')>=ROWNUM
         ) b ON a.DATA_DATE = b.DAY_TIME
+        GROUP BY b.DAY_TIME
         ORDER BY b.DAY_TIME
     </select>
 

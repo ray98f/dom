@@ -179,7 +179,6 @@
         <if test="run2Kilometer != null">
             RUN2_KILOMETER=#{run2Kilometer},
         </if>
-
         VERSION = VERSION+1,
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate
@@ -298,7 +297,9 @@
         <if test="lightRate != null and lightRate !=''">
             LIGHT_RATE=#{lightRate},
         </if>
-
+        <if test="remark != null and remark !=''">
+            REMARK=#{remark},
+        </if>
         VERSION = VERSION+1,
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate

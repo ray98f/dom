@@ -1,13 +1,9 @@
 package com.wzmtr.dom.dto.req.operate;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wzmtr.dom.entity.BaseEntity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.util.Date;
 
 /**
  * 日数据结果类
@@ -96,6 +92,12 @@ public class IndicatorPowerReqDTO extends BaseEntity {
      * */
     @ApiModelProperty(value = " 照明能耗占比")
     private String lightRate;
+
+    /**
+     * 备注
+     * */
+    @ApiModelProperty(value = " 备注")
+    private String remark;
 
     @ApiModelProperty(value = "版本号")
     private String version;
