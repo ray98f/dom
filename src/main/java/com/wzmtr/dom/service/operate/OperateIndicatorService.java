@@ -33,7 +33,7 @@ public interface OperateIndicatorService {
      * @param id 入参数
      * @re IndicatorResDTO
      */
-    IndicatorDetailResDTO detail(String id,String startDate, String endDate);
+    IndicatorDetailResDTO detail(String id, String dataType, String startDate, String endDate);
 
     /**
      * 初期运营指标-新增

@@ -38,7 +38,6 @@ public class OperatePassengerFlowController {
 
     /**
      * 客流-列表
-     *
      * @param dataType   数据类型
      * @param startDate  起始日期
      * @param endDate    终止日期
@@ -56,20 +55,20 @@ public class OperatePassengerFlowController {
 
     /**
      * 客流-详情
-     *
      * @param id 记录ID
      * @return 成功
      */
     @GetMapping("/detail")
     @ApiOperation(value = "客流记录详情")
-    public DataResponse<PassengerFlowDetailResDTO> add(@RequestParam(required = false) String id,@RequestParam(required = false) String startDate,
+    public DataResponse<PassengerFlowDetailResDTO> add(@RequestParam(required = false) String id,
+                                                       @RequestParam(required = false) String dataType,
+                                                       @RequestParam(required = false) String startDate,
                                                        @RequestParam(required = false) String endDate) {
-        return DataResponse.of(operatePassengerFlowService.detail(id,startDate,endDate));
+        return DataResponse.of(operatePassengerFlowService.detail(id, dataType, startDate, endDate));
     }
 
     /**
      * 客流-新增
-     *
      * @return 成功
      */
     @PostMapping("/add")
@@ -83,7 +82,6 @@ public class OperatePassengerFlowController {
 
     /**
      * 车站客流-编辑
-     *
      * @return 成功
      */
     @PostMapping("/modifyStationPassenger")
@@ -95,7 +93,6 @@ public class OperatePassengerFlowController {
 
     /**
      * 客流信息-编辑
-     *
      * @return 成功
      */
     @PostMapping("/modify")

@@ -13,10 +13,10 @@ import com.wzmtr.dom.mapper.operate.OperateFaultStatisticsMapper;
 import com.wzmtr.dom.service.operate.OperateFaultStatisticsService;
 import com.wzmtr.dom.utils.StringUtils;
 import com.wzmtr.dom.utils.TokenUtils;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -35,22 +35,38 @@ public class OperateFaultStatisticsServiceImpl implements OperateFaultStatistics
     @Override
     public Page<FaultStatisticsResDTO> list(String dataType, String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        Page<FaultStatisticsResDTO> list = operateFaultStatisticsMapper.list(pageReqDTO.of(), dataType, startDate, endDate);
-        List<FaultStatisticsResDTO> records = list.getRecords();
-        if (CollectionUtils.isEmpty(records)) {
-            return list;
+        Page<FaultStatisticsResDTO> page = operateFaultStatisticsMapper.list(pageReqDTO.of(), dataType, startDate, endDate);
+        List<FaultStatisticsResDTO> list = page.getRecords();
+        if (StringUtils.isNotEmpty(list)) {
+            for (FaultStatisticsResDTO res : list) {
+                if (CommonConstants.ONE_STRING.equals(res.getDataType())) {
+                    res.setSum(getFaultSum(res));
+                } else {
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    FaultStatisticsResDTO currentDetail = operateFaultStatisticsMapper.getCurrentDetail(
+                            sdf.format(res.getStartDate()), sdf.format(res.getEndDate()));
+                    if (StringUtils.isNotNull(currentDetail)) {
+                        res.setSum(getFaultSum(currentDetail));
+                    }
+                }
+            }
         }
-        records.forEach(a -> a.setSum(getFaultSum(a)));
-        return list;
+        page.setRecords(list);
+        return page;
     }
 
     @Override
     public FaultStatisticsResDTO report(String dataType, String startDate, String endDate) {
+        FaultStatisticsResDTO res;
         if (CommonConstants.ONE_STRING.equals(dataType)) {
-            return operateFaultStatisticsMapper.getDayDetail(startDate);
+            res = operateFaultStatisticsMapper.getDayDetail(startDate);
         } else {
-            return operateFaultStatisticsMapper.getCurrentDetail(startDate, endDate);
+            res = operateFaultStatisticsMapper.getCurrentDetail(startDate, endDate);
         }
+        if (StringUtils.isNotNull(res)) {
+            res.setSum(getFaultSum(res));
+        }
+        return res;
     }
 
     public static long getFaultSum(FaultStatisticsResDTO a) {

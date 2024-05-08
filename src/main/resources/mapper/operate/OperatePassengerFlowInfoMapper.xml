@@ -21,50 +21,50 @@
     <update id="modifyStationPassenger">
         UPDATE OPERATE_PASSENGER_FLOW_INFO
         SET PASSENGER=#{passenger},
-            VERSION = VERSION + 1,
-            UPDATE_BY=#{updateBy},
-            UPDATE_DATE=sysdate
+        VERSION=VERSION + 1,
+        UPDATE_BY=#{updateBy},
+        UPDATE_DATE=sysdate
         WHERE ID=#{id}
-          and VERSION=#{version}
+        and VERSION=#{version}
     </update>
     <select id="eachStation" resultType="com.wzmtr.dom.dto.res.traffic.PassengerInfoResDTO">
         SELECT t1.ID,t1.RECORD_ID,t1.STATION_CODE,t1.PASSENGER,VERSION,t2.STATION_NAME
         FROM TRAFFIC_PASSENGER_INFO t1
-                 LEFT JOIN SYS_STATION t2 on t1.STATION_CODE = t2.STATION_CODE
-        WHERE  DEL_FLAG = '0'
-          AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
-          AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        LEFT JOIN SYS_STATION t2 on t1.STATION_CODE=t2.STATION_CODE
+        WHERE DEL_FLAG='0'
+        AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
         ORDER BY t1.PASSENGER DESC
     </select>
     <select id="topThree" resultType="java.lang.String">
         select ss.STATION_NAME
         from OPERATE_PASSENGER_FLOW_INFO op
-        left join SYS_STATION ss ON op.STATION_CODE = ss.STATION_CODE
-        where DEL_FLAG = '0'
+        left join SYS_STATION ss ON op.STATION_CODE=ss.STATION_CODE
+        where DEL_FLAG='0'
         <if test="startDate!=null and startDate!=''">
-            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+            AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
         <if test="endDate!=null and endDate!=''">
             AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
         </if>
         AND DATA_TYPE=#{dataType}
-        AND rownum = 3
+        AND rownum=3
         order by op.PASSENGER desc
     </select>
 
     <select id="lastThree" resultType="java.lang.String">
         select ss.STATION_NAME
         from OPERATE_PASSENGER_FLOW_INFO op
-                 left join SYS_STATION ss ON op.STATION_CODE = ss.STATION_CODE
-        where DEL_FLAG = '0'
+        left join SYS_STATION ss ON op.STATION_CODE=ss.STATION_CODE
+        where DEL_FLAG='0'
         <if test="startDate!=null and startDate!=''">
-            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+            AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
         <if test="endDate!=null and endDate!=''">
             AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
         </if>
-          AND DATA_TYPE=#{dataType}
-          AND rownum = 3
+        AND DATA_TYPE=#{dataType}
+        AND rownum=3
         order by op.PASSENGER
     </select>
 
