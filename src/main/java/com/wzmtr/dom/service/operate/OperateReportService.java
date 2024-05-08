@@ -10,6 +10,7 @@ import com.wzmtr.dom.dto.res.operate.WeeklyReportResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -19,6 +20,12 @@ import java.util.List;
  * @date 2024/04/24
  */
 public interface OperateReportService {
+
+    /**
+     * 获取安全运营天数
+     * @return 安全运营天数
+     */
+    String getSafeDay() throws ParseException;
 
     /**
      * 分页查询日报列表

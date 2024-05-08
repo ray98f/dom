@@ -242,4 +242,19 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
         return dto;
     }
 
+    /**
+     * 获取两个日期相差天数
+     * @param startDate 开始时间
+     * @param endDate 结束时间
+     * @return 相差天数
+     * @throws ParseException 异常
+     */
+    public static Long getDayBetween(String startDate, String endDate) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date1 = dateFormat.parse(startDate);
+        Date date2 = dateFormat.parse(endDate);
+        long diff = date2.getTime() - date1.getTime();
+        return diff / (24 * 60 * 60 * 1000);
+    }
+
 }

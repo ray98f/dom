@@ -127,7 +127,7 @@
 
     <select id="pageWeekly" resultType="com.wzmtr.dom.dto.res.operate.WeeklyReportResDTO">
         SELECT wr.ID, wr.IF_PASSENGER, wr.IF_ENERGY, wr.IF_EVENT_FAULT, wr.IF_CONSTRUCT,
-        wr.IF_HOTLINE, wr.IF_SECURITY_CLEAN, wr.IF_INDICATOR wr.START_DATE, wr.END_DATE,
+        wr.IF_HOTLINE, wr.IF_SECURITY_CLEAN, wr.IF_INDICATOR, wr.START_DATE, wr.END_DATE,
         wr.STATUS, wr.VERSION, wr.CREATE_DATE, u.NAME AS CREATE_BY
         FROM OPERATE_WEEKLY_REPORT wr
         LEFT JOIN SYS_USER u ON u.ID=wr.CREATE_BY
