@@ -4,10 +4,14 @@ import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.page.PageMethod;
 import com.wzmtr.dom.constant.CommonConstants;
-import com.wzmtr.dom.dto.req.operate.*;
-import com.wzmtr.dom.dto.res.operate.*;
+import com.wzmtr.dom.dto.req.operate.ConstructEventReqDTO;
+import com.wzmtr.dom.dto.req.operate.ConstructPlanBatchReqDTO;
+import com.wzmtr.dom.dto.req.operate.ConstructPlanReqDTO;
+import com.wzmtr.dom.dto.req.operate.ConstructRecordReqDTO;
+import com.wzmtr.dom.dto.res.operate.ConstructEventResDTO;
+import com.wzmtr.dom.dto.res.operate.ConstructPlanResDTO;
+import com.wzmtr.dom.dto.res.operate.ConstructRecordResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.ErrorCode;
@@ -63,12 +67,14 @@ public class OperateConstructServiceImpl implements OperateConstructService {
         ConstructRecordResDTO detail = operateConstructMapper.queryInfoById(id, startDate, endDate);
 
         // TODO 增加不饱和施工数据
-        if(CommonConstants.DATA_TYPE_WEEKLY.equals(detail.getDataType()) || CommonConstants.DATA_TYPE_MONTHLY.equals(detail.getDataType())){
-            detail.setUnsaturationConstruct(thirdService.getUnsaturationConstruct(DateUtil.formatDate(detail.getStartDate()),
-                    DateUtil.formatDate(detail.getEndDate())));
-            detail.setRemark(CommonConstants.OPERATE_CONSTRUCT_REMARK_TPL);
-        }
+        if (StringUtils.isNotNull(detail)) {
+            if(CommonConstants.DATA_TYPE_WEEKLY.equals(detail.getDataType()) || CommonConstants.DATA_TYPE_MONTHLY.equals(detail.getDataType())){
+                detail.setUnsaturationConstruct(thirdService.getUnsaturationConstruct(DateUtil.formatDate(detail.getStartDate()),
+                        DateUtil.formatDate(detail.getEndDate())));
+                detail.setRemark(CommonConstants.OPERATE_CONSTRUCT_REMARK_TPL);
 
+            }
+        }
         return detail;
     }
 

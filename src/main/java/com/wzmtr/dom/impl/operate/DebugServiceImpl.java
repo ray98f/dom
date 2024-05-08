@@ -3,7 +3,6 @@ package com.wzmtr.dom.impl.operate;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.page.PageMethod;
 import com.wzmtr.dom.dto.req.operate.DebugInfoReqDTO;
 import com.wzmtr.dom.dto.req.operate.DebugRecordReqDTO;
 import com.wzmtr.dom.dto.res.operate.ConstructPlanResDTO;
@@ -46,9 +45,9 @@ public class DebugServiceImpl implements DebugService {
     }
 
     @Override
-    public Page<DebugInfoResDTO> infoPage(String id, String dataType, PageReqDTO pageReqDTO) {
+    public Page<DebugInfoResDTO> infoPage(String id, String dataType, String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return debugMapper.infoPage(pageReqDTO.of(), id, dataType);
+        return debugMapper.infoPage(pageReqDTO.of(), id, dataType, startDate, endDate);
     }
 
     @Override

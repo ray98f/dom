@@ -157,6 +157,8 @@ public class CommonConstants {
 
     public static final String HOTLINE_TYPE = "HOTLINE_TYPE";
 
+    public static final String OPERATE_DAY = "OPERATE_DAY";
+
     public static final String DEFAULT_PRODUCTION_TITLE = "安全生产情况";
     public static final String[] S2_STATION_ARRAY = {"231","232","233","234","235","236","237","238","239","240","241","242","243","244","245","246","247","248","249","250"};
 

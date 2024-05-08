@@ -24,7 +24,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * 运营日报-运营事件
+ * 运营-运营事件
  *
  * @author zhangxin
  * @version 1.0

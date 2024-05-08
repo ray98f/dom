@@ -8,6 +8,7 @@ import com.wzmtr.dom.dto.req.operate.MonthlyReportReqDTO;
 import com.wzmtr.dom.dto.req.operate.WeeklyReportReqDTO;
 import com.wzmtr.dom.dto.req.system.ApprovalReqDTO;
 import com.wzmtr.dom.dto.req.system.ReportUpdateReqDTO;
+import com.wzmtr.dom.dto.res.common.DictResDTO;
 import com.wzmtr.dom.dto.res.operate.DailyReportResDTO;
 import com.wzmtr.dom.dto.res.operate.MonthlyReportResDTO;
 import com.wzmtr.dom.dto.res.operate.WeeklyReportResDTO;
@@ -16,14 +17,19 @@ import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.BpmnFlowEnum;
 import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
+import com.wzmtr.dom.mapper.common.DictMapper;
 import com.wzmtr.dom.mapper.operate.OperateReportMapper;
 import com.wzmtr.dom.service.operate.OperateReportService;
 import com.wzmtr.dom.service.system.WorkbenchService;
+import com.wzmtr.dom.utils.DateUtils;
 import com.wzmtr.dom.utils.StringUtils;
 import com.wzmtr.dom.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -41,6 +47,19 @@ public class OperateReportServiceImpl implements OperateReportService {
 
     @Autowired
     private OperateReportMapper operateReportMapper;
+
+    @Autowired
+    private DictMapper dictMapper;
+
+    @Override
+    public String getSafeDay() throws ParseException {
+        List<DictResDTO> dict = dictMapper.list(CommonConstants.OPERATE_DAY, CommonConstants.ONE_STRING, null);
+        if (StringUtils.isNotEmpty(dict)) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            return String.valueOf(DateUtils.getDayBetween(dict.get(0).getName(), dateFormat.format(new Date())));
+        }
+        return "0";
+    }
 
     @Override
     public Page<DailyReportResDTO> pageDaily(String startDate, String endDate, PageReqDTO pageReqDTO) {

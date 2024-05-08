@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.operate.OperateFaultStatisticsReqDTO;
+import com.wzmtr.dom.dto.res.common.DateResDTO;
 import com.wzmtr.dom.dto.res.operate.fault.FaultStatisticsResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
@@ -11,11 +12,14 @@ import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
 import com.wzmtr.dom.mapper.operate.OperateFaultStatisticsMapper;
 import com.wzmtr.dom.service.operate.OperateFaultStatisticsService;
+import com.wzmtr.dom.utils.DateUtils;
 import com.wzmtr.dom.utils.StringUtils;
 import com.wzmtr.dom.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -56,7 +60,7 @@ public class OperateFaultStatisticsServiceImpl implements OperateFaultStatistics
     }
 
     @Override
-    public FaultStatisticsResDTO report(String dataType, String startDate, String endDate) {
+    public FaultStatisticsResDTO report(String dataType, String startDate, String endDate) throws ParseException {
         FaultStatisticsResDTO res;
         if (CommonConstants.ONE_STRING.equals(dataType)) {
             res = operateFaultStatisticsMapper.getDayDetail(startDate);
@@ -65,6 +69,22 @@ public class OperateFaultStatisticsServiceImpl implements OperateFaultStatistics
         }
         if (StringUtils.isNotNull(res)) {
             res.setSum(getFaultSum(res));
+            DateResDTO dateRes = null;
+            if (CommonConstants.TWO_STRING.equals(dataType)) {
+                dateRes = DateUtils.getLastWeek(startDate);
+            } else if (CommonConstants.THREE_STRING.equals(dataType)) {
+                dateRes = DateUtils.getLastMonth(startDate);
+            }
+            if (StringUtils.isNotNull(dateRes)) {
+                FaultStatisticsResDTO lastRes = operateFaultStatisticsMapper.getCurrentDetail(dateRes.getStartDate(), dateRes.getEndDate());
+                if (StringUtils.isNotNull(lastRes)) {
+                    lastRes.setSum(getFaultSum(lastRes));
+                    res.setLastCycleDifference(res.getSum() - lastRes.getSum());
+                    DecimalFormat df = new DecimalFormat("0.00%");
+                    double lastCycleRange = (double) res.getLastCycleDifference() / lastRes.getSum();
+                    res.setLastCycleRange(df.format(lastCycleRange));
+                }
+            }
         }
         return res;
     }
