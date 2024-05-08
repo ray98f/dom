@@ -6,6 +6,7 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 施工计划信息
@@ -128,4 +129,8 @@ public class ConstructPlanResDTO {
     )
     private Date dataDate;
 
+    /**
+     * 不饱和施工列表
+     * */
+    private List<UnsaturationConstructResDTO> unsaturationConstruct;
 }

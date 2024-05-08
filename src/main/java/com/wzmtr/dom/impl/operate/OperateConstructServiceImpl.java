@@ -54,7 +54,14 @@ public class OperateConstructServiceImpl implements OperateConstructService {
 
     @Override
     public ConstructRecordResDTO detail(String id, String startDate, String endDate) {
-        return operateConstructMapper.queryInfoById(id, startDate, endDate);
+        ConstructRecordResDTO detail = operateConstructMapper.queryInfoById(id, startDate, endDate);
+
+        // TODO 增加不饱和施工数据
+        if(CommonConstants.DATA_TYPE_WEEKLY.equals(detail.getDataType()) || CommonConstants.DATA_TYPE_MONTHLY.equals(detail.getDataType())){
+
+        }
+
+        return detail;
     }
 
     @Override
