@@ -26,7 +26,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 运营日报-初期运营指标
@@ -90,7 +92,7 @@ public class OperateIndicatorServiceImpl implements OperateIndicatorService {
                     detail.getEndDate());
             IndicatorInfoResDTO constant2 = new IndicatorInfoResDTO(
                     id,
-                    CommonConstants.THREE_STRING,
+                    CommonConstants.FOUR_STRING,
                     "≥99.9%",
                     "≥99.9%",
                     "≥30",
@@ -108,7 +110,8 @@ public class OperateIndicatorServiceImpl implements OperateIndicatorService {
             indicatorList.add(constant1);
             indicatorList.add(constant2);
             IndicatorPowerResDTO indicatorPower = operateIndicatorMapper.queryPower(id, startDate, endDate);
-            detail.setIndicatorList(indicatorList);
+
+            detail.setIndicatorList(indicatorList.stream().sorted(Comparator.comparing(IndicatorInfoResDTO::getIndicatorType)).collect(Collectors.toList()));
             detail.setIndicatorPower(indicatorPower);
         }
         return detail;
