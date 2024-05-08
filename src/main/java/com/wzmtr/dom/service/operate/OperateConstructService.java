@@ -104,5 +104,5 @@ public interface OperateConstructService {
      * @param id 入参数
      * @return IndicatorResDTO
      */
-    ConstructRecordResDTO detail(String id, String startDate, String endDate);
+    ConstructRecordResDTO detail(String id, String dataType, String startDate, String endDate);
 }

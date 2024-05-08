@@ -18,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.text.ParseException;
 
 /**
  * 运营-故障统计
@@ -62,7 +63,7 @@ public class OperateFaultStatisticsController {
     @ApiOperation(value = "故障统计-报表详情")
     public DataResponse<FaultStatisticsResDTO> report(@RequestParam String dataType,
                                                       @RequestParam(required = false) String startDate,
-                                                      @RequestParam(required = false) String endDate) {
+                                                      @RequestParam(required = false) String endDate) throws ParseException {
         return DataResponse.of(faultStatisticsService.report(dataType, startDate, endDate));
     }
 

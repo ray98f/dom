@@ -16,13 +16,23 @@
     </select>
 
     <select id="infoPage" resultType="com.wzmtr.dom.dto.res.operate.DebugInfoResDTO">
-        SELECT ID, SERIAL_NO, DATA_TYPE, CSM_PLAN, STATUS, EXTERNAL_ID, VERSION, RECORD_ID
-        FROM OPERATE_DEBUG_INFO
-        WHERE DEL_FLAG='0' AND RECORD_ID=#{id}
-        <if test="dataType!=null and dataType!=''">
-            and DATA_TYPE=#{dataType}
+        SELECT di.ID, di.SERIAL_NO, di.DATA_TYPE, di.CSM_PLAN, di.STATUS, di.EXTERNAL_ID, di.VERSION, di.RECORD_ID
+        FROM OPERATE_DEBUG_INFO di
+        LEFT JOIN OPERATE_DEBUG_RECORD dr ON di.RECORD_ID=dr.ID AND dr.DEL_FLAG='0'
+        WHERE di.DEL_FLAG='0'
+        <if test="id!=null and id!=''">
+            AND di.RECORD_ID=#{id}
         </if>
-        ORDER BY SERIAL_NO ASC
+        <if test="dataType!=null and dataType!=''">
+            and di.DATA_TYPE=#{dataType}
+        </if>
+        <if test="startDate!=null and startDate!=''">
+            AND dr.DATA_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'YYYY-MM-DD')>=dr.DATA_DATE
+        </if>
+        ORDER BY di.SERIAL_NO ASC
     </select>
 
     <select id="getInfoDetail" resultType="com.wzmtr.dom.dto.res.operate.DebugInfoResDTO">

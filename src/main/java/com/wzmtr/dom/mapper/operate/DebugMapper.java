@@ -34,9 +34,12 @@ public interface DebugMapper {
      * @param page 分页参数
      * @param id 记录id
      * @param dataType 数据类型 1 信号调试 2 车辆调试
+     * @param startDate 开始时间
+     * @param endDate 结束时间
      * @return 调试情况详情列表
      */
-    Page<DebugInfoResDTO> infoPage(Page<DebugRecordResDTO> page, String id, String dataType);
+    Page<DebugInfoResDTO> infoPage(Page<DebugRecordResDTO> page, String id, String dataType,
+                                   String startDate, String endDate);
 
     /**
      * 获取调试情况详情

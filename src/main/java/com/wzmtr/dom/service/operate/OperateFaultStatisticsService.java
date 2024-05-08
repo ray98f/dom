@@ -6,6 +6,7 @@ import com.wzmtr.dom.dto.res.operate.fault.FaultStatisticsResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -34,7 +35,7 @@ public interface OperateFaultStatisticsService {
      * @param endDate 终止日期
      * @return 报表详情
      */
-    FaultStatisticsResDTO report(String dataType, String startDate, String endDate);
+    FaultStatisticsResDTO report(String dataType, String startDate, String endDate) throws ParseException;
 
     /**
      * @param currentLoginUser 入参数

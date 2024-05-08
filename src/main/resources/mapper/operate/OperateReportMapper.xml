@@ -125,7 +125,7 @@
         )
     </update>
 
-    <select id="pageWeekly" resultType="com.wzmtr.dom.dto.res.vehicle.WeeklyReportResDTO">
+    <select id="pageWeekly" resultType="com.wzmtr.dom.dto.res.operate.WeeklyReportResDTO">
         SELECT wr.ID, wr.IF_PASSENGER, wr.IF_ENERGY, wr.IF_EVENT_FAULT, wr.IF_CONSTRUCT,
         wr.IF_HOTLINE, wr.IF_SECURITY_CLEAN, wr.IF_INDICATOR wr.START_DATE, wr.END_DATE,
         wr.STATUS, wr.VERSION, wr.CREATE_DATE, u.NAME AS CREATE_BY
@@ -141,9 +141,9 @@
         ORDER BY wr.START_DATE desc
     </select>
 
-    <select id="detailWeekly" resultType="com.wzmtr.dom.dto.res.vehicle.WeeklyReportResDTO">
+    <select id="detailWeekly" resultType="com.wzmtr.dom.dto.res.operate.WeeklyReportResDTO">
         SELECT wr.ID, wr.IF_PASSENGER, wr.IF_ENERGY, wr.IF_EVENT_FAULT, wr.IF_CONSTRUCT,
-        wr.IF_HOTLINE, wr.IF_SECURITY_CLEAN, wr.IF_INDICATOR wr.START_DATE, wr.END_DATE,
+        wr.IF_HOTLINE, wr.IF_SECURITY_CLEAN, wr.IF_INDICATOR, wr.START_DATE, wr.END_DATE,
         wr.STATUS, wr.VERSION, wr.CREATE_DATE, u.NAME AS CREATE_BY
         FROM OPERATE_WEEKLY_REPORT wr
         LEFT JOIN SYS_USER u ON u.ID=wr.CREATE_BY
@@ -249,7 +249,7 @@
         )
     </update>
 
-    <select id="pageMonthly" resultType="com.wzmtr.dom.dto.res.vehicle.MonthlyReportResDTO">
+    <select id="pageMonthly" resultType="com.wzmtr.dom.dto.res.operate.MonthlyReportResDTO">
         SELECT mr.ID, mr.IF_PASSENGER, mr.IF_ENERGY, mr.IF_EVENT_FAULT, mr.IF_CONSTRUCT,
         mr.IF_HOTLINE, mr.IF_SECURITY_CLEAN, mr.IF_INDICATOR, mr.START_DATE, mr.END_DATE,
         mr.STATUS, mr.VERSION, mr.CREATE_DATE, u.NAME AS CREATE_BY
@@ -265,7 +265,7 @@
         ORDER BY mr.START_DATE desc
     </select>
 
-    <select id="detailMonthly" resultType="com.wzmtr.dom.dto.res.vehicle.MonthlyReportResDTO">
+    <select id="detailMonthly" resultType="com.wzmtr.dom.dto.res.operate.MonthlyReportResDTO">
         SELECT mr.ID, mr.IF_PASSENGER, mr.IF_ENERGY, mr.IF_EVENT_FAULT, mr.IF_CONSTRUCT,
         mr.IF_HOTLINE, mr.IF_SECURITY_CLEAN, mr.IF_INDICATOR, mr.START_DATE, mr.END_DATE,
         mr.STATUS, mr.VERSION, mr.CREATE_DATE, u.NAME AS CREATE_BY

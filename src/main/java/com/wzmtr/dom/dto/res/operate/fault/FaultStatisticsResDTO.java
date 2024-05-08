@@ -172,5 +172,15 @@ public class FaultStatisticsResDTO {
      */
     @ApiModelProperty("总数")
     private Long sum;
+    /**
+     * 与上一周期的差值
+     */
+    @ApiModelProperty("与上一周期的差值")
+    private Long lastCycleDifference;
+    /**
+     * 与上一周期的幅度
+     */
+    @ApiModelProperty("与上一周期的幅度")
+    private String lastCycleRange;
 
 }
