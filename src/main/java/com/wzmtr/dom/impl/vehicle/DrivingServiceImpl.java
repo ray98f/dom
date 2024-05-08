@@ -205,12 +205,15 @@ public class DrivingServiceImpl implements DrivingService {
         if(Objects.nonNull(drivingInfoReqDTO.getMileage())){
 
             //获取前一天数据
-            DrivingInfoResDTO preInfo = drivingMapper.driveInfo(DateUtil.formatDate(
-                    DateUtil.offsetDay(DateUtil.parseDate(drivingInfoReqDTO.getDataDate()), -1)));
-            if(Objects.nonNull(preInfo)){
-                mileageTotal = preInfo.getMileageTotal() + drivingInfoReqDTO.getMileage();
-                drivingInfoReqDTO.setMileageTotal(mileageTotal);
+            if(drivingInfoReqDTO.getDataDate() !=null){
+                DrivingInfoResDTO preInfo = drivingMapper.driveInfo(DateUtil.formatDate(
+                        DateUtil.offsetDay(DateUtil.parseDate(drivingInfoReqDTO.getDataDate()), -1)));
+                if(Objects.nonNull(preInfo)){
+                    mileageTotal = preInfo.getMileageTotal() + drivingInfoReqDTO.getMileage();
+                    drivingInfoReqDTO.setMileageTotal(mileageTotal);
+                }
             }
+
         }
         try{
             int res = drivingMapper.modifyInfoData(drivingInfoReqDTO);
