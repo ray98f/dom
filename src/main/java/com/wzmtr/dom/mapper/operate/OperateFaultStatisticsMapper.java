@@ -24,15 +24,15 @@ public interface OperateFaultStatisticsMapper {
      * @param date 日期
      * @return 当日数据
      */
-    FaultStatisticsResDTO getTodayDetail(String date);
+    FaultStatisticsResDTO getDayDetail(String date);
 
     /**
-     * 获取报表当月数据
+     * 获取报表时间范围内数据
      * @param startDate 开始时间
      * @param endDate 结束时间
      * @return 当月数据
      */
-    FaultStatisticsResDTO getCurrentMonthDetail(String startDate, String endDate);
+    FaultStatisticsResDTO getCurrentDetail(String startDate, String endDate);
 
     Integer selectIsExist(OperateFaultStatisticsReqDTO req);
 
