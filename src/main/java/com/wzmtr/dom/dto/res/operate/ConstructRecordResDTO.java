@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 日数据结果类
@@ -166,4 +167,8 @@ public class ConstructRecordResDTO extends BaseEntity {
     )
     private Date endDate;
 
+    /**
+     * 不饱和施工列表
+     * */
+    private List<UnsaturationConstructResDTO> unsaturationConstruct;
 }

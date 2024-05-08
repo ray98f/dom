@@ -128,9 +128,4 @@ public class ConstructPlanResDTO {
             timezone = "GMT+8"
     )
     private Date dataDate;
-
-    /**
-     * 不饱和施工列表
-     * */
-    private List<UnsaturationConstructResDTO> unsaturationConstruct;
 }
