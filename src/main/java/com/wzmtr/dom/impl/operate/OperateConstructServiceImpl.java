@@ -66,6 +66,7 @@ public class OperateConstructServiceImpl implements OperateConstructService {
         if(CommonConstants.DATA_TYPE_WEEKLY.equals(detail.getDataType()) || CommonConstants.DATA_TYPE_MONTHLY.equals(detail.getDataType())){
             detail.setUnsaturationConstruct(thirdService.getUnsaturationConstruct(DateUtil.formatDate(detail.getStartDate()),
                     DateUtil.formatDate(detail.getEndDate())));
+            detail.setRemark(CommonConstants.OPERATE_CONSTRUCT_REMARK_TPL);
         }
 
         return detail;
