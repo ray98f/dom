@@ -19,28 +19,28 @@
     <select id="queryInfoById" resultType="com.wzmtr.dom.dto.res.operate.ConstructRecordResDTO">
         SELECT *
         FROM OPERATE_CONSTRUCT_RECORD
-        WHERE DEL_FLAG = '0'
+        WHERE DEL_FLAG='0'
         <if test="id != null">
             AND ID=#{id}
         </if>
         <if test="startDate != null">
-            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+            AND START_DATE=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
         <if test="endDate != null">
-            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+            AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
     </select>
 
     <select id="checkExist" resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM OPERATE_CONSTRUCT_RECORD
-        WHERE DEL_FLAG = '0'
+        WHERE DEL_FLAG='0'
         AND DATA_TYPE=#{dataType}
         <if test="startDate != null">
-            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+            AND START_DATE=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
         <if test="endDate != null">
-            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+            AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
     </select>
 
@@ -120,11 +120,10 @@
         <if test="summarize != null and summarize!=''">
             SUMMARIZE=#{summarize},
         </if>
-        VERSION = VERSION+1,
+        VERSION=VERSION+1,
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate
-        WHERE ID=#{id}
-        AND VERSION=#{version}
+        WHERE ID=#{id} AND VERSION=#{version}
     </update>
 
     <select id="planList" resultType="com.wzmtr.dom.dto.res.operate.ConstructPlanResDTO">
@@ -404,7 +403,7 @@
         <if test="isClose != null">
             IS_CLOSE=#{isClose},
         </if>
-        VERSION = VERSION+1,
+        VERSION=VERSION+1,
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate
         WHERE ID=#{id}

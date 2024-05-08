@@ -17,8 +17,7 @@
 
     <select id="getDayDetail" resultType="com.wzmtr.dom.dto.res.operate.fault.FaultStatisticsResDTO">
         SELECT * FROM OPERATE_FAULT_STATISTICS
-        WHERE DEL_FLAG='0'
-        AND DATA_DATE=#{date}
+        WHERE DEL_FLAG='0' AND DATA_DATE=#{date} AND DATA_TYPE='1'
     </select>
 
     <select id="getCurrentDetail" resultType="com.wzmtr.dom.dto.res.operate.fault.FaultStatisticsResDTO">
@@ -39,7 +38,7 @@
         SUM(BRIDGE_TUNNEL_NUM) AS BRIDGE_TUNNEL_NUM,
         SUM(ENGINEERING_VEHICLE_NUM) AS ENGINEERING_VEHICLE_NUM
         FROM OPERATE_FAULT_STATISTICS
-        WHERE DEL_FLAG='0'
+        WHERE DEL_FLAG='0' AND DATA_TYPE='1'
         <if test="startDate!=null and startDate!=''">
             AND DATA_DATE>=to_date(#{startDate},'YYYY-MM-DD')
         </if>

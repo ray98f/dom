@@ -174,7 +174,7 @@ public class OperateEventInfoResDTO extends BaseEntity {
             timezone = "GMT+8"
     )
     private Date endDate;
-    /*******周报******/
+
     /**
      * 事件概括
      */
@@ -188,5 +188,10 @@ public class OperateEventInfoResDTO extends BaseEntity {
      * 造成指标
      */
     private String effect;
+
+    /**
+     * 事件等级
+     */
+    private String eventLevel;
 
 }

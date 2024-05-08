@@ -8,8 +8,6 @@ import com.wzmtr.dom.dto.res.operate.passengerflow.PassengerFlowListResDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
-
 
 @Mapper
 @Repository
@@ -17,7 +15,7 @@ public interface OperatePassengerFlowDetailMapper extends BaseMapper<OperatePass
 
     Page<PassengerFlowListResDTO> list(Page<Object> of, String dataType, String startDate, String endDate);
 
-    OperatePassengerFlowDetailDO info(String id, String startDate, String endDate);
+    OperatePassengerFlowDetailDO info(String id, String dataType, String startDate, String endDate);
 
     /**
      * 校验数据是否存在

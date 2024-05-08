@@ -67,10 +67,10 @@ public class OperateIndicatorServiceImpl implements OperateIndicatorService {
     }
 
     @Override
-    public IndicatorDetailResDTO detail(String id, String startDate, String endDate) {
-        IndicatorDetailResDTO detail = operateIndicatorMapper.queryInfoById(id, startDate, endDate);
+    public IndicatorDetailResDTO detail(String id, String dataType, String startDate, String endDate) {
+        IndicatorDetailResDTO detail = operateIndicatorMapper.queryInfoById(id, dataType, startDate, endDate);
         if (StringUtils.isNotNull(detail)) {
-            List<IndicatorInfoResDTO> indicatorList = operateIndicatorMapper.infoList(id, startDate, endDate);
+            List<IndicatorInfoResDTO> indicatorList = operateIndicatorMapper.infoList(id, dataType, startDate, endDate);
 
             //固定两条标准
             IndicatorInfoResDTO constant1 = new IndicatorInfoResDTO(
@@ -109,7 +109,7 @@ public class OperateIndicatorServiceImpl implements OperateIndicatorService {
                     detail.getEndDate());
             indicatorList.add(constant1);
             indicatorList.add(constant2);
-            IndicatorPowerResDTO indicatorPower = operateIndicatorMapper.queryPower(id, startDate, endDate);
+            IndicatorPowerResDTO indicatorPower = operateIndicatorMapper.queryPower(id, dataType, startDate, endDate);
 
             detail.setIndicatorList(indicatorList.stream().sorted(Comparator.comparing(IndicatorInfoResDTO::getIndicatorType)).collect(Collectors.toList()));
             detail.setIndicatorPower(indicatorPower);

@@ -117,7 +117,7 @@
         WHERE DEL_FLAG='0'
         AND DATA_TYPE=#{dataType}
         <if test="startDate!=null and startDate!=''">
-            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+            AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
         <if test="endDate!=null and endDate!=''">
             AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
@@ -131,11 +131,24 @@
         <if test="id!=null and id!=''">
             AND ID=#{id}
         </if>
-        <if test="startDate!=null and startDate!=''">
-            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        <if test="dataType!=null and dataType!=''">
+            AND DATA_TYPE=#{dataType}
         </if>
-        <if test="endDate!=null and endDate!=''">
-            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        <if test="dataType=='1'.toString()">
+            <if test="startDate!=null and startDate!=''">
+                AND DATA_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+            </if>
+            <if test="endDate!=null and endDate!=''">
+                AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>DATA_DATE
+            </if>
+        </if>
+        <if test="dataType!='1'.toString()">
+            <if test="startDate!=null and startDate!=''">
+                AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+            </if>
+            <if test="endDate!=null and endDate!=''">
+                AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>END_DATE
+            </if>
         </if>
     </select>
 
