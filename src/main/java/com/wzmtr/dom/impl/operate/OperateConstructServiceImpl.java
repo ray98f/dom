@@ -1,5 +1,6 @@
 package com.wzmtr.dom.impl.operate;
 
+import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
@@ -16,6 +17,7 @@ import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
 import com.wzmtr.dom.mapper.operate.OperateConstructMapper;
+import com.wzmtr.dom.service.common.ThirdService;
 import com.wzmtr.dom.service.operate.OperateConstructService;
 import com.wzmtr.dom.utils.HttpUtils;
 import com.wzmtr.dom.utils.StringUtils;
@@ -41,8 +43,12 @@ import java.util.List;
 @Service
 public class OperateConstructServiceImpl implements OperateConstructService {
 
+
     @Value("${open-api.csm.constructPlan}")
     private String constructPlanApi;
+
+    @Autowired
+    private ThirdService thirdService;
 
     @Autowired
     private SqlSessionFactory sqlSessionFactory;
@@ -61,8 +67,9 @@ public class OperateConstructServiceImpl implements OperateConstructService {
         ConstructRecordResDTO detail = operateConstructMapper.queryInfoById(id, dataType, startDate, endDate);
         if (StringUtils.isNotNull(detail)) {
             // TODO 增加不饱和施工数据
-            if (CommonConstants.DATA_TYPE_WEEKLY.equals(detail.getDataType()) || CommonConstants.DATA_TYPE_MONTHLY.equals(detail.getDataType())){
-
+            if(CommonConstants.DATA_TYPE_WEEKLY.equals(detail.getDataType()) || CommonConstants.DATA_TYPE_MONTHLY.equals(detail.getDataType())){
+                detail.setUnsaturationConstruct(thirdService.getUnsaturationConstruct(
+                        DateUtil.formatDate(detail.getStartDate()), DateUtil.formatDate(detail.getEndDate())));
             }
         }
         return detail;
