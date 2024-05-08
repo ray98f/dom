@@ -70,6 +70,7 @@
         <if test="version!=null and version!=''">
             AND VERSION=#{version,jdbcType=VARCHAR}
         </if>
+        AND DATA_TYPE = #{dataType}
         AND DEL_FLAG='0' AND rownum=1
     </select>
 
