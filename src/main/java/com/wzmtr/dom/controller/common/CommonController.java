@@ -1,5 +1,6 @@
 package com.wzmtr.dom.controller.common;
 
+import com.wzmtr.dom.dto.res.operate.PlanStatisticsResDTO;
 import com.wzmtr.dom.dto.res.operate.UnsaturationConstructResDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.service.common.ThirdService;
@@ -58,8 +59,8 @@ public class CommonController {
 
     @ApiOperation(value = "测试")
     @GetMapping(value = "/test1")
-    public DataResponse<List<UnsaturationConstructResDTO>> test1(@RequestParam String startTime,String endTime) {
-        return DataResponse.of(thirdService.getUnsaturationConstruct(startTime,endTime));
+    public DataResponse<PlanStatisticsResDTO> test1(@RequestParam String startTime, String endTime) {
+        return DataResponse.of(thirdService.getPlanStatistics(startTime,endTime));
     }
 
     /**

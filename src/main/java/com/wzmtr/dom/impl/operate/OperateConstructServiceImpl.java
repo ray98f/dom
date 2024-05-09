@@ -31,6 +31,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,6 +65,11 @@ public class OperateConstructServiceImpl implements OperateConstructService {
     }
 
     @Override
+    public void syncStatistics(String dataType, String startDate, String endDate) {
+
+    }
+
+    @Override
     public ConstructRecordResDTO detail(String id, String dataType,String startDate, String endDate) {
         ConstructRecordResDTO detail = operateConstructMapper.queryInfoById(id, dataType,startDate, endDate);
 
@@ -71,7 +78,7 @@ public class OperateConstructServiceImpl implements OperateConstructService {
             if(CommonConstants.DATA_TYPE_WEEKLY.equals(detail.getDataType()) || CommonConstants.DATA_TYPE_MONTHLY.equals(detail.getDataType())){
                 detail.setUnsaturationConstruct(thirdService.getUnsaturationConstruct(DateUtil.formatDate(detail.getStartDate()),
                         DateUtil.formatDate(detail.getEndDate())));
-                detail.setRemark(CommonConstants.OPERATE_CONSTRUCT_REMARK_TPL);
+                detail.setRemark(getConstructRemark(detail));
 
             }
         }
@@ -259,5 +266,38 @@ public class OperateConstructServiceImpl implements OperateConstructService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    private String getConstructRemark(ConstructRecordResDTO detail){
+        String baseRemark = CommonConstants.OPERATE_CONSTRUCT_REMARK_TPL;
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        baseRemark = MessageFormat.format(baseRemark,
+                detail.getLinePlan1Count()+detail.getLinePlan2Count(),
+                detail.getLinePlan3Count(),
+                detail.getLineCanceledCount(),
+                detail.getLineExpiredCount(),
+                detail.getLineChangedCount(),
+                detail.getLineAddCount(),
+                detail.getLineReal1Count()+detail.getLineReal2Count()+detail.getLineReal3Count(),
+                detail.getLineCancledByair(),
+                detail.getLineDelayCount(),
+                detail.getDepotPlan1Count()+detail.getDepotPlan2Count(),
+                detail.getDepotPlan3Count(),
+                detail.getDepotCanceledCount(),
+                detail.getDepotExpiredCount(),
+                detail.getDepotAddCount(),
+                detail.getDepotAddCount(),
+                detail.getDepotReal1Count()+detail.getDepotReal2Count()+detail.getDepotReal3Count(),
+                detail.getDepotCancledByair(),
+                detail.getDepotDelayCount(),
+                (detail.getLinePlan1Count()) > 0 ? decimalFormat.format(((detail.getLineReal1Count()) / (detail.getLinePlan1Count())) * 100) + "%":"0%",
+                (detail.getLinePlan1Count()) > 0 ? decimalFormat.format(((detail.getLinePlan1Count() - detail.getLineChangedCount()-detail.getLineCanceledCount()) / (detail.getLinePlan1Count())) * 100) + "%":"0%",
+                (detail.getDepotPlan1Count()) > 0 ? decimalFormat.format(((detail.getDepotReal1Count()) / (detail.getDepotPlan1Count())) * 100) + "%":"0%",
+                (detail.getDepotPlan1Count()) > 0 ? decimalFormat.format(((detail.getDepotPlan1Count() - detail.getDepotChangedCount()-detail.getDepotCanceledCount()) / (detail.getDepotPlan1Count())) * 100) + "%":"0%",
+                "0",
+                "0",
+                "0",
+                "0"
+                );
+        return baseRemark;
     }
 }

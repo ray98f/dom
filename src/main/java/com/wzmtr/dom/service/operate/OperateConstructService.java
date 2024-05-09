@@ -27,6 +27,14 @@ public interface OperateConstructService {
     Page<ConstructRecordResDTO> list(String dataType, String startDate, String endDate, PageReqDTO pageReqDTO);
 
     /**
+     * 数据同步
+     * @param dataType 查询参数
+     * @param startDate 查询参数
+     * @param endDate 查询参数
+     */
+    void syncStatistics(String dataType, String startDate, String endDate);
+
+    /**
      * 正线/车场事件记录-新增
      * @param currentLoginUser 入参数
      * @param constructRecordReqDTO 入参数

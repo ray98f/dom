@@ -1,5 +1,6 @@
 package com.wzmtr.dom.service.common;
 
+import com.wzmtr.dom.dto.res.operate.PlanStatisticsResDTO;
 import com.wzmtr.dom.dto.res.operate.UnsaturationConstructResDTO;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -18,5 +19,7 @@ public interface ThirdService {
      * @return 施工作业列表
      */
     List<UnsaturationConstructResDTO> getUnsaturationConstruct(String startTime,String endTime);
+
+    PlanStatisticsResDTO getPlanStatistics(String startTime,String endTime);
 
 }

@@ -90,6 +90,7 @@ open-api:
   csm:
     constructPlan: ${csm.host}/csm/plan/list
     unsaturationConstruct: ${csm.host}/csm/report/open/getUnsaturationPlan
+    planStatistics: ${csm.host}/csm/report/open/getPlanStatistics
   acc:
     api-app-key: "EvbhN1NZFmsuFM0j1T3Fi3tKQAxpd52r"
     person-count: "http://dxp.wzmtr.com:9080/v2/ACC/ACC13"
