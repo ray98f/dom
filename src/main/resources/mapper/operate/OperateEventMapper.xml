@@ -360,9 +360,7 @@
         <if test="isClose!=null">
             IS_CLOSE=#{isClose},
         </if>
-        <if test="eventContent!=null and eventContent!=''">
-            EVENT_CONTENT=#{eventContent},
-        </if>
+
         <if test="eventDesc!=null and eventDesc!=''">
             EVENT_DESC=#{eventDesc},
         </if>
