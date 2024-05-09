@@ -1,11 +1,13 @@
 package com.wzmtr.dom.mapper.operate;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wzmtr.dom.dto.req.operate.OperateEventDetailReqDTO;
 import com.wzmtr.dom.dto.req.operate.OperateEventInfoReqDTO;
 import com.wzmtr.dom.dto.req.operate.OperateEventReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.LineEventInfoReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.LineEventRecordReqDTO;
 import com.wzmtr.dom.dto.res.operate.EventCountResDTO;
+import com.wzmtr.dom.dto.res.operate.OperateEventDetailResDTO;
 import com.wzmtr.dom.dto.res.operate.OperateEventInfoResDTO;
 import com.wzmtr.dom.dto.res.operate.OperateEventResDTO;
 import com.wzmtr.dom.dto.res.vehicle.LineEventDetailResDTO;
@@ -92,6 +94,13 @@ public interface OperateEventMapper {
     Page<OperateEventInfoResDTO> eventList(Page<OperateEventInfoResDTO> page,String startDate,String endDate);
 
     /**
+     * 事件信息-时间明细列表
+     * @param eventId 事件ID
+     * @return 列表
+     */
+    List<OperateEventDetailResDTO>  eventDetailById(String eventId);
+
+    /**
      * 事件信息-统计
      * @param startDate 查询参数
      * @param endDate 查询参数
@@ -104,6 +113,11 @@ public interface OperateEventMapper {
      * @param operateEventInfoReqDTO 入参数
      */
     void createEvent(OperateEventInfoReqDTO operateEventInfoReqDTO);
+
+    void deleteEventDetail(String eventId);
+    void deleteEventDetailBatch(List<String> ids);
+
+    void createEventDetail(String createBy,String parentId,List<OperateEventDetailReqDTO> list);
 
     /**
      * 事件信息-编辑

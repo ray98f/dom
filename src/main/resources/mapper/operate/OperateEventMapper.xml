@@ -99,6 +99,14 @@
         ORDER BY CREATE_DATE desc
     </select>
 
+    <select id="eventDetailById" resultType="com.wzmtr.dom.dto.res.operate.OperateEventDetailResDTO">
+        SELECT *
+        FROM OPERATE_EVENT_DETAIL
+        WHERE DEL_FLAG='0'
+        AND EVENT_ID = #{eventId}
+        ORDER BY NODE_TIME ASC
+    </select>
+
     <select id="eventCount" resultType="com.wzmtr.dom.dto.res.operate.EventCountResDTO">
         SELECT RTRIM(MAJOR_TYPE) AS MAJOR_TYPE, COUNT(*) AS count
         FROM OPERATE_EVENT_INFO
@@ -178,12 +186,6 @@
         <if test="powerFaultCount!=null">
             POWER_FAULT_COUNT,
         </if>
-        <if test="eventTime!=null">
-            EVENT_TIME,
-        </if>
-        <if test="eventContent!=null and eventContent!=''">
-            EVENT_CONTENT,
-        </if>
         <if test="isRectified!=null and isRectified!=''">
             IS_RECTIFIED,
         </if>
@@ -260,12 +262,6 @@
         <if test="powerFaultCount!=null">
             #{powerFaultCount},
         </if>
-        <if test="eventTime!=null">
-            to_date(#{eventTime},'yyyy-mm-dd hh24:mi:ss'),
-        </if>
-        <if test="eventContent!=null and eventContent!=''">
-            #{eventContent},
-        </if>
         <if test="isRectified!=null and isRectified!=''">
             #{isRectified},
         </if>
@@ -286,6 +282,23 @@
         to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
         to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
         #{createBy}, sysdate,#{createBy}, sysdate)
+    </insert>
+
+    <insert id="createEventDetail">
+        insert ALL
+        <foreach collection="list" index="index" item="item" separator=" ">
+            INTO OPERATE_EVENT_DETAIL (
+            EVENT_ID,
+            NODE_TIME,
+            EVENT_CONTENT,
+            CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+            VALUES (
+            #{parentId},
+            to_date(#{item.nodeTime},'yyyy-mm-dd hh24:mi:ss'),
+            #{item.eventContent},
+            #{createBy}, sysdate,#{createBy}, sysdate)
+        </foreach>
+        SELECT * FROM dual
     </insert>
 
     <update id="modifyEvent">
@@ -372,6 +385,20 @@
     <delete id="deleteEvent">
         DELETE FROM OPERATE_EVENT_INFO
         WHERE ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </delete>
+
+    <delete id="deleteEventDetail">
+        DELETE FROM OPERATE_EVENT_DETAIL
+        WHERE EVENT_ID = #{id}
+    </delete>
+
+    <delete id="deleteEventDetailBatch">
+        DELETE FROM OPERATE_EVENT_DETAIL
+        WHERE EVENT_ID IN (
         <foreach collection="ids" index="index" item="id" separator=",">
             #{id}
         </foreach>

@@ -1,6 +1,7 @@
 package com.wzmtr.dom.dto.req.operate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.wzmtr.dom.dto.res.operate.OperateEventDetailResDTO;
 import com.wzmtr.dom.entity.BaseEntity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -8,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 日数据结果类
@@ -134,18 +136,6 @@ public class OperateEventInfoReqDTO extends BaseEntity {
     private Integer powerFaultCount;
 
     /**
-     * 事件时间
-     * */
-    @ApiModelProperty(value = "事件时间")
-    private String eventTime;
-
-    /**
-     * 事件内容、处理经过
-     * */
-    @ApiModelProperty(value = "事件内容、处理经过")
-    private String eventContent;
-
-    /**
      * 事件内容 概括
      * */
     @ApiModelProperty(value = "事件内容")
@@ -190,4 +180,12 @@ public class OperateEventInfoReqDTO extends BaseEntity {
     @ApiModelProperty(value = "数据终止日期")
     private String endDate;
 
+    /**
+     * 是否编辑事件明细
+     */
+    String editDetailFlag;
+    /**
+     * 事件明细
+     */
+    List<OperateEventDetailReqDTO> eventDetailList;
 }

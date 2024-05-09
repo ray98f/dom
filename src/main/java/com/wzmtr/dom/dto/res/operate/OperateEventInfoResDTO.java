@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 日数据结果类
@@ -193,5 +194,10 @@ public class OperateEventInfoResDTO extends BaseEntity {
      * 事件等级
      */
     private String eventLevel;
+
+    /**
+     * 事件明细
+     */
+    List<OperateEventDetailResDTO> eventDetailList;
 
 }
