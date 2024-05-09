@@ -129,6 +129,108 @@
         WHERE ID=#{id} AND VERSION=#{version}
     </update>
 
+    <update id="modifyBySync">
+        UPDATE OPERATE_CONSTRUCT_RECORD SET
+        <if test="plan1Count!=null">
+            PLAN1_COUNT=#{plan1Count},
+        </if>
+        <if test="real1Count!=null">
+            REAL1_COUNT=#{real1Count},
+        </if>
+        <if test="plan2Count!=null">
+            PLAN2_COUNT=#{plan2Count},
+        </if>
+        <if test="real2Count!=null">
+            REAL2_COUNT=#{real2Count},
+        </if>
+        <if test="plan3Count!=null">
+            PLAN3_COUNT=#{plan3Count},
+        </if>
+        <if test="real3Count!=null">
+            REAL3_COUNT=#{real3Count},
+        </if>
+        <if test="totalCount!=null">
+            TOTAL_COUNT=#{totalCount},
+        </if>
+        <if test="realCount!=null">
+            REAL_COUNT=#{realCount},
+        </if>
+        <if test="linePlan1Count!=null">
+            LINE_PLAN1_COUNT=#{linePlan1Count},
+        </if>
+        <if test="linePlan2Count!=null">
+            LINE_PLAN2_COUNT=#{linePlan2Count},
+        </if>
+        <if test="linePlan3Count!=null">
+            LINE_PLAN3_COUNT=#{linePlan2Count},
+        </if>
+        <if test="lineReal1Count!=null">
+            LINE_REAL1_COUNT=#{lineReal1Count},
+        </if>
+        <if test="lineReal2Count!=null">
+            LINE_REAL2_COUNT=#{lineReal2Count},
+        </if>
+        <if test="lineReal3Count!=null">
+            LINE_REAL3_COUNT=#{lineReal3Count},
+        </if>
+        <if test="lineCanceledCount!=null">
+            LINE_CANCELED_COUNT=#{lineCanceledCount},
+        </if>
+        <if test="lineExpiredCount!=null">
+            LINE_EXPIRED_COUNT=#{lineExpiredCount},
+        </if>
+        <if test="lineChangedCount!=null">
+            LINE_CHANGED_COUNT=#{lineChangedCount},
+        </if>
+        <if test="lineDelayCount!=null">
+            LINE_DELAY_COUNT=#{lineDelayCount},
+        </if>
+        <if test="lineAddCount!=null">
+            LINE_ADD_COUNT=#{lineAddCount},
+        </if>
+
+        <if test="depotPlan1Count!=null">
+            DEPOT_PLAN1_COUNT=#{depotPlan1Count},
+        </if>
+        <if test="depotPlan2Count!=null">
+            DEPOT_PLAN2_COUNT=#{depotPlan2Count},
+        </if>
+        <if test="depotPlan3Count!=null">
+            DEPOT_PLAN1_COUNT=#{depotPlan3Count},
+        </if>
+        <if test="depotReal1Count!=null">
+            DEPOT_REAL1_COUNT=#{depotReal1Count},
+        </if>
+        <if test="depotReal2Count!=null">
+            DEPOT_REAL2_COUNT=#{depotReal2Count},
+        </if>
+        <if test="depotReal3Count!=null">
+            DEPOT_REAL3_COUNT=#{depotReal3Count},
+        </if>
+        <if test="depotCanceledCount!=null">
+            DEPOT_CANCELED_COUNT=#{depotCanceledCount},
+        </if>
+        <if test="depotExpiredCount!=null">
+            DEPOT_EXPIRED_COUNT=#{depotExpiredCount},
+        </if>
+        <if test="depotChangedCount!=null">
+            DEPOT_CHANGED_COUNT=#{depotChangedCount},
+        </if>
+        <if test="depotDelayCount!=null">
+            DEPOT_DELAY_COUNT=#{depotDelayCount},
+        </if>
+        <if test="depotAddCount!=null">
+            DEPOT_ADD_COUNT=#{depotAddCount},
+        </if>
+
+        UPDATE_BY=#{updateBy},
+        UPDATE_DATE=sysdate
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE=#{dataType}
+        AND START_DATE=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+    </update>
+
     <select id="planList" resultType="com.wzmtr.dom.dto.res.operate.ConstructPlanResDTO">
         SELECT ID, RECORD_ID,WORK_CODE,WORK_NAME,WORK_DEPT,WORK_AREA,WORK_DETAIL,POWER_REQ
         VERSION, DATA_TYPE, DATA_DATE, START_DATE,END_DATE,CREATE_DATE, UPDATE_DATE

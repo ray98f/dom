@@ -20,6 +20,6 @@ public interface ThirdService {
      */
     List<UnsaturationConstructResDTO> getUnsaturationConstruct(String startTime,String endTime);
 
-    PlanStatisticsResDTO getPlanStatistics(String startTime,String endTime);
+    List<PlanStatisticsResDTO> getPlanStatistics(String startTime,String endTime);
 
 }

@@ -43,10 +43,10 @@ public class ThirdServiceImpl implements ThirdService {
     }
 
     @Override
-    public PlanStatisticsResDTO getPlanStatistics(String startTime, String endTime) {
+    public List<PlanStatisticsResDTO> getPlanStatistics(String startTime, String endTime) {
         JSONObject res = JSONObject.parseObject(HttpUtils.doGet(planStatisticsApi+"?planBeginTime="+startTime+"&planEndTime="+endTime,null), JSONObject.class);
         if(Objects.nonNull(res)){
-            PlanStatisticsResDTO result = JSONObject.parseObject(res.getJSONObject(CommonConstants.API_RES_DATA).toJSONString(),PlanStatisticsResDTO.class);
+            List<PlanStatisticsResDTO> result = res.getJSONArray(CommonConstants.API_RES_DATA).toJavaList(PlanStatisticsResDTO.class);
             return result;
         }
         return null;

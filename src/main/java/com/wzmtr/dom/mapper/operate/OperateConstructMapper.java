@@ -57,6 +57,12 @@ public interface OperateConstructMapper {
     int modify(ConstructRecordReqDTO constructRecordReqDTO);
 
     /**
+     * 编辑
+     * @param planStatisticsReqDTO
+     */
+    void modifyBySync(PlanStatisticsReqDTO planStatisticsReqDTO);
+
+    /**
      * 施工计划列表
      * @param page 分页参数
      * @param startDate 查询参数
