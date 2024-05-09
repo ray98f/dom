@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @Author: Li.Wang
@@ -83,15 +84,20 @@ public class HotLineSummaryServiceImpl implements HotLineSummaryService {
         if (result == 0) {
             throw new CommonException(ErrorCode.NORMAL_ERROR, "当前数据已被编辑，请刷新列表并重新编辑数据");
         }
-
-        //接听总量=咨询+求助+建议+总投诉+热线表演+S1转接+其他
-        incomeRecordDO.setAnswerTotal(incomeRecordDO.getConsult()
-                + incomeRecordDO.getResort()
-                + incomeRecordDO.getSuggest()
-                + incomeRecordDO.getComplaintTotal()
-                + incomeRecordDO.getType1Praise()
-                + incomeRecordDO.getS1Switch()
-                + incomeRecordDO.getOther());
+        // 接听总量=咨询+求助+建议+总投诉+热线表演+S1转接+其他
+        incomeRecordDO.setAnswerTotal(Optional.ofNullable(incomeRecordDO.getConsult()).orElse(0L)
+                + Optional.ofNullable(incomeRecordDO.getResort()).orElse(0L)
+                + Optional.ofNullable(incomeRecordDO.getSuggest()).orElse(0L)
+                + Optional.ofNullable(incomeRecordDO.getComplaintTotal()).orElse(0L)
+                + Optional.ofNullable(incomeRecordDO.getType1Praise()).orElse(0L)
+                + Optional.ofNullable(incomeRecordDO.getS1Switch()).orElse(0L)
+                + Optional.ofNullable(incomeRecordDO.getOther()).orElse(0L));
+        // 总投诉=有责投诉+无责投诉
+        incomeRecordDO.setComplaintTotal(Optional.ofNullable(incomeRecordDO.getType1Complaint()).orElse(0L)
+                + Optional.ofNullable(incomeRecordDO.getType2Complaint()).orElse(0L));
+        // 总表扬=热线表扬+车站表扬
+        incomeRecordDO.setPraiseTotal(Optional.ofNullable(incomeRecordDO.getType1Praise()).orElse(0L)
+                + Optional.ofNullable(incomeRecordDO.getType2Praise()).orElse(0L));
         incomeRecordDO.setUpdateBy(TokenUtils.getCurrentPersonId());
         incomeRecordDO.setVersion(String.valueOf(Integer.parseInt(now.getVersion()) + 1));
         hotLineSummaryMapper.updateById(incomeRecordDO);
