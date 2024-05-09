@@ -196,7 +196,7 @@
             DEPOT_PLAN2_COUNT=#{depotPlan2Count},
         </if>
         <if test="depotPlan3Count!=null">
-            DEPOT_PLAN1_COUNT=#{depotPlan3Count},
+            DEPOT_PLAN3_COUNT=#{depotPlan3Count},
         </if>
         <if test="depotReal1Count!=null">
             DEPOT_REAL1_COUNT=#{depotReal1Count},
@@ -223,7 +223,6 @@
             DEPOT_ADD_COUNT=#{depotAddCount},
         </if>
 
-        UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate
         WHERE DEL_FLAG='0'
         AND DATA_TYPE=#{dataType}
