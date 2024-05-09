@@ -60,7 +60,8 @@ public class CommonController {
     @ApiOperation(value = "测试")
     @GetMapping(value = "/test1")
     public DataResponse<PlanStatisticsResDTO> test1(@RequestParam String startTime, String endTime) {
-        return DataResponse.of(thirdService.getPlanStatistics(startTime,endTime));
+       // return DataResponse.of(thirdService.getPlanStatistics(startTime,endTime));
+        return null;
     }
 
     /**
