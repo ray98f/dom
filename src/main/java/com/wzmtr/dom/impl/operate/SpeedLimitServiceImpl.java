@@ -51,6 +51,7 @@ public class SpeedLimitServiceImpl implements SpeedLimitService {
         }
         speedLimitRecordReqDTO.setId(TokenUtils.getUuId());
         speedLimitRecordReqDTO.setCreateBy(TokenUtils.getCurrentPersonId());
+        speedLimitRecordReqDTO.setLimitNum(0);
         speedLimitMapper.addRecord(speedLimitRecordReqDTO);
     }
 
