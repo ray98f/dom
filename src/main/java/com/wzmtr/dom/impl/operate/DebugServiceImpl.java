@@ -1,5 +1,6 @@
 package com.wzmtr.dom.impl.operate;
 
+import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
@@ -24,6 +25,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -117,9 +119,11 @@ public class DebugServiceImpl implements DebugService {
 
     @Override
     public Page<ConstructPlanResDTO> getCsmConstructPlan(String startDate, String endDate, PageReqDTO pageReqDTO) {
+        Date date = DateUtil.parse(endDate);
+        String endDateNext = DateUtil.formatDate(DateUtil.offsetDay(date, 1)) + CommonConstants.SYNC_DATA_TIME;
         OpenConstructPlanReqDTO req = OpenConstructPlanReqDTO.builder()
-                .planbeginTime(startDate)
-                .planendTime(endDate)
+                .planbeginTime(startDate + CommonConstants.SYNC_DATA_TIME)
+                .planendTime(endDateNext)
                 .workType(CommonConstants.CONSTRUCT_DEBUG)
                 .page(pageReqDTO.getPageNo())
                 .limit(pageReqDTO.getPageSize())

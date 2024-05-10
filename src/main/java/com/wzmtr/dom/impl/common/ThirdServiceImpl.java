@@ -11,6 +11,7 @@ import com.wzmtr.dom.dto.res.operate.ConstructPlanResDTO;
 import com.wzmtr.dom.dto.res.operate.PlanStatisticsResDTO;
 import com.wzmtr.dom.dto.res.operate.UnsaturationConstructResDTO;
 import com.wzmtr.dom.dto.res.vehicle.DepotConstructPlanResDTO;
+import com.wzmtr.dom.enums.PlanStatusEnum;
 import com.wzmtr.dom.service.common.ThirdService;
 import com.wzmtr.dom.utils.HttpUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -94,6 +95,9 @@ public class ThirdServiceImpl implements ThirdService {
                 .workDetail(openConstructPlan.getWorkName())
                 .powerReq(openConstructPlan.getPowerRequest())
                 .workType(openConstructPlan.getWorkType())
+                .planStatus(PlanStatusEnum.getLabelByValue(openConstructPlan.getPlanStatus()))
+                .planBeginTime(openConstructPlan.getPlanbeginTime())
+                .planEndTime(openConstructPlan.getPlanendTime())
                 .build();
     }
 }

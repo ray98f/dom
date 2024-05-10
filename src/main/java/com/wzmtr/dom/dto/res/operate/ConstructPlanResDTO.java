@@ -95,6 +95,11 @@ public class ConstructPlanResDTO {
      */
     private String planStatus;
 
+    @ApiModelProperty("计划开始时间")
+    private String planBeginTime;
+    @ApiModelProperty("计划结束时间")
+    private String planEndTime;
+
     /**
      * 版本号
      * */
