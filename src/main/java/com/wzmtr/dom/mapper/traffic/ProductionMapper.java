@@ -1,6 +1,8 @@
 package com.wzmtr.dom.mapper.traffic;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wzmtr.dom.dto.req.operate.OperateEventDetailReqDTO;
+import com.wzmtr.dom.dto.req.traffic.ProEventDetailReqDTO;
 import com.wzmtr.dom.dto.req.traffic.ProductionApprovalReqDTO;
 import com.wzmtr.dom.dto.req.traffic.ProductionInfoReqDTO;
 import com.wzmtr.dom.dto.req.traffic.ProductionRecordReqDTO;
@@ -173,6 +175,8 @@ public interface ProductionMapper {
     Page<ProductionInfoResDTO> eventPage(Page<ProductionInfoResDTO> page, String stationCode, String productionType,
                                          String dataType, String startDate, String endDate);
 
+    List<ProEventDetailResDTO> eventDetailById(String infoId);
+
     /**
      * 周报获取安全生产具体情况记录
      * @param page 分页参数
@@ -203,6 +207,11 @@ public interface ProductionMapper {
      * @param productionInfoReqDTO 入参数
      */
     void createEvent(ProductionInfoReqDTO productionInfoReqDTO);
+
+    void deleteEventDetail(String eventId);
+    void deleteEventDetailBatch(List<String> ids);
+
+    void createEventDetail(String createBy,String parentId,List<ProEventDetailReqDTO> list);
 
     /**
      * 事件信息-编辑

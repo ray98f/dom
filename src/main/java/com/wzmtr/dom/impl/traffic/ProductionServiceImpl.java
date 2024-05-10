@@ -7,6 +7,8 @@ import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.traffic.ProductionApprovalReqDTO;
 import com.wzmtr.dom.dto.req.traffic.ProductionInfoReqDTO;
 import com.wzmtr.dom.dto.req.traffic.ProductionRecordReqDTO;
+import com.wzmtr.dom.dto.res.operate.OperateEventDetailResDTO;
+import com.wzmtr.dom.dto.res.operate.OperateEventInfoResDTO;
 import com.wzmtr.dom.dto.res.system.StationRoleResDTO;
 import com.wzmtr.dom.dto.res.traffic.*;
 import com.wzmtr.dom.entity.CurrentLoginUser;
@@ -275,7 +277,14 @@ public class ProductionServiceImpl implements ProductionService {
     public Page<ProductionInfoResDTO> eventList(String stationCode, String productionType, String dataType,
                                                 String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return productionMapper.eventPage(pageReqDTO.of(), stationCode, productionType, dataType, startDate, endDate);
+        Page<ProductionInfoResDTO> eventList = productionMapper.eventPage(pageReqDTO.of(), stationCode, productionType, dataType, startDate, endDate);
+        List<ProductionInfoResDTO>  recordList = eventList.getRecords();
+        for(ProductionInfoResDTO o : recordList){
+            List<ProEventDetailResDTO> detailList = productionMapper.eventDetailById(o.getId());
+            o.setProEventDetailList(detailList);
+        }
+        eventList.setRecords(recordList);
+        return eventList;
     }
 
     @Override
@@ -293,6 +302,7 @@ public class ProductionServiceImpl implements ProductionService {
                 res.setStationName(record.getStationName());
                 res.setProductionTwoList(productionMapper.listProductionTwo(record.getStationCode(),
                         startDate + " 00:00:00", endDate + " 23:59:59"));
+
                 resList.add(res);
             }
         }
@@ -314,16 +324,31 @@ public class ProductionServiceImpl implements ProductionService {
         productionInfoReqDTO.setCreateBy(currentLoginUser.getPersonId());
         productionInfoReqDTO.setUpdateBy(currentLoginUser.getPersonId());
         productionMapper.createEvent(productionInfoReqDTO);
+
+        //插入事件明细
+        if(productionInfoReqDTO.getEventDetailList() != null && productionInfoReqDTO.getEventDetailList().size() > 0){
+            productionMapper.createEventDetail(currentLoginUser.getPersonId(),productionInfoReqDTO.getId(), productionInfoReqDTO.getEventDetailList());
+        }
+
         //更新事件统计
         updateSummaryCount(productionInfoReqDTO.getStationCode(), productionInfoReqDTO.getStartDate(), productionInfoReqDTO.getEndDate());
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void modifyEvent(CurrentLoginUser currentLoginUser, ProductionInfoReqDTO productionInfoReqDTO) {
         productionInfoReqDTO.setUpdateBy(currentLoginUser.getPersonId());
         int res = productionMapper.modifyEvent(productionInfoReqDTO);
         if (res <= 0) {
             throw new CommonException(ErrorCode.UPDATE_ERROR);
+        }
+
+        //插入事件明细
+        if( CommonConstants.ONE_STRING.equals(productionInfoReqDTO.getEditDetailFlag())
+                && productionInfoReqDTO.getEventDetailList() != null
+                && productionInfoReqDTO.getEventDetailList().size() > 0){
+            productionMapper.deleteEventDetail(productionInfoReqDTO.getId());
+            productionMapper.createEventDetail(currentLoginUser.getPersonId(),productionInfoReqDTO.getId(),productionInfoReqDTO.getEventDetailList());
         }
 
         //更新事件统计
@@ -340,6 +365,7 @@ public class ProductionServiceImpl implements ProductionService {
             ProductionInfoResDTO eventInfo = productionMapper.queryDateRange(ids);
             try {
                 productionMapper.deleteEvent(ids, TokenUtils.getCurrentPersonId());
+                productionMapper.deleteEventDetailBatch(ids);
             } catch (Exception e) {
                 throw new CommonException(ErrorCode.DELETE_ERROR);
             }

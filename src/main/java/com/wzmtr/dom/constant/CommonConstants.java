@@ -200,6 +200,9 @@ public class CommonConstants {
     // " 八项指标类型:1件数/次数,2指标值,3指标值(国标)4运营服务指标
     public static final String[] OPERATE_INDICATOR_TYPE = {"1","2"};
 
+    //车辆和信号调试作业
+    public static final String CONSTRUCT_DEBUG = "A1";
+
     public static final String WEEK_PLAN = "week_plan";
     public static final String DAY_PLAN = "day_plan";
     public static final String TEMP_PLAN = "temp_plan";

@@ -2,7 +2,10 @@ package com.wzmtr.dom.dto.res.operate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
@@ -16,6 +19,9 @@ import java.util.List;
  * @date 2024/3/13 13:38
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ConstructPlanResDTO {
 
     /**
@@ -83,6 +89,11 @@ public class ConstructPlanResDTO {
      */
     @ApiModelProperty(value = "施工作业类型")
     private String workType;
+
+    /**
+     * 计划状态
+     */
+    private String planStatus;
 
     /**
      * 版本号

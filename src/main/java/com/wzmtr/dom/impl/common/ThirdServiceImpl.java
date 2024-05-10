@@ -2,7 +2,12 @@ package com.wzmtr.dom.impl.common;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
+import com.wzmtr.dom.controller.common.OpenConstructPlanReqDTO;
+import com.wzmtr.dom.dto.res.common.OpenConstructPlanResDTO;
+import com.wzmtr.dom.dto.res.operate.ConstructPlanResDTO;
 import com.wzmtr.dom.dto.res.operate.PlanStatisticsResDTO;
 import com.wzmtr.dom.dto.res.operate.UnsaturationConstructResDTO;
 import com.wzmtr.dom.dto.res.vehicle.DepotConstructPlanResDTO;
@@ -27,6 +32,8 @@ import java.util.Objects;
 @Slf4j
 public class ThirdServiceImpl implements ThirdService {
 
+    @Value("${open-api.csm.constructPlan}")
+    private String constructPlanApi;
 
     @Value("${open-api.csm.unsaturationConstruct}")
     private String unsaturationConstructApi;
@@ -50,5 +57,43 @@ public class ThirdServiceImpl implements ThirdService {
             return result;
         }
         return null;
+    }
+
+    @Override
+    public Page<ConstructPlanResDTO> getCsmConstructPlan(OpenConstructPlanReqDTO constructPlanReqDTO) {
+
+        String reqData = JSONObject.toJSONString(constructPlanReqDTO);
+        JSONObject res = JSONObject.parseObject(HttpUtils.doPost(constructPlanApi, reqData, null), JSONObject.class);
+        List<OpenConstructPlanResDTO> openList = JSONArray.parseArray(res.getJSONObject(
+                CommonConstants.API_RES_DATA).getJSONArray(CommonConstants.API_RES_LIST).toJSONString(),
+                OpenConstructPlanResDTO.class);
+        List<ConstructPlanResDTO> list = new ArrayList<>();
+        PageHelper.startPage(constructPlanReqDTO.getPage(), constructPlanReqDTO.getLimit());
+        Page<ConstructPlanResDTO> page = new Page<>();
+        for(OpenConstructPlanResDTO o: openList){
+            list.add(convertDTO(o));
+        }
+        page.setRecords(list);
+        page.setCurrent(res.getJSONObject(CommonConstants.API_RES_DATA).getInteger("pageNum"));
+        page.setPages(res.getJSONObject(CommonConstants.API_RES_DATA).getInteger("pages"));
+        page.setTotal(res.getJSONObject(CommonConstants.API_RES_DATA).getInteger("total"));
+        page.setSize(res.getJSONObject(CommonConstants.API_RES_DATA).getInteger("size"));
+        return page;
+    }
+
+
+    private ConstructPlanResDTO convertDTO(OpenConstructPlanResDTO openConstructPlan){
+
+        return ConstructPlanResDTO.builder()
+                .constructPlanId(openConstructPlan.getConstructplanId())
+                .workconcentId(openConstructPlan.getWorkconcentId())
+                .workCode(openConstructPlan.getWorkCode())
+                .workName(openConstructPlan.getWorkName())
+                .workDept(openConstructPlan.getWorkdeptName())
+                .workArea(openConstructPlan.getWorkareaDesc())
+                .workDetail(openConstructPlan.getWorkName())
+                .powerReq(openConstructPlan.getPowerRequest())
+                .workType(openConstructPlan.getWorkType())
+                .build();
     }
 }

@@ -1,9 +1,12 @@
 package com.wzmtr.dom.dto.req.traffic;
 
+import com.wzmtr.dom.dto.req.operate.OperateEventDetailReqDTO;
 import com.wzmtr.dom.entity.BaseEntity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.util.List;
 
 /**
  * description:
@@ -44,6 +47,12 @@ public class ProductionInfoReqDTO extends BaseEntity {
      */
     @ApiModelProperty(value = "施工作业时间")
     private String workTime;
+
+    /**
+     * 施工作业结束时间
+     */
+    @ApiModelProperty(value = "施工作业时间")
+    private String workTimeEnd;
 
     /**
      * 施工作业单位
@@ -128,4 +137,13 @@ public class ProductionInfoReqDTO extends BaseEntity {
      */
     @ApiModelProperty(value = "版本号")
     private String version;
+
+    /**
+     * 是否编辑事件明细
+     */
+    String editDetailFlag;
+    /**
+     * 事件明细
+     */
+    List<ProEventDetailReqDTO> eventDetailList;
 }

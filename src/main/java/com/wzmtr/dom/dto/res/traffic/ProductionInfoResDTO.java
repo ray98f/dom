@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * description:
@@ -60,6 +61,18 @@ public class ProductionInfoResDTO extends BaseEntity {
             timezone = "GMT+8"
     )
     private Date workTime;
+
+
+    /**
+     * 施工作业时间
+     */
+    @ApiModelProperty(value = "施工作业时间")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8"
+    )
+    private Date workTimeEnd;
 
     /**
      * 施工作业单位
@@ -164,4 +177,9 @@ public class ProductionInfoResDTO extends BaseEntity {
             timezone = "GMT+8"
     )
     private Date endDate;
+
+    /**
+     * 事件经过列表
+     * */
+    private List<ProEventDetailResDTO> proEventDetailList;
 }
