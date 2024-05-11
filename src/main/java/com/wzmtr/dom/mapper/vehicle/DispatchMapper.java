@@ -41,6 +41,15 @@ public interface DispatchMapper {
     Page<DispatchOrderResDTO> pageOrder(Page<DispatchOrderResDTO> page, String id, String startDate, String endDate);
 
     /**
+     * 获取调度命令详情列表
+     * @param id 记录id
+     * @param startDate 开始时间
+     * @param endDate 结束时间
+     * @return 调度命令详情列表
+     */
+    List<String> orderIds( String id, String startDate, String endDate);
+
+    /**
      * 根据id获取调度命令记录
      * @param id id
      * @return 调度命令记录
@@ -79,6 +88,8 @@ public interface DispatchMapper {
      * @param dispatchOrderReqDTO 调度命令详情参数
      */
     void addOrder(DispatchOrderReqDTO dispatchOrderReqDTO);
+
+    void addOrderBatch(String recordId,String createBy,String startDate,String endDate,List<DispatchOrderReqDTO> list);
 
     /**
      * 编辑调度命令

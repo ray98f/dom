@@ -6,7 +6,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.common.OpenConstructPlanReqDTO;
+import com.wzmtr.dom.dto.req.common.OpenDispatchOrderReqDTO;
 import com.wzmtr.dom.dto.res.common.OpenConstructPlanResDTO;
+import com.wzmtr.dom.dto.res.common.OpenDispatchOrderRes;
 import com.wzmtr.dom.dto.res.operate.ConstructPlanResDTO;
 import com.wzmtr.dom.dto.res.operate.PlanStatisticsResDTO;
 import com.wzmtr.dom.dto.res.operate.UnsaturationConstructResDTO;
@@ -40,6 +42,9 @@ public class ThirdServiceImpl implements ThirdService {
 
     @Value("${open-api.csm.planStatistics}")
     private String planStatisticsApi;
+
+    @Value("${open-api.csm.dispatchOrder}")
+    private String dispatchOrderApi;
     @Override
     public List<UnsaturationConstructResDTO> getUnsaturationConstruct(String startTime,String endTime) {
         JSONObject res = JSONObject.parseObject(HttpUtils.doGet(unsaturationConstructApi+"?planBeginTime="+startTime+"&planEndTime="+endTime,null), JSONObject.class);
@@ -79,6 +84,15 @@ public class ThirdServiceImpl implements ThirdService {
         page.setTotal(res.getJSONObject(CommonConstants.API_RES_DATA).getInteger("total"));
         page.setSize(res.getJSONObject(CommonConstants.API_RES_DATA).getInteger("size"));
         return page;
+    }
+
+    @Override
+    public List<OpenDispatchOrderRes> getCsmDispatchOrder(OpenDispatchOrderReqDTO dispatchOrderReqDTO) {
+        String reqData = JSONObject.toJSONString(dispatchOrderReqDTO);
+        JSONObject res = JSONObject.parseObject(HttpUtils.doPost(dispatchOrderApi, reqData, null), JSONObject.class);
+
+        List<OpenDispatchOrderRes> openList = res.getJSONArray(CommonConstants.API_RES_DATA).toJavaList(OpenDispatchOrderRes.class);
+        return openList;
     }
 
 

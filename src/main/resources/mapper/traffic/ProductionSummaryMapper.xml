@@ -114,6 +114,24 @@
 
     <update id="modify">
         UPDATE TRAFFIC_PRODUCTION_SUMMARY SET
+        <if test="type1Keyword!=null">
+            TYPE1_KEYWORD=#{type1Keyword},
+        </if>
+        <if test="type2Desc!=null">
+            TYPE2_KEYWORD=#{type2Keyword},
+        </if>
+        <if test="type3Desc!=null">
+            TYPE3_KEYWORD=#{type3Keyword},
+        </if>
+        <if test="type4Desc!=null">
+            TYPE4_KEYWORD=#{type4Keyword},
+        </if>
+        <if test="type5Desc!=null">
+            TYPE5_KEYWORD=#{type5Keyword},
+        </if>
+        <if test="type6Keyword!=null">
+            TYPE6_KEYWORD=#{type6Keyword},
+        </if>
         <if test="type1Desc!=null">
             TYPE1_DESC=#{type1Desc},
         </if>

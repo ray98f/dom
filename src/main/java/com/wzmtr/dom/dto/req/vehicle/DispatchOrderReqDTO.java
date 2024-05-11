@@ -37,6 +37,28 @@ public class DispatchOrderReqDTO extends BaseEntity {
     private Date orderTime;
 
     /**
+     * 发令时间
+     */
+    @ApiModelProperty(value = "开始时间")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd",
+            timezone = "GMT+8"
+    )
+    private Date startDate;
+
+    /**
+     * 发令时间
+     */
+    @ApiModelProperty(value = "结束时间")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd",
+            timezone = "GMT+8"
+    )
+    private Date endDate;
+
+    /**
      * 发令号码
      */
     @ApiModelProperty(value = "发令号码")
