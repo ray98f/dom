@@ -3,14 +3,18 @@ package com.wzmtr.dom.impl.traffic;
 import cn.hutool.core.collection.CollectionUtil;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dataobject.traffic.TrafficHotlineImportantDO;
+import com.wzmtr.dom.dataobject.traffic.TrafficHotlineSummaryDO;
 import com.wzmtr.dom.dto.req.common.SidReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineImportantAddDataReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineImportantAddReqDTO;
 import com.wzmtr.dom.dto.res.common.DictResDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineImportantDetailResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
+import com.wzmtr.dom.enums.ErrorCode;
+import com.wzmtr.dom.exception.CommonException;
 import com.wzmtr.dom.mapper.common.DictMapper;
 import com.wzmtr.dom.mapper.traffic.HotLineImportantMapper;
+import com.wzmtr.dom.mapper.traffic.HotLineSummaryMapper;
 import com.wzmtr.dom.service.traffic.HotLineImportantService;
 import com.wzmtr.dom.utils.*;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +31,10 @@ import java.util.List;
 @Service
 @Slf4j
 public class HotLineImportantServiceImpl implements HotLineImportantService {
+
+    @Autowired
+    private HotLineSummaryMapper hotLineSummaryMapper;
+
     @Autowired
     private HotLineImportantMapper hotLineImportantMapper;
 
@@ -40,7 +48,24 @@ public class HotLineImportantServiceImpl implements HotLineImportantService {
 
     @Override
     public void add(HotLineImportantAddReqDTO req) {
-        List<TrafficHotlineImportantDO> list = new ArrayList<>();
+        TrafficHotlineSummaryDO trafficHotlineSummaryDO = new TrafficHotlineSummaryDO();
+        trafficHotlineSummaryDO.setDataType(req.getDataType());
+        if(CommonConstants.ONE_STRING.equals(req.getDataType())){
+            trafficHotlineSummaryDO.setDataDate(req.getStartDate());
+        }
+        trafficHotlineSummaryDO.setStartDate(req.getStartDate());
+        trafficHotlineSummaryDO.setEndDate(req.getEndDate());
+        trafficHotlineSummaryDO.setCreateBy(TokenUtils.getCurrentPersonId());
+        trafficHotlineSummaryDO.setId(TokenUtils.getUuId());
+        trafficHotlineSummaryDO.setDelFlag("0");
+        trafficHotlineSummaryDO.setCreateDate(DateUtils.currentDate());
+        trafficHotlineSummaryDO.setCreateBy(TokenUtils.getCurrentPersonId());
+        trafficHotlineSummaryDO.setVersion("1");
+        Integer result = hotLineSummaryMapper.selectIsExist(trafficHotlineSummaryDO);
+        if (result > 0) {
+            throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期数据已存在，无法重复新增");
+        }
+/*        List<TrafficHotlineImportantDO> list = new ArrayList<>();
         List<DictResDTO> dictList = dictMapper.list(CommonConstants.HOTLINE_TYPE, null, CommonConstants.ZERO_STRING);
         if (StringUtils.isNotEmpty(dictList)) {
             for (DictResDTO dict : dictList) {
@@ -57,7 +82,7 @@ public class HotLineImportantServiceImpl implements HotLineImportantService {
         }
         if (CollectionUtil.isNotEmpty(list)) {
             hotLineImportantMapper.insertList(list);
-        }
+        }*/
     }
 
     @Override
