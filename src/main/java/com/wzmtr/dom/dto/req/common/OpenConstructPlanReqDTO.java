@@ -1,4 +1,4 @@
-package com.wzmtr.dom.controller.common;
+package com.wzmtr.dom.dto.req.common;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -22,6 +22,8 @@ public class OpenConstructPlanReqDTO {
     private String workCode;
     @ApiModelProperty("作业类型")
     private String workType;
+    @ApiModelProperty("作业区域")
+    private String workAreaDesc;
     @ApiModelProperty("计划类型")
     private String planType;
     @ApiModelProperty("计划开始时间")

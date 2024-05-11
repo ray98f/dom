@@ -1,7 +1,7 @@
 package com.wzmtr.dom.controller.common;
 
+import com.wzmtr.dom.dto.req.common.OpenConstructPlanReqDTO;
 import com.wzmtr.dom.dto.res.operate.PlanStatisticsResDTO;
-import com.wzmtr.dom.dto.res.operate.UnsaturationConstructResDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.service.common.ThirdService;
 import io.swagger.annotations.Api;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * 公共分类-单点登录

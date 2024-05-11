@@ -106,6 +106,8 @@ public class CommonConstants {
     public static final String LINE_CODE_ONE = "01";
     public static final String LINE_CODE_TWO = "02";
 
+    public static final String XT = "下塘";
+    public static final String TT = "汀田";
     /**
      * 下塘停车场
      */
@@ -204,6 +206,9 @@ public class CommonConstants {
 
     //车辆和信号调试作业
     public static final String CONSTRUCT_DEBUG = "A1";
+
+    //车场作业
+    public static final String CONSTRUCT_DEPOT = "B";
 
     public static final String WEEK_PLAN = "week_plan";
     public static final String DAY_PLAN = "day_plan";

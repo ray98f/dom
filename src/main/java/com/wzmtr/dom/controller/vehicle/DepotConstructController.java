@@ -5,6 +5,7 @@ import com.wzmtr.dom.constant.ValidationGroup;
 import com.wzmtr.dom.dto.req.vehicle.DepotConstructPlanBatchReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.DepotConstructRecordReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.DrivingRecordReqDTO;
+import com.wzmtr.dom.dto.res.operate.ConstructPlanResDTO;
 import com.wzmtr.dom.dto.res.vehicle.*;
 import com.wzmtr.dom.entity.BaseIdsEntity;
 import com.wzmtr.dom.entity.CurrentLoginUser;
@@ -103,10 +104,10 @@ public class DepotConstructController {
      */
     @GetMapping("/getCsmConstructPlan")
     @ApiOperation(value = "选择施工计划-列表")
-    public PageResponse<DepotConstructPlanResDTO> getCsmConstructPlan(@RequestParam String depotCode,
-                                                                      @RequestParam String startDate,
-                                                                      @RequestParam String endDate,
-                                                                      @Valid PageReqDTO pageReqDTO) {
+    public PageResponse<ConstructPlanResDTO> getCsmConstructPlan(@RequestParam String depotCode,
+                                                                 @RequestParam String startDate,
+                                                                 @RequestParam String endDate,
+                                                                 @Valid PageReqDTO pageReqDTO) {
         return PageResponse.of(depotConstructService.getCsmConstructPlan(depotCode,startDate,endDate,pageReqDTO));
     }
 

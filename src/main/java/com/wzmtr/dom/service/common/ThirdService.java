@@ -1,7 +1,7 @@
 package com.wzmtr.dom.service.common;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.wzmtr.dom.controller.common.OpenConstructPlanReqDTO;
+import com.wzmtr.dom.dto.req.common.OpenConstructPlanReqDTO;
 import com.wzmtr.dom.dto.res.operate.ConstructPlanResDTO;
 import com.wzmtr.dom.dto.res.operate.PlanStatisticsResDTO;
 import com.wzmtr.dom.dto.res.operate.UnsaturationConstructResDTO;

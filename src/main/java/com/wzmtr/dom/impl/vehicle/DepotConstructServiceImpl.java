@@ -5,9 +5,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
+import com.wzmtr.dom.dto.req.common.OpenConstructPlanReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.DepotConstructPlanBatchReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.DepotConstructPlanReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.DepotConstructRecordReqDTO;
+import com.wzmtr.dom.dto.res.operate.ConstructPlanResDTO;
 import com.wzmtr.dom.dto.res.vehicle.DepotConstructDetailResDTO;
 import com.wzmtr.dom.dto.res.vehicle.DepotConstructPlanResDTO;
 import com.wzmtr.dom.dto.res.vehicle.DepotConstructRecordResDTO;
@@ -17,6 +19,7 @@ import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
 import com.wzmtr.dom.mapper.vehicle.DepotConstructMapper;
 import com.wzmtr.dom.mapper.vehicle.IndicatorMapper;
+import com.wzmtr.dom.service.common.ThirdService;
 import com.wzmtr.dom.service.vehicle.DepotConstructService;
 import com.wzmtr.dom.utils.HttpUtils;
 import com.wzmtr.dom.utils.StringUtils;
@@ -33,6 +36,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -48,6 +52,9 @@ public class DepotConstructServiceImpl implements DepotConstructService {
 
     @Value("${open-api.csm.constructPlan}")
     private String constructPlanApi;
+
+    @Autowired
+    private ThirdService thirdService;
 
     @Autowired
     private SqlSessionFactory sqlSessionFactory;
@@ -149,7 +156,30 @@ public class DepotConstructServiceImpl implements DepotConstructService {
     }
 
     @Override
-    public Page<DepotConstructPlanResDTO> getCsmConstructPlan(String depotCode, String startDate, String endDate, PageReqDTO pageReqDTO) {
+    public Page<ConstructPlanResDTO> getCsmConstructPlan(String depotCode, String startDate, String endDate, PageReqDTO pageReqDTO) {
+
+        Date date = DateUtil.parse(endDate);
+        String endDateNext = DateUtil.formatDate(DateUtil.offsetDay(date, 1)) + CommonConstants.SYNC_DATA_TIME;
+        String workAreaDesc = "";
+        switch (depotCode){
+            case CommonConstants.STATION_280:
+                workAreaDesc = CommonConstants.XT;
+                break;
+            default:
+                workAreaDesc = CommonConstants.TT;
+                break;
+        }
+
+        OpenConstructPlanReqDTO req = OpenConstructPlanReqDTO.builder()
+                .planbeginTime(startDate + CommonConstants.SYNC_DATA_TIME)
+                .planendTime(endDateNext)
+                .workType(CommonConstants.CONSTRUCT_DEPOT)
+                .workAreaDesc(workAreaDesc)
+                .page(pageReqDTO.getPageNo())
+                .limit(pageReqDTO.getPageSize())
+                .build();
+
+
         //TODO 调取施工调度计划
         //JSONObject.toJSONString(convertDto(req));
         String reqData = "{}";
@@ -186,7 +216,7 @@ public class DepotConstructServiceImpl implements DepotConstructService {
         page.setPages(1);
         page.setTotal(1);
         page.setSize(10);
-        return page;
+        return thirdService.getCsmConstructPlan(req);
     }
 
     @Override

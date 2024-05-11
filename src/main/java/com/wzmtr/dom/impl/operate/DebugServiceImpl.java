@@ -1,11 +1,10 @@
 package com.wzmtr.dom.impl.operate;
 
 import cn.hutool.core.date.DateUtil;
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
-import com.wzmtr.dom.controller.common.OpenConstructPlanReqDTO;
+import com.wzmtr.dom.dto.req.common.OpenConstructPlanReqDTO;
 import com.wzmtr.dom.dto.req.operate.DebugInfoReqDTO;
 import com.wzmtr.dom.dto.req.operate.DebugRecordReqDTO;
 import com.wzmtr.dom.dto.res.operate.ConstructPlanResDTO;
@@ -17,14 +16,12 @@ import com.wzmtr.dom.exception.CommonException;
 import com.wzmtr.dom.mapper.operate.DebugMapper;
 import com.wzmtr.dom.service.common.ThirdService;
 import com.wzmtr.dom.service.operate.DebugService;
-import com.wzmtr.dom.utils.HttpUtils;
 import com.wzmtr.dom.utils.StringUtils;
 import com.wzmtr.dom.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
