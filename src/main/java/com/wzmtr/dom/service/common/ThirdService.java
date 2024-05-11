@@ -34,6 +34,13 @@ public interface ThirdService {
     Page<ConstructPlanResDTO> getCsmConstructPlan(OpenConstructPlanReqDTO constructPlanReqDTO);
 
     /**
+     * 选择重点施工计划-列表
+     * @param constructPlanReqDTO 查询参数
+     * @return 重点施工计划列表
+     */
+    Page<ConstructPlanResDTO> getCsmImportantConstructPlan(OpenConstructPlanReqDTO constructPlanReqDTO);
+
+    /**
      * 选择调度命令-列表
      * @param dispatchOrderReqDTO 查询参数
      * @return 选择调度命令列表

@@ -89,6 +89,7 @@ csm:
 open-api:
   csm:
     constructPlan: ${csm.host}/csm/constructPlan/open/getPlanList
+    importantConstruct: ${csm.host}/csm/constructPlan/open/getImportantPlanList
     unsaturationConstruct: ${csm.host}/csm/report/open/getUnsaturationPlan
     planStatistics: ${csm.host}/csm/report/open/getPlanStatistics
     dispatchOrder: ${csm.host}/csm/dispatch/order/open/list

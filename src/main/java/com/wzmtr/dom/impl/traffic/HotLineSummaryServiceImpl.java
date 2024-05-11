@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Assert;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
+import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dataobject.traffic.TrafficHotlineSummaryDO;
 import com.wzmtr.dom.dto.req.common.SidReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineImportantAddReqDTO;
@@ -27,6 +28,7 @@ import com.wzmtr.dom.utils.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -55,23 +57,31 @@ public class HotLineSummaryServiceImpl implements HotLineSummaryService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void add(HotLineSummaryAddReqDTO reqDTO) {
-        TrafficHotlineSummaryDO trafficHotlineSummaryDO = reqDTO.toDO(reqDTO);
-        trafficHotlineSummaryDO.setCreateBy(TokenUtils.getCurrentPersonId());
-        trafficHotlineSummaryDO.setId(TokenUtils.getUuId());
-        trafficHotlineSummaryDO.setDelFlag("0");
-        trafficHotlineSummaryDO.setCreateDate(DateUtils.currentDate());
-        trafficHotlineSummaryDO.setCreateBy(TokenUtils.getCurrentPersonId());
-        trafficHotlineSummaryDO.setVersion("1");
-        Integer result = hotLineSummaryMapper.selectIsExist(trafficHotlineSummaryDO);
-        if (result > 0) {
-            throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期服务热线汇总数据已存在，无法重复新增");
+        try{
+            TrafficHotlineSummaryDO trafficHotlineSummaryDO = reqDTO.toDO(reqDTO);
+            trafficHotlineSummaryDO.setCreateBy(TokenUtils.getCurrentPersonId());
+            trafficHotlineSummaryDO.setId(TokenUtils.getUuId());
+            trafficHotlineSummaryDO.setDelFlag("0");
+            trafficHotlineSummaryDO.setCreateDate(DateUtils.currentDate());
+            trafficHotlineSummaryDO.setCreateBy(TokenUtils.getCurrentPersonId());
+            trafficHotlineSummaryDO.setVersion("1");
+            Integer result = hotLineSummaryMapper.selectIsExist(trafficHotlineSummaryDO);
+            if (result > 0) {
+                throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期服务热线汇总数据已存在，无法重复新增");
+            }
+            hotLineSummaryMapper.insert(trafficHotlineSummaryDO);
+            // 初始化重要热线内容
+            if(CommonConstants.ONE_STRING.equals(trafficHotlineSummaryDO.getDataType())){
+                HotLineImportantAddReqDTO req = new HotLineImportantAddReqDTO();
+                org.springframework.beans.BeanUtils.copyProperties(reqDTO, req);
+                hotLineImportantService.add(req);
+            }
+        }catch (Exception e){
+            throw new CommonException(ErrorCode.NORMAL_ERROR, "数据库新增异常");
         }
-        hotLineSummaryMapper.insert(trafficHotlineSummaryDO);
-        // 初始化重要热线内容
-        HotLineImportantAddReqDTO req = new HotLineImportantAddReqDTO();
-        org.springframework.beans.BeanUtils.copyProperties(reqDTO, req);
-        hotLineImportantService.add(req);
+
     }
 
     @Override
