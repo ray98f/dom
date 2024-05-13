@@ -63,4 +63,11 @@ public interface OperateIndicatorService {
      */
     void modifyPower(CurrentLoginUser currentLoginUser, IndicatorPowerReqDTO indicatorPowerReqDTO);
 
+    /**
+     * 同步数据
+     * @param dataType 入参数
+     * @param startDate 入参数
+     * @param endDate 入参数
+     */
+    void syncData(String dataType, String startDate,String endDate);
 }

@@ -73,6 +73,10 @@ public class CommonConstants {
     public static final String FORTY_STRING = "40";
     public static final String FIFTY_STRING = "50";
     public static final String NINETY_STRING = "90";
+    public static final String INFINITY_STRING = "∞";
+    public static final String ZERO_PERCENTAGE_STRING = "0%";
+    public static final String DECIMAL_FMT_STRING = "0.0000";
+    public static final String PERCENTAGE_STRING = "%";
 
     /**
      * 数字
@@ -91,6 +95,8 @@ public class CommonConstants {
     public static final int TEN = 10;
     public static final int TWENTY = 20;
     public static final int THIRTY = 30;
+    public static final int ONE_HUNDRED = 100;
+    public static final long ONE_HUNDRED_LONG = 100L;
     public static final int TEN_THOUSAND = 10000;
     public static final double TEN_THOUSAND_DOUBLE = 10000.0;
 
@@ -198,6 +204,9 @@ public class CommonConstants {
     public static final String OPERATE_DAILY_NODE1 ="operate_daily_node1";
     public static final String OPERATE_WEEKLY_NODE1 ="operate_weekly_node1";
     public static final String OPERATE_MONTHLY_NODE1 ="operate_monthly_node1";
+
+    //运营开始日期
+    public static final String OPERATE_START_DAY = "2023-08-26";
 
     // " 八项指标类型:1件数/次数,2指标值,3指标值(国标)4运营服务指标
     public static final String[] OPERATE_INDICATOR_TYPE = {"1","2"};

@@ -218,6 +218,12 @@
         <if test="run2Kilometer!=null">
             RUN2_KILOMETER=#{run2Kilometer},
         </if>
+        <if test="operateEvent5!=null">
+            OPERATE_EVENT5=#{operateEvent5},
+        </if>
+        <if test="event5Rate!=null">
+            EVENT5_RATE=#{event5Rate},
+        </if>
         VERSION = VERSION+1,
         UPDATE_BY=#{updateBy},
         UPDATE_DATE=sysdate

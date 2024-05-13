@@ -3,6 +3,7 @@ package com.wzmtr.dom.service.common;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.common.OpenConstructPlanReqDTO;
 import com.wzmtr.dom.dto.req.common.OpenDispatchOrderReqDTO;
+import com.wzmtr.dom.dto.res.common.OpenDepotStatisticsRes;
 import com.wzmtr.dom.dto.res.common.OpenDispatchOrderRes;
 import com.wzmtr.dom.dto.res.operate.ConstructPlanResDTO;
 import com.wzmtr.dom.dto.res.operate.PlanStatisticsResDTO;
@@ -47,4 +48,10 @@ public interface ThirdService {
      */
     List<OpenDispatchOrderRes> getCsmDispatchOrder(OpenDispatchOrderReqDTO dispatchOrderReqDTO);
 
+    /**
+     * 获取车场调车事件统计
+     * @param date 查询参数
+     * @return 选择调度命令列表
+     */
+    OpenDepotStatisticsRes getOdmDepotStatistics(String date);
 }

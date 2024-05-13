@@ -1,5 +1,6 @@
 package com.wzmtr.dom.impl.common;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -8,6 +9,7 @@ import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.common.OpenConstructPlanReqDTO;
 import com.wzmtr.dom.dto.req.common.OpenDispatchOrderReqDTO;
 import com.wzmtr.dom.dto.res.common.OpenConstructPlanResDTO;
+import com.wzmtr.dom.dto.res.common.OpenDepotStatisticsRes;
 import com.wzmtr.dom.dto.res.common.OpenDispatchOrderRes;
 import com.wzmtr.dom.dto.res.operate.ConstructPlanResDTO;
 import com.wzmtr.dom.dto.res.operate.PlanStatisticsResDTO;
@@ -48,6 +50,9 @@ public class ThirdServiceImpl implements ThirdService {
 
     @Value("${open-api.csm.dispatchOrder}")
     private String dispatchOrderApi;
+
+    @Value("${open-api.odm.depotStatistics}")
+    private String depotStatisticsApi;
     @Override
     public List<UnsaturationConstructResDTO> getUnsaturationConstruct(String startTime,String endTime) {
         JSONObject res = JSONObject.parseObject(HttpUtils.doGet(unsaturationConstructApi+"?planBeginTime="+startTime+"&planEndTime="+endTime,null), JSONObject.class);
@@ -117,6 +122,17 @@ public class ThirdServiceImpl implements ThirdService {
 
         List<OpenDispatchOrderRes> openList = res.getJSONArray(CommonConstants.API_RES_DATA).toJavaList(OpenDispatchOrderRes.class);
         return openList;
+    }
+
+    @Override
+    public OpenDepotStatisticsRes getOdmDepotStatistics(String date) {
+
+        JSONObject res = JSONObject.parseObject(HttpUtils.doGet(depotStatisticsApi+"?date="+date,null), JSONObject.class);
+        if(Objects.nonNull(res)){
+            OpenDepotStatisticsRes result = JSON.parseObject(res.getJSONObject(CommonConstants.API_RES_DATA).toJSONString(),OpenDepotStatisticsRes.class);
+            return result;
+        }
+        return null;
     }
 
 
