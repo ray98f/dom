@@ -1,26 +1,34 @@
 package com.wzmtr.dom.impl.vehicle;
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
+import com.wzmtr.dom.dto.req.common.OpenDispatchOrderReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.DispatchOrderReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.DispatchRecordReqDTO;
+import com.wzmtr.dom.dto.res.common.OpenDispatchOrderRes;
 import com.wzmtr.dom.dto.res.vehicle.DispatchOrderResDTO;
 import com.wzmtr.dom.dto.res.vehicle.DispatchRecordResDTO;
 import com.wzmtr.dom.entity.PageReqDTO;
+import com.wzmtr.dom.enums.DispatchOrderStatusEnum;
 import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
 import com.wzmtr.dom.mapper.vehicle.DispatchMapper;
+import com.wzmtr.dom.service.common.ThirdService;
 import com.wzmtr.dom.service.vehicle.DispatchService;
 import com.wzmtr.dom.utils.StringUtils;
 import com.wzmtr.dom.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 车辆部-调度命令管理
@@ -30,6 +38,9 @@ import java.util.Objects;
  */
 @Service
 public class DispatchServiceImpl implements DispatchService {
+
+    @Autowired
+    private ThirdService thirdService;
 
     @Autowired
     private DispatchMapper dispatchMapper;
@@ -55,9 +66,42 @@ public class DispatchServiceImpl implements DispatchService {
     }
 
     @Override
-    public List<DispatchOrderResDTO> getCsmDispatch(String time) {
-        // todo 调用 施工调度系统接口 根据日期获取调度命令数据并新增调度命令详情，修改调度命令记录命令数
-        return new ArrayList<>();
+    @Transactional(rollbackFor = Exception.class)
+    public List<DispatchOrderResDTO> getCsmDispatch(String recordId, String dataType,String startDate,String endDate) {
+        try {
+            Date date = DateUtil.parse(endDate);
+            String endDateNext = DateUtil.formatDate(DateUtil.offsetDay(date, 1)) + CommonConstants.SYNC_DATA_TIME;
+            OpenDispatchOrderReqDTO req = OpenDispatchOrderReqDTO.builder()
+                    .startTime(startDate + CommonConstants.SYNC_DATA_TIME)
+                    .endTime(endDateNext)
+                    .dispatchorderStatus(DispatchOrderStatusEnum.RELEASED.value())
+                    .build();
+            List<OpenDispatchOrderRes> res = thirdService.getCsmDispatchOrder(req);
+
+            if(res != null && res.size() > 0){
+                List<DispatchOrderReqDTO> addList = new ArrayList<>();
+
+                //获取现在所有调度命令,不存在的插入
+                List<String> orderIds = dispatchMapper.orderIds(dataType,startDate ,endDate);
+                addList = res.stream().filter(e->!orderIds.contains(e.getDispatchorderId())).map(this::dispatchOrderCopy).collect(Collectors.toList());
+                if(addList.size()>0){
+                    addOrder(recordId,TokenUtils.getCurrentPersonId(), startDate, endDate,addList);
+                }
+            }
+        }catch (Exception e){
+            throw new CommonException(ErrorCode.NORMAL_ERROR, "同步失败");
+        }
+        return null;
+    }
+
+    private DispatchOrderReqDTO dispatchOrderCopy(OpenDispatchOrderRes res){
+        DispatchOrderReqDTO dto = new DispatchOrderReqDTO();
+        dto.setId(res.getDispatchorderId());
+        dto.setOrderCode(res.getOrderCode());
+        dto.setOrderDesc(res.getDispatchorderDesc());
+        dto.setOrderTime(DateUtil.parseDate(res.getOrderTime()));
+
+        return dto;
     }
 
     @Override
@@ -103,6 +147,10 @@ public class DispatchServiceImpl implements DispatchService {
             req.setUpdateBy(TokenUtils.getCurrentPersonId());
             dispatchMapper.modifyRecord(req);
         }
+    }
+
+    private void addOrder(String recordId,String createBy,String startDate,String endDate,List<DispatchOrderReqDTO> list){
+        dispatchMapper.addOrderBatch(recordId,createBy,startDate,endDate,list);
     }
 
 }

@@ -2,6 +2,7 @@ package com.wzmtr.dom.utils;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
+import com.wzmtr.dom.dto.res.common.DateResDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
@@ -97,9 +98,6 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
         return calendar.getTime();
     }
 
-    public static void main(String[] args) {
-        System.out.println(formatDateYYYY_MM_DD_HH_MM_SS(new Date()));
-    }
     public static String dateTimeNow(final String format) {
         return parseDateToStr(format, new Date());
     }
@@ -195,6 +193,68 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    /**
+     * 根据日期获取上周日期范围
+     * @param day 日期（yyyy-MM-dd）
+     * @return 上周日期范围
+     */
+    public static DateResDTO getLastWeek(String day) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = sdf.parse(day);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        // 获取上一周
+        calendar.add(Calendar.DATE, -7);
+        // 设置为周一
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        Date monday = calendar.getTime();
+        // 设置为周日
+        calendar.add(Calendar.DATE, 6);
+        Date sunday = calendar.getTime();
+        DateResDTO dto = new DateResDTO();
+        dto.setStartDate(sdf.format(monday));
+        dto.setEndDate(sdf.format(sunday));
+        return dto;
+    }
+
+    /**
+     * 根据日期获取上月日期范围
+     * @param day 日期（yyyy-MM-dd）
+     * @return 上月日期范围
+     */
+    public static DateResDTO getLastMonth(String day) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = sdf.parse(day);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MONTH, -1);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        //上个月第一天
+        Date startTime = calendar.getTime();
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        //上个月最后一天
+        Date endTime = calendar.getTime();
+        DateResDTO dto = new DateResDTO();
+        dto.setStartDate(sdf.format(startTime));
+        dto.setEndDate(sdf.format(endTime));
+        return dto;
+    }
+
+    /**
+     * 获取两个日期相差天数
+     * @param startDate 开始时间
+     * @param endDate 结束时间
+     * @return 相差天数
+     * @throws ParseException 异常
+     */
+    public static Long getDayBetween(String startDate, String endDate) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date1 = dateFormat.parse(startDate);
+        Date date2 = dateFormat.parse(endDate);
+        long diff = date2.getTime() - date1.getTime();
+        return diff / (24 * 60 * 60 * 1000);
     }
 
 }

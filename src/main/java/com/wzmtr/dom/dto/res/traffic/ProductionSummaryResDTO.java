@@ -198,4 +198,39 @@ public class ProductionSummaryResDTO extends BaseEntity {
             timezone = "GMT+8"
     )
     private Date endDate;
+
+    /**
+     * 施工异常:关键词
+     * */
+    @ApiModelProperty(value = "施工异常:关键词")
+    private String type1Keyword;
+
+    /**
+     * 施工异常:关键词
+     * */
+    @ApiModelProperty(value = "施工异常:概述")
+    private String type2Keyword;
+
+    /**
+     * 施工异常:关键词
+     * */
+    @ApiModelProperty(value = "施工异常:概述")
+    private String type3Keyword;
+
+    /**
+     * 施工异常:关键词
+     * */
+    @ApiModelProperty(value = "施工异常:概述")
+    private String type4Keyword;
+
+    /**
+     * 施工异常:关键词
+     * */
+    @ApiModelProperty(value = "施工异常:概述")
+    private String type5Keyword;
+    /**
+     * 设备缺陷、故障:  关键词
+     * */
+    @ApiModelProperty(value = "设备缺陷、故障:键词")
+    private String type6Keyword;
 }

@@ -218,7 +218,7 @@
     </update>
 
     <select id="eventPage" resultType="com.wzmtr.dom.dto.res.traffic.ProductionInfoResDTO">
-        SELECT t1.ID, t1.RECORD_ID,t1.STATION_CODE,t1.PRODUCTION_TYPE,t1.TITLE,t1.WORK_TIME,t1.WORK_DEPT,t1.WORK_CONTENT,
+        SELECT t1.ID, t1.RECORD_ID,t1.STATION_CODE,t1.PRODUCTION_TYPE,t1.TITLE,t1.WORK_TIME,t1.WORK_TIME_END,t1.WORK_DEPT,t1.WORK_CONTENT,
         t1.EVENT_TIME,t1.EVENT_DESC,t1.EVENT_AFFECT,t1.EVENT_HANDLE,t1.PIC_URL,t1.IS_CLOSE,t1.RESULT,t2.STATION_NAME,
         t1.DATA_TYPE,t1.VERSION
         FROM TRAFFIC_PRODUCTION_INFO t1
@@ -250,6 +250,14 @@
             </if>
         </if>
         ORDER BY t1.CREATE_DATE desc
+    </select>
+
+    <select id="eventDetailById" resultType="com.wzmtr.dom.dto.res.traffic.ProEventDetailResDTO">
+        SELECT *
+        FROM TRAFFIC_PRO_EVENT_DETAIL
+        WHERE DEL_FLAG='0'
+        AND INFO_ID = #{infoId}
+        ORDER BY EVENT_TIME ASC
     </select>
 
     <select id="listWeeklyRecord" resultType="com.wzmtr.dom.dto.res.traffic.ProductionRecordResDTO">
@@ -300,15 +308,16 @@
         <if test="workTime!=null and workTime!=''">
             WORK_TIME,
         </if>
+        <if test="workTimeEnd!=null and workTimeEnd!=''">
+            WORK_TIME_END,
+        </if>
         <if test="workDept!=null and workDept!=''">
             WORK_DEPT,
         </if>
         <if test="workContent!=null and workContent!=''">
             WORK_CONTENT,
         </if>
-        <if test="eventTime!=null and eventTime!=''">
-            EVENT_TIME,
-        </if>
+
         <if test="eventDesc!=null and eventDesc!=''">
             EVENT_DESC,
         </if>
@@ -341,15 +350,16 @@
         <if test="workTime!=null and workTime!=''">
             to_date(#{workTime},'yyyy-mm-dd hh24:mi:ss'),
         </if>
+        <if test="workTimeEnd!=null and workTimeEnd!=''">
+            to_date(#{workTimeEnd},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
         <if test="workDept!=null and workDept!=''">
             #{workDept},
         </if>
         <if test="workContent!=null and workContent!=''">
             #{workContent},
         </if>
-        <if test="eventTime!=null and eventTime!=''">
-            to_date(#{eventTime},'yyyy-mm-dd hh24:mi:ss'),
-        </if>
+
         <if test="eventDesc!=null and eventDesc!=''">
             #{eventDesc},
         </if>
@@ -377,6 +387,24 @@
         #{createBy}, sysdate,#{createBy}, sysdate)
     </insert>
 
+    <insert id="createEventDetail">
+        insert ALL
+        <foreach collection="list" index="index" item="item" separator=" ">
+            INTO TRAFFIC_PRO_EVENT_DETAIL (
+            INFO_ID,
+            EVENT_TIME,
+            EVENT_DESC,
+            CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+            VALUES (
+            #{parentId},
+            to_date(#{item.eventTime},'yyyy-mm-dd hh24:mi:ss'),
+            #{item.eventDesc},
+            #{createBy}, sysdate,#{createBy}, sysdate)
+        </foreach>
+        SELECT * FROM dual
+    </insert>
+
+
     <update id="modifyEvent">
         UPDATE TRAFFIC_PRODUCTION_INFO SET
         <if test="productionType!=null and productionType!=''">
@@ -388,15 +416,16 @@
         <if test="workTime!=null and workTime!=''">
             WORK_TIME=to_date(#{workTime},'yyyy-mm-dd hh24:mi:ss'),
         </if>
+        <if test="workTimeEnd!=null and workTimeEnd!=''">
+            WORK_TIME_END=to_date(#{workTimeEnd},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
         <if test="workDept!=null and workDept!=''">
             WORK_DEPT=#{workDept},
         </if>
         <if test="workContent!=null and workContent!=''">
             WORK_CONTENT=#{workContent},
         </if>
-        <if test="eventTime!=null and eventTime!=''">
-            EVENT_TIME=to_date(#{eventTime},'yyyy-mm-dd hh24:mi:ss'),
-        </if>
+
         <if test="eventDesc!=null and eventDesc!=''">
             EVENT_DESC=#{eventDesc},
         </if>
@@ -425,6 +454,20 @@
     <delete id="deleteEvent">
         DELETE FROM TRAFFIC_PRODUCTION_INFO
         WHERE ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </delete>
+
+    <delete id="deleteEventDetail">
+        DELETE FROM TRAFFIC_PRO_EVENT_DETAIL
+        WHERE INFO_ID = #{id}
+    </delete>
+
+    <delete id="deleteEventDetailBatch">
+        DELETE FROM TRAFFIC_PRO_EVENT_DETAIL
+        WHERE INFO_ID IN (
         <foreach collection="ids" index="index" item="id" separator=",">
             #{id}
         </foreach>

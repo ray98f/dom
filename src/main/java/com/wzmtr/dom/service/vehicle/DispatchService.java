@@ -38,10 +38,13 @@ public interface DispatchService {
 
     /**
      * 提取施工调度调度命令数据
-     * @param time 日期
+     * @param recordId 记录id
+     * @param dataType dataType
+     * @param startDate startDate
+     * @param endDate endDate
      * @return 调度命令数据
      */
-    List<DispatchOrderResDTO> getCsmDispatch(String time);
+    List<DispatchOrderResDTO> getCsmDispatch(String recordId, String dataType,String startDate,String endDate);
 
     /**
      * 新增调度命令记录

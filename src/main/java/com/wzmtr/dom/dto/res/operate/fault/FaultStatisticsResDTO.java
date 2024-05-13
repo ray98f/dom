@@ -60,28 +60,38 @@ public class FaultStatisticsResDTO {
     /**
      * 所属日期
      */
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty(value = "所属日期")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonFormat(
-            pattern = "yyyy-MM-dd HH:mm:ss",
+            pattern = "yyyy-MM-dd",
             timezone = "GMT+8"
     )
-    @ApiModelProperty("所属日期")
     private Date dataDate;
     /**
-     * 数据所属类型
+     * 数据类型 1:日报 2:周报 3:月报
      */
-    @ApiModelProperty(value = "数据所属类型")
+    @ApiModelProperty(value = "数据类型 1:日报 2:周报 3:月报")
     private String dataType;
     /**
      * 数据起始日期
      */
     @ApiModelProperty(value = "数据起始日期")
-    private String startDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd",
+            timezone = "GMT+8"
+    )
+    private Date startDate;
     /**
-     * 数据终止日期
+     * 数据结束日期
      */
-    @ApiModelProperty(value = "数据终止日期")
-    private String endDate;
+    @ApiModelProperty(value = "数据结束日期")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd",
+            timezone = "GMT+8"
+    )
+    private Date endDate;
     /**
      * 变配电
      */
@@ -162,5 +172,15 @@ public class FaultStatisticsResDTO {
      */
     @ApiModelProperty("总数")
     private Long sum;
+    /**
+     * 与上一周期的差值
+     */
+    @ApiModelProperty("与上一周期的差值")
+    private Long lastCycleDifference;
+    /**
+     * 与上一周期的幅度
+     */
+    @ApiModelProperty("与上一周期的幅度")
+    private String lastCycleRange;
 
 }

@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Assert;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
+import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dataobject.traffic.TrafficHotlineSummaryDO;
 import com.wzmtr.dom.dto.req.common.SidReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineImportantAddReqDTO;
@@ -27,8 +28,10 @@ import com.wzmtr.dom.utils.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @Author: Li.Wang
@@ -54,23 +57,31 @@ public class HotLineSummaryServiceImpl implements HotLineSummaryService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void add(HotLineSummaryAddReqDTO reqDTO) {
-        TrafficHotlineSummaryDO trafficHotlineSummaryDO = reqDTO.toDO(reqDTO);
-        trafficHotlineSummaryDO.setCreateBy(TokenUtils.getCurrentPersonId());
-        trafficHotlineSummaryDO.setId(TokenUtils.getUuId());
-        trafficHotlineSummaryDO.setDelFlag("0");
-        trafficHotlineSummaryDO.setCreateDate(DateUtils.currentDate());
-        trafficHotlineSummaryDO.setCreateBy(TokenUtils.getCurrentPersonId());
-        trafficHotlineSummaryDO.setVersion("1");
-        Integer result = hotLineSummaryMapper.selectIsExist(trafficHotlineSummaryDO);
-        if (result > 0) {
-            throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期服务热线汇总数据已存在，无法重复新增");
+        try{
+            TrafficHotlineSummaryDO trafficHotlineSummaryDO = reqDTO.toDO(reqDTO);
+            trafficHotlineSummaryDO.setCreateBy(TokenUtils.getCurrentPersonId());
+            trafficHotlineSummaryDO.setId(TokenUtils.getUuId());
+            trafficHotlineSummaryDO.setDelFlag("0");
+            trafficHotlineSummaryDO.setCreateDate(DateUtils.currentDate());
+            trafficHotlineSummaryDO.setCreateBy(TokenUtils.getCurrentPersonId());
+            trafficHotlineSummaryDO.setVersion("1");
+            Integer result = hotLineSummaryMapper.selectIsExist(trafficHotlineSummaryDO);
+            if (result > 0) {
+                throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期服务热线汇总数据已存在，无法重复新增");
+            }
+            hotLineSummaryMapper.insert(trafficHotlineSummaryDO);
+            // 初始化重要热线内容
+            if(CommonConstants.ONE_STRING.equals(trafficHotlineSummaryDO.getDataType())){
+                HotLineImportantAddReqDTO req = new HotLineImportantAddReqDTO();
+                org.springframework.beans.BeanUtils.copyProperties(reqDTO, req);
+                hotLineImportantService.add(req);
+            }
+        }catch (Exception e){
+            throw new CommonException(ErrorCode.NORMAL_ERROR, "数据库新增异常");
         }
-        hotLineSummaryMapper.insert(trafficHotlineSummaryDO);
-        // 初始化重要热线内容
-        HotLineImportantAddReqDTO req = new HotLineImportantAddReqDTO();
-        org.springframework.beans.BeanUtils.copyProperties(reqDTO, req);
-        hotLineImportantService.add(req);
+
     }
 
     @Override
@@ -83,15 +94,20 @@ public class HotLineSummaryServiceImpl implements HotLineSummaryService {
         if (result == 0) {
             throw new CommonException(ErrorCode.NORMAL_ERROR, "当前数据已被编辑，请刷新列表并重新编辑数据");
         }
-
-        //接听总量=咨询+求助+建议+总投诉+热线表演+S1转接+其他
-        incomeRecordDO.setAnswerTotal(incomeRecordDO.getConsult()
-                + incomeRecordDO.getResort()
-                + incomeRecordDO.getSuggest()
-                + incomeRecordDO.getComplaintTotal()
-                + incomeRecordDO.getType1Praise()
-                + incomeRecordDO.getS1Switch()
-                + incomeRecordDO.getOther());
+        // 接听总量=咨询+求助+建议+总投诉+热线表演+S1转接+其他
+        incomeRecordDO.setAnswerTotal(Optional.ofNullable(incomeRecordDO.getConsult()).orElse(0L)
+                + Optional.ofNullable(incomeRecordDO.getResort()).orElse(0L)
+                + Optional.ofNullable(incomeRecordDO.getSuggest()).orElse(0L)
+                + Optional.ofNullable(incomeRecordDO.getComplaintTotal()).orElse(0L)
+                + Optional.ofNullable(incomeRecordDO.getType1Praise()).orElse(0L)
+                + Optional.ofNullable(incomeRecordDO.getS1Switch()).orElse(0L)
+                + Optional.ofNullable(incomeRecordDO.getOther()).orElse(0L));
+        // 总投诉=有责投诉+无责投诉
+        incomeRecordDO.setComplaintTotal(Optional.ofNullable(incomeRecordDO.getType1Complaint()).orElse(0L)
+                + Optional.ofNullable(incomeRecordDO.getType2Complaint()).orElse(0L));
+        // 总表扬=热线表扬+车站表扬
+        incomeRecordDO.setPraiseTotal(Optional.ofNullable(incomeRecordDO.getType1Praise()).orElse(0L)
+                + Optional.ofNullable(incomeRecordDO.getType2Praise()).orElse(0L));
         incomeRecordDO.setUpdateBy(TokenUtils.getCurrentPersonId());
         incomeRecordDO.setVersion(String.valueOf(Integer.parseInt(now.getVersion()) + 1));
         hotLineSummaryMapper.updateById(incomeRecordDO);

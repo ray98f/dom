@@ -29,7 +29,7 @@ public class IndicatorRecordReqDTO extends BaseEntity {
      * 上线列车数及备车数
      * */
     @ApiModelProperty(value = " 上线列车数及备车数")
-    private Integer trainCount;
+    private String trainCount;
 
     /**
      * 最小发车时间间隔(秒)
@@ -153,5 +153,15 @@ public class IndicatorRecordReqDTO extends BaseEntity {
 
     @ApiModelProperty(value = "数据终止日期")
     private String endDate;
+
+    /**
+     * 站台门故障数
+     * */
+    private Integer operateEvent5;
+
+    /**
+     * 站台门故障率
+     * */
+    private String event5Rate;
 
 }

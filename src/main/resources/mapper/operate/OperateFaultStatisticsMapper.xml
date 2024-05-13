@@ -7,21 +7,20 @@
         WHERE DEL_FLAG='0'
         AND DATA_TYPE=#{dataType}
         <if test="startDate!=null and startDate!=''">
-            AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+            AND START_DATE>=to_date(#{startDate},'YYYY-MM-DD')
         </if>
         <if test="endDate!=null and endDate!=''">
-            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+            AND to_date(#{endDate},'YYYY-MM-DD')>=END_DATE
         </if>
         ORDER BY START_DATE desc
     </select>
 
-    <select id="getTodayDetail" resultType="com.wzmtr.dom.dto.res.operate.fault.FaultStatisticsResDTO">
+    <select id="getDayDetail" resultType="com.wzmtr.dom.dto.res.operate.fault.FaultStatisticsResDTO">
         SELECT * FROM OPERATE_FAULT_STATISTICS
-        WHERE DEL_FLAG='0'
-        AND DATA_DATE=#{date}
+        WHERE DEL_FLAG='0' AND DATA_DATE=#{date} AND DATA_TYPE='1'
     </select>
 
-    <select id="getCurrentMonthDetail" resultType="com.wzmtr.dom.dto.res.operate.fault.FaultStatisticsResDTO">
+    <select id="getCurrentDetail" resultType="com.wzmtr.dom.dto.res.operate.fault.FaultStatisticsResDTO">
         SELECT
         SUM(VEHICLE_NUM) AS VEHICLE_NUM,
         SUM(SIGNAL_NUM) AS SIGNAL_NUM,
@@ -39,28 +38,29 @@
         SUM(BRIDGE_TUNNEL_NUM) AS BRIDGE_TUNNEL_NUM,
         SUM(ENGINEERING_VEHICLE_NUM) AS ENGINEERING_VEHICLE_NUM
         FROM OPERATE_FAULT_STATISTICS
-        WHERE DEL_FLAG='0'
+        WHERE DEL_FLAG='0' AND DATA_TYPE='1'
         <if test="startDate!=null and startDate!=''">
-            AND DATA_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+            AND DATA_DATE>=to_date(#{startDate},'YYYY-MM-DD')
         </if>
         <if test="endDate!=null and endDate!=''">
-            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=DATA_DATE
+            AND to_date(#{endDate},'YYYY-MM-DD')>=DATA_DATE
         </if>
         ORDER BY START_DATE desc
     </select>
 
     <select id="selectIsExist" resultType="java.lang.Integer">
         SELECT count(1) FROM OPERATE_FAULT_STATISTICS
-        WHERE
-        <if test="dataType=='1'.toString()">
-            DATA_DATE=#{dataDate,jdbcType=TIMESTAMP}
-        </if>
-        <if test="dataType!='1'.toString()">
-            and START_DATE=#{startDate,jdbcType=TIMESTAMP} AND END_DATE=#{endDate,jdbcType=TIMESTAMP}
-        </if>
-        <if test="version!=null and version!=''">
-            AND VERSION=#{version,jdbcType=VARCHAR}
-        </if>
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="dataType=='1'.toString()">
+                AND DATA_DATE=#{dataDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="dataType!='1'.toString()">
+                AND START_DATE=#{startDate,jdbcType=TIMESTAMP} AND END_DATE=#{endDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="version!=null and version!=''">
+                AND VERSION=#{version,jdbcType=VARCHAR}
+            </if>
+        </trim>
         AND DEL_FLAG='0' AND rownum=1
     </select>
 
@@ -74,10 +74,10 @@
         CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
         VALUES (#{id},#{dataType},
         <if test="dataDate!=null">
-            to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
+            #{dataDate},
         </if>
-        to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
-        to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
+        #{startDate},
+        #{endDate},
         #{createBy}, sysdate,#{createBy}, sysdate)
     </insert>
 

@@ -13,7 +13,7 @@
         <if test="endDate!=null and endDate!=''">
             AND to_date(#{endDate},'YYYY-MM-DD')>=END_DATE
         </if>
-        ORDER BY DATA_DATE desc
+        ORDER BY START_DATE desc
     </select>
 
     <select id="detail" resultType="com.wzmtr.dom.dto.res.vehicle.TrainRecordResDTO">

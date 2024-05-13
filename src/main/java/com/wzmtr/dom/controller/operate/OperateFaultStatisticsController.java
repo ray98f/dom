@@ -4,7 +4,6 @@ import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.constant.ValidationGroup;
 import com.wzmtr.dom.dto.req.operate.OperateFaultStatisticsReqDTO;
 import com.wzmtr.dom.dto.res.operate.fault.FaultStatisticsResDTO;
-import com.wzmtr.dom.dto.res.operate.fault.ReportFaultStatisticsResDTO;
 import com.wzmtr.dom.entity.BaseIdsEntity;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
@@ -19,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.text.ParseException;
 
 /**
  * 运营-故障统计
@@ -54,13 +54,17 @@ public class OperateFaultStatisticsController {
 
     /**
      * 故障统计-报表详情
-     * @param date 日期
+     * @param dataType 数据类型
+     * @param startDate 起始日期
+     * @param endDate 终止日期
      * @return 报表详情
      */
     @GetMapping("/report")
     @ApiOperation(value = "故障统计-报表详情")
-    public DataResponse<ReportFaultStatisticsResDTO> report(@RequestParam String date) {
-        return DataResponse.of(faultStatisticsService.report(date));
+    public DataResponse<FaultStatisticsResDTO> report(@RequestParam String dataType,
+                                                      @RequestParam(required = false) String startDate,
+                                                      @RequestParam(required = false) String endDate) throws ParseException {
+        return DataResponse.of(faultStatisticsService.report(dataType, startDate, endDate));
     }
 
 

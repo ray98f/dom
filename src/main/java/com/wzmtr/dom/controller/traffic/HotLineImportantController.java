@@ -4,10 +4,14 @@ import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.constant.ValidationGroup;
 import com.wzmtr.dom.dto.req.common.SidReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineImportantAddReqDTO;
+import com.wzmtr.dom.dto.req.traffic.hotline.HotLineSummaryListReqDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineImportantDetailResDTO;
+import com.wzmtr.dom.dto.res.traffic.hotline.HotLineSummaryListResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.response.DataResponse;
+import com.wzmtr.dom.entity.response.PageResponse;
 import com.wzmtr.dom.service.traffic.HotLineImportantService;
+import com.wzmtr.dom.service.traffic.HotLineSummaryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.poi.ss.formula.functions.T;
@@ -30,17 +34,18 @@ import java.util.List;
 public class HotLineImportantController {
     @Autowired
     private HotLineImportantService hotLineImportantService;
-
+    @Autowired
+    private HotLineSummaryService hotLineSummaryService;
     // /** 直接调HotLineSummary 的list
     //  * 重要热线内容-列表
     //  *
     //  * @return 重要热线内容
     //  */
-    // @PostMapping("/list")
-    // @ApiOperation(value = "重要热线内容-列表")
-    // public PageResponse<HotLineSummaryListResDTO> page(@RequestBody HotLineSummaryListReqDTO reqDTO) {
-    //     return PageResponse.of(hotLineImportantService.list(reqDTO));
-    // }
+     @PostMapping("/list")
+     @ApiOperation(value = "重要热线内容-列表")
+     public PageResponse<HotLineSummaryListResDTO> page(@RequestBody HotLineSummaryListReqDTO reqDTO) {
+         return PageResponse.of(hotLineSummaryService.list(reqDTO));
+     }
 
     /**
      * 重要热线内容-详情

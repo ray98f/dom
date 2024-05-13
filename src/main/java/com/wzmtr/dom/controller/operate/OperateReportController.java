@@ -21,6 +21,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.text.ParseException;
 
 /**
  * 运营-运营报表
@@ -36,6 +37,16 @@ public class OperateReportController {
 
     @Autowired
     private OperateReportService operateReportService;
+
+    /**
+     * 获取安全运营天数
+     * @return 安全运营天数
+     */
+    @GetMapping("/safe/day")
+    @ApiOperation(value = "获取安全运营天数")
+    public DataResponse<String> getSafeDay() throws ParseException {
+        return DataResponse.of(operateReportService.getSafeDay());
+    }
 
     /**
      * 分页查询日报列表

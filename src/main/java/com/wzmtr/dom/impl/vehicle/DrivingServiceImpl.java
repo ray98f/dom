@@ -148,7 +148,7 @@ public class DrivingServiceImpl implements DrivingService {
 
         //更新记录中的统计数据 更新总里程  TODO async
         //前一日的recordId
-        String preRecordId = DateUtil.formatDate(DateUtil.offsetDay(DateUtil.parseDate(recordId), -1));
+       // String preRecordId = DateUtil.formatDate(DateUtil.offsetDay(DateUtil.parseDate(recordId), -1));
         //获取前一日的总里程和累计人均公里数
         DrivingCountReqDTO countReqDTO = new DrivingCountReqDTO();
         countReqDTO.setId(recordId);
@@ -205,12 +205,15 @@ public class DrivingServiceImpl implements DrivingService {
         if(Objects.nonNull(drivingInfoReqDTO.getMileage())){
 
             //获取前一天数据
-            DrivingInfoResDTO preInfo = drivingMapper.driveInfo(DateUtil.formatDate(
-                    DateUtil.offsetDay(DateUtil.parseDate(drivingInfoReqDTO.getDataDate()), -1)));
-            if(Objects.nonNull(preInfo)){
-                mileageTotal = preInfo.getMileageTotal() + drivingInfoReqDTO.getMileage();
-                drivingInfoReqDTO.setMileageTotal(mileageTotal);
+            if(drivingInfoReqDTO.getDataDate() !=null){
+                DrivingInfoResDTO preInfo = drivingMapper.driveInfo(DateUtil.formatDate(
+                        DateUtil.offsetDay(DateUtil.parseDate(drivingInfoReqDTO.getDataDate()), -1)));
+                if(Objects.nonNull(preInfo)){
+                    mileageTotal = preInfo.getMileageTotal() + drivingInfoReqDTO.getMileage();
+                    drivingInfoReqDTO.setMileageTotal(mileageTotal);
+                }
             }
+
         }
         try{
             int res = drivingMapper.modifyInfoData(drivingInfoReqDTO);

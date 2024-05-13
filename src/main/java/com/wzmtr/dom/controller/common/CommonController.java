@@ -1,17 +1,18 @@
 package com.wzmtr.dom.controller.common;
 
+import com.wzmtr.dom.dto.req.common.OpenConstructPlanReqDTO;
+import com.wzmtr.dom.dto.res.operate.PlanStatisticsResDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
+import com.wzmtr.dom.service.common.ThirdService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -50,7 +51,22 @@ public class CommonController {
     @Value("${sso.home}")
     private String home;
 
+    @Autowired
+    private ThirdService thirdService;
+
     private final String SERVICE = "?service=";
+
+    @ApiOperation(value = "测试")
+    @GetMapping(value = "/test1")
+    public DataResponse<PlanStatisticsResDTO> test1(@RequestParam String startTime, String endTime) {
+        OpenConstructPlanReqDTO req = new OpenConstructPlanReqDTO();
+        req.setPlanbeginTime(startTime);
+        req.setPlanendTime(endTime);
+        req.setPage(1);
+        req.setLimit(10);
+       thirdService.getCsmConstructPlan(req);
+        return null;
+    }
 
     /**
      * 单点登出

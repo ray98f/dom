@@ -1,17 +1,22 @@
 package com.wzmtr.dom.impl.operate;
 
+import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.page.PageMethod;
 import com.wzmtr.dom.constant.CommonConstants;
+import com.wzmtr.dom.dto.req.common.OpenConstructPlanReqDTO;
 import com.wzmtr.dom.dto.req.operate.*;
-import com.wzmtr.dom.dto.res.operate.*;
+import com.wzmtr.dom.dto.res.operate.ConstructEventResDTO;
+import com.wzmtr.dom.dto.res.operate.ConstructPlanResDTO;
+import com.wzmtr.dom.dto.res.operate.ConstructRecordResDTO;
+import com.wzmtr.dom.dto.res.operate.PlanStatisticsResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
 import com.wzmtr.dom.mapper.operate.OperateConstructMapper;
+import com.wzmtr.dom.service.common.ThirdService;
 import com.wzmtr.dom.service.operate.OperateConstructService;
 import com.wzmtr.dom.utils.HttpUtils;
 import com.wzmtr.dom.utils.StringUtils;
@@ -24,8 +29,12 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.text.DecimalFormat;
+import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,8 +46,12 @@ import java.util.List;
 @Service
 public class OperateConstructServiceImpl implements OperateConstructService {
 
+
     @Value("${open-api.csm.constructPlan}")
     private String constructPlanApi;
+
+    @Autowired
+    private ThirdService thirdService;
 
     @Autowired
     private SqlSessionFactory sqlSessionFactory;
@@ -53,11 +66,93 @@ public class OperateConstructServiceImpl implements OperateConstructService {
     }
 
     @Override
-    public ConstructRecordResDTO detail(String id, String startDate, String endDate) {
-        return operateConstructMapper.queryInfoById(id, startDate, endDate);
+    public void syncStatistics(String dataType, String startDate, String endDate) {
+        PlanStatisticsReqDTO req = PlanStatisticsReqDTO.builder().dataType(dataType).startDate(startDate).endDate(endDate)
+                .build();
+
+        List<PlanStatisticsResDTO> openRes = thirdService.getPlanStatistics(startDate,endDate);
+
+        for(PlanStatisticsResDTO p : openRes){
+            switch (p.getPlanType()){
+                case CommonConstants.WEEK_PLAN:
+                    req.setPlan1Count(p.getTotalnum());
+                    req.setReal1Count(p.getFinishednum());
+                    req.setLinePlan1Count(p.getTotalnumA() + p.getTotalnumC());
+                    req.setLineCanceledCount1(p.getCancelednumA() + p.getCancelednumC());
+                    req.setLineChangedCount1(p.getChangednumA() + p.getChangednumC());
+                    req.setLineDelayCount1(p.getDelaynumA() + p.getDelaynumC());
+                    req.setLineReal1Count(p.getFinishednumA() + p.getFinishednumC());
+
+                    req.setDepotPlan1Count(p.getTotalnumB());
+                    req.setDepotCanceledCount1(p.getCancelednumB());
+                    req.setDepotChangedCount1(p.getChangednumB());
+                    req.setDepotDelayCount1(p.getDelaynumB());
+                    req.setDepotReal1Count(p.getFinishednumB());
+                    break;
+                case CommonConstants.DAY_PLAN:
+                    req.setPlan2Count(p.getTotalnum());
+                    req.setReal2Count(p.getFinishednum());
+                    req.setLinePlan2Count(p.getTotalnumA() + p.getTotalnumC());
+                    req.setLineCanceledCount2(p.getCancelednumA() + p.getCancelednumC());
+                    req.setLineChangedCount2(p.getChangednumA() + p.getChangednumC());
+                    req.setLineDelayCount2(p.getDelaynumA() + p.getDelaynumC());
+                    req.setLineReal2Count(p.getFinishednumA()+p.getFinishednumB());
+
+                    req.setDepotPlan2Count(p.getTotalnumB());
+                    req.setDepotCanceledCount2(p.getCancelednumB());
+                    req.setDepotChangedCount2(p.getChangednumB());
+                    req.setDepotDelayCount2(p.getDelaynumB());
+                    req.setDepotReal2Count(p.getFinishednumB());
+                    break;
+                case CommonConstants.TEMP_PLAN:
+                    req.setPlan3Count(p.getTotalnum());
+                    req.setReal3Count(p.getFinishednum());
+                    req.setLinePlan3Count(p.getTotalnumA() + p.getTotalnumC());
+                    req.setLineCanceledCount3(p.getCancelednumA() + p.getCancelednumC());
+                    req.setLineChangedCount3(p.getChangednumA() + p.getChangednumC());
+                    req.setLineDelayCount3(p.getDelaynumA() + p.getDelaynumC());
+                    req.setLineReal3Count(p.getFinishednumA()+p.getFinishednumC());
+
+                    req.setDepotPlan3Count(p.getTotalnumB());
+                    req.setDepotCanceledCount3(p.getCancelednumB());
+                    req.setDepotChangedCount3(p.getChangednumB());
+                    req.setDepotDelayCount3(p.getDelaynumB());
+                    req.setDepotReal3Count(p.getFinishednumB());
+                    break;
+                default:
+                    break;
+            }
+        }
+        req.setTotalCount(req.getPlan1Count() + req.getPlan2Count() + req.getPlan3Count());
+        req.setRealCount(req.getReal1Count() + req.getReal2Count() + req.getReal3Count());
+
+        req.setLineCanceledCount(req.getLineCanceledCount1() + req.getLineCanceledCount2() + req.getLineCanceledCount3());
+        req.setLineChangedCount(req.getLineChangedCount1() + req.getLineChangedCount2() + req.getLineChangedCount3());
+        req.setLineDelayCount(req.getLineDelayCount1() + req.getLineDelayCount2() + req.getLineDelayCount3());
+        req.setDepotCanceledCount(req.getDepotCanceledCount1() + req.getDepotCanceledCount2() + req.getDepotCanceledCount3());
+        req.setDepotChangedCount(req.getDepotChangedCount1() + req.getDepotChangedCount2() + req.getDepotChangedCount3());
+        req.setDepotDelayCount(req.getDepotDelayCount1() + req.getDepotDelayCount2() + req.getDepotDelayCount3());
+        operateConstructMapper.modifyBySync(req);
     }
 
     @Override
+    public ConstructRecordResDTO detail(String id, String dataType,String startDate, String endDate) {
+        ConstructRecordResDTO detail = operateConstructMapper.queryInfoById(id, dataType,startDate, endDate);
+
+        // TODO 增加不饱和施工数据
+        if (StringUtils.isNotNull(detail)) {
+            if(CommonConstants.DATA_TYPE_WEEKLY.equals(detail.getDataType()) || CommonConstants.DATA_TYPE_MONTHLY.equals(detail.getDataType())){
+                detail.setUnsaturationConstruct(thirdService.getUnsaturationConstruct(DateUtil.formatDate(detail.getStartDate()),
+                        DateUtil.formatDate(detail.getEndDate())));
+                detail.setRemark(getConstructRemark(detail));
+
+            }
+        }
+        return detail;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     public void add(CurrentLoginUser currentLoginUser, ConstructRecordReqDTO constructRecordReqDTO) {
         int existFlag = operateConstructMapper.checkExist(constructRecordReqDTO.getDataType(),
                 constructRecordReqDTO.getStartDate(), constructRecordReqDTO.getEndDate());
@@ -71,11 +166,6 @@ public class OperateConstructServiceImpl implements OperateConstructService {
                 throw new CommonException(ErrorCode.DATE_ERROR);
             }
             constructRecordReqDTO.setDataDate(constructRecordReqDTO.getStartDate());
-        } else {
-            //周报 月报 //TODO 施工概况 REMARK 参数来源未知
-            String baseRemark = CommonConstants.OPERATE_CONSTRUCT_REMARK_TPL;
-
-            //constructRecordReqDTO.
         }
 
         constructRecordReqDTO.setCreateBy(currentLoginUser.getPersonId());
@@ -83,6 +173,9 @@ public class OperateConstructServiceImpl implements OperateConstructService {
         constructRecordReqDTO.setId(TokenUtils.getUuId());
         try {
             operateConstructMapper.add(constructRecordReqDTO);
+
+            //同步统计数据 TODO
+            syncStatistics(constructRecordReqDTO.getDataType(),constructRecordReqDTO.getStartDate(),constructRecordReqDTO.getEndDate());
         } catch (Exception e) {
             throw new CommonException(ErrorCode.INSERT_ERROR);
         }
@@ -99,43 +192,15 @@ public class OperateConstructServiceImpl implements OperateConstructService {
 
     @Override
     public Page<ConstructPlanResDTO> getCsmConstructPlan(String startDate, String endDate, PageReqDTO pageReqDTO) {
-        //TODO 调取施工调度计划
-        //JSONObject.toJSONString(convertDto(req));
-        String reqData = "{}";
-        JSONObject res = JSONObject.parseObject(HttpUtils.doPost(constructPlanApi, reqData, null), JSONObject.class);
-        /*List<DepotConstructPlanResDTO> list = JSONArray.parseArray(res.getJSONObject(
-                CommonConstants.API_RES_DATA).getJSONArray(CommonConstants.API_RES_LIST).toJSONString(),
-                DepotConstructPlanResDTO.class);
-        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        Page<DepotConstructPlanResDTO> page = new Page<>();
-        page.setRecords(list);
-        page.setCurrent(res.getJSONObject(CommonConstants.API_RES_DATA).getInteger("pageNum"));
-        page.setPages(res.getJSONObject(CommonConstants.API_RES_DATA).getInteger("pages"));
-        page.setTotal(res.getJSONObject(CommonConstants.API_RES_DATA).getInteger("total"));
-        page.setSize(res.getJSONObject(CommonConstants.API_RES_DATA).getInteger("size"));*/
-        //TODO TEST
-        String test1 = "{\n" +
-                "            \"constructPlanId\":\"d4ef94232cd44af69c09d9a69cf9a029\",\n" +
-                "            \"workType\":\"A1\",\n" +
-                "            \"workconcentId\":\"7ebc015e2d64430a819ab82226b99e8a\",\n" +
-                "            \"workCode\":\"S1A104-02\",\n" +
-                "            \"workName\":\"工程车动态验收\",\n" +
-                "            \"workDept\":\"中铁通轨道运营有限公司\",\n" +
-                "            \"workArea\":\"正线:动车南站-新桥站\",\n" +
-                "            \"workDetail\":\"123\",\n" +
-                "            \"powerReq\":\"正线分区：1A2带电\"\n" +
-                "        }";
-
-        List<ConstructPlanResDTO> list = new ArrayList<>();
-        list.add(JSONObject.parseObject(test1, ConstructPlanResDTO.class));
-        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        Page<ConstructPlanResDTO> page = new Page<>();
-        page.setRecords(list);
-        page.setCurrent(1);
-        page.setPages(1);
-        page.setTotal(1);
-        page.setSize(10);
-        return page;
+        Date date = DateUtil.parse(endDate);
+        String endDateNext = DateUtil.formatDate(DateUtil.offsetDay(date, 1)) + CommonConstants.SYNC_DATA_TIME;
+        OpenConstructPlanReqDTO req = OpenConstructPlanReqDTO.builder()
+                .planbeginTime(startDate + CommonConstants.SYNC_DATA_TIME)
+                .planendTime(endDateNext)
+                .page(pageReqDTO.getPageNo())
+                .limit(pageReqDTO.getPageSize())
+                .build();
+        return thirdService.getCsmImportantConstructPlan(req);
     }
 
     @Override
@@ -238,5 +303,38 @@ public class OperateConstructServiceImpl implements OperateConstructService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    private String getConstructRemark(ConstructRecordResDTO detail){
+        String baseRemark = CommonConstants.OPERATE_CONSTRUCT_REMARK_TPL;
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        baseRemark = MessageFormat.format(baseRemark,
+                detail.getLinePlan1Count()+detail.getLinePlan2Count(),
+                detail.getLinePlan3Count(),
+                detail.getLineCanceledCount(),
+                detail.getLineExpiredCount(),
+                detail.getLineChangedCount(),
+                detail.getLineAddCount(),
+                detail.getLineReal1Count()+detail.getLineReal2Count()+detail.getLineReal3Count(),
+                detail.getLineCancledByair(),
+                detail.getLineDelayCount(),
+                detail.getDepotPlan1Count()+detail.getDepotPlan2Count(),
+                detail.getDepotPlan3Count(),
+                detail.getDepotCanceledCount(),
+                detail.getDepotExpiredCount(),
+                detail.getDepotAddCount(),
+                detail.getDepotAddCount(),
+                detail.getDepotReal1Count()+detail.getDepotReal2Count()+detail.getDepotReal3Count(),
+                detail.getDepotCancledByair(),
+                detail.getDepotDelayCount(),
+                (detail.getLinePlan1Count()) > 0 ? decimalFormat.format(((detail.getLineReal1Count()) / (detail.getLinePlan1Count())) * 100) + "%":"0%",
+                (detail.getLinePlan1Count()) > 0 ? decimalFormat.format(((detail.getLinePlan1Count() - detail.getLineChangedCount()-detail.getLineCanceledCount()) / (detail.getLinePlan1Count())) * 100) + "%":"0%",
+                (detail.getDepotPlan1Count()) > 0 ? decimalFormat.format(((detail.getDepotReal1Count()) / (detail.getDepotPlan1Count())) * 100) + "%":"0%",
+                (detail.getDepotPlan1Count()) > 0 ? decimalFormat.format(((detail.getDepotPlan1Count() - detail.getDepotChangedCount()-detail.getDepotCanceledCount()) / (detail.getDepotPlan1Count())) * 100) + "%":"0%",
+                "0",
+                "0",
+                "0",
+                "0"
+                );
+        return baseRemark;
     }
 }

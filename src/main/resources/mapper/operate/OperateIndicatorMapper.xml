@@ -7,10 +7,10 @@
         FROM OPERATE_INDICATOR_RECORD
         WHERE DEL_FLAG='0'
         AND DATA_TYPE=#{dataType}
-        <if test="startDate != null and startDate!=''">
-            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        <if test="startDate!=null and startDate!=''">
+            AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
-        <if test="endDate != null and endDate!=''">
+        <if test="endDate!=null and endDate!=''">
             AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
         </if>
         ORDER BY START_DATE desc
@@ -20,14 +20,27 @@
         SELECT *
         FROM OPERATE_INDICATOR_RECORD
         WHERE DEL_FLAG = '0'
-        <if test="id != null">
+        <if test="id!=null">
             AND ID=#{id}
         </if>
-        <if test="startDate != null">
-            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        <if test="dataType!=null and dataType!=''">
+            AND DATA_TYPE=#{dataType}
         </if>
-        <if test="endDate != null">
-            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>END_DATE
+        <if test="dataType=='1'.toString()">
+            <if test="startDate!=null">
+                AND DATA_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+            </if>
+            <if test="endDate!=null">
+                AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>DATA_DATE
+            </if>
+        </if>
+        <if test="dataType!='1'.toString()">
+            <if test="startDate!=null">
+                AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+            </if>
+            <if test="endDate!=null">
+                AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>END_DATE
+            </if>
         </if>
     </select>
 
@@ -36,10 +49,10 @@
         FROM OPERATE_INDICATOR_RECORD
         WHERE DEL_FLAG = '0'
         AND DATA_TYPE=#{dataType}
-        <if test="startDate != null">
+        <if test="startDate!=null">
             AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
-        <if test="endDate != null">
+        <if test="endDate!=null">
             AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
     </select>
@@ -48,14 +61,27 @@
         SELECT *
         FROM OPERATE_INDICATOR_INFO
         WHERE DEL_FLAG='0'
-        <if test="recordId != null">
+        <if test="recordId!=null">
             AND RECORD_ID=#{recordId}
         </if>
-        <if test="startDate != null">
-            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        <if test="dataType!=null and dataType!=''">
+            AND DATA_TYPE=#{dataType}
         </if>
-        <if test="endDate != null">
-            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>END_DATE
+        <if test="dataType=='1'.toString()">
+            <if test="startDate!=null">
+                AND DATA_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+            </if>
+            <if test="endDate!=null">
+                AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>DATA_DATE
+            </if>
+        </if>
+        <if test="dataType!='1'.toString()">
+            <if test="startDate!=null">
+                AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+            </if>
+            <if test="endDate!=null">
+                AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>END_DATE
+            </if>
         </if>
         ORDER BY START_DATE desc
     </select>
@@ -64,14 +90,27 @@
         SELECT *
         FROM OPERATE_INDICATOR_POWER
         WHERE DEL_FLAG='0'
-        <if test="recordId != null">
+        <if test="recordId!=null">
             AND RECORD_ID=#{recordId}
         </if>
-        <if test="startDate != null">
-            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        <if test="dataType!=null and dataType!=''">
+            AND DATA_TYPE=#{dataType}
         </if>
-        <if test="endDate != null">
-            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>END_DATE
+        <if test="dataType=='1'.toString()">
+            <if test="startDate!=null">
+                AND DATA_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+            </if>
+            <if test="endDate!=null">
+                AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>DATA_DATE
+            </if>
+        </if>
+        <if test="dataType!='1'.toString()">
+            <if test="startDate!=null">
+                AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+            </if>
+            <if test="endDate!=null">
+                AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>END_DATE
+            </if>
         </if>
         ORDER BY START_DATE desc
     </select>
@@ -79,13 +118,13 @@
         select * from  OPERATE_INDICATOR_INFO
         WHERE DEL_FLAG = '0'
         AND DATA_TYPE=#{dataType}
-        <if test="startDate != null">
-            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        <if test="startDate!=null">
+            AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
-        <if test="endDate != null">
+        <if test="endDate!=null">
             AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
         </if>
-        <if test="indicatorType != null">
+        <if test="indicatorType!=null">
             AND INDICATOR_TYPE=#{indicatorType}
         </if>
     </select>
@@ -93,23 +132,23 @@
         select * from OPERATE_INDICATOR_POWER
         WHERE DEL_FLAG = '0'
         AND DATA_TYPE=#{dataType}
-        <if test="startDate != null">
-            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        <if test="startDate!=null">
+            AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
-        <if test="endDate != null">
+        <if test="endDate!=null">
             AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
         </if>
     </select>
     <insert id="add">
         INSERT INTO OPERATE_INDICATOR_RECORD (ID,DATA_TYPE,
-        <if test="dataDate != null">
+        <if test="dataDate!=null">
             DATA_DATE,
         </if>
         START_DATE,
         END_DATE,
         CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
         VALUES (#{id},#{dataType},
-        <if test="dataDate != null">
+        <if test="dataDate!=null">
             to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
         </if>
         to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
@@ -119,65 +158,71 @@
 
     <update id="modify">
         UPDATE OPERATE_INDICATOR_RECORD SET
-        <if test="runCode != null and runCode!=''">
+        <if test="runCode!=null and runCode!=''">
             RUN_CODE=#{runCode},
         </if>
-        <if test="trainCount != null">
+        <if test="trainCount!=null">
             TRAIN_COUNT=#{trainCount},
         </if>
-        <if test="sendTimeInterval != null">
+        <if test="sendTimeInterval!=null">
             SEND_TIME_INTERVAL=#{sendTimeInterval},
         </if>
-        <if test="noAccidentDay != null">
+        <if test="noAccidentDay!=null">
             NO_ACCIDENT_DAY=#{noAccidentDay},
         </if>
-        <if test="planRunCount != null">
+        <if test="planRunCount!=null">
             PLAN_RUN_COUNT=#{planRunCount},
         </if>
-        <if test="planPromiseCount != null">
+        <if test="planPromiseCount!=null">
             PLAN_PROMISE_COUNT=#{planPromiseCount},
         </if>
-        <if test="addCount != null">
+        <if test="addCount!=null">
             ADD_COUNT=#{addCount},
         </if>
-        <if test="realRunCount != null">
+        <if test="realRunCount!=null">
             REAL_RUN_COUNT=#{realRunCount},
         </if>
-        <if test="stopCount != null">
+        <if test="stopCount!=null">
             STOP_COUNT=#{stopCount},
         </if>
-        <if test="rutineGuestCount != null">
+        <if test="rutineGuestCount!=null">
             RUTINE_GUEST_COUNT=#{rutineGuestCount},
         </if>
-        <if test="rescueCount != null">
+        <if test="rescueCount!=null">
             RESCUE_COUNT=#{rescueCount},
         </if>
-        <if test="offLineCount != null">
+        <if test="offLineCount!=null">
             OFF_LINE_COUNT=#{offLineCount},
         </if>
-        <if test="delayCount != null">
+        <if test="delayCount!=null">
             DELAY_COUNT=#{delayCount},
         </if>
-        <if test="delay2Count != null">
+        <if test="delay2Count!=null">
             DELAY2_COUNT=#{delay2Count},
         </if>
-        <if test="delay3Count != null">
+        <if test="delay3Count!=null">
             DELAY3_COUNT=#{delay3Count},
         </if>
-        <if test="delay4Count != null">
+        <if test="delay4Count!=null">
             DELAY4_COUNT=#{delay4Count},
         </if>
-        <if test="operate1Kilometer != null">
+        <if test="operate1Kilometer!=null">
             OPERATE1_KILOMETER=#{operate1Kilometer},
         </if>
-        <if test="operate2Kilometer != null">
+        <if test="operate2Kilometer!=null">
             OPERATE2_KILOMETER=#{operate2Kilometer},
         </if>
-        <if test="run1Kilometer != null">
+        <if test="run1Kilometer!=null">
             RUN1_KILOMETER=#{run1Kilometer},
         </if>
-        <if test="run2Kilometer != null">
+        <if test="run2Kilometer!=null">
             RUN2_KILOMETER=#{run2Kilometer},
+        </if>
+        <if test="operateEvent5!=null">
+            OPERATE_EVENT5=#{operateEvent5},
+        </if>
+        <if test="event5Rate!=null">
+            EVENT5_RATE=#{event5Rate},
         </if>
         VERSION = VERSION+1,
         UPDATE_BY=#{updateBy},
@@ -190,7 +235,7 @@
         INSERT INTO OPERATE_INDICATOR_INFO (ID, RECORD_ID,
         INDICATOR_TYPE,
         DATA_TYPE,
-        <if test="dataDate != null">
+        <if test="dataDate!=null">
             DATA_DATE,
         </if>
         START_DATE,
@@ -200,7 +245,7 @@
         #{recordId},
         #{indicatorType},
         #{dataType},
-        <if test="dataDate != null">
+        <if test="dataDate!=null">
             to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
         </if>
         to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
@@ -210,25 +255,25 @@
 
     <update id="modifyInfo">
         UPDATE OPERATE_INDICATOR_INFO SET
-        <if test="punctualityRate != null and punctualityRate!=''">
+        <if test="punctualityRate!=null and punctualityRate!=''">
             PUNCTUALITY_RATE=#{punctualityRate},
         </if>
-        <if test="fulfillmentRate != null and fulfillmentRate!=''">
+        <if test="fulfillmentRate!=null and fulfillmentRate!=''">
             FULFILLMENT_RATE=#{fulfillmentRate},
         </if>
-        <if test="serviceReliability != null and serviceReliability!=''">
+        <if test="serviceReliability!=null and serviceReliability!=''">
             SERVICE_RELIABILITY=#{serviceReliability},
         </if>
-        <if test="lineFaultRate != null and lineFaultRate!=''">
+        <if test="lineFaultRate!=null and lineFaultRate!=''">
             LINE_FAULT_RATE=#{lineFaultRate},
         </if>
-        <if test="vehicleFaultRate != null and vehicleFaultRate!=''">
+        <if test="vehicleFaultRate!=null and vehicleFaultRate!=''">
             VEHICLE_FAULT_RATE=#{vehicleFaultRate},
         </if>
-        <if test="signalFaultRate != null and signalFaultRate!=''">
+        <if test="signalFaultRate!=null and signalFaultRate!=''">
             SIGNAL_FAULT_RATE=#{signalFaultRate},
         </if>
-        <if test="gateFaultRate != null and gateFaultRate!=''">
+        <if test="gateFaultRate!=null and gateFaultRate!=''">
             GATE_FAULT_RATE=#{gateFaultRate},
         </if>
 
@@ -242,7 +287,7 @@
     <insert id="addPower">
         INSERT INTO OPERATE_INDICATOR_POWER (ID, RECORD_ID,
         DATA_TYPE,
-        <if test="dataDate != null">
+        <if test="dataDate!=null">
             DATA_DATE,
         </if>
         START_DATE,
@@ -251,7 +296,7 @@
         VALUES ( #{id},
         #{recordId},
         #{dataType},
-        <if test="dataDate != null">
+        <if test="dataDate!=null">
             to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
         </if>
         to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
@@ -261,43 +306,43 @@
 
     <update id="modifyPower">
         UPDATE OPERATE_INDICATOR_POWER SET
-        <if test="energyConsumption != null">
+        <if test="energyConsumption!=null">
             ENERGY_CONSUMPTION=#{energyConsumption},
         </if>
-        <if test="rmlConsumption != null">
+        <if test="rmlConsumption!=null">
             RML_CONSUMPTION=#{rmlConsumption},
         </if>
-        <if test="xtConsumption != null">
+        <if test="xtConsumption!=null">
             XT_CONSUMPTION=#{xtConsumption},
         </if>
-        <if test="lkConsumption != null">
+        <if test="lkConsumption!=null">
             LK_CONSUMPTION=#{lkConsumption},
         </if>
-        <if test="ttConsumption != null">
+        <if test="ttConsumption!=null">
             TT_CONSUMPTION=#{ttConsumption},
         </if>
-        <if test="traction1Consumption != null">
+        <if test="traction1Consumption!=null">
             TRACTION1_CONSUMPTION=#{traction1Consumption},
         </if>
-        <if test="traction2Consumption != null">
+        <if test="traction2Consumption!=null">
             TRACTION2_CONSUMPTION=#{traction2Consumption},
         </if>
-        <if test="vehicleConsumption != null">
+        <if test="vehicleConsumption!=null">
             VEHICLE_CONSUMPTION=#{vehicleConsumption},
         </if>
-        <if test="traction3Consumption != null">
+        <if test="traction3Consumption!=null">
             TRACTION3_CONSUMPTION=#{traction3Consumption},
         </if>
-        <if test="tractionRate != null and tractionRate !='' ">
+        <if test="tractionRate!=null and tractionRate !='' ">
             TRACTION_RATE=#{tractionRate},
         </if>
-        <if test="lightConsumption != null">
+        <if test="lightConsumption!=null">
             LIGHT_CONSUMPTION=#{lightConsumption},
         </if>
-        <if test="lightRate != null and lightRate !=''">
+        <if test="lightRate!=null and lightRate !=''">
             LIGHT_RATE=#{lightRate},
         </if>
-        <if test="remark != null and remark !=''">
+        <if test="remark!=null and remark !=''">
             REMARK=#{remark},
         </if>
         VERSION = VERSION+1,

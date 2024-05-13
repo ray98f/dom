@@ -4,20 +4,23 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.operate.OperateFaultStatisticsReqDTO;
+import com.wzmtr.dom.dto.res.common.DateResDTO;
 import com.wzmtr.dom.dto.res.operate.fault.FaultStatisticsResDTO;
-import com.wzmtr.dom.dto.res.operate.fault.ReportFaultStatisticsResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
 import com.wzmtr.dom.mapper.operate.OperateFaultStatisticsMapper;
 import com.wzmtr.dom.service.operate.OperateFaultStatisticsService;
+import com.wzmtr.dom.utils.DateUtils;
 import com.wzmtr.dom.utils.StringUtils;
 import com.wzmtr.dom.utils.TokenUtils;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -36,26 +39,52 @@ public class OperateFaultStatisticsServiceImpl implements OperateFaultStatistics
     @Override
     public Page<FaultStatisticsResDTO> list(String dataType, String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        Page<FaultStatisticsResDTO> list = operateFaultStatisticsMapper.list(pageReqDTO.of(), dataType, startDate, endDate);
-        List<FaultStatisticsResDTO> records = list.getRecords();
-        if (CollectionUtils.isEmpty(records)) {
-            return list;
+        Page<FaultStatisticsResDTO> page = operateFaultStatisticsMapper.list(pageReqDTO.of(), dataType, startDate, endDate);
+        List<FaultStatisticsResDTO> list = page.getRecords();
+        if (StringUtils.isNotEmpty(list)) {
+            for (FaultStatisticsResDTO res : list) {
+                if (CommonConstants.ONE_STRING.equals(res.getDataType())) {
+                    res.setSum(getFaultSum(res));
+                } else {
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    FaultStatisticsResDTO currentDetail = operateFaultStatisticsMapper.getCurrentDetail(
+                            sdf.format(res.getStartDate()), sdf.format(res.getEndDate()));
+                    if (StringUtils.isNotNull(currentDetail)) {
+                        res.setSum(getFaultSum(currentDetail));
+                    }
+                }
+            }
         }
-        records.forEach(a -> a.setSum(getFaultSum(a)));
-        return list;
+        page.setRecords(list);
+        return page;
     }
 
     @Override
-    public ReportFaultStatisticsResDTO report(String date) {
-        ReportFaultStatisticsResDTO res = new ReportFaultStatisticsResDTO();
-        FaultStatisticsResDTO today = operateFaultStatisticsMapper.getTodayDetail(date);
-        if (StringUtils.isNotNull(today)) {
-            res.setToday(today);
+    public FaultStatisticsResDTO report(String dataType, String startDate, String endDate) throws ParseException {
+        FaultStatisticsResDTO res;
+        if (CommonConstants.ONE_STRING.equals(dataType)) {
+            res = operateFaultStatisticsMapper.getDayDetail(startDate);
+        } else {
+            res = operateFaultStatisticsMapper.getCurrentDetail(startDate, endDate);
         }
-        FaultStatisticsResDTO currentMonth =
-                operateFaultStatisticsMapper.getCurrentMonthDetail(date.substring(0, 7) + "01", date);
-        if (StringUtils.isNotNull(currentMonth)) {
-            res.setCurrentMonth(currentMonth);
+        if (StringUtils.isNotNull(res)) {
+            res.setSum(getFaultSum(res));
+            DateResDTO dateRes = null;
+            if (CommonConstants.TWO_STRING.equals(dataType)) {
+                dateRes = DateUtils.getLastWeek(startDate);
+            } else if (CommonConstants.THREE_STRING.equals(dataType)) {
+                dateRes = DateUtils.getLastMonth(startDate);
+            }
+            if (StringUtils.isNotNull(dateRes)) {
+                FaultStatisticsResDTO lastRes = operateFaultStatisticsMapper.getCurrentDetail(dateRes.getStartDate(), dateRes.getEndDate());
+                if (StringUtils.isNotNull(lastRes)) {
+                    lastRes.setSum(getFaultSum(lastRes));
+                    res.setLastCycleDifference(res.getSum() - lastRes.getSum());
+                    DecimalFormat df = new DecimalFormat("0.00%");
+                    double lastCycleRange = (double) res.getLastCycleDifference() / lastRes.getSum();
+                    res.setLastCycleRange(df.format(lastCycleRange));
+                }
+            }
         }
         return res;
     }

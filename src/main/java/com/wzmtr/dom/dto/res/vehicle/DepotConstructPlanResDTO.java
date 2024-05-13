@@ -90,6 +90,15 @@ public class DepotConstructPlanResDTO {
     private String powerReq;
 
     /**
+     * 计划状态
+     */
+    private String planStatus;
+
+    @ApiModelProperty("计划开始时间")
+    private String planBeginTime;
+    @ApiModelProperty("计划结束时间")
+    private String planEndTime;
+    /**
      * 版本号
      * */
     @ApiModelProperty(value = "版本号")

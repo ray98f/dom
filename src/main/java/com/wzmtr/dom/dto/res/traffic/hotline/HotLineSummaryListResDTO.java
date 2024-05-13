@@ -17,6 +17,11 @@ public class HotLineSummaryListResDTO {
     @ApiModelProperty("ID")
     private String id;
     /**
+     * 接听总量
+     */
+    @ApiModelProperty("接听总量")
+    private Long answerTotal;
+    /**
      * 总投诉
      */
     @ApiModelProperty("总投诉")

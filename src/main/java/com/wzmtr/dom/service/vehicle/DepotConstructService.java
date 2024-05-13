@@ -3,6 +3,7 @@ package com.wzmtr.dom.service.vehicle;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.vehicle.DepotConstructPlanBatchReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.DepotConstructRecordReqDTO;
+import com.wzmtr.dom.dto.res.operate.ConstructPlanResDTO;
 import com.wzmtr.dom.dto.res.vehicle.DepotConstructDetailResDTO;
 import com.wzmtr.dom.dto.res.vehicle.DepotConstructPlanResDTO;
 import com.wzmtr.dom.dto.res.vehicle.DepotConstructRecordResDTO;
@@ -67,7 +68,7 @@ public interface DepotConstructService {
      * @param pageReqDTO 分页参数
      * @return 施工计划列表
      */
-    Page<DepotConstructPlanResDTO> getCsmConstructPlan(String depotCode, String startDate, String endDate, PageReqDTO pageReqDTO);
+    Page<ConstructPlanResDTO> getCsmConstructPlan(String depotCode, String startDate, String endDate, PageReqDTO pageReqDTO);
 
     /**
      * 车场施工计划-列表

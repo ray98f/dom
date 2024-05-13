@@ -46,6 +46,18 @@
         ORDER BY dr.DATA_DATE ASC, do.ORDER_TIME ASC
     </select>
 
+    <select id="orderIds" resultType="java.lang.String">
+        SELECT do.ID
+        FROM VEHICLE_DISPATCH_ORDER do
+        WHERE do.DEL_FLAG='0'
+        <if test="startDate!=null and startDate!=''">
+            AND do.START_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'YYYY-MM-DD')>=do.END_DATE
+        </if>
+    </select>
+
     <select id="getRecordDetail" resultType="com.wzmtr.dom.dto.res.vehicle.DispatchRecordResDTO">
         SELECT ID, ORDER_NUM, VERSION, DATA_DATE, DATA_TYPE, START_DATE, END_DATE
         FROM VEHICLE_DISPATCH_RECORD
@@ -70,6 +82,7 @@
         <if test="version!=null and version!=''">
             AND VERSION=#{version,jdbcType=VARCHAR}
         </if>
+        AND DATA_TYPE = #{dataType}
         AND DEL_FLAG='0' AND rownum=1
     </select>
 
@@ -143,6 +156,31 @@
             #{orderDesc},
         </if>
         #{createBy}, sysdate)
+    </insert>
+
+    <insert id="addOrderBatch">
+        insert ALL
+        <foreach collection="list" index="index" item="item" separator=" ">
+            INTO VEHICLE_DISPATCH_ORDER (
+            ID,
+            RECORD_ID,
+            ORDER_TIME,
+            ORDER_CODE,
+            ORDER_DESC,
+            START_DATE,
+            END_DATE,
+            CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+            VALUES (
+            #{item.id},
+            #{recordId},
+            #{item.orderTime},
+            #{item.orderCode},
+            #{item.orderDesc},
+            to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
+            to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
+            #{createBy}, sysdate,#{createBy}, sysdate)
+        </foreach>
+        SELECT * FROM dual
     </insert>
 
     <update id="modifyRecord">

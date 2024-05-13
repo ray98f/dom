@@ -1,6 +1,7 @@
 package com.wzmtr.dom.dto.res.operate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wzmtr.dom.entity.BaseEntity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -8,6 +9,8 @@ import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * 日数据结果类
@@ -166,4 +169,175 @@ public class ConstructRecordResDTO extends BaseEntity {
     )
     private Date endDate;
 
+    /**
+     * 不饱和施工列表
+     * */
+    private List<UnsaturationConstructResDTO> unsaturationConstruct;
+
+    @JsonIgnore
+    private Integer linePlan1Count;
+
+    @JsonIgnore
+    private Integer linePlan2Count;
+
+    @JsonIgnore
+    private Integer linePlan3Count;
+
+    @JsonIgnore
+    private Integer lineCanceledCount;
+
+    @JsonIgnore
+    private Integer lineExpiredCount;
+
+    @JsonIgnore
+    private Integer lineChangedCount;
+
+    @JsonIgnore
+    private Integer lineAddCount;
+
+    @JsonIgnore
+    private Integer lineReal1Count;
+
+    @JsonIgnore
+    private Integer lineReal2Count;
+
+    @JsonIgnore
+    private Integer lineReal3Count;
+
+    @JsonIgnore
+    private Integer lineCancledByair;
+
+    @JsonIgnore
+    private Integer lineDelayCount;
+
+    @JsonIgnore
+    private Integer depotPlan1Count;
+
+    @JsonIgnore
+    private Integer depotPlan2Count;
+
+    @JsonIgnore
+    private Integer depotPlan3Count;
+
+    @JsonIgnore
+    private Integer depotCanceledCount;
+
+    @JsonIgnore
+    private Integer depotExpiredCount;
+
+    @JsonIgnore
+    private Integer depotChangedCount;
+
+    @JsonIgnore
+    private Integer depotAddCount;
+
+    @JsonIgnore
+    private Integer depotReal1Count;
+
+    @JsonIgnore
+    private Integer depotReal2Count;
+
+    @JsonIgnore
+    private Integer depotReal3Count;
+
+    @JsonIgnore
+    private Integer depotCancledByair;
+
+    @JsonIgnore
+    private Integer depotDelayCount;
+
+    public Integer getLinePlan1Count() {
+        return Optional.ofNullable(linePlan1Count).orElse(0);
+    }
+
+    public Integer getLinePlan2Count() {
+        return Optional.ofNullable(linePlan2Count).orElse(0);
+    }
+
+    public Integer getLinePlan3Count() {
+        return Optional.ofNullable(linePlan3Count).orElse(0);
+    }
+
+    public Integer getLineCanceledCount() {
+        return Optional.ofNullable(lineCanceledCount).orElse(0);
+    }
+
+    public Integer getLineExpiredCount() {
+        return Optional.ofNullable(lineExpiredCount).orElse(0);
+    }
+
+    public Integer getLineChangedCount() {
+        return Optional.ofNullable(lineChangedCount).orElse(0);
+    }
+
+    public Integer getLineAddCount() {
+        return Optional.ofNullable(lineAddCount).orElse(0);
+    }
+
+    public Integer getLineReal1Count() {
+        return Optional.ofNullable(lineReal1Count).orElse(0);
+    }
+
+    public Integer getLineReal2Count() {
+        return Optional.ofNullable(lineReal2Count).orElse(0);
+    }
+
+    public Integer getLineReal3Count() {
+        return Optional.ofNullable(lineReal3Count).orElse(0);
+    }
+
+    public Integer getLineCancledByair() {
+        return Optional.ofNullable(lineCancledByair).orElse(0);
+    }
+
+    public Integer getLineDelayCount() {
+        return Optional.ofNullable(lineDelayCount).orElse(0);
+    }
+
+    public Integer getDepotPlan1Count() {
+        return Optional.ofNullable(depotPlan1Count).orElse(0);
+    }
+
+    public Integer getDepotPlan2Count() {
+        return Optional.ofNullable(depotPlan2Count).orElse(0);
+    }
+    public Integer getDepotPlan3Count() {
+        return Optional.ofNullable(depotPlan3Count).orElse(0);
+    }
+
+    public Integer getDepotCanceledCount() {
+        return Optional.ofNullable(depotCanceledCount).orElse(0);
+    }
+
+    public Integer getDepotExpiredCount() {
+        return Optional.ofNullable(depotExpiredCount).orElse(0);
+    }
+
+    public Integer getDepotChangedCount() {
+        return Optional.ofNullable(depotChangedCount).orElse(0);
+    }
+
+    public Integer getDepotAddCount() {
+        return Optional.ofNullable(depotAddCount).orElse(0);
+    }
+
+    public Integer getDepotReal1Count() {
+        return Optional.ofNullable(depotReal1Count).orElse(0);
+    }
+
+    public Integer getDepotReal2Count() {
+        return Optional.ofNullable(depotReal2Count).orElse(0);
+    }
+
+    public Integer getDepotReal3Count() {
+        return Optional.ofNullable(depotReal3Count).orElse(0);
+    }
+
+    public Integer getDepotCancledByair() {
+        return Optional.ofNullable(depotCancledByair).orElse(0);
+    }
+
+    public Integer getDepotDelayCount() {
+        return Optional.ofNullable(depotDelayCount).orElse(0);
+    }
 }

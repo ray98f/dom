@@ -81,10 +81,10 @@ public class OperatePassengerFlowServiceImpl implements OperatePassengerFlowServ
     }
 
     @Override
-    public PassengerFlowDetailResDTO detail(String id, String startDate, String endDate) {
+    public PassengerFlowDetailResDTO detail(String id, String dataType, String startDate, String endDate) {
         PassengerFlowDetailResDTO passengerFlowDetailResDTO = new PassengerFlowDetailResDTO();
         // 获取详情
-        OperatePassengerFlowDetailDO detail = passengerFlowDetailMapper.info(id,startDate,endDate);
+        OperatePassengerFlowDetailDO detail = passengerFlowDetailMapper.info(id, dataType, startDate, endDate);
         List<PassengerInfoResDTO> passengerInfoRes = Lists.newArrayList();
         if (StringUtils.isNotNull(detail)) {
             passengerFlowDetailResDTO = BeanUtils.convert(detail, PassengerFlowDetailResDTO.class);
@@ -102,8 +102,8 @@ public class OperatePassengerFlowServiceImpl implements OperatePassengerFlowServ
         List<PassengerInfoResDTO> list = Lists.newArrayList();
         List<String> codes = Arrays.asList("231","232","233","234","235","236","237","238","239","240","241","242","243","244","245","246","247","248","249","250");
         Set<String> strings = new HashSet<>(codes);
-        List<StationResDTO> stationResDTOS = stationMapper.listByCodes(strings);
-        Map<String, StationResDTO> map = StreamUtil.toMap(stationResDTOS, StationResDTO::getStationCode);
+        List<StationResDTO> stationRes = stationMapper.listByCodes(strings);
+        Map<String, StationResDTO> map = StreamUtil.toMap(stationRes, StationResDTO::getStationCode);
         for (String a : codes) {
             PassengerInfoResDTO res = new PassengerInfoResDTO();
             res.setStationCode(a);

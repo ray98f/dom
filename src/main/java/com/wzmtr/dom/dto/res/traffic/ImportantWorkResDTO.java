@@ -34,9 +34,9 @@ public class ImportantWorkResDTO extends BaseEntity {
     private String editFlag;
 
     @ApiModelProperty(value = "数据所属日期")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonFormat(
-            pattern = "yyyy-MM-dd HH:mm:ss",
+            pattern = "yyyy-MM-dd",
             timezone = "GMT+8"
     )
     private Date dataDate;
@@ -45,17 +45,17 @@ public class ImportantWorkResDTO extends BaseEntity {
     private String dataType;
 
     @ApiModelProperty(value = "数据起始日期")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonFormat(
-            pattern = "yyyy-MM-dd HH:mm:ss",
+            pattern = "yyyy-MM-dd",
             timezone = "GMT+8"
     )
     private Date startDate;
 
     @ApiModelProperty(value = "数据终止日期")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonFormat(
-            pattern = "yyyy-MM-dd HH:mm:ss",
+            pattern = "yyyy-MM-dd",
             timezone = "GMT+8"
     )
     private Date endDate;

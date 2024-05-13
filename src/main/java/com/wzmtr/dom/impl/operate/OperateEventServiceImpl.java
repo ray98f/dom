@@ -7,6 +7,7 @@ import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.operate.OperateEventInfoReqDTO;
 import com.wzmtr.dom.dto.req.operate.OperateEventReqDTO;
 import com.wzmtr.dom.dto.res.operate.EventCountResDTO;
+import com.wzmtr.dom.dto.res.operate.OperateEventDetailResDTO;
 import com.wzmtr.dom.dto.res.operate.OperateEventInfoResDTO;
 import com.wzmtr.dom.dto.res.operate.OperateEventResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
@@ -19,6 +20,7 @@ import com.wzmtr.dom.utils.StringUtils;
 import com.wzmtr.dom.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -81,7 +83,14 @@ public class OperateEventServiceImpl implements OperateEventService {
     @Override
     public Page<OperateEventInfoResDTO> eventList(String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return operateEventMapper.eventList(pageReqDTO.of(),startDate,endDate);
+        Page<OperateEventInfoResDTO> eventList = operateEventMapper.eventList(pageReqDTO.of(),startDate,endDate);
+        List<OperateEventInfoResDTO>  recordList = eventList.getRecords();
+        for(OperateEventInfoResDTO o : recordList){
+            List<OperateEventDetailResDTO> detailList = operateEventMapper.eventDetailById(o.getId());
+            o.setEventDetailList(detailList);
+        }
+        eventList.setRecords(recordList);
+        return eventList;
     }
 
     @Override
@@ -90,6 +99,7 @@ public class OperateEventServiceImpl implements OperateEventService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void createEvent(CurrentLoginUser currentLoginUser, OperateEventInfoReqDTO operateEventInfoReqDTO) {
         try{
             if(CommonConstants.DATA_TYPE_DAILY.equals(operateEventInfoReqDTO.getDataType())){
@@ -99,6 +109,12 @@ public class OperateEventServiceImpl implements OperateEventService {
             operateEventInfoReqDTO.setCreateBy(currentLoginUser.getPersonId());
             operateEventInfoReqDTO.setUpdateBy(currentLoginUser.getPersonId());
             operateEventMapper.createEvent(operateEventInfoReqDTO);
+
+            //插入事件明细
+            if(operateEventInfoReqDTO.getEventDetailList() != null && operateEventInfoReqDTO.getEventDetailList().size() > 0){
+                operateEventMapper.createEventDetail(currentLoginUser.getPersonId(),operateEventInfoReqDTO.getId(), operateEventInfoReqDTO.getEventDetailList());
+            }
+
         }catch (Exception e){
             throw new CommonException(ErrorCode.INSERT_ERROR);
         }
@@ -108,20 +124,30 @@ public class OperateEventServiceImpl implements OperateEventService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void modifyEvent(CurrentLoginUser currentLoginUser, OperateEventInfoReqDTO operateEventInfoReqDTO) {
         operateEventInfoReqDTO.setUpdateBy(currentLoginUser.getPersonId());
         int res = operateEventMapper.modifyEvent(operateEventInfoReqDTO);
         if( res <= 0){
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
+        //插入事件明细
+        if( CommonConstants.ONE_STRING.equals(operateEventInfoReqDTO.getEditDetailFlag())
+                && operateEventInfoReqDTO.getEventDetailList() != null
+                && operateEventInfoReqDTO.getEventDetailList().size() > 0){
+            operateEventMapper.deleteEventDetail(operateEventInfoReqDTO.getId());
+            operateEventMapper.createEventDetail(currentLoginUser.getPersonId(),operateEventInfoReqDTO.getId(),operateEventInfoReqDTO.getEventDetailList());
+        }
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteEvent(List<String> ids) {
         if (StringUtils.isNotEmpty(ids)) {
             OperateEventInfoResDTO eventInfo = operateEventMapper.queryDateRange(ids);
             try{
                 operateEventMapper.deleteEvent(ids, TokenUtils.getCurrentPersonId());
+                operateEventMapper.deleteEventDetailBatch(ids);
             }catch (Exception e){
                 throw new CommonException(ErrorCode.DELETE_ERROR);
             }

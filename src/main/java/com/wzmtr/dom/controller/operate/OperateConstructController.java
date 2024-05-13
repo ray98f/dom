@@ -63,9 +63,10 @@ public class OperateConstructController {
     @GetMapping("/detail")
     @ApiOperation(value = "施工情况详情")
     public DataResponse<ConstructRecordResDTO> add(@RequestParam(required = false) String id,
+                                                   @RequestParam(required = false) String dataType,
                                                    @RequestParam(required = false) String startDate,
                                                    @RequestParam(required = false) String endDate) {
-        return DataResponse.of(operateConstructService.detail(id, startDate, endDate));
+        return DataResponse.of(operateConstructService.detail(id, dataType, startDate, endDate));
     }
 
     /**

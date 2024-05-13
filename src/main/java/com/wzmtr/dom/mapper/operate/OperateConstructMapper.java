@@ -33,7 +33,7 @@ public interface OperateConstructMapper {
      * @param id 入参数
      * @return LineEventResDTO
      */
-    ConstructRecordResDTO queryInfoById(String id,String startDate, String endDate);
+    ConstructRecordResDTO queryInfoById(String id, String dataType, String startDate, String endDate);
 
     /**
      * 校验数据是否存在
@@ -55,6 +55,12 @@ public interface OperateConstructMapper {
      * @param constructRecordReqDTO 入参数
      */
     int modify(ConstructRecordReqDTO constructRecordReqDTO);
+
+    /**
+     * 编辑
+     * @param planStatisticsReqDTO
+     */
+    void modifyBySync(PlanStatisticsReqDTO planStatisticsReqDTO);
 
     /**
      * 施工计划列表

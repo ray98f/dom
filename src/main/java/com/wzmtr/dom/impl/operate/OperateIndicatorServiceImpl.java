@@ -26,7 +26,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.DecimalFormat;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 运营日报-初期运营指标
@@ -65,50 +68,12 @@ public class OperateIndicatorServiceImpl implements OperateIndicatorService {
     }
 
     @Override
-    public IndicatorDetailResDTO detail(String id, String startDate, String endDate) {
-        IndicatorDetailResDTO detail = operateIndicatorMapper.queryInfoById(id, startDate, endDate);
-        if (StringUtils.isNotNull(detail)) {
-            List<IndicatorInfoResDTO> indicatorList = operateIndicatorMapper.infoList(id, startDate, endDate);
+    public IndicatorDetailResDTO detail(String id, String dataType, String startDate, String endDate) {
+        IndicatorDetailResDTO detail = operateIndicatorMapper.queryInfoById(id, dataType, startDate, endDate);
 
-            //固定两条标准
-            IndicatorInfoResDTO constant1 = new IndicatorInfoResDTO(
-                    id,
-                    CommonConstants.THREE_STRING,
-                    "≥98.5%",
-                    "≥99%",
-                    "≥8",
-                    "≤0.4",
-                    "≤4",
-                    "≤0.8",
-                    "≤0.6",
-                    "≤0.8",
-                    detail.getVersion(),
-                    detail.getEditFlag(),
-                    detail.getDataDate(),
-                    detail.getDataType(),
-                    detail.getStartDate(),
-                    detail.getEndDate());
-            IndicatorInfoResDTO constant2 = new IndicatorInfoResDTO(
-                    id,
-                    CommonConstants.THREE_STRING,
-                    "≥99.9%",
-                    "≥99.9%",
-                    "≥30",
-                    "≤0.1",
-                    "≤4",
-                    "≤0.8",
-                    "≤0.6",
-                    "≤0.8",
-                    detail.getVersion(),
-                    detail.getEditFlag(),
-                    detail.getDataDate(),
-                    detail.getDataType(),
-                    detail.getStartDate(),
-                    detail.getEndDate());
-            indicatorList.add(constant1);
-            indicatorList.add(constant2);
-            IndicatorPowerResDTO indicatorPower = operateIndicatorMapper.queryPower(id, startDate, endDate);
-            detail.setIndicatorList(indicatorList);
+        if (StringUtils.isNotNull(detail)) {
+            buildIndicatorDetail(detail);
+            IndicatorPowerResDTO indicatorPower = operateIndicatorMapper.queryPower(id, dataType, startDate, endDate);
             detail.setIndicatorPower(indicatorPower);
         }
         return detail;
@@ -134,11 +99,7 @@ public class OperateIndicatorServiceImpl implements OperateIndicatorService {
         indicatorRecordReqDTO.setId(TokenUtils.getUuId());
         try {
             operateIndicatorMapper.add(indicatorRecordReqDTO);
-            //八项运营指标
-            for (String sType : CommonConstants.OPERATE_INDICATOR_TYPE) {
-                IndicatorInfoReqDTO infoReqDTO = buildIndicatorInfo(currentLoginUser, indicatorRecordReqDTO, sType);
-                operateIndicatorMapper.addInfo(infoReqDTO);
-            }
+
             IndicatorPowerReqDTO powerReqDTO = buildIndicatorPower(currentLoginUser, indicatorRecordReqDTO);
             operateIndicatorMapper.addPower(powerReqDTO);
         } catch (Exception e) {
@@ -146,6 +107,83 @@ public class OperateIndicatorServiceImpl implements OperateIndicatorService {
         }
     }
 
+    @Override
+    public void modify(CurrentLoginUser currentLoginUser, IndicatorRecordReqDTO indicatorRecordReqDTO) {
+        indicatorRecordReqDTO.setUpdateBy(currentLoginUser.getPersonId());
+        int res = operateIndicatorMapper.modify(indicatorRecordReqDTO);
+        if (res <= 0) {
+            throw new CommonException(ErrorCode.UPDATE_ERROR);
+        }
+    }
+
+    @Override
+    public void modifyInfo(CurrentLoginUser currentLoginUser, IndicatorInfoReqDTO indicatorInfoReqDTO) {
+        //TODO 注释掉 废弃
+/*        indicatorInfoReqDTO.setUpdateBy(currentLoginUser.getPersonId());
+        int res = operateIndicatorMapper.modifyInfo(indicatorInfoReqDTO);
+        if (res <= 0) {
+            throw new CommonException(ErrorCode.UPDATE_ERROR);
+        }*/
+    }
+
+    @Override
+    public void modifyPower(CurrentLoginUser currentLoginUser, IndicatorPowerReqDTO indicatorPowerReqDTO) {
+        indicatorPowerReqDTO.setUpdateBy(currentLoginUser.getPersonId());
+        int res = operateIndicatorMapper.modifyPower(indicatorPowerReqDTO);
+        if (res <= 0) {
+            throw new CommonException(ErrorCode.UPDATE_ERROR);
+        }
+    }
+
+    @Override
+    public void syncData(String dataType, String startDate, String endDate) {
+        //TODO
+        // 行调数据接口
+        // 乘务数据接口
+        // EAM数据接口
+
+    }
+
+    private IndicatorDetailResDTO buildIndicatorDetail(IndicatorDetailResDTO detail){
+
+        DecimalFormat decimalFormat = new DecimalFormat(CommonConstants.DECIMAL_FMT_STRING);
+        // 正点率 (实际开行列此-晚点次数) / 实际开行列次
+        if(detail.getRealRunCount() > 0){
+            detail.setPunctualityRate(decimalFormat.format(((detail.getRealRunCount() - detail.getDelayCount()) / detail.getRealRunCount()) * CommonConstants.ONE_HUNDRED_LONG) + CommonConstants.PERCENTAGE_STRING);
+        }else{
+            detail.setPunctualityRate(CommonConstants.ZERO_PERCENTAGE_STRING);
+        }
+        // 兑现率 (计划兑现列次) / 计划开行列次
+        if(detail.getPlanRunCount() > 0){
+            detail.setFulfillmentRate(decimalFormat.format(( detail.getPlanPromiseCount() / detail.getPlanRunCount()) * CommonConstants.ONE_HUNDRED_LONG) + CommonConstants.PERCENTAGE_STRING);
+        }else{
+            detail.setFulfillmentRate(CommonConstants.ZERO_PERCENTAGE_STRING);
+        }
+        // 列出服务可靠度 运营车公里数(万列公里) / 延误次数, 延误次数 15分钟以内延误次数+15分钟以上延误次数
+        if((detail.getDelay3Count() + detail.getDelay4Count()) > 0){
+            detail.setServiceReliability(decimalFormat.format( detail.getOperate1Kilometer() / (detail.getDelay3Count() + detail.getDelay4Count())));
+        }else{
+            detail.setServiceReliability(CommonConstants.INFINITY_STRING);
+        }
+
+        // 列出退出正线运营故障率  退出正线数 / 运营车公里(万列公里)
+        // 车辆系统故障率  车辆系统故障数 / 运营车公里(万列公里)
+        // 信号系统故障率  信号系统故障数 / 运营车公里(万列公里)
+        // 供电系统故障率  供电系统故障数 / 运营车公里(万列公里)
+        if(detail.getOperate1Kilometer() > 0){
+            detail.setEvent1Rate(decimalFormat.format( detail.getOperateEvent1() / detail.getOperate1Kilometer()));
+            detail.setEvent2Rate(decimalFormat.format( detail.getOperateEvent2() / detail.getOperate1Kilometer()));
+            detail.setEvent3Rate(decimalFormat.format( detail.getOperateEvent3() / detail.getOperate1Kilometer()));
+            detail.setEvent4Rate(decimalFormat.format( detail.getOperateEvent4() / detail.getOperate1Kilometer()));
+        }else{
+            detail.setEvent1Rate(CommonConstants.ZERO_STRING);
+            detail.setEvent2Rate(CommonConstants.ZERO_STRING);
+            detail.setEvent3Rate(CommonConstants.ZERO_STRING);
+            detail.setEvent4Rate(CommonConstants.ZERO_STRING);
+        }
+
+        return detail;
+    }
     @NotNull
     private static IndicatorInfoReqDTO buildIndicatorInfo(CurrentLoginUser currentLoginUser, IndicatorRecordReqDTO indicatorRecordReqDTO, String sType) {
         IndicatorInfoReqDTO infoReqDTO = new IndicatorInfoReqDTO();
@@ -173,32 +211,5 @@ public class OperateIndicatorServiceImpl implements OperateIndicatorService {
         powerReqDTO.setCreateBy(currentLoginUser.getPersonId());
         powerReqDTO.setUpdateBy(currentLoginUser.getPersonId());
         return powerReqDTO;
-    }
-
-    @Override
-    public void modify(CurrentLoginUser currentLoginUser, IndicatorRecordReqDTO indicatorRecordReqDTO) {
-        indicatorRecordReqDTO.setUpdateBy(currentLoginUser.getPersonId());
-        int res = operateIndicatorMapper.modify(indicatorRecordReqDTO);
-        if (res <= 0) {
-            throw new CommonException(ErrorCode.UPDATE_ERROR);
-        }
-    }
-
-    @Override
-    public void modifyInfo(CurrentLoginUser currentLoginUser, IndicatorInfoReqDTO indicatorInfoReqDTO) {
-        indicatorInfoReqDTO.setUpdateBy(currentLoginUser.getPersonId());
-        int res = operateIndicatorMapper.modifyInfo(indicatorInfoReqDTO);
-        if (res <= 0) {
-            throw new CommonException(ErrorCode.UPDATE_ERROR);
-        }
-    }
-
-    @Override
-    public void modifyPower(CurrentLoginUser currentLoginUser, IndicatorPowerReqDTO indicatorPowerReqDTO) {
-        indicatorPowerReqDTO.setUpdateBy(currentLoginUser.getPersonId());
-        int res = operateIndicatorMapper.modifyPower(indicatorPowerReqDTO);
-        if (res <= 0) {
-            throw new CommonException(ErrorCode.UPDATE_ERROR);
-        }
     }
 }

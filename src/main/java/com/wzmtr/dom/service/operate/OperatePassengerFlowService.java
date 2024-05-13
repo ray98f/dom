@@ -32,7 +32,7 @@ public interface OperatePassengerFlowService {
      * @param id 入参数
      * @return IndicatorResDTO
      */
-    PassengerFlowDetailResDTO detail(String id,String startDate, String endDate);
+    PassengerFlowDetailResDTO detail(String id, String dataType, String startDate, String endDate);
 
     /**
      * @param currentLoginUser 入参数

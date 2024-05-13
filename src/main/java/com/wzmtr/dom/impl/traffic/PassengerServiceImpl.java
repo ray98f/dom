@@ -25,6 +25,7 @@ import org.apache.ibatis.executor.BatchResult;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -63,10 +64,10 @@ public class PassengerServiceImpl implements PassengerService {
     }
 
     @Override
-    public PassengerDetailResDTO detail(String recordId, String startDate, String endDate) {
+    public PassengerDetailResDTO detail(String recordId, String dataType,String startDate, String endDate) {
 
         //获取详情
-        PassengerDetailResDTO detail = passengerMapper.queryInfoById(recordId, startDate, endDate);
+        PassengerDetailResDTO detail = passengerMapper.queryInfoById(recordId,dataType, startDate, endDate);
 
         //车站情况
         List<PassengerInfoResDTO> stationPassengerList = passengerMapper.stationPassenger(DateUtil.formatDate(detail.getStartDate()),
@@ -141,6 +142,16 @@ public class PassengerServiceImpl implements PassengerService {
         } catch (Exception e) {
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
+    }
+
+    @Override
+    public void syncACCdata13(String recordId, String dataType,String startDate, String endDate) {
+        PassengerDetailResDTO detail = passengerMapper.queryInfoById(recordId, dataType,startDate, endDate);
+        PassengerRecordReqDTO req = new PassengerRecordReqDTO();
+        BeanUtils.copyProperties(detail,req);
+        req.setStartDate(DateUtil.formatDate(detail.getStartDate()));
+        req.setEndDate(DateUtil.formatDate(detail.getEndDate()));
+        syncACCdata(req);
     }
 
     /**

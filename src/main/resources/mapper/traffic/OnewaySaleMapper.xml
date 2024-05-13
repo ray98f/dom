@@ -6,12 +6,14 @@
         SELECT COUNT(*)
         FROM TRAFFIC_ONEWAY_SALE
         WHERE DEL_FLAG='0'
-        AND DATA_TYPE=#{dataType}
+        <if test="dataType!=null and dataType!=''">
+            AND DATA_TYPE=#{dataType}
+        </if>
         <if test="dataType=='1'.toString()">
-            DATA_DATE=#{dataDate,jdbcType=TIMESTAMP}
+            AND DATA_DATE=#{dataDate,jdbcType=TIMESTAMP}
         </if>
         <if test="dataType!='1'.toString()">
-            START_DATE=#{startDate,jdbcType=TIMESTAMP} AND END_DATE=#{endDate,jdbcType=TIMESTAMP}
+            AND START_DATE=#{startDate,jdbcType=TIMESTAMP} AND END_DATE=#{endDate,jdbcType=TIMESTAMP}
         </if>
         <if test="version!=null and version!=''">
             AND VERSION=#{version,jdbcType=VARCHAR}

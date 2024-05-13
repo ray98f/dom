@@ -73,6 +73,10 @@ public class CommonConstants {
     public static final String FORTY_STRING = "40";
     public static final String FIFTY_STRING = "50";
     public static final String NINETY_STRING = "90";
+    public static final String INFINITY_STRING = "∞";
+    public static final String ZERO_PERCENTAGE_STRING = "0%";
+    public static final String DECIMAL_FMT_STRING = "0.0000";
+    public static final String PERCENTAGE_STRING = "%";
 
     /**
      * 数字
@@ -91,6 +95,8 @@ public class CommonConstants {
     public static final int TEN = 10;
     public static final int TWENTY = 20;
     public static final int THIRTY = 30;
+    public static final int ONE_HUNDRED = 100;
+    public static final long ONE_HUNDRED_LONG = 100L;
     public static final int TEN_THOUSAND = 10000;
     public static final double TEN_THOUSAND_DOUBLE = 10000.0;
 
@@ -106,6 +112,8 @@ public class CommonConstants {
     public static final String LINE_CODE_ONE = "01";
     public static final String LINE_CODE_TWO = "02";
 
+    public static final String XT = "下塘";
+    public static final String TT = "汀田";
     /**
      * 下塘停车场
      */
@@ -157,6 +165,8 @@ public class CommonConstants {
 
     public static final String HOTLINE_TYPE = "HOTLINE_TYPE";
 
+    public static final String OPERATE_DAY = "OPERATE_DAY";
+
     public static final String DEFAULT_PRODUCTION_TITLE = "安全生产情况";
     public static final String[] S2_STATION_ARRAY = {"231","232","233","234","235","236","237","238","239","240","241","242","243","244","245","246","247","248","249","250"};
 
@@ -195,9 +205,23 @@ public class CommonConstants {
     public static final String OPERATE_WEEKLY_NODE1 ="operate_weekly_node1";
     public static final String OPERATE_MONTHLY_NODE1 ="operate_monthly_node1";
 
+    //运营开始日期
+    public static final String OPERATE_START_DAY = "2023-08-26";
+
     // " 八项指标类型:1件数/次数,2指标值,3指标值(国标)4运营服务指标
     public static final String[] OPERATE_INDICATOR_TYPE = {"1","2"};
 
+    public static final String SYNC_DATA_TIME = " 05:00:00";
+
+    //车辆和信号调试作业
+    public static final String CONSTRUCT_DEBUG = "A1";
+
+    //车场作业
+    public static final String CONSTRUCT_DEPOT = "B";
+
+    public static final String WEEK_PLAN = "week_plan";
+    public static final String DAY_PLAN = "day_plan";
+    public static final String TEMP_PLAN = "temp_plan";
     public static final String OPERATE_CONSTRUCT_REMARK_TPL = "（1）本周正线施工计划A、C类施工（周施工计划和日补充计划）共{1}件，临时补修计划{2}件；其中删除计划共计{3}件，擅自取消施工共计{4}件，修改计划共计{5}件，增加计划共计{6}件，实际完成施工共计{7}件。因天气影响等导致施工被迫取消共计{8}件，施工延点（行调同意）共计{9}件;\n" +
             "（2）本周车场施工计划 B 类施工（周施工计划和日补充计划）共{10}件，临时补修计划{11}件；其中删除计划共计{12}件，擅自取消施工共计{13}件，修改计划共计 {14}件，增加计划共计{15}件，实际完成施工共计{16}件。因天气影响等被迫取消共计{17}件，施工延点（场调同意）共计{18}件;\n" +
             "（3）S2 正线本周计划兑现率为{19}，计划准确率为{20}，车场本周计划兑现率为{21}，计划准确率为{22}。正线平均施工时间利用率为：{23}。有{24}项施工时间利用率不足，详见下表；车场本周平均施工时间利用率为：{25}，有{26}项施工时间利用率不足。";

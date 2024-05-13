@@ -2,10 +2,14 @@ package com.wzmtr.dom.dto.res.operate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 施工计划信息
@@ -15,6 +19,9 @@ import java.util.Date;
  * @date 2024/3/13 13:38
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ConstructPlanResDTO {
 
     /**
@@ -84,6 +91,16 @@ public class ConstructPlanResDTO {
     private String workType;
 
     /**
+     * 计划状态
+     */
+    private String planStatus;
+
+    @ApiModelProperty("计划开始时间")
+    private String planBeginTime;
+    @ApiModelProperty("计划结束时间")
+    private String planEndTime;
+
+    /**
      * 版本号
      * */
     @ApiModelProperty(value = "版本号")
@@ -127,5 +144,4 @@ public class ConstructPlanResDTO {
             timezone = "GMT+8"
     )
     private Date dataDate;
-
 }

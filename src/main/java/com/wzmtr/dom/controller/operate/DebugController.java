@@ -53,14 +53,19 @@ public class DebugController {
      * 查询调试情况详情列表(分页)
      * @param id id
      * @param dataType 数据类型 1 信号调试 2 车辆调试
+     * @param startDate 开始时间
+     * @param endDate 结束时间
+     * @param pageReqDTO 分页参数
      * @return 调试情况详情列表
      */
     @GetMapping("/info/page")
     @ApiOperation(value = "查询调试情况详情列表(分页)")
-    public PageResponse<DebugInfoResDTO> infoPage(@RequestParam String id,
+    public PageResponse<DebugInfoResDTO> infoPage(@RequestParam(required = false) String id,
                                                   @RequestParam String dataType,
+                                                  @RequestParam(required = false) String startDate,
+                                                  @RequestParam(required = false) String endDate,
                                                   @Valid PageReqDTO pageReqDTO) {
-        return PageResponse.of(debugService.infoPage(id, dataType, pageReqDTO));
+        return PageResponse.of(debugService.infoPage(id, dataType, startDate, endDate, pageReqDTO));
     }
 
     /**

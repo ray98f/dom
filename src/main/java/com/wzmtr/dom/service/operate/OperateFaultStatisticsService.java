@@ -3,10 +3,10 @@ package com.wzmtr.dom.service.operate;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.operate.OperateFaultStatisticsReqDTO;
 import com.wzmtr.dom.dto.res.operate.fault.FaultStatisticsResDTO;
-import com.wzmtr.dom.dto.res.operate.fault.ReportFaultStatisticsResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -30,10 +30,12 @@ public interface OperateFaultStatisticsService {
 
     /**
      * 故障统计-报表详情
-     * @param date 日期
+     * @param dataType 数据类型
+     * @param startDate 起始日期
+     * @param endDate 终止日期
      * @return 报表详情
      */
-    ReportFaultStatisticsResDTO report(String date);
+    FaultStatisticsResDTO report(String dataType, String startDate, String endDate) throws ParseException;
 
     /**
      * @param currentLoginUser 入参数

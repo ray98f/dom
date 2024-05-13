@@ -59,6 +59,42 @@ public class ProductionSummaryRecordReqDTO extends BaseEntity {
     private String type6Desc;
 
     /**
+     * 施工异常:关键词
+     * */
+    @ApiModelProperty(value = "施工异常:关键词")
+    private String type1Keyword;
+
+    /**
+     * 运检异常:概述
+     * */
+    @ApiModelProperty(value = "运检异常:概述")
+    private String type2Keyword;
+
+    /**
+     * 行车异常:概述
+     * */
+    @ApiModelProperty(value = "行车异常:概述")
+    private String type3Keyword;
+
+    /**
+     * 其他突发事件:概述
+     * */
+    @ApiModelProperty(value = "其他突发事件:概述")
+    private String type4Keyword;
+
+    /**
+     * 其他事件:概述
+     * */
+    @ApiModelProperty(value = "其他事件:概述")
+    private String type5Keyword;
+
+    /**
+     * 设备缺陷、故障:概述
+     * */
+    @ApiModelProperty(value = "设备缺陷、故障:概述")
+    private String type6Keyword;
+
+    /**
      * 说明
      * */
     @ApiModelProperty(value = "说明")
