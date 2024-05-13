@@ -36,6 +36,8 @@ public interface DispatchService {
      */
     Page<DispatchOrderResDTO> pageOrder(String recordId, String dataType, PageReqDTO pageReqDTO);
 
+    List<DispatchOrderResDTO> orderList(String recordId, String dataType, String startDate,String endDate);
+
     /**
      * 提取施工调度调度命令数据
      * @param recordId 记录id

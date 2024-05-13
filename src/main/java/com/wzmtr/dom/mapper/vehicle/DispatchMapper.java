@@ -40,6 +40,8 @@ public interface DispatchMapper {
      */
     Page<DispatchOrderResDTO> pageOrder(Page<DispatchOrderResDTO> page, String id, String startDate, String endDate);
 
+    List<DispatchOrderResDTO> orderList(String recordId, String dataType, String startDate, String endDate);
+
     /**
      * 获取调度命令详情列表
      * @param id 记录id

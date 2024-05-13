@@ -32,6 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -129,6 +130,9 @@ public class PassengerServiceImpl implements PassengerService {
         } catch (Exception e) {
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
+
+        //PassengerDetailResDTO detail = passengerMapper.queryInfoById(passengerRecordReqDTO.getId(),null,null,null);
+        //passengerMapper.modifyCount(detail.getId(), DateUtil.formatDate(detail.getStartDate()),  DateUtil.formatDate(detail.getEndDate()));
     }
 
     @Override
