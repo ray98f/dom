@@ -117,16 +117,16 @@
         <if test="type1Keyword!=null">
             TYPE1_KEYWORD=#{type1Keyword},
         </if>
-        <if test="type2Desc!=null">
+        <if test="type2Keyword!=null">
             TYPE2_KEYWORD=#{type2Keyword},
         </if>
-        <if test="type3Desc!=null">
+        <if test="type3Keyword!=null">
             TYPE3_KEYWORD=#{type3Keyword},
         </if>
-        <if test="type4Desc!=null">
+        <if test="type4Keyword!=null">
             TYPE4_KEYWORD=#{type4Keyword},
         </if>
-        <if test="type5Desc!=null">
+        <if test="type5Keyword!=null">
             TYPE5_KEYWORD=#{type5Keyword},
         </if>
         <if test="type6Keyword!=null">
