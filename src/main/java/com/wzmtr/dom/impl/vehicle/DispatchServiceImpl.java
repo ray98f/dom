@@ -66,6 +66,11 @@ public class DispatchServiceImpl implements DispatchService {
     }
 
     @Override
+    public List<DispatchOrderResDTO> orderList(String recordId, String dataType, String startDate, String endDate) {
+        return dispatchMapper.orderList(recordId, dataType, startDate, endDate);
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public List<DispatchOrderResDTO> getCsmDispatch(String recordId, String dataType,String startDate,String endDate) {
         try {

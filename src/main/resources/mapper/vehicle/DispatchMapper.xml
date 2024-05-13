@@ -46,6 +46,26 @@
         ORDER BY dr.DATA_DATE ASC, do.ORDER_TIME ASC
     </select>
 
+    <select id="orderList" resultType="com.wzmtr.dom.dto.res.vehicle.DispatchOrderResDTO">
+        SELECT do.ID, do.RECORD_ID, do.ORDER_TIME, do.ORDER_CODE, do.ORDER_DESC, do.VERSION
+        FROM VEHICLE_DISPATCH_RECORD dr
+        LEFT JOIN VEHICLE_DISPATCH_ORDER do ON do.RECORD_ID=dr.ID AND do.DEL_FLAG='0'
+        WHERE do.DEL_FLAG='0'
+        <if test="dataType!=null and dataType!=''">
+            AND dr.DATA_TYPE=#{dataType}
+        </if>
+        <if test="recordId!=null and recordId!=''">
+            AND dr.ID=#{recordId}
+        </if>
+        <if test="startDate!=null and startDate!=''">
+            AND dr.START_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'YYYY-MM-DD')>=dr.END_DATE
+        </if>
+        ORDER BY dr.START_DATE ASC, do.ORDER_TIME ASC
+    </select>
+
     <select id="orderIds" resultType="java.lang.String">
         SELECT do.ID
         FROM VEHICLE_DISPATCH_ORDER do

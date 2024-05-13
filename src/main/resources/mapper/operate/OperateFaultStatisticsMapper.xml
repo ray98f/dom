@@ -50,17 +50,9 @@
 
     <select id="selectIsExist" resultType="java.lang.Integer">
         SELECT count(1) FROM OPERATE_FAULT_STATISTICS
-        <trim prefix="WHERE" prefixOverrides="AND">
-            <if test="dataType=='1'.toString()">
-                AND DATA_DATE=#{dataDate,jdbcType=TIMESTAMP}
-            </if>
-            <if test="dataType!='1'.toString()">
-                AND START_DATE=#{startDate,jdbcType=TIMESTAMP} AND END_DATE=#{endDate,jdbcType=TIMESTAMP}
-            </if>
-            <if test="version!=null and version!=''">
-                AND VERSION=#{version,jdbcType=VARCHAR}
-            </if>
-        </trim>
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE=#{dataType}
+        AND START_DATE=#{startDate,jdbcType=TIMESTAMP} AND END_DATE=#{endDate,jdbcType=TIMESTAMP}
         AND DEL_FLAG='0' AND rownum=1
     </select>
 

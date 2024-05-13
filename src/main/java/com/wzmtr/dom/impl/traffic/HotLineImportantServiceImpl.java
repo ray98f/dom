@@ -48,7 +48,7 @@ public class HotLineImportantServiceImpl implements HotLineImportantService {
 
     @Override
     public void add(HotLineImportantAddReqDTO req) {
-        TrafficHotlineSummaryDO trafficHotlineSummaryDO = new TrafficHotlineSummaryDO();
+        /*TrafficHotlineSummaryDO trafficHotlineSummaryDO = new TrafficHotlineSummaryDO();
         trafficHotlineSummaryDO.setDataType(req.getDataType());
         if(CommonConstants.ONE_STRING.equals(req.getDataType())){
             trafficHotlineSummaryDO.setDataDate(req.getStartDate());
@@ -64,8 +64,9 @@ public class HotLineImportantServiceImpl implements HotLineImportantService {
         Integer result = hotLineSummaryMapper.selectIsExist(trafficHotlineSummaryDO);
         if (result > 0) {
             throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期数据已存在，无法重复新增");
-        }
-/*        List<TrafficHotlineImportantDO> list = new ArrayList<>();
+        }*/
+        //hotLineSummaryMapper.insert(trafficHotlineSummaryDO);
+        List<TrafficHotlineImportantDO> list = new ArrayList<>();
         List<DictResDTO> dictList = dictMapper.list(CommonConstants.HOTLINE_TYPE, null, CommonConstants.ZERO_STRING);
         if (StringUtils.isNotEmpty(dictList)) {
             for (DictResDTO dict : dictList) {
@@ -82,7 +83,7 @@ public class HotLineImportantServiceImpl implements HotLineImportantService {
         }
         if (CollectionUtil.isNotEmpty(list)) {
             hotLineImportantMapper.insertList(list);
-        }*/
+        }
     }
 
     @Override

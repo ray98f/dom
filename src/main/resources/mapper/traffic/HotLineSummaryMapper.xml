@@ -13,7 +13,7 @@
         <if test="req.endDate!=null and req.endDate!=''">
             AND to_date(#{req.endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
         </if>
-        ORDER BY CREATE_DATE desc
+        ORDER BY START_DATE desc
     </select>
 
     <select id="selectIsExist" resultType="java.lang.Integer">

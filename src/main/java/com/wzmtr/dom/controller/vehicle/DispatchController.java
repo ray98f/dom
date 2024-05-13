@@ -66,6 +66,15 @@ public class DispatchController {
         return PageResponse.of(dispatchService.pageOrder(recordId, dataType, pageReqDTO));
     }
 
+    @GetMapping("/order/list")
+    @ApiOperation(value = "获取调度命令详情列表")
+    public DataResponse<List<DispatchOrderResDTO>> orderList(@RequestParam(required = false) String startDate,
+                                               @RequestParam(required = false) String endDate,
+                                               @RequestParam(required = false) String dataType,
+                                               @RequestParam(required = false) String recordId) {
+        return DataResponse.of(dispatchService.orderList(recordId, dataType, startDate,endDate));
+    }
+
     /**
      * 提取施工调度调度命令数据
      * @param recordId 记录id

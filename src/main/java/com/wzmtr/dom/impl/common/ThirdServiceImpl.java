@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
+import com.sun.org.apache.bcel.internal.generic.RETURN;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.common.OpenConstructPlanReqDTO;
 import com.wzmtr.dom.dto.req.common.OpenDispatchOrderReqDTO;
@@ -96,22 +97,32 @@ public class ThirdServiceImpl implements ThirdService {
 
     @Override
     public Page<ConstructPlanResDTO> getCsmImportantConstructPlan(OpenConstructPlanReqDTO constructPlanReqDTO) {
-        String reqData = JSONObject.toJSONString(constructPlanReqDTO);
-        JSONObject res = JSONObject.parseObject(HttpUtils.doPost(importantConstruct, reqData, null), JSONObject.class);
-        List<OpenConstructPlanResDTO> openList = JSONArray.parseArray(res.getJSONObject(
-                CommonConstants.API_RES_DATA).getJSONArray(CommonConstants.API_RES_LIST).toJSONString(),
-                OpenConstructPlanResDTO.class);
-        List<ConstructPlanResDTO> list = new ArrayList<>();
         PageHelper.startPage(constructPlanReqDTO.getPage(), constructPlanReqDTO.getLimit());
         Page<ConstructPlanResDTO> page = new Page<>();
-        for(OpenConstructPlanResDTO o: openList){
-            list.add(convertDTO(o));
+        List<ConstructPlanResDTO> list = new ArrayList<>();
+        String reqData = JSONObject.toJSONString(constructPlanReqDTO);
+        JSONObject res = JSONObject.parseObject(HttpUtils.doPost(importantConstruct, reqData, null), JSONObject.class);
+        if(res != null){
+            List<OpenConstructPlanResDTO> openList = JSONArray.parseArray(res.getJSONObject(
+                    CommonConstants.API_RES_DATA).getJSONArray(CommonConstants.API_RES_LIST).toJSONString(),
+                    OpenConstructPlanResDTO.class);
+
+
+            for(OpenConstructPlanResDTO o: openList){
+                list.add(convertDTO(o));
+            }
+            page.setRecords(list);
+            page.setCurrent(res.getJSONObject(CommonConstants.API_RES_DATA).getInteger("pageNum"));
+            page.setPages(res.getJSONObject(CommonConstants.API_RES_DATA).getInteger("pages"));
+            page.setTotal(res.getJSONObject(CommonConstants.API_RES_DATA).getInteger("total"));
+            page.setSize(res.getJSONObject(CommonConstants.API_RES_DATA).getInteger("size"));
+            return page;
         }
         page.setRecords(list);
-        page.setCurrent(res.getJSONObject(CommonConstants.API_RES_DATA).getInteger("pageNum"));
-        page.setPages(res.getJSONObject(CommonConstants.API_RES_DATA).getInteger("pages"));
-        page.setTotal(res.getJSONObject(CommonConstants.API_RES_DATA).getInteger("total"));
-        page.setSize(res.getJSONObject(CommonConstants.API_RES_DATA).getInteger("size"));
+        page.setCurrent(constructPlanReqDTO.getPage());
+        page.setPages(1);
+        page.setTotal(0);
+        page.setSize(constructPlanReqDTO.getLimit());
         return page;
     }
 
