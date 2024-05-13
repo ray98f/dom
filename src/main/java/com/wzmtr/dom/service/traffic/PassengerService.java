@@ -33,7 +33,7 @@ public interface PassengerService {
      * @param recordId 入参数
      * @return 客流总体情况-详情
      */
-    PassengerDetailResDTO detail(String recordId,String startDate, String endDate);
+    PassengerDetailResDTO detail(String recordId,String dataType,String startDate, String endDate);
 
     /**
      * 客流总体情况-新增
@@ -57,4 +57,12 @@ public interface PassengerService {
      * @param passengerInfoReqDTO 入参数
      */
     void modifyStationPassenger(CurrentLoginUser currentLoginUser, PassengerInfoReqDTO passengerInfoReqDTO);
+
+    /**
+     * 车站客流同步
+     * @param dataType 入参数
+     * @param startDate 入参数
+     * @param endDate 入参数
+     */
+     void syncACCdata13(String id,String dataType, String startDate, String endDate);
 }

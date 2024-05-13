@@ -13,7 +13,7 @@
         <if test="endDate!=null and endDate!=''">
             AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
         </if>
-        ORDER BY CREATE_DATE desc
+        ORDER BY START_DATE desc
     </select>
 
     <select id="checkExist" resultType="java.lang.Integer">
@@ -33,6 +33,9 @@
         SELECT *
         FROM TRAFFIC_PASSENGER_RECORD
         WHERE DEL_FLAG='0'
+        <if test="dataType!=null">
+            AND DATA_TYPE=#{dataType}
+        </if>
         <if test="startDate!=null">
             AND START_DATE=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>

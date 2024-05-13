@@ -59,9 +59,11 @@ public class PassengerController {
      */
     @GetMapping("/detail")
     @ApiOperation(value = "客流总体情况")
-    public DataResponse<PassengerDetailResDTO> add(@RequestParam(required = false) String id,@RequestParam(required = false) String startDate,
+    public DataResponse<PassengerDetailResDTO> add(@RequestParam(required = false) String id,
+                                                   @RequestParam(required = false) String dataType,
+                                                   @RequestParam(required = false) String startDate,
                                                    @RequestParam(required = false) String endDate) {
-        return DataResponse.of(trafficService.detail(id,startDate,endDate));
+        return DataResponse.of(trafficService.detail(id,dataType,startDate,endDate));
     }
 
     /**
@@ -106,4 +108,13 @@ public class PassengerController {
         return DataResponse.success();
     }
 
+    @GetMapping("/syncACCdata13")
+    @ApiOperation(value = "客流同步")
+    public DataResponse<T> syncACCdata13(@RequestParam(required = false) String id,
+                                                   @RequestParam(required = false) String dataType,
+                                                   @RequestParam(required = false) String startDate,
+                                                   @RequestParam(required = false) String endDate) {
+        trafficService.syncACCdata13(id,dataType,startDate,endDate);
+        return DataResponse.success();
+    }
 }
