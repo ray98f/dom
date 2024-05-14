@@ -32,7 +32,7 @@ public interface TrafficReportService {
      * @param id id
      * @return 日报详情
      */
-    DailyReportResDTO dailyDetail(String id,String startDate,String endDate);
+    DailyReportResDTO dailyDetail(String id,String dataType, String startDate, String endDate);
 
     /**
      * 新增日报

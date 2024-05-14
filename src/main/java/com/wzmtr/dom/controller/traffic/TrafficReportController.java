@@ -59,9 +59,11 @@ public class TrafficReportController {
      */
     @GetMapping("/daily/detail")
     @ApiOperation(value = "日报详情")
-    public DataResponse<DailyReportResDTO> detailDaily(@RequestParam(required = false) String id,@RequestParam(required = false) String startDate,
+    public DataResponse<DailyReportResDTO> detailDaily(@RequestParam(required = false) String id,
+                                                       @RequestParam(required = false) String dataType,
+                                                       @RequestParam(required = false) String startDate,
                                                        @RequestParam(required = false) String endDate) {
-        return DataResponse.of(reportService.dailyDetail(id,startDate,endDate));
+        return DataResponse.of(reportService.dailyDetail(id,dataType,startDate,endDate));
     }
 
     /**

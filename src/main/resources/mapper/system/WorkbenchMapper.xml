@@ -63,8 +63,8 @@
         WHERE ah.DEL_FLAG='0'
         AND ah.STATUS='0'
         AND ah.PROCESS_KEY=#{processKey}
-        AND ah.REPORT_ID=#{eportId}
-        ah.CURRENT_NODE IN (
+        AND ah.REPORT_ID=#{reportId}
+        AND ah.CURRENT_NODE IN (
         <foreach collection="nodes" index="index" item="node" separator=",">
             #{node}
         </foreach>
