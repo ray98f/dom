@@ -37,7 +37,7 @@ public interface TrafficReportMapper {
      * @param id id
      * @return 日报详情
      */
-    DailyReportResDTO dailyDetail(String id);
+    DailyReportResDTO dailyDetail(String id,String dataType, String startDate, String endDate);
 
     /**
      * 获取日报子报表

@@ -55,10 +55,13 @@
         <if test="id != null">
             and dr.ID=#{id}
         </if>
-        <if test="startDate != null">
+        <if test="dataType != null">
+            and dr.DATA_TYPE=#{dataType}
+        </if>
+        <if test="startDate != null and startDate !=''">
             AND to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') >= dr.START_DATE
         </if>
-        <if test="endDate != null">
+        <if test="endDate != null and endDate !=''">
             AND dr.END_DATE >= to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
     </select>

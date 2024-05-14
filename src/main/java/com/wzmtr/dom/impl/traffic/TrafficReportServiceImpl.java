@@ -50,10 +50,10 @@ public class TrafficReportServiceImpl implements TrafficReportService {
     }
 
     @Override
-    public DailyReportResDTO dailyDetail(String id, String startDate, String endDate) {
+    public DailyReportResDTO dailyDetail(String id,String dataType, String startDate, String endDate) {
 
         //主报表信息
-        DailyReportResDTO detail = trafficReportMapper.dailyDetail(id);
+        DailyReportResDTO detail = trafficReportMapper.dailyDetail(id,dataType,startDate,endDate);
 
         //先假设主报表默认可提交审核,根据报表状态更新
         detail.setSubmitFlag(CommonConstants.ONE_STRING);
