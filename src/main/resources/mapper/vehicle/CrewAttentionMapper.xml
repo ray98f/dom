@@ -38,10 +38,8 @@
     <select id="selectIsExist" resultType="java.lang.Integer">
         SELECT count(1) FROM VEHICLE_CREW_ATTENTION
         WHERE
-        <if test="dataType=='1'.toString()">
-            DATA_DATE=#{dataDate,jdbcType=TIMESTAMP}
-        </if>
-        <if test="dataType!='1'.toString()">
+        dataType=#{dataType}
+        <if test="startDate != null">
             START_DATE=#{startDate,jdbcType=TIMESTAMP} AND END_DATE=#{endDate,jdbcType=TIMESTAMP}
         </if>
         <if test="version!=null and version!=''">
