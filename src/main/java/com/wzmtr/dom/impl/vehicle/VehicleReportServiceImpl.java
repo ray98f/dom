@@ -1,5 +1,6 @@
 package com.wzmtr.dom.impl.vehicle;
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
@@ -24,6 +25,7 @@ import com.wzmtr.dom.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 /**
@@ -173,9 +175,13 @@ public class VehicleReportServiceImpl implements VehicleReportService {
 
     @Override
     public void commitDaily(CurrentLoginUser currentLoginUser, DailyReportReqDTO dailyReportReqDTO) {
+
+        DailyReportResDTO dailyReportRes = vehicleReportMapper.detailDaily(dailyReportReqDTO.getId());
+        String title = "【?】车辆部日报-请审批";
+
         // 报表审核参数
         ApprovalReqDTO approvalReqDTO = new ApprovalReqDTO();
-        approvalReqDTO.setTitle("车辆部日报-请审批");
+        approvalReqDTO.setTitle(MessageFormat.format(title, DateUtil.formatDate(dailyReportRes.getDailyDate())));
         approvalReqDTO.setReportId(dailyReportReqDTO.getId());
         approvalReqDTO.setReportTable(CommonConstants.VEHICLE_DAILY_REPORT);
         approvalReqDTO.setTodoType(CommonConstants.ONE_STRING);
