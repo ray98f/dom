@@ -174,8 +174,8 @@ public class OperateConstructServiceImpl implements OperateConstructService {
         try {
             operateConstructMapper.add(constructRecordReqDTO);
 
-            //同步统计数据 TODO
-            syncStatistics(constructRecordReqDTO.getDataType(),constructRecordReqDTO.getStartDate(),constructRecordReqDTO.getEndDate());
+            //同步统计数据 TODO 先注释 云服务器调用不了其他系统接口
+            //syncStatistics(constructRecordReqDTO.getDataType(),constructRecordReqDTO.getStartDate(),constructRecordReqDTO.getEndDate());
         } catch (Exception e) {
             throw new CommonException(ErrorCode.INSERT_ERROR);
         }
