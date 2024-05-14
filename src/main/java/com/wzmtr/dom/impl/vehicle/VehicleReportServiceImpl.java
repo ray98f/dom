@@ -177,11 +177,11 @@ public class VehicleReportServiceImpl implements VehicleReportService {
     public void commitDaily(CurrentLoginUser currentLoginUser, DailyReportReqDTO dailyReportReqDTO) {
 
         DailyReportResDTO dailyReportRes = vehicleReportMapper.detailDaily(dailyReportReqDTO.getId());
-        String title = "【{1}】车辆部日报-请审批";
+        String title = "【"+DateUtil.formatDate(dailyReportRes.getDailyDate())+"】车辆部日报-请审批";
 
         // 报表审核参数
         ApprovalReqDTO approvalReqDTO = new ApprovalReqDTO();
-        approvalReqDTO.setTitle(MessageFormat.format(title, DateUtil.formatDate(dailyReportRes.getDailyDate())));
+        approvalReqDTO.setTitle(title);
         approvalReqDTO.setReportId(dailyReportReqDTO.getId());
         approvalReqDTO.setReportTable(CommonConstants.VEHICLE_DAILY_REPORT);
         approvalReqDTO.setTodoType(CommonConstants.ONE_STRING);
@@ -198,11 +198,11 @@ public class VehicleReportServiceImpl implements VehicleReportService {
     public void commitWeekly(CurrentLoginUser currentLoginUser, WeeklyReportReqDTO weeklyReportReqDTO) {
 
         WeeklyReportResDTO weeklyReportRes = vehicleReportMapper.detailWeekly(weeklyReportReqDTO.getId());
-        String title = "【{1}~{2}】车辆部周报-请审批";
+        String title = "【"+DateUtil.formatDate(weeklyReportRes.getStartDate())+"~"+DateUtil.formatDate(weeklyReportRes.getEndDate())+"】车辆部周报-请审批";
 
         // 报表审核参数
         ApprovalReqDTO approvalReqDTO = new ApprovalReqDTO();
-        approvalReqDTO.setTitle(MessageFormat.format(title, DateUtil.formatDate(weeklyReportRes.getStartDate()),DateUtil.formatDate(weeklyReportRes.getEndDate())));
+        approvalReqDTO.setTitle(title);
         approvalReqDTO.setReportId(weeklyReportReqDTO.getId());
         approvalReqDTO.setReportTable(CommonConstants.VEHICLE_WEEKLY_REPORT);
         approvalReqDTO.setTodoType(CommonConstants.ONE_STRING);
@@ -219,11 +219,11 @@ public class VehicleReportServiceImpl implements VehicleReportService {
     public void commitMonthly(CurrentLoginUser currentLoginUser, MonthlyReportReqDTO monthlyReportReqDTO) {
 
         MonthlyReportResDTO monthlyReportRes = vehicleReportMapper.detailMonthly(monthlyReportReqDTO.getId());
-        String title = "【{1}~{2}】车辆部月报-请审批";
+        String title = "【"+DateUtil.formatDate(monthlyReportRes.getStartDate())+"~"+DateUtil.formatDate(monthlyReportRes.getEndDate())+"】车辆部月报-请审批";
 
         // 报表审核参数
         ApprovalReqDTO approvalReqDTO = new ApprovalReqDTO();
-        approvalReqDTO.setTitle(MessageFormat.format(title, DateUtil.formatDate(monthlyReportRes.getStartDate()),DateUtil.formatDate(monthlyReportRes.getEndDate())));
+        approvalReqDTO.setTitle(title);
         approvalReqDTO.setReportId(monthlyReportReqDTO.getId());
         approvalReqDTO.setReportTable(CommonConstants.VEHICLE_MONTHLY_REPORT);
         approvalReqDTO.setTodoType(CommonConstants.ONE_STRING);
