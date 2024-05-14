@@ -1,5 +1,6 @@
 package com.wzmtr.dom.impl.vehicle;
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
@@ -24,6 +25,7 @@ import com.wzmtr.dom.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 /**
@@ -173,9 +175,13 @@ public class VehicleReportServiceImpl implements VehicleReportService {
 
     @Override
     public void commitDaily(CurrentLoginUser currentLoginUser, DailyReportReqDTO dailyReportReqDTO) {
+
+        DailyReportResDTO dailyReportRes = vehicleReportMapper.detailDaily(dailyReportReqDTO.getId());
+        String title = "【"+DateUtil.formatDate(dailyReportRes.getDailyDate())+"】车辆部日报-请审批";
+
         // 报表审核参数
         ApprovalReqDTO approvalReqDTO = new ApprovalReqDTO();
-        approvalReqDTO.setTitle("车辆部日报-请审批");
+        approvalReqDTO.setTitle(title);
         approvalReqDTO.setReportId(dailyReportReqDTO.getId());
         approvalReqDTO.setReportTable(CommonConstants.VEHICLE_DAILY_REPORT);
         approvalReqDTO.setTodoType(CommonConstants.ONE_STRING);
@@ -190,9 +196,13 @@ public class VehicleReportServiceImpl implements VehicleReportService {
 
     @Override
     public void commitWeekly(CurrentLoginUser currentLoginUser, WeeklyReportReqDTO weeklyReportReqDTO) {
+
+        WeeklyReportResDTO weeklyReportRes = vehicleReportMapper.detailWeekly(weeklyReportReqDTO.getId());
+        String title = "【"+DateUtil.formatDate(weeklyReportRes.getStartDate())+"~"+DateUtil.formatDate(weeklyReportRes.getEndDate())+"】车辆部周报-请审批";
+
         // 报表审核参数
         ApprovalReqDTO approvalReqDTO = new ApprovalReqDTO();
-        approvalReqDTO.setTitle("车辆部周报-请审批");
+        approvalReqDTO.setTitle(title);
         approvalReqDTO.setReportId(weeklyReportReqDTO.getId());
         approvalReqDTO.setReportTable(CommonConstants.VEHICLE_WEEKLY_REPORT);
         approvalReqDTO.setTodoType(CommonConstants.ONE_STRING);
@@ -207,9 +217,13 @@ public class VehicleReportServiceImpl implements VehicleReportService {
 
     @Override
     public void commitMonthly(CurrentLoginUser currentLoginUser, MonthlyReportReqDTO monthlyReportReqDTO) {
+
+        MonthlyReportResDTO monthlyReportRes = vehicleReportMapper.detailMonthly(monthlyReportReqDTO.getId());
+        String title = "【"+DateUtil.formatDate(monthlyReportRes.getStartDate())+"~"+DateUtil.formatDate(monthlyReportRes.getEndDate())+"】车辆部月报-请审批";
+
         // 报表审核参数
         ApprovalReqDTO approvalReqDTO = new ApprovalReqDTO();
-        approvalReqDTO.setTitle("车辆部月报-请审批");
+        approvalReqDTO.setTitle(title);
         approvalReqDTO.setReportId(monthlyReportReqDTO.getId());
         approvalReqDTO.setReportTable(CommonConstants.VEHICLE_MONTHLY_REPORT);
         approvalReqDTO.setTodoType(CommonConstants.ONE_STRING);
