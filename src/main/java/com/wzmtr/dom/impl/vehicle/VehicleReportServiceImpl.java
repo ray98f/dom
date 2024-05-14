@@ -177,7 +177,7 @@ public class VehicleReportServiceImpl implements VehicleReportService {
     public void commitDaily(CurrentLoginUser currentLoginUser, DailyReportReqDTO dailyReportReqDTO) {
 
         DailyReportResDTO dailyReportRes = vehicleReportMapper.detailDaily(dailyReportReqDTO.getId());
-        String title = "【?】车辆部日报-请审批";
+        String title = "【{1}】车辆部日报-请审批";
 
         // 报表审核参数
         ApprovalReqDTO approvalReqDTO = new ApprovalReqDTO();
@@ -196,9 +196,13 @@ public class VehicleReportServiceImpl implements VehicleReportService {
 
     @Override
     public void commitWeekly(CurrentLoginUser currentLoginUser, WeeklyReportReqDTO weeklyReportReqDTO) {
+
+        WeeklyReportResDTO weeklyReportRes = vehicleReportMapper.detailWeekly(weeklyReportReqDTO.getId());
+        String title = "【{1}~{2}】车辆部周报-请审批";
+
         // 报表审核参数
         ApprovalReqDTO approvalReqDTO = new ApprovalReqDTO();
-        approvalReqDTO.setTitle("车辆部周报-请审批");
+        approvalReqDTO.setTitle(MessageFormat.format(title, DateUtil.formatDate(weeklyReportRes.getStartDate()),DateUtil.formatDate(weeklyReportRes.getEndDate())));
         approvalReqDTO.setReportId(weeklyReportReqDTO.getId());
         approvalReqDTO.setReportTable(CommonConstants.VEHICLE_WEEKLY_REPORT);
         approvalReqDTO.setTodoType(CommonConstants.ONE_STRING);
@@ -213,9 +217,13 @@ public class VehicleReportServiceImpl implements VehicleReportService {
 
     @Override
     public void commitMonthly(CurrentLoginUser currentLoginUser, MonthlyReportReqDTO monthlyReportReqDTO) {
+
+        MonthlyReportResDTO monthlyReportRes = vehicleReportMapper.detailMonthly(monthlyReportReqDTO.getId());
+        String title = "【{1}~{2}】车辆部月报-请审批";
+
         // 报表审核参数
         ApprovalReqDTO approvalReqDTO = new ApprovalReqDTO();
-        approvalReqDTO.setTitle("车辆部月报-请审批");
+        approvalReqDTO.setTitle(MessageFormat.format(title, DateUtil.formatDate(monthlyReportRes.getStartDate()),DateUtil.formatDate(monthlyReportRes.getEndDate())));
         approvalReqDTO.setReportId(monthlyReportReqDTO.getId());
         approvalReqDTO.setReportTable(CommonConstants.VEHICLE_MONTHLY_REPORT);
         approvalReqDTO.setTodoType(CommonConstants.ONE_STRING);
