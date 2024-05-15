@@ -228,4 +228,22 @@ public interface TrafficReportMapper {
      * @param reqDTO 报表修改参数
      */
     void modifyMonthlyByFlow(ReportUpdateReqDTO reqDTO);
+
+    /**
+     * 获取最新日报
+     * @return 获取最新日报
+     */
+    String getLastDaily();
+
+    /**
+     * 获取最新周报
+     * @return 获取最新周报
+     */
+    String getLastWeekly();
+
+    /**
+     * 获取最新月报
+     * @return 获取最新月报
+     */
+    String getLastMonthly();
 }

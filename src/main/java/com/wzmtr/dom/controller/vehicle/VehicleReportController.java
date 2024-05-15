@@ -275,4 +275,5 @@ public class VehicleReportController {
         vehicleReportService.commitMonthly(currentLoginUser,monthlyReportReqDTO);
         return DataResponse.success();
     }
+
 }

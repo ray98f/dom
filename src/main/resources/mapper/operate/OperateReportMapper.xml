@@ -399,4 +399,28 @@
         UPDATE_DATE=sysdate, UPDATE_BY=#{updateBy}
         WHERE ID=#{id}
     </update>
+
+    <select id="getLastDaily" resultType="java.lang.String">
+        SELECT dr.ID
+        FROM OPERATE_DAILY_REPORT dr
+        WHERE dr.DEL_FLAG='0'
+        AND dr.STATUS='2' AND rownum=1
+        ORDER BY START_DATE DESC
+    </select>
+
+    <select id="getLastWeekly" resultType="java.lang.String">
+        SELECT dr.ID
+        FROM OPERATE_WEEKLY_REPORT dr
+        WHERE dr.DEL_FLAG='0'
+        AND dr.STATUS='2' AND rownum=1
+        ORDER BY START_DATE DESC
+    </select>
+
+    <select id="getLastMonthly" resultType="java.lang.String">
+        SELECT dr.ID
+        FROM OPERATE_MONTHLY_REPORT dr
+        WHERE dr.DEL_FLAG='0'
+        AND dr.STATUS='2' AND rownum=1
+        ORDER BY START_DATE DESC
+    </select>
 </mapper>
