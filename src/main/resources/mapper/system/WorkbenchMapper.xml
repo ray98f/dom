@@ -63,7 +63,7 @@
         WHERE ah.DEL_FLAG='0'
         AND ah.STATUS='0'
         AND ah.PROCESS_KEY=#{processKey}
-        AND ah.REPORT_ID=#{reportId}
+<!--        AND ah.REPORT_ID=#{reportId}-->
         AND ah.CURRENT_NODE IN (
         <foreach collection="nodes" index="index" item="node" separator=",">
             #{node}
@@ -188,7 +188,7 @@
         UPDATE DOM_APPROVAL_HISTORY SET
         DEL_FLAG='1', UPDATE_BY=#{userId}, UPDATE_DATE=sysdate
         WHERE PROCESS_KEY=#{res.processKey} AND REPORT_ID=#{res.reportId} AND REPORT_TABLE=#{res.reportTable}
-        AND CURRENT_NODE=#{res.currentNode} AND DATA_TYPE=#{res.todoType} AND STATUS='0' AND TODO_TYPE='1'
+        AND CURRENT_NODE=#{res.currentNode} AND DATA_TYPE=#{res.dataType} AND APPROVAL_USER <![CDATA[ <> ]]> #{userId} AND STATUS='0' AND TODO_TYPE='1'
         AND DEL_FLAG='0'
     </update>
 

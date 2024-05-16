@@ -226,7 +226,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
         if (nodes.contains(todoResDTO.getCurrentNode())) {
             List<TodoResDTO> todoList = workbenchMapper.queryTodoByNode(todoReqDTO.getProcessKey(), todoReqDTO.getReportId(), nodes);
             List<String> status = dailyList.stream().map(DailyReportResDTO::getStatus).collect(Collectors.toList());
-            if (StringUtils.isNull(todoList) && !status.contains(CommonConstants.ZERO_STRING)) {
+            if ((Objects.isNull(todoList) || todoList.size() == 0) && !status.contains(CommonConstants.ZERO_STRING)) {
                 String nextNode = workbenchMapper.queryNextNode(todoResDTO.getCurrentNode());
                 FlowNodeResDTO nodeDetail = workbenchMapper.nodeDetail(nextNode);
                 List<String> nextUserList = getUserByNode(nextNode);
@@ -303,7 +303,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
         if (nodes.contains(todoResDTO.getCurrentNode())) {
             List<TodoResDTO> todoList = workbenchMapper.queryTodoByNode(todoReqDTO.getProcessKey(), todoReqDTO.getReportId(), nodes);
             List<String> status = weeklyList.stream().map(WeeklyReportResDTO::getStatus).collect(Collectors.toList());
-            if (StringUtils.isNull(todoList) && !status.contains(CommonConstants.ZERO_STRING)) {
+            if ((Objects.isNull(todoList) || todoList.size() == 0) && !status.contains(CommonConstants.ZERO_STRING)) {
                 String nextNode = workbenchMapper.queryNextNode(todoResDTO.getCurrentNode());
                 FlowNodeResDTO nodeDetail = workbenchMapper.nodeDetail(nextNode);
                 List<String> nextUserList = getUserByNode(nextNode);
@@ -323,6 +323,8 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                                 user, CommonConstants.ONE_STRING, parentId);
                     }
                 }
+            }else{
+                //流转下一节点
             }
         } else {
             // 客运部报表子待办/主待办联动修改
@@ -380,7 +382,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
         if (nodes.contains(todoResDTO.getCurrentNode())) {
             List<TodoResDTO> todoList = workbenchMapper.queryTodoByNode(todoReqDTO.getProcessKey(), todoReqDTO.getReportId(), nodes);
             List<String> status = monthlyList.stream().map(MonthlyReportResDTO::getStatus).collect(Collectors.toList());
-            if (StringUtils.isNull(todoList) && !status.contains(CommonConstants.ZERO_STRING)) {
+            if ((Objects.isNull(todoList) || todoList.size() == 0) && !status.contains(CommonConstants.ZERO_STRING)) {
                 String nextNode = workbenchMapper.queryNextNode(todoResDTO.getCurrentNode());
                 FlowNodeResDTO nodeDetail = workbenchMapper.nodeDetail(nextNode);
                 List<String> nextUserList = getUserByNode(nextNode);
