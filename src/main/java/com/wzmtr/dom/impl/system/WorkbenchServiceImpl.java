@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -61,7 +62,13 @@ public class WorkbenchServiceImpl implements WorkbenchService {
 
     @Override
     public TodoResDTO todoDetail(String id) {
-        return workbenchMapper.todoDetail(id);
+        TodoResDTO detail = workbenchMapper.todoDetail(id);
+
+        //查询子代办
+        List<TodoResDTO> childTodo = workbenchMapper.queryChildTodo(id);
+        detail.setChildTodo(childTodo);
+
+        return detail;
     }
 
     @Override

@@ -37,6 +37,13 @@ public interface WorkbenchMapper {
     TodoResDTO todoDetail(String id);
 
     /**
+     * 获取工作台任务督办详情
+     * @param id id
+     * @return 工作台任务督办详情
+     */
+    List<TodoResDTO> queryChildTodo(String id);
+
+    /**
      * 工作台任务督办审批
      * @param todoReqDTO 督办审批参数
      */
