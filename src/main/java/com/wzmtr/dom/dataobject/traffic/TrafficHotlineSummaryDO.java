@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * 客运部-服务热线汇总
@@ -166,4 +167,59 @@ public class TrafficHotlineSummaryDO implements Serializable {
     private String remark;
 
 
+    public Long getComplaintTotal() {
+        return Optional.ofNullable(complaintTotal).orElse(0L);
+    }
+
+    public Long getSuggest() {
+        return Optional.ofNullable(suggest).orElse(0L);
+    }
+
+    public Long getPraiseTotal() {
+        return Optional.ofNullable(praiseTotal).orElse(0L);
+    }
+
+    public Long getAnswerTotal() {
+        return Optional.ofNullable(answerTotal).orElse(0L);
+    }
+
+    public Long getAppAnswer() {
+        return Optional.ofNullable(appAnswer).orElse(0L);
+    }
+
+    public Long getConsult() {
+        return Optional.ofNullable(consult).orElse(0L);
+    }
+
+    public Long getResort() {
+        return Optional.ofNullable(resort).orElse(0L);
+    }
+
+    public Long getType1Complaint() {
+        return Optional.ofNullable(type1Complaint).orElse(0L);
+    }
+
+    public Long getType2Complaint() {
+        return Optional.ofNullable(type2Complaint).orElse(0L);
+    }
+
+    public Long getType1Praise() {
+        return Optional.ofNullable(type1Praise).orElse(0L);
+    }
+
+    public Long getType2Praise() {
+        return Optional.ofNullable(type2Praise).orElse(0L);
+    }
+
+    public Long getPennant() {
+        return Optional.ofNullable(pennant).orElse(0L);
+    }
+
+    public Long getS1Switch() {
+        return Optional.ofNullable(s1Switch).orElse(0L);
+    }
+
+    public Long getOther() {
+        return Optional.ofNullable(other).orElse(0L);
+    }
 }

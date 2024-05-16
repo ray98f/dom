@@ -481,6 +481,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
             TodoReqDTO parentTodoReq = new TodoReqDTO();
             parentTodoReq.setId(todoResDTO.getParentId());
             parentTodoReq.setApprovalStatus(parenStatus);
+            parentTodoReq.setUpdateBy(TokenUtils.getCurrentPersonId());
             workbenchMapper.todoApproval(parentTodoReq);
         }
         // 更新子报表状态
