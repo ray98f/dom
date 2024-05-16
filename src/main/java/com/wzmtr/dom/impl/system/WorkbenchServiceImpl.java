@@ -131,11 +131,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
     @Transactional(rollbackFor = Exception.class)
     private void vehicleReportApproval(TodoReqDTO todoReqDTO, TodoResDTO todoResDTO) {
         // 标题
-        String[] titleArr = todoResDTO.getTitle().split(CommonConstants.SHOR_LINE);
-        String titlePrefix = "";
-        if(titleArr.length > 0){
-            titlePrefix = titleArr[0];
-        }
+        String titlePrefix = todoResDTO.getTitle().replace("-请审批","").replace("-请查阅","");
 //        switch (todoResDTO.getDataType()) {
 //            case CommonConstants.DATA_TYPE_DAILY:
 //                titlePrefix = "车辆部日报";
@@ -221,11 +217,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
     @Transactional(rollbackFor = Exception.class)
     private void trafficDailyApproval(TodoReqDTO todoReqDTO, TodoResDTO todoResDTO) {
         // 标题
-        String[] titleArr = todoResDTO.getTitle().split(CommonConstants.SHOR_LINE);
-        String titlePrefix = "";
-        if(titleArr.length > 0){
-            titlePrefix = titleArr[0];
-        }
+        String titlePrefix = todoResDTO.getTitle().replace("-请审批","").replace("-请查阅","");
         // 若属于第一个节点，需查询这三个节点下是否还存在未审批的待办，没有则可以流转到下一节点
         List<String> nodes = Arrays.asList(CommonConstants.TRAFFIC_DAILY_NODE1_SUB);
         // 获取各子报表
@@ -301,11 +293,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
     private void trafficWeeklyApproval(TodoReqDTO todoReqDTO, TodoResDTO todoResDTO) {
 
         // 标题
-        String[] titleArr = todoResDTO.getTitle().split(CommonConstants.SHOR_LINE);
-        String titlePrefix = "";
-        if(titleArr.length > 0){
-            titlePrefix = titleArr[0];
-        }
+        String titlePrefix = todoResDTO.getTitle().replace("-请审批","").replace("-请查阅","");
 
         // 若属于第一个节点，需查询这三个节点下是否还存在未审批的待办，没有则可以流转到下一节点
         List<String> nodes = Arrays.asList(CommonConstants.TRAFFIC_WEEKLY_NODE1_SUB);
@@ -382,11 +370,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
     private void trafficMonthlyApproval(TodoReqDTO todoReqDTO, TodoResDTO todoResDTO) {
 
         // 标题
-        String[] titleArr = todoResDTO.getTitle().split(CommonConstants.SHOR_LINE);
-        String titlePrefix = "";
-        if(titleArr.length > 0){
-            titlePrefix = titleArr[0];
-        }
+        String titlePrefix = todoResDTO.getTitle().replace("-请审批","").replace("-请查阅","");
 
         // 若属于第一个节点，需查询这三个节点下是否还存在未审批的待办，没有则可以流转到下一节点
         List<String> nodes = Arrays.asList(CommonConstants.TRAFFIC_MONTHLY_NODE1_SUB);
@@ -514,11 +498,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
     private void operateReportApproval(TodoReqDTO todoReqDTO, TodoResDTO todoResDTO) {
 
         // 标题
-        String[] titleArr = todoResDTO.getTitle().split(CommonConstants.SHOR_LINE);
-        String titlePrefix = "";
-        if(titleArr.length > 0){
-            titlePrefix = titleArr[0];
-        }
+        String titlePrefix = todoResDTO.getTitle().replace("-请审批","").replace("-请查阅","");
 
         // 标题
 //        String titlePrefix = "";

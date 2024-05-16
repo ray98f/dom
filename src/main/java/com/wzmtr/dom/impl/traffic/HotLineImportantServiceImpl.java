@@ -48,24 +48,6 @@ public class HotLineImportantServiceImpl implements HotLineImportantService {
 
     @Override
     public void add(HotLineImportantAddReqDTO req) {
-        /*TrafficHotlineSummaryDO trafficHotlineSummaryDO = new TrafficHotlineSummaryDO();
-        trafficHotlineSummaryDO.setDataType(req.getDataType());
-        if(CommonConstants.ONE_STRING.equals(req.getDataType())){
-            trafficHotlineSummaryDO.setDataDate(req.getStartDate());
-        }
-        trafficHotlineSummaryDO.setStartDate(req.getStartDate());
-        trafficHotlineSummaryDO.setEndDate(req.getEndDate());
-        trafficHotlineSummaryDO.setCreateBy(TokenUtils.getCurrentPersonId());
-        trafficHotlineSummaryDO.setId(TokenUtils.getUuId());
-        trafficHotlineSummaryDO.setDelFlag("0");
-        trafficHotlineSummaryDO.setCreateDate(DateUtils.currentDate());
-        trafficHotlineSummaryDO.setCreateBy(TokenUtils.getCurrentPersonId());
-        trafficHotlineSummaryDO.setVersion("1");
-        Integer result = hotLineSummaryMapper.selectIsExist(trafficHotlineSummaryDO);
-        if (result > 0) {
-            throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期数据已存在，无法重复新增");
-        }*/
-        //hotLineSummaryMapper.insert(trafficHotlineSummaryDO);
         List<TrafficHotlineImportantDO> list = new ArrayList<>();
         List<DictResDTO> dictList = dictMapper.list(CommonConstants.HOTLINE_TYPE, null, CommonConstants.ZERO_STRING);
         if (StringUtils.isNotEmpty(dictList)) {

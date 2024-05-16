@@ -69,7 +69,7 @@ public class HotLineSummaryServiceImpl implements HotLineSummaryService {
             trafficHotlineSummaryDO.setVersion("1");
             Integer result = hotLineSummaryMapper.selectIsExist(trafficHotlineSummaryDO);
             if (result > 0) {
-                throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期服务热线汇总数据已存在，无法重复新增");
+                throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期数据已存在，无法重复新增");
             }
             hotLineSummaryMapper.insert(trafficHotlineSummaryDO);
             // 初始化重要热线内容
