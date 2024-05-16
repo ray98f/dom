@@ -1,5 +1,6 @@
 package com.wzmtr.dom.impl.traffic;
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
@@ -148,9 +149,13 @@ public class TrafficReportServiceImpl implements TrafficReportService {
 
     @Override
     public void commitDaily(CurrentLoginUser currentLoginUser, DailyReportReqDTO dailyReportReqDTO) {
+
+        DailyReportResDTO detail = trafficReportMapper.dailyDetail(dailyReportReqDTO.getId(),null,null,null);
+        String title = "【"+ DateUtil.formatDate(detail.getDailyDate())+"】客运部部日报-请审批";
+
         // 报表审核参数
         ApprovalReqDTO approvalReqDTO = new ApprovalReqDTO();
-        approvalReqDTO.setTitle("客运部日报-请审批");
+        approvalReqDTO.setTitle(title);
         approvalReqDTO.setReportId(dailyReportReqDTO.getId());
         approvalReqDTO.setReportTable(CommonConstants.TRAFFIC_DAILY_REPORT);
         approvalReqDTO.setTodoType(CommonConstants.ONE_STRING);
@@ -272,9 +277,14 @@ public class TrafficReportServiceImpl implements TrafficReportService {
 
     @Override
     public void commitWeekly(CurrentLoginUser currentLoginUser, WeeklyReportReqDTO weeklyReportReqDTO) {
+
+        WeeklyReportResDTO detail = trafficReportMapper.weeklyDetail(weeklyReportReqDTO.getId());
+        String title = "【"+DateUtil.formatDate(detail.getStartDate())+"~"+DateUtil.formatDate(detail.getEndDate())+"】客运部周报-请审批";
+
+
         // 报表审核参数
         ApprovalReqDTO approvalReqDTO = new ApprovalReqDTO();
-        approvalReqDTO.setTitle("客运部周报-请审批");
+        approvalReqDTO.setTitle(title);
         approvalReqDTO.setReportId(weeklyReportReqDTO.getId());
         approvalReqDTO.setReportTable(CommonConstants.TRAFFIC_WEEKLY_REPORT);
         approvalReqDTO.setTodoType(CommonConstants.ONE_STRING);
@@ -397,9 +407,13 @@ public class TrafficReportServiceImpl implements TrafficReportService {
 
     @Override
     public void commitMonthly(CurrentLoginUser currentLoginUser, MonthlyReportReqDTO monthlyReportReqDTO) {
+
+        MonthlyReportResDTO detail = trafficReportMapper.monthlyDetail(monthlyReportReqDTO.getId());
+        String title = "【"+DateUtil.formatDate(detail.getStartDate())+"~"+DateUtil.formatDate(detail.getEndDate())+"】客运部月报-请审批";
+
         // 报表审核参数
         ApprovalReqDTO approvalReqDTO = new ApprovalReqDTO();
-        approvalReqDTO.setTitle("客运部月报-请审批");
+        approvalReqDTO.setTitle(title);
         approvalReqDTO.setReportId(monthlyReportReqDTO.getId());
         approvalReqDTO.setReportTable(CommonConstants.TRAFFIC_MONTHLY_REPORT);
         approvalReqDTO.setTodoType(CommonConstants.ONE_STRING);

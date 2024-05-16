@@ -131,20 +131,24 @@ public class WorkbenchServiceImpl implements WorkbenchService {
     @Transactional(rollbackFor = Exception.class)
     private void vehicleReportApproval(TodoReqDTO todoReqDTO, TodoResDTO todoResDTO) {
         // 标题
+        String[] titleArr = todoResDTO.getTitle().split(CommonConstants.SHOR_LINE);
         String titlePrefix = "";
-        switch (todoResDTO.getDataType()) {
-            case CommonConstants.DATA_TYPE_DAILY:
-                titlePrefix = "车辆部日报";
-                break;
-            case CommonConstants.DATA_TYPE_WEEKLY:
-                titlePrefix = "车辆部周报";
-                break;
-            case CommonConstants.DATA_TYPE_MONTHLY:
-                titlePrefix = "车辆部月报";
-                break;
-            default:
-                break;
+        if(titleArr.length > 0){
+            titlePrefix = titleArr[0];
         }
+//        switch (todoResDTO.getDataType()) {
+//            case CommonConstants.DATA_TYPE_DAILY:
+//                titlePrefix = "车辆部日报";
+//                break;
+//            case CommonConstants.DATA_TYPE_WEEKLY:
+//                titlePrefix = "车辆部周报";
+//                break;
+//            case CommonConstants.DATA_TYPE_MONTHLY:
+//                titlePrefix = "车辆部月报";
+//                break;
+//            default:
+//                break;
+//        }
         // 流转下一节点标记
         String goNextFlag = CommonConstants.ONE_STRING;
         String status = "";
@@ -216,6 +220,12 @@ public class WorkbenchServiceImpl implements WorkbenchService {
      */
     @Transactional(rollbackFor = Exception.class)
     private void trafficDailyApproval(TodoReqDTO todoReqDTO, TodoResDTO todoResDTO) {
+        // 标题
+        String[] titleArr = todoResDTO.getTitle().split(CommonConstants.SHOR_LINE);
+        String titlePrefix = "";
+        if(titleArr.length > 0){
+            titlePrefix = titleArr[0];
+        }
         // 若属于第一个节点，需查询这三个节点下是否还存在未审批的待办，没有则可以流转到下一节点
         List<String> nodes = Arrays.asList(CommonConstants.TRAFFIC_DAILY_NODE1_SUB);
         // 获取各子报表
@@ -230,7 +240,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                 List<String> nextUserList = getUserByNode(nextNode);
                 // 节点流转
                 for (String user : nextUserList) {
-                    String title = DateUtil.formatDate(dailyList.get(0).getDailyDate()) + "运营日报-请审批";
+                    String title = titlePrefix + "-请审批";
                     // 主报表添加待办
                     String parentId = addTodo(title, dailyList.get(0).getParentId(),
                             CommonConstants.TRAFFIC_DAILY_REPORT, nodeDetail.getNodeType(),
@@ -262,10 +272,10 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                 String nextNode = workbenchMapper.queryNextNode(todoResDTO.getCurrentNode());
                 FlowNodeResDTO nodeDetail = workbenchMapper.nodeDetail(nextNode);
                 List<String> nextUserList = getUserByNode(nextNode);
-                String title = "运营日报-请审批";
+                String title = titlePrefix + "-请审批";
                 // 下一节点不是待办,则更新报表为审批完成
                 if (!nodeDetail.getNodeType().equals(CommonConstants.ONE_STRING)) {
-                    title = "运营日报-请查阅";
+                    title = titlePrefix + "-请查阅";
                     trafficReportMapper.dailyApprovalComplete(modifyReq);
                 }
                 // 节点流转
@@ -289,6 +299,14 @@ public class WorkbenchServiceImpl implements WorkbenchService {
      */
     @Transactional(rollbackFor = Exception.class)
     private void trafficWeeklyApproval(TodoReqDTO todoReqDTO, TodoResDTO todoResDTO) {
+
+        // 标题
+        String[] titleArr = todoResDTO.getTitle().split(CommonConstants.SHOR_LINE);
+        String titlePrefix = "";
+        if(titleArr.length > 0){
+            titlePrefix = titleArr[0];
+        }
+
         // 若属于第一个节点，需查询这三个节点下是否还存在未审批的待办，没有则可以流转到下一节点
         List<String> nodes = Arrays.asList(CommonConstants.TRAFFIC_WEEKLY_NODE1_SUB);
         // 获取各子报表
@@ -303,7 +321,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                 List<String> nextUserList = getUserByNode(nextNode);
                 // 节点流转
                 for (String user : nextUserList) {
-                    String title = DateUtil.formatDate(weeklyList.get(0).getStartDate()) + "-" + DateUtil.formatDate(weeklyList.get(0).getEndDate()) + "运营周报-请审批";
+                    String title = titlePrefix + "-请审批";
                     // 主报表添加待办
                     String parentId = addTodo(title, weeklyList.get(0).getParentId(),
                             CommonConstants.TRAFFIC_WEEKLY_REPORT, nodeDetail.getNodeType(),
@@ -335,10 +353,10 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                 String nextNode = workbenchMapper.queryNextNode(todoResDTO.getCurrentNode());
                 FlowNodeResDTO nodeDetail = workbenchMapper.nodeDetail(nextNode);
                 List<String> nextUserList = getUserByNode(nextNode);
-                String title = "运营周报-请审批";
+                String title = titlePrefix + "-请审批";
                 // 下一节点不是待办,则更新报表为审批完成
                 if (!nodeDetail.getNodeType().equals(CommonConstants.ONE_STRING)) {
-                    title = "运营周报-请查阅";
+                    title = titlePrefix + "-请查阅";
                     trafficReportMapper.weeklyApprovalComplete(modifyReq);
                 }
                 // 节点流转
@@ -362,6 +380,14 @@ public class WorkbenchServiceImpl implements WorkbenchService {
      */
     @Transactional(rollbackFor = Exception.class)
     private void trafficMonthlyApproval(TodoReqDTO todoReqDTO, TodoResDTO todoResDTO) {
+
+        // 标题
+        String[] titleArr = todoResDTO.getTitle().split(CommonConstants.SHOR_LINE);
+        String titlePrefix = "";
+        if(titleArr.length > 0){
+            titlePrefix = titleArr[0];
+        }
+
         // 若属于第一个节点，需查询这三个节点下是否还存在未审批的待办，没有则可以流转到下一节点
         List<String> nodes = Arrays.asList(CommonConstants.TRAFFIC_MONTHLY_NODE1_SUB);
         // 获取各子报表
@@ -376,7 +402,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                 List<String> nextUserList = getUserByNode(nextNode);
                 // 节点流转
                 for (String user : nextUserList) {
-                    String title = DateUtil.formatDate(monthlyList.get(0).getStartDate()) + "-" + DateUtil.formatDate(monthlyList.get(0).getEndDate()) + "运营月报-请审批";
+                    String title = titlePrefix + "-请审批";
                     // 主报表添加待办
                     String parentId = addTodo(title, monthlyList.get(0).getParentId(),
                             CommonConstants.TRAFFIC_MONTHLY_REPORT, nodeDetail.getNodeType(),
@@ -408,10 +434,10 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                 String nextNode = workbenchMapper.queryNextNode(todoResDTO.getCurrentNode());
                 FlowNodeResDTO nodeDetail = workbenchMapper.nodeDetail(nextNode);
                 List<String> nextUserList = getUserByNode(nextNode);
-                String title = "运营月报-请审批";
+                String title = titlePrefix + "-请审批";
                 // 下一节点不是待办,则更新报表为审批完成
                 if (!nodeDetail.getNodeType().equals(CommonConstants.ONE_STRING)) {
-                    title = "运营月报-请查阅";
+                    title = titlePrefix + "-请查阅";
                     trafficReportMapper.monthlyApprovalComplete(modifyReq);
                 }
                 // 节点流转
@@ -486,21 +512,30 @@ public class WorkbenchServiceImpl implements WorkbenchService {
      */
     @Transactional(rollbackFor = Exception.class)
     private void operateReportApproval(TodoReqDTO todoReqDTO, TodoResDTO todoResDTO) {
+
         // 标题
+        String[] titleArr = todoResDTO.getTitle().split(CommonConstants.SHOR_LINE);
         String titlePrefix = "";
-        switch (todoResDTO.getDataType()) {
-            case CommonConstants.DATA_TYPE_DAILY:
-                titlePrefix = "运营日报";
-                break;
-            case CommonConstants.DATA_TYPE_WEEKLY:
-                titlePrefix = "运营周报";
-                break;
-            case CommonConstants.DATA_TYPE_MONTHLY:
-                titlePrefix = "运营月报";
-                break;
-            default:
-                break;
+        if(titleArr.length > 0){
+            titlePrefix = titleArr[0];
         }
+
+        // 标题
+//        String titlePrefix = "";
+//        switch (todoResDTO.getDataType()) {
+//            case CommonConstants.DATA_TYPE_DAILY:
+//                titlePrefix = "运营日报";
+//                break;
+//            case CommonConstants.DATA_TYPE_WEEKLY:
+//                titlePrefix = "运营周报";
+//                break;
+//            case CommonConstants.DATA_TYPE_MONTHLY:
+//                titlePrefix = "运营月报";
+//                break;
+//            default:
+//                break;
+//        }
+
         // 流转下一节点标记
         String goNextFlag = CommonConstants.ONE_STRING;
         String status = "";

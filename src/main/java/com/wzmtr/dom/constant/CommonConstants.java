@@ -29,6 +29,7 @@ public class CommonConstants {
     public static final String BLANK = " ";
     public static final String COMMA = ",";
     public static final String UNDERLINE = "_";
+    public static final String SHOR_LINE = "-";
     public static final String SINGLE_QUOTATION_MARK = "'";
     public static final String DOUBLE_QUOTATION_MARKS = "\"";
     public static final String TIME = "yyyy-MM-dd HH:mm:ss";
