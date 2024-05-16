@@ -247,10 +247,12 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                             user, CommonConstants.ZERO_STRING, null);
                     // 发送子报表待办（隐藏）
                     for (DailyReportResDTO r : dailyList) {
-                        addTodo(title, r.getId(), CommonConstants.TRAFFIC_DAILY_REPORT,
-                                nodeDetail.getNodeType(), CommonConstants.DATA_TYPE_DAILY,
-                                nodeDetail.getFlowId(), nodeDetail.getNodeId(),
-                                user, CommonConstants.ONE_STRING, parentId);
+                        if(CommonConstants.ONE_STRING.equals(r.getStatus())){
+                            addTodo(title, r.getId(), CommonConstants.TRAFFIC_DAILY_REPORT,
+                                    nodeDetail.getNodeType(), CommonConstants.DATA_TYPE_DAILY,
+                                    nodeDetail.getFlowId(), nodeDetail.getNodeId(),
+                                    user, CommonConstants.ONE_STRING, parentId);
+                        }
                     }
                 }
             }
@@ -324,14 +326,14 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                             user, CommonConstants.ZERO_STRING, null);
                     // 判断子报表状态 为1审批中则发送待办
                     for (WeeklyReportResDTO r : weeklyList) {
-                        addTodo(title, r.getId(), CommonConstants.TRAFFIC_WEEKLY_REPORT,
-                                nodeDetail.getNodeType(), CommonConstants.DATA_TYPE_WEEKLY,
-                                nodeDetail.getFlowId(), nodeDetail.getNodeId(),
-                                user, CommonConstants.ONE_STRING, parentId);
+                        if(CommonConstants.ONE_STRING.equals(r.getStatus())){
+                            addTodo(title, r.getId(), CommonConstants.TRAFFIC_WEEKLY_REPORT,
+                                    nodeDetail.getNodeType(), CommonConstants.DATA_TYPE_WEEKLY,
+                                    nodeDetail.getFlowId(), nodeDetail.getNodeId(),
+                                    user, CommonConstants.ONE_STRING, parentId);
+                        }
                     }
                 }
-            }else{
-                //流转下一节点
             }
         } else {
             // 客运部报表子待办/主待办联动修改
@@ -403,10 +405,12 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                             user, CommonConstants.ZERO_STRING, null);
                     // 判断子报表状态 为1审批中则发送待办
                     for (MonthlyReportResDTO r : monthlyList) {
-                        addTodo(title, r.getId(), CommonConstants.TRAFFIC_MONTHLY_REPORT,
-                                nodeDetail.getNodeType(), CommonConstants.DATA_TYPE_MONTHLY,
-                                nodeDetail.getFlowId(), nodeDetail.getNodeId(),
-                                user, CommonConstants.ONE_STRING, parentId);
+                        if(CommonConstants.ONE_STRING.equals(r.getStatus())){
+                            addTodo(title, r.getId(), CommonConstants.TRAFFIC_MONTHLY_REPORT,
+                                    nodeDetail.getNodeType(), CommonConstants.DATA_TYPE_MONTHLY,
+                                    nodeDetail.getFlowId(), nodeDetail.getNodeId(),
+                                    user, CommonConstants.ONE_STRING, parentId);
+                        }
                     }
                 }
             }
