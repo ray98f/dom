@@ -65,36 +65,9 @@ public class IndicatorController {
             }
         }*/
 
-       /* List<String> station = new ArrayList<>();
-        station.add("1");
-        station.add("2");
-        station.add("3");
 
-        String s =station.stream()
-                .collect(Collectors.joining(","));;
-        System.out.println(s);
 
-        List<String> list = new ArrayList<>();
-        list.add("Apple");
-        list.add("Banana");
-        list.add("Cherry");
-        list.add("Date");
 
-        // 使用Iterator来遍历并删除元素
-        Iterator<String> iterator = list.iterator();
-        while (iterator.hasNext()) {
-            String item = iterator.next();
-            if (item.equals("Banana")) {
-                iterator.remove(); // 删除元素
-            }
-        }*/
-
-        // 打印结果，检查元素是否已被删除
-       // System.out.println(list);
-     /*   int a=101;
-        int b=10000;
-        Double c = new Double(Math.round(a*10000/b)/10000.0);
-        System.out.println(c);*/
         CurrentLoginUser user = new CurrentLoginUser("admin", "admin", "系统管理员", "A","","", "A02","","","","","","","241");
         String jwtToken = TokenUtils.createSimpleToken(user);
         System.out.println(jwtToken);

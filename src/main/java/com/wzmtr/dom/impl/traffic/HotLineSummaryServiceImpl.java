@@ -69,17 +69,17 @@ public class HotLineSummaryServiceImpl implements HotLineSummaryService {
             trafficHotlineSummaryDO.setVersion("1");
             Integer result = hotLineSummaryMapper.selectIsExist(trafficHotlineSummaryDO);
             if (result > 0) {
-                throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期服务热线汇总数据已存在，无法重复新增");
+                throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期数据已存在，无法重复新增");
             }
             hotLineSummaryMapper.insert(trafficHotlineSummaryDO);
             // 初始化重要热线内容
-            if(CommonConstants.ONE_STRING.equals(trafficHotlineSummaryDO.getDataType())){
+            //if(CommonConstants.ONE_STRING.equals(trafficHotlineSummaryDO.getDataType())){
                 HotLineImportantAddReqDTO req = new HotLineImportantAddReqDTO();
                 org.springframework.beans.BeanUtils.copyProperties(reqDTO, req);
                 hotLineImportantService.add(req);
-            }
+            //}
         }catch (Exception e){
-            throw new CommonException(ErrorCode.NORMAL_ERROR, "数据库新增异常");
+            throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期数据已存在，无法重复新增");
         }
 
     }
@@ -111,6 +111,9 @@ public class HotLineSummaryServiceImpl implements HotLineSummaryService {
         incomeRecordDO.setUpdateBy(TokenUtils.getCurrentPersonId());
         incomeRecordDO.setVersion(String.valueOf(Integer.parseInt(now.getVersion()) + 1));
         hotLineSummaryMapper.updateById(incomeRecordDO);
+
+        //更新统计
+
     }
 
     @Override

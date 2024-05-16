@@ -20,4 +20,12 @@ public interface HotLineImportantService {
     void modify(CurrentLoginUser currentLoginUser, HotLineImportantAddReqDTO passengerRecordReqDTO);
 
     List<HotLineImportantDetailResDTO> acc(SidReqDTO reqDTO);
+
+    /**
+     * 自动更新报表统计
+     * @param dataType 查询参数
+     * @param startDate 查询参数
+     * @param endDate 查询参数
+     */
+    void autoModify(String dataType,String startDate,String endDate);
 }

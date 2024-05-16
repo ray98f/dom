@@ -1,7 +1,7 @@
-# 中兴开发环境
+# 铁投测试环境
 spring:
   datasource:
-    url: jdbc:oracle:thin:@192.168.30.113:1521/xe
+    url: jdbc:oracle:thin:@10.11.82.46:1521/xe
     username: dom
     password: dom@123
     driver-class-name: oracle.jdbc.OracleDriver
@@ -16,9 +16,9 @@ spring:
       minimum-idle: 10
 
   redis:
-    host: 192.168.30.113
+    host: 10.11.82.38
     port: 6379
-    password: 123456
+    password: B=zvgH9QC@AY
     jedis:
       pool:
         max-active: 50
@@ -33,16 +33,16 @@ excluded:
 
 sso:
   url: http://zxgd.softether.net:4443/cas
-  home: http://192.168.30.140:8900/dom/
+  home: http://10.11.82.38:8100/dom/
 
 cas:
   serverUrlPrefix: "${sso.url}"
-  serviceUrlPrefix: "http://192.168.30.140:8900/dom"
+  serviceUrlPrefix: "http://10.11.82.38:8100/dom"
   casFilterUrlPattern: "/cas"
   loginUrlPattern: "/login"
   logoutUrlPattern: "/logout"
   successUrlPattern: "/index"
-  serviceFront: "http://192.168.30.140:8899/index.html"
+  serviceFront: "http://10.11.82.38:8100/index.html"
 
 diboot:
   core:
@@ -83,12 +83,26 @@ minio:
   accessKey: miniominio
   secretKey: miniominio
 
+#乘务、eam、施工调度、行车调度
+ocm:
+  host: http://nocm.wzmtr.com:2443
+eam:
+  host: http://192.168.30.140:8002
 csm:
-  host: http://192.168.30.140:8005/
+  host: http://192.168.30.140:8005
+odm:
+  host: http://10.11.82.27:8181
+
 
 open-api:
   csm:
-    constructPlan: ${csm.host}/csm/plan/list
+    constructPlan: ${csm.host}/csm/constructPlan/open/getPlanList
+    importantConstruct: ${csm.host}/csm/constructPlan/open/getImportantPlanList
+    unsaturationConstruct: ${csm.host}/csm/report/open/getUnsaturationPlan
+    planStatistics: ${csm.host}/csm/report/open/getPlanStatistics
+    dispatchOrder: ${csm.host}/csm/dispatch/order/open/list
+  odm:
+    depotStatistics: ${odm.host}/api/statistics/anon/day
   acc:
     api-app-key: "EvbhN1NZFmsuFM0j1T3Fi3tKQAxpd52r"
     person-count: "http://dxp.wzmtr.com:9080/v2/ACC/ACC13"

@@ -6,6 +6,7 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 任务督办结果类
@@ -134,4 +135,10 @@ public class TodoResDTO {
      */
     @ApiModelProperty(value = "父待办")
     private String parentId;
+
+    /**
+     * 子报表待办
+     */
+    @ApiModelProperty(value = "子报表待办")
+    private List<TodoResDTO> childTodo;
 }
