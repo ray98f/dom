@@ -349,7 +349,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                             user, CommonConstants.ZERO_STRING, null);
                     // 判断子报表状态 为1审批中则发送待办
                     for (WeeklyReportResDTO r : weeklyList) {
-                        if(CommonConstants.ONE_STRING.equals(r.getStatus())){
+                        if(CommonConstants.ONE_STRING.equals(r.getStatus()) || (CommonConstants.THREE_STRING.equals(r.getStatus()) && "traffic_weekly_node3".equals(todoResDTO.getCurrentNode()))){
                             addTodo(title, r.getId(), CommonConstants.TRAFFIC_WEEKLY_REPORT,
                                     nodeDetail.getNodeType(), CommonConstants.DATA_TYPE_WEEKLY,
                                     nodeDetail.getFlowId(), nodeDetail.getNodeId(),
@@ -408,10 +408,12 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                     //子报表审批
                     if(nodeDetail.getNodeType().equals(CommonConstants.ONE_STRING)){
                         for (WeeklyReportResDTO r : weeklyList) {
-                            addTodo(title, r.getId(), CommonConstants.TRAFFIC_WEEKLY_REPORT,
-                                    nodeDetail.getNodeType(), CommonConstants.DATA_TYPE_WEEKLY,
-                                    nodeDetail.getFlowId(), nodeDetail.getNodeId(),
-                                    user, CommonConstants.ONE_STRING, parentId);
+                            if(CommonConstants.ONE_STRING.equals(r.getStatus()) || (CommonConstants.THREE_STRING.equals(r.getStatus()) && "traffic_weekly_node3".equals(todoResDTO.getCurrentNode()))){
+                                addTodo(title, r.getId(), CommonConstants.TRAFFIC_WEEKLY_REPORT,
+                                        nodeDetail.getNodeType(), CommonConstants.DATA_TYPE_WEEKLY,
+                                        nodeDetail.getFlowId(), nodeDetail.getNodeId(),
+                                        user, CommonConstants.ONE_STRING, parentId);
+                            }
                         }
                     }
                 }
@@ -461,7 +463,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                             user, CommonConstants.ZERO_STRING, null);
                     // 判断子报表状态 为1审批中则发送待办
                     for (MonthlyReportResDTO r : monthlyList) {
-                        if(CommonConstants.ONE_STRING.equals(r.getStatus())){
+                        if(CommonConstants.ONE_STRING.equals(r.getStatus()) || (CommonConstants.THREE_STRING.equals(r.getStatus()) && "traffic_weekly_node3".equals(todoResDTO.getCurrentNode()))){
                             addTodo(title, r.getId(), CommonConstants.TRAFFIC_MONTHLY_REPORT,
                                     nodeDetail.getNodeType(), CommonConstants.DATA_TYPE_MONTHLY,
                                     nodeDetail.getFlowId(), nodeDetail.getNodeId(),
@@ -519,10 +521,12 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                     //子报表审批
                     if(nodeDetail.getNodeType().equals(CommonConstants.ONE_STRING)){
                         for (MonthlyReportResDTO r : monthlyList) {
-                            addTodo(title, r.getId(), CommonConstants.TRAFFIC_MONTHLY_REPORT,
-                                    nodeDetail.getNodeType(), CommonConstants.DATA_TYPE_MONTHLY,
-                                    nodeDetail.getFlowId(), nodeDetail.getNodeId(),
-                                    user, CommonConstants.ONE_STRING, parentId);
+                            if(CommonConstants.ONE_STRING.equals(r.getStatus()) || (CommonConstants.THREE_STRING.equals(r.getStatus()) && "traffic_weekly_node3".equals(todoResDTO.getCurrentNode()))){
+                                addTodo(title, r.getId(), CommonConstants.TRAFFIC_MONTHLY_REPORT,
+                                        nodeDetail.getNodeType(), CommonConstants.DATA_TYPE_MONTHLY,
+                                        nodeDetail.getFlowId(), nodeDetail.getNodeId(),
+                                        user, CommonConstants.ONE_STRING, parentId);
+                            }
                         }
                     }
 
