@@ -85,6 +85,7 @@ public interface TrafficReportMapper {
      */
     void modifyMainDaily(DailyReportReqDTO dailyReportReqDTO);
 
+
     /**
      * 分页查询周报列表
      * @param page 分页参数

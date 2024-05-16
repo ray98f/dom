@@ -143,8 +143,42 @@ public class TrafficReportServiceImpl implements TrafficReportService {
         if (res <= 0) {
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
-        //更新主报表
-        trafficReportMapper.modifyMainDaily(dailyReportReqDTO);
+        //更新子表
+        if(CommonConstants.ZERO_STRING.equals(dailyReportReqDTO.getReportType())){
+
+            List<DailyReportResDTO> subList = trafficReportMapper.queryDailyByParent(dailyReportReqDTO.getId());
+
+            for(DailyReportResDTO r : subList){
+                DailyReportReqDTO req = new DailyReportReqDTO();
+                req.setId(r.getId());
+                req.setUpdateBy(currentLoginUser.getPersonId());
+                switch (r.getReportType()){
+                    case CommonConstants.ONE_STRING:
+                        req.setIfPassenger(dailyReportReqDTO.getIfPassenger());
+                        req.setIfIncome(dailyReportReqDTO.getIfIncome());
+                        req.setIfTicketUse(dailyReportReqDTO.getIfTicketUse());
+                        req.setIfOnewaySale(dailyReportReqDTO.getIfOnewaySale());
+                        break;
+                    case CommonConstants.TWO_STRING:
+                        req.setIfHotlineSummary(dailyReportReqDTO.getIfHotlineSummary());
+                        req.setIfHotlineImportant(dailyReportReqDTO.getIfHotlineImportant());
+                        req.setIfTransmitInfo(dailyReportReqDTO.getIfTransmitInfo());
+                        break;
+                    case CommonConstants.THREE_STRING:
+                        req.setIfProductionSummary(dailyReportReqDTO.getIfProductionSummary());
+                        req.setIfProductionInfo(dailyReportReqDTO.getIfProductionInfo());
+                        break;
+                    default:
+                        break;
+                }
+                trafficReportMapper.modifyDaily(req);
+            }
+
+
+        //更新主表
+        }else{
+            trafficReportMapper.modifyMainDaily(dailyReportReqDTO);
+        }
     }
 
     @Override
@@ -271,8 +305,44 @@ public class TrafficReportServiceImpl implements TrafficReportService {
         if (res <= 0) {
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
-        //更新主报表
-        trafficReportMapper.modifyMainWeekly(weeklyReportReqDTO);
+
+        //更新子表
+        if(CommonConstants.ZERO_STRING.equals(weeklyReportReqDTO.getReportType())){
+
+            List<WeeklyReportResDTO> subList = trafficReportMapper.queryWeeklyByParent(weeklyReportReqDTO.getId());
+
+            for(WeeklyReportResDTO r : subList){
+                WeeklyReportReqDTO req = new WeeklyReportReqDTO();
+                req.setId(r.getId());
+                req.setUpdateBy(currentLoginUser.getPersonId());
+                switch (r.getReportType()){
+                    case CommonConstants.ONE_STRING:
+                        req.setIfPassenger(weeklyReportReqDTO.getIfPassenger());
+                        req.setIfIncome(weeklyReportReqDTO.getIfIncome());
+                        req.setIfTicketUse(weeklyReportReqDTO.getIfTicketUse());
+                        req.setIfOnewaySale(weeklyReportReqDTO.getIfOnewaySale());
+                        break;
+                    case CommonConstants.TWO_STRING:
+                        req.setIfHotlineSummary(weeklyReportReqDTO.getIfHotlineSummary());
+                        req.setIfHotlineImportant(weeklyReportReqDTO.getIfHotlineImportant());
+                        req.setIfTransmitInfo(weeklyReportReqDTO.getIfTransmitInfo());
+                        break;
+                    case CommonConstants.THREE_STRING:
+                        req.setIfProductionSummary(weeklyReportReqDTO.getIfProductionSummary());
+                        req.setIfProductionInfo(weeklyReportReqDTO.getIfProductionInfo());
+                        break;
+                    default:
+                        break;
+                }
+                trafficReportMapper.modifyWeekly(req);
+            }
+
+
+            //更新主表
+        }else{
+            trafficReportMapper.modifyMainWeekly(weeklyReportReqDTO);
+        }
+
     }
 
     @Override
@@ -401,8 +471,43 @@ public class TrafficReportServiceImpl implements TrafficReportService {
         if (res <= 0) {
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
-        //更新主报表
-        trafficReportMapper.modifyMainMonthly(monthlyReportReqDTO);
+
+        //更新子表
+        if(CommonConstants.ZERO_STRING.equals(monthlyReportReqDTO.getReportType())){
+
+            List<MonthlyReportResDTO> subList = trafficReportMapper.queryMonthlyByParent(monthlyReportReqDTO.getId());
+
+            for(MonthlyReportResDTO r : subList){
+                MonthlyReportReqDTO req = new MonthlyReportReqDTO();
+                req.setId(r.getId());
+                req.setUpdateBy(currentLoginUser.getPersonId());
+                switch (r.getReportType()){
+                    case CommonConstants.ONE_STRING:
+                        req.setIfPassenger(monthlyReportReqDTO.getIfPassenger());
+                        req.setIfIncome(monthlyReportReqDTO.getIfIncome());
+                        req.setIfTicketUse(monthlyReportReqDTO.getIfTicketUse());
+                        req.setIfOnewaySale(monthlyReportReqDTO.getIfOnewaySale());
+                        break;
+                    case CommonConstants.TWO_STRING:
+                        req.setIfHotlineSummary(monthlyReportReqDTO.getIfHotlineSummary());
+                        req.setIfHotlineImportant(monthlyReportReqDTO.getIfHotlineImportant());
+                        req.setIfTransmitInfo(monthlyReportReqDTO.getIfTransmitInfo());
+                        break;
+                    case CommonConstants.THREE_STRING:
+                        req.setIfProductionSummary(monthlyReportReqDTO.getIfProductionSummary());
+                        req.setIfProductionInfo(monthlyReportReqDTO.getIfProductionInfo());
+                        break;
+                    default:
+                        break;
+                }
+                trafficReportMapper.modifyMonthly(req);
+            }
+
+            //更新主表
+        }else{
+            trafficReportMapper.modifyMainMonthly(monthlyReportReqDTO);
+        }
+
     }
 
     @Override

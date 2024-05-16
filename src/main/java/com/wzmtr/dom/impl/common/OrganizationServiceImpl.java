@@ -83,7 +83,10 @@ public class OrganizationServiceImpl implements OrganizationService {
     public List<MemberResDTO> listMember(String id, String name) {
         List<MemberResDTO> list;
         String newId = organizationMapper.getIdByAreaId(id);
-        if (!Objects.isNull(newId)) {
+        if (!Objects.isNull(newId) && !Objects.isNull(name)) {
+            return organizationMapper.listUserByOfficeAndName(newId,name);
+        }
+        if (!Objects.isNull(newId) && Objects.isNull(name)) {
             return organizationMapper.listUserByOffice(newId);
         }
         if (CommonConstants.ROOT.equals(id)) {

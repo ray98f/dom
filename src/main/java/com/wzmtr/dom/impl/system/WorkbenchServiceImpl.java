@@ -7,6 +7,9 @@ import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.system.ApprovalReqDTO;
 import com.wzmtr.dom.dto.req.system.ReportUpdateReqDTO;
 import com.wzmtr.dom.dto.req.system.TodoReqDTO;
+import com.wzmtr.dom.dto.req.traffic.DailyReportReqDTO;
+import com.wzmtr.dom.dto.req.traffic.MonthlyReportReqDTO;
+import com.wzmtr.dom.dto.req.traffic.WeeklyReportReqDTO;
 import com.wzmtr.dom.dto.res.system.FlowNodeResDTO;
 import com.wzmtr.dom.dto.res.system.TodoResDTO;
 import com.wzmtr.dom.dto.res.traffic.DailyReportResDTO;
@@ -85,6 +88,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
 //        if (StringUtils.isNotEmpty(todoReqDTO.getId()) && !todoReqDTO.getProcessKey().contains(CommonConstants.VEHICLE_CONTAINS)) {
             workbenchMapper.sameStageTodoDelete(res, TokenUtils.getCurrentPersonId());
 //        }
+
         // 根据流程名进行审核流程
         switch (Objects.requireNonNull(BpmnFlowEnum.find(todoReqDTO.getProcessKey()))) {
             // 车辆部报表
@@ -223,6 +227,16 @@ public class WorkbenchServiceImpl implements WorkbenchService {
      */
     @Transactional(rollbackFor = Exception.class)
     private void trafficDailyApproval(TodoReqDTO todoReqDTO, TodoResDTO todoResDTO) {
+
+        //驳回情况下更新报表为草稿
+        if(CommonConstants.TWO_STRING.equals(todoReqDTO.getApprovalStatus())){
+            DailyReportReqDTO dailyReportReqDTO = new DailyReportReqDTO();
+            dailyReportReqDTO.setId(todoReqDTO.getReportId());
+            dailyReportReqDTO.setStatus(CommonConstants.ZERO_STRING);
+            dailyReportReqDTO.setUpdateBy(TokenUtils.getCurrentPersonId());
+            trafficReportMapper.modifyDaily(dailyReportReqDTO);
+        }
+
         // 标题
         String titlePrefix = todoResDTO.getTitle().replace("-请审批","").replace("-请查阅","");
         // 若属于第一个节点，需查询这三个节点下是否还存在未审批的待办，没有则可以流转到下一节点
@@ -301,6 +315,15 @@ public class WorkbenchServiceImpl implements WorkbenchService {
     @Transactional(rollbackFor = Exception.class)
     private void trafficWeeklyApproval(TodoReqDTO todoReqDTO, TodoResDTO todoResDTO) {
 
+        //驳回情况下更新报表为草稿
+        if(CommonConstants.TWO_STRING.equals(todoReqDTO.getApprovalStatus())){
+            WeeklyReportReqDTO weeklyReportReqDTO = new WeeklyReportReqDTO();
+            weeklyReportReqDTO.setId(todoReqDTO.getReportId());
+            weeklyReportReqDTO.setStatus(CommonConstants.ZERO_STRING);
+            weeklyReportReqDTO.setUpdateBy(TokenUtils.getCurrentPersonId());
+            trafficReportMapper.modifyWeekly(weeklyReportReqDTO);
+        }
+
         // 标题
         String titlePrefix = todoResDTO.getTitle().replace("-请审批","").replace("-请查阅","");
 
@@ -342,10 +365,24 @@ public class WorkbenchServiceImpl implements WorkbenchService {
             String goNextFlag = CommonConstants.ONE_STRING;
             for (WeeklyReportResDTO weekly : weeklyList) {
                 // 存在草稿、一级审核状态下，不流转
-                if (CommonConstants.ONE_STRING.equals(weekly.getStatus()) || CommonConstants.ZERO_STRING.equals(weekly.getStatus())) {
-                    goNextFlag = CommonConstants.ZERO_STRING;
-                    break;
+                if(!todoReqDTO.getReportId().equals(weekly.getId())){
+                    if("traffic_weekly_node3".equals(todoResDTO.getCurrentNode())){
+                        if(CommonConstants.TWO_STRING.equals(todoReqDTO.getApprovalStatus())){
+                            goNextFlag = CommonConstants.ZERO_STRING;
+                            break;
+                        }
+                        if (CommonConstants.THREE_STRING.equals(weekly.getStatus()) || CommonConstants.ZERO_STRING.equals(weekly.getStatus())) {
+                            goNextFlag = CommonConstants.ZERO_STRING;
+                            break;
+                        }
+                    }else{
+                        if (CommonConstants.ONE_STRING.equals(weekly.getStatus()) || CommonConstants.ZERO_STRING.equals(weekly.getStatus())) {
+                            goNextFlag = CommonConstants.ZERO_STRING;
+                            break;
+                        }
+                    }
                 }
+
             }
             // 子报表都审核完毕,流转下一节点
             if (goNextFlag.equals(CommonConstants.ONE_STRING)) {
@@ -360,13 +397,23 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                 }
                 // 节点流转
                 for (String user : nextUserList) {
-                    addTodo(DateUtil.formatDate(weeklyList.get(0).getStartDate()) + "-" + DateUtil.formatDate(weeklyList.get(0).getEndDate()) + title,
+                    String parentId = addTodo(DateUtil.formatDate(weeklyList.get(0).getStartDate()) + "-" + DateUtil.formatDate(weeklyList.get(0).getEndDate()) + title,
                             weeklyList.get(0).getParentId(),
                             CommonConstants.TRAFFIC_WEEKLY_REPORT,
                             nodeDetail.getNodeType(),
                             CommonConstants.DATA_TYPE_WEEKLY,
                             nodeDetail.getFlowId(),
                             nodeDetail.getNodeId(), user, CommonConstants.ZERO_STRING, null);
+
+                    //子报表审批
+                    if(nodeDetail.getNodeType().equals(CommonConstants.ONE_STRING)){
+                        for (WeeklyReportResDTO r : weeklyList) {
+                            addTodo(title, r.getId(), CommonConstants.TRAFFIC_WEEKLY_REPORT,
+                                    nodeDetail.getNodeType(), CommonConstants.DATA_TYPE_WEEKLY,
+                                    nodeDetail.getFlowId(), nodeDetail.getNodeId(),
+                                    user, CommonConstants.ONE_STRING, parentId);
+                        }
+                    }
                 }
             }
         }
@@ -379,6 +426,15 @@ public class WorkbenchServiceImpl implements WorkbenchService {
      */
     @Transactional(rollbackFor = Exception.class)
     private void trafficMonthlyApproval(TodoReqDTO todoReqDTO, TodoResDTO todoResDTO) {
+
+        //驳回情况下更新报表为草稿
+        if(CommonConstants.TWO_STRING.equals(todoReqDTO.getApprovalStatus())){
+            MonthlyReportReqDTO monthlyReportReqDTO = new MonthlyReportReqDTO();
+            monthlyReportReqDTO.setId(todoReqDTO.getReportId());
+            monthlyReportReqDTO.setStatus(CommonConstants.ZERO_STRING);
+            monthlyReportReqDTO.setUpdateBy(TokenUtils.getCurrentPersonId());
+            trafficReportMapper.modifyMonthly(monthlyReportReqDTO);
+        }
 
         // 标题
         String titlePrefix = todoResDTO.getTitle().replace("-请审批","").replace("-请查阅","");
@@ -421,9 +477,22 @@ public class WorkbenchServiceImpl implements WorkbenchService {
             String goNextFlag = CommonConstants.ONE_STRING;
             for (MonthlyReportResDTO monthly : monthlyList) {
                 // 存在草稿、一级审核状态下，不流转
-                if (CommonConstants.ONE_STRING.equals(monthly.getStatus()) || CommonConstants.ZERO_STRING.equals(monthly.getStatus())) {
-                    goNextFlag = CommonConstants.ZERO_STRING;
-                    break;
+                if(!todoReqDTO.getReportId().equals(monthly.getId())){
+                    if("traffic_weekly_node3".equals(todoResDTO.getCurrentNode())){
+                        if(CommonConstants.TWO_STRING.equals(todoReqDTO.getApprovalStatus())){
+                            goNextFlag = CommonConstants.ZERO_STRING;
+                            break;
+                        }
+                        if (CommonConstants.THREE_STRING.equals(monthly.getStatus()) || CommonConstants.ZERO_STRING.equals(monthly.getStatus())) {
+                            goNextFlag = CommonConstants.ZERO_STRING;
+                            break;
+                        }
+                    }else{
+                        if (CommonConstants.ONE_STRING.equals(monthly.getStatus()) || CommonConstants.ZERO_STRING.equals(monthly.getStatus())) {
+                            goNextFlag = CommonConstants.ZERO_STRING;
+                            break;
+                        }
+                    }
                 }
             }
             // 子报表都审核完毕,流转下一节点
@@ -439,13 +508,24 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                 }
                 // 节点流转
                 for (String user : nextUserList) {
-                    addTodo(DateUtil.formatDate(monthlyList.get(0).getStartDate()) + "-" + DateUtil.formatDate(monthlyList.get(0).getEndDate()) + title,
+                    String parentId = addTodo(DateUtil.formatDate(monthlyList.get(0).getStartDate()) + "-" + DateUtil.formatDate(monthlyList.get(0).getEndDate()) + title,
                             monthlyList.get(0).getParentId(),
                             CommonConstants.TRAFFIC_MONTHLY_REPORT,
                             nodeDetail.getNodeType(),
                             CommonConstants.DATA_TYPE_MONTHLY,
                             nodeDetail.getFlowId(),
                             nodeDetail.getNodeId(), user, CommonConstants.ZERO_STRING, null);
+
+                    //子报表审批
+                    if(nodeDetail.getNodeType().equals(CommonConstants.ONE_STRING)){
+                        for (MonthlyReportResDTO r : monthlyList) {
+                            addTodo(title, r.getId(), CommonConstants.TRAFFIC_MONTHLY_REPORT,
+                                    nodeDetail.getNodeType(), CommonConstants.DATA_TYPE_MONTHLY,
+                                    nodeDetail.getFlowId(), nodeDetail.getNodeId(),
+                                    user, CommonConstants.ONE_STRING, parentId);
+                        }
+                    }
+
                 }
             }
         }
@@ -464,7 +544,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
         List<TodoResDTO> subTodoList = workbenchMapper.queryTodoByParent(todoResDTO.getParentId());
         // 存在未完成的待办
         for (TodoResDTO todo : subTodoList) {
-            if (CommonConstants.ZERO_STRING.equals(todo.getStatus())) {
+            if (CommonConstants.ZERO_STRING.equals(todo.getStatus()) && !todo.getId().equals(todoReqDTO.getId())) {
                 modifyParenFlag = CommonConstants.ZERO_STRING;
                 break;
             }
@@ -490,6 +570,9 @@ public class WorkbenchServiceImpl implements WorkbenchService {
         modifyReq.setUpdateBy(TokenUtils.getCurrentPersonId());
         if (CommonConstants.ONE_STRING.equals(todoReqDTO.getApprovalStatus())) {
             modifyReq.setStatus(CommonConstants.THREE_STRING);
+            if("traffic_weekly_node3".equals(todoResDTO.getCurrentNode()) || "traffic_monthly_node3".equals(todoResDTO.getCurrentNode())){
+                modifyReq.setStatus(CommonConstants.FOUR_STRING);
+            }
         } else {
             modifyReq.setStatus(CommonConstants.ZERO_STRING);
         }

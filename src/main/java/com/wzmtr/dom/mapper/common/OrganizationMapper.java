@@ -86,6 +86,8 @@ public interface OrganizationMapper {
      */
     List<MemberResDTO> listUserByOffice(@Param("id") String id);
 
+    List<MemberResDTO> listUserByOfficeAndName(@Param("id") String id,@Param("name") String name);
+
     /**
      * 根据id查询组织机构名称
      * @param id id
