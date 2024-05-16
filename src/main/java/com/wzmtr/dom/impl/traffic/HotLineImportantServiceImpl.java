@@ -119,4 +119,8 @@ public class HotLineImportantServiceImpl implements HotLineImportantService {
         hotLineImportantMapper.autoModify(summaryDetail.getOther(),CommonConstants.NINE_STRING,dataType,startDate,endDate);
 
     }
+
+    public void autoModify1(String dataType,String startDate,String endDate){
+
+    }
 }
