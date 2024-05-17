@@ -1,6 +1,7 @@
 package com.wzmtr.dom.impl.traffic;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
@@ -110,9 +111,14 @@ public class HotLineSummaryServiceImpl implements HotLineSummaryService {
         incomeRecordDO.setVersion(String.valueOf(Integer.parseInt(now.getVersion()) + 1));
         hotLineSummaryMapper.updateById(incomeRecordDO);
 
-        //日报数据，更新周报/月报统计
+        //日报数据编辑后，更新周报/月报统计
         if(CommonConstants.DATA_TYPE_DAILY.equals(reqDTO.getDataType())){
+            hotLineImportantService.autoModify(reqDTO.getDataType(), DateUtil.formatDate(reqDTO.getStartDate()),
+                    DateUtil.formatDate(reqDTO.getEndDate()));
 
+            //hotLineImportantService
+            hotLineImportantService.autoModifyByDaily(reqDTO.getDataType(), DateUtil.formatDate(reqDTO.getStartDate()),
+                    DateUtil.formatDate(reqDTO.getEndDate()));
         }
     }
 

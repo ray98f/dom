@@ -245,7 +245,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
         List<DailyReportResDTO> dailyList = trafficReportMapper.queryDailyById(todoReqDTO.getReportId());
 
         if (nodes.contains(todoResDTO.getCurrentNode())) {
-            List<TodoResDTO> todoList = workbenchMapper.queryTodoByNode(todoReqDTO.getProcessKey(), todoReqDTO.getReportId(), nodes);
+            List<TodoResDTO> todoList = workbenchMapper.queryTodoByNodeForDaily(todoReqDTO.getProcessKey(), todoReqDTO.getReportId(), nodes);
             List<String> status = dailyList.stream().map(DailyReportResDTO::getStatus).collect(Collectors.toList());
             if ((Objects.isNull(todoList) || todoList.size() == 0) && !status.contains(CommonConstants.ZERO_STRING)) {
                 String nextNode = workbenchMapper.queryNextNode(todoResDTO.getCurrentNode());
@@ -273,15 +273,24 @@ public class WorkbenchServiceImpl implements WorkbenchService {
         } else {
             // 客运部报表子待办/主待办联动修改
             ReportUpdateReqDTO modifyReq = childTodoUpdate(todoReqDTO, todoResDTO);
-            // 获取各子报表
+
             String goNextFlag = CommonConstants.ONE_STRING;
-            for (DailyReportResDTO daily : dailyList) {
-                // 存在草稿、一级审核状态下，不流转
-                if (CommonConstants.ONE_STRING.equals(daily.getStatus()) || CommonConstants.ZERO_STRING.equals(daily.getStatus())) {
-                    goNextFlag = CommonConstants.ZERO_STRING;
-                    break;
+            if(CommonConstants.TWO_STRING.equals(todoReqDTO.getApprovalStatus())){
+                goNextFlag = CommonConstants.ZERO_STRING;
+            }else{
+                for (DailyReportResDTO daily : dailyList) {
+                    if(!todoResDTO.getReportId().equals(daily.getId())){
+                        // 存在草稿、一级审核状态下，不流转
+                        if (CommonConstants.ONE_STRING.equals(daily.getStatus())
+                                || CommonConstants.ZERO_STRING.equals(daily.getStatus())) {
+                            goNextFlag = CommonConstants.ZERO_STRING;
+                            break;
+                        }
+                    }
+
                 }
             }
+
             // 子报表都审核完毕,流转下一节点
             if (goNextFlag.equals(CommonConstants.ONE_STRING)) {
                 String nextNode = workbenchMapper.queryNextNode(todoResDTO.getCurrentNode());
@@ -333,7 +342,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
         List<WeeklyReportResDTO> weeklyList = trafficReportMapper.queryWeeklyById(todoReqDTO.getReportId());
 
         if (nodes.contains(todoResDTO.getCurrentNode())) {
-            List<TodoResDTO> todoList = workbenchMapper.queryTodoByNode(todoReqDTO.getProcessKey(), todoReqDTO.getReportId(), nodes);
+            List<TodoResDTO> todoList = workbenchMapper.queryTodoByNodeForWeekly(todoReqDTO.getProcessKey(), todoReqDTO.getReportId(), nodes);
             List<String> status = weeklyList.stream().map(WeeklyReportResDTO::getStatus).collect(Collectors.toList());
             if ((Objects.isNull(todoList) || todoList.size() == 0) && !status.contains(CommonConstants.ZERO_STRING)) {
                 String nextNode = workbenchMapper.queryNextNode(todoResDTO.getCurrentNode());
@@ -367,7 +376,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
             for (WeeklyReportResDTO weekly : weeklyList) {
                 // 存在草稿、一级审核状态下，不流转
                 if(!todoReqDTO.getReportId().equals(weekly.getId())){
-                    if("traffic_weekly_node3".equals(todoResDTO.getCurrentNode())){
+                    if(CommonConstants.TRAFFIC_WEEKLY_NODE3.equals(todoResDTO.getCurrentNode())){
                         if(CommonConstants.TWO_STRING.equals(todoReqDTO.getApprovalStatus())){
                             goNextFlag = CommonConstants.ZERO_STRING;
                             break;
@@ -450,7 +459,7 @@ public class WorkbenchServiceImpl implements WorkbenchService {
         List<MonthlyReportResDTO> monthlyList = trafficReportMapper.queryMonthlyById(todoReqDTO.getReportId());
 
         if (nodes.contains(todoResDTO.getCurrentNode())) {
-            List<TodoResDTO> todoList = workbenchMapper.queryTodoByNode(todoReqDTO.getProcessKey(), todoReqDTO.getReportId(), nodes);
+            List<TodoResDTO> todoList = workbenchMapper.queryTodoByNodeForMonthly(todoReqDTO.getProcessKey(), todoReqDTO.getReportId(), nodes);
             List<String> status = monthlyList.stream().map(MonthlyReportResDTO::getStatus).collect(Collectors.toList());
             if ((Objects.isNull(todoList) || todoList.size() == 0) && !status.contains(CommonConstants.ZERO_STRING)) {
                 String nextNode = workbenchMapper.queryNextNode(todoResDTO.getCurrentNode());
@@ -581,7 +590,8 @@ public class WorkbenchServiceImpl implements WorkbenchService {
         modifyReq.setUpdateBy(TokenUtils.getCurrentPersonId());
         if (CommonConstants.ONE_STRING.equals(todoReqDTO.getApprovalStatus())) {
             modifyReq.setStatus(CommonConstants.THREE_STRING);
-            if("traffic_weekly_node3".equals(todoResDTO.getCurrentNode()) || "traffic_monthly_node3".equals(todoResDTO.getCurrentNode())){
+            if(CommonConstants.TRAFFIC_WEEKLY_NODE3.equals(todoResDTO.getCurrentNode())
+                    || CommonConstants.TRAFFIC_MONTHLY_NODE3.equals(todoResDTO.getCurrentNode())){
                 modifyReq.setStatus(CommonConstants.FOUR_STRING);
             }
         } else {

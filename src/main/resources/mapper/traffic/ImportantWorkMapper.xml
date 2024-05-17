@@ -63,5 +63,15 @@
             UPDATE_DATE=sysdate
         WHERE ID=#{id} and VERSION=#{version}
     </update>
+    <update id="modify">
+        UPDATE TRAFFIC_IMPORTANT_WORK SET
+        <if test="remark != null">
+            REMARK=#{remark},
+        </if>
+        VERSION = VERSION+1,
+        UPDATE_BY=#{updateBy},
+        UPDATE_DATE=sysdate
+        WHERE ID=#{id} and VERSION=#{version}
+    </update>
 
 </mapper>
