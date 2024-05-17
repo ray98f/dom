@@ -73,7 +73,7 @@
         WHERE ah.DEL_FLAG='0'
         AND ah.STATUS='0'
         AND ah.PROCESS_KEY=#{processKey}
-<!-- TODO       AND ah.REPORT_ID IN (SELECT ID FROM TRAFFIC_WEEKLY_REPORT WHERE PARENT = (SELECT PARENT_ID FROM TRAFFIC_WEEKLY_REPORT WHERE ID = #{reportId}))-->
+        AND ah.REPORT_ID IN (SELECT ID FROM TRAFFIC_WEEKLY_REPORT WHERE PARENT = (SELECT PARENT_ID FROM TRAFFIC_WEEKLY_REPORT WHERE ID = #{reportId}))
         AND ah.CURRENT_NODE IN (
         <foreach collection="nodes" index="index" item="node" separator=",">
             #{node}
