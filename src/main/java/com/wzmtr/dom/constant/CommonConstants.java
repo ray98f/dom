@@ -192,12 +192,14 @@ public class CommonConstants {
     public static final String TRAFFIC_WEEKLY_NODE1_SUB1 ="traffic_weekly_node1_sub1";
     public static final String TRAFFIC_WEEKLY_NODE1_SUB2 ="traffic_weekly_node1_sub2";
     public static final String TRAFFIC_WEEKLY_NODE1_SUB3 ="traffic_weekly_node1_sub3";
+    public static final String TRAFFIC_WEEKLY_NODE3 ="traffic_weekly_node3";
 
     public static final String TRAFFIC_MONTHLY_REPORT = "TRAFFIC_MONTHLY_REPORT";
     public static final String[]  TRAFFIC_MONTHLY_NODE1_SUB = {"traffic_monthly_node1_sub1","traffic_monthly_node1_sub2","traffic_monthly_node1_sub3"};
     public static final String TRAFFIC_MONTHLY_NODE1_SUB1 ="traffic_monthly_node1_sub1";
     public static final String TRAFFIC_MONTHLY_NODE1_SUB2 ="traffic_monthly_node1_sub2";
     public static final String TRAFFIC_MONTHLY_NODE1_SUB3 ="traffic_monthly_node1_sub3";
+    public static final String TRAFFIC_MONTHLY_NODE3 ="traffic_monthly_node3";
 
     public static final String OPERATE_DAILY_REPORT = "OPERATE_DAILY_REPORT";
     public static final String OPERATE_WEEKLY_REPORT = "OPERATE_WEEKLY_REPORT";

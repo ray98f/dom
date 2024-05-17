@@ -120,7 +120,8 @@ public class HotLineImportantServiceImpl implements HotLineImportantService {
 
     }
 
-    public void autoModify1(String dataType,String startDate,String endDate){
+    @Override
+    public void autoModifyByDaily(String dataType,String startDate,String endDate){
 
     }
 }
