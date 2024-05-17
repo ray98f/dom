@@ -62,7 +62,7 @@
         )
     </select>
 
-    <select id="queryTodoByNode" resultType="com.wzmtr.dom.dto.res.system.TodoResDTO">
+    <select id="queryTodoByNodeForDaily" resultType="com.wzmtr.dom.dto.res.system.TodoResDTO">
         SELECT ah.ID, ah.PROCESS_KEY, ah.PARENT_PROCESS_KEY, ah.TODO_TYPE,
         ah.STATUS, ah.DATA_TYPE, ah.REPORT_ID, ah.REPORT_TABLE, ah.APPROVAL_USER,
         ah.APPROVAL_RESULT, ah.APPROVAL_STATUS, ah.VERSION, ah.CREATE_DATE, u.NAME AS CREATE_BY,
@@ -73,7 +73,45 @@
         WHERE ah.DEL_FLAG='0'
         AND ah.STATUS='0'
         AND ah.PROCESS_KEY=#{processKey}
-<!--        AND ah.REPORT_ID IN (SELECT ID FROM TRAFFIC_WEEKLY_REPORT WHERE PARENT)#{reportId}-->
+        AND ah.REPORT_ID IN (SELECT ID FROM TRAFFIC_DAILY_REPORT WHERE PARENT_ID = (SELECT PARENT_ID FROM TRAFFIC_DAILY_REPORT WHERE ID = #{reportId}))
+        AND ah.CURRENT_NODE IN (
+        <foreach collection="nodes" index="index" item="node" separator=",">
+            #{node}
+        </foreach>
+        )
+    </select>
+
+    <select id="queryTodoByNodeForWeekly" resultType="com.wzmtr.dom.dto.res.system.TodoResDTO">
+        SELECT ah.ID, ah.PROCESS_KEY, ah.PARENT_PROCESS_KEY, ah.TODO_TYPE,
+        ah.STATUS, ah.DATA_TYPE, ah.REPORT_ID, ah.REPORT_TABLE, ah.APPROVAL_USER,
+        ah.APPROVAL_RESULT, ah.APPROVAL_STATUS, ah.VERSION, ah.CREATE_DATE, u.NAME AS CREATE_BY,
+        ah.CURRENT_NODE,ah.TITLE,ah.IS_HIDE,ah.PARENT_ID,fn.NODE_NAME AS CURRENT_NODE_NAME
+        FROM DOM_APPROVAL_HISTORY ah
+        LEFT JOIN SYS_USER u on u.ID=ah.CREATE_BY
+        LEFT JOIN DOM_FLOW_NODE fn ON fn.NODE_ID=ah.CURRENT_NODE AND ah.PROCESS_KEY=fn.FLOW_ID AND fn.DEL_FLAG='0'
+        WHERE ah.DEL_FLAG='0'
+        AND ah.STATUS='0'
+        AND ah.PROCESS_KEY=#{processKey}
+        AND ah.REPORT_ID IN (SELECT ID FROM TRAFFIC_WEEKLY_REPORT WHERE PARENT_ID = (SELECT PARENT_ID FROM TRAFFIC_WEEKLY_REPORT WHERE ID = #{reportId}))
+        AND ah.CURRENT_NODE IN (
+        <foreach collection="nodes" index="index" item="node" separator=",">
+            #{node}
+        </foreach>
+        )
+    </select>
+
+    <select id="queryTodoByNodeForMonthly" resultType="com.wzmtr.dom.dto.res.system.TodoResDTO">
+        SELECT ah.ID, ah.PROCESS_KEY, ah.PARENT_PROCESS_KEY, ah.TODO_TYPE,
+        ah.STATUS, ah.DATA_TYPE, ah.REPORT_ID, ah.REPORT_TABLE, ah.APPROVAL_USER,
+        ah.APPROVAL_RESULT, ah.APPROVAL_STATUS, ah.VERSION, ah.CREATE_DATE, u.NAME AS CREATE_BY,
+        ah.CURRENT_NODE,ah.TITLE,ah.IS_HIDE,ah.PARENT_ID,fn.NODE_NAME AS CURRENT_NODE_NAME
+        FROM DOM_APPROVAL_HISTORY ah
+        LEFT JOIN SYS_USER u on u.ID=ah.CREATE_BY
+        LEFT JOIN DOM_FLOW_NODE fn ON fn.NODE_ID=ah.CURRENT_NODE AND ah.PROCESS_KEY=fn.FLOW_ID AND fn.DEL_FLAG='0'
+        WHERE ah.DEL_FLAG='0'
+        AND ah.STATUS='0'
+        AND ah.PROCESS_KEY=#{processKey}
+        AND ah.REPORT_ID IN (SELECT ID FROM TRAFFIC_MONTHLY_REPORT WHERE PARENT_ID = (SELECT PARENT_ID FROM TRAFFIC_MONTHLY_REPORT WHERE ID = #{reportId}))
         AND ah.CURRENT_NODE IN (
         <foreach collection="nodes" index="index" item="node" separator=",">
             #{node}

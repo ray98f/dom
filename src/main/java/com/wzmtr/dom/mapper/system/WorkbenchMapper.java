@@ -76,7 +76,25 @@ public interface WorkbenchMapper {
      * @param nodes 节点列表
      * @return 待办列表
      */
-    List<TodoResDTO> queryTodoByNode(String processKey, String reportId, List<String> nodes);
+    List<TodoResDTO> queryTodoByNodeForDaily(String processKey, String reportId, List<String> nodes);
+
+    /**
+     * 查询待办
+     * @param processKey 流程名
+     * @param reportId 报表id
+     * @param nodes 节点列表
+     * @return 待办列表
+     */
+    List<TodoResDTO> queryTodoByNodeForWeekly(String processKey, String reportId, List<String> nodes);
+
+    /**
+     * 查询待办
+     * @param processKey 流程名
+     * @param reportId 报表id
+     * @param nodes 节点列表
+     * @return 待办列表
+     */
+    List<TodoResDTO> queryTodoByNodeForMonthly(String processKey, String reportId, List<String> nodes);
 
     /**
      * 查询待办

@@ -119,6 +119,15 @@
         AND DATA_TYPE = #{dataType}
         AND START_DATE=to_date(#{startDate}, 'yyyy-mm-dd hh24:mi:ss')
         AND END_DATE=to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss')
+    </update>
 
+    <update id="autoModifyByDaily">
+        UPDATE TRAFFIC_HOTLINE_IMPORTANT SET
+        COUNT = #{count},
+        UPDATE_DATE=sysdate
+        WHERE HOTLINE_TYPE=#{hotlineType}
+        AND DATA_TYPE = #{dataType}
+        AND START_DATE=to_date(#{startDate}, 'yyyy-mm-dd hh24:mi:ss')
+        AND END_DATE=to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss')
     </update>
 </mapper>

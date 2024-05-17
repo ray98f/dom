@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.traffic.ProductionSummaryRecordReqDTO;
+import com.wzmtr.dom.dto.res.traffic.MonthSummaryResDTO;
 import com.wzmtr.dom.dto.res.traffic.ProductionSummaryResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
@@ -16,6 +17,8 @@ import com.wzmtr.dom.utils.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 客运部-安全生产情况汇总
@@ -34,6 +37,29 @@ public class ProductionSummaryServiceImpl implements ProductionSummaryService {
     public Page<ProductionSummaryResDTO> list(String dataType, String stationCode, String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         return productionSummaryMapper.list(pageReqDTO.of(), dataType, stationCode, startDate, endDate);
+    }
+
+    @Override
+    public MonthSummaryResDTO summaryByMonth(String dataType, String stationCode, String startDate, String endDate) {
+        List<ProductionSummaryResDTO> monthList = productionSummaryMapper.listAll(dataType, stationCode, startDate, endDate);
+        MonthSummaryResDTO res = productionSummaryMapper.summaryByMonth(dataType, stationCode, startDate, endDate);
+        for(ProductionSummaryResDTO p:monthList){
+            res.getType1Keyword().add(p.getType1Keyword());
+            res.getType1Desc().add(p.getType1Desc());
+            res.getType2Keyword().add(p.getType2Keyword());
+            res.getType2Desc().add(p.getType2Desc());
+            res.getType3Keyword().add(p.getType3Keyword());
+            res.getType3Desc().add(p.getType3Desc());
+            res.getType4Keyword().add(p.getType4Keyword());
+            res.getType4Desc().add(p.getType4Desc());
+            res.getType5Keyword().add(p.getType5Keyword());
+            res.getType5Desc().add(p.getType5Desc());
+            res.getType6Keyword().add(p.getType6Keyword());
+            res.getType6Desc().add(p.getType6Desc());
+        }
+
+
+        return res;
     }
 
     @Override
