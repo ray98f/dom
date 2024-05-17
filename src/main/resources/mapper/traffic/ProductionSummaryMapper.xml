@@ -19,6 +19,39 @@
         ORDER BY START_DATE desc
     </select>
 
+    <select id="listAll" resultType="com.wzmtr.dom.dto.res.traffic.ProductionSummaryResDTO">
+        SELECT *
+        FROM TRAFFIC_PRODUCTION_SUMMARY
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE=#{dataType}
+        <if test="stationCode!=null and stationCode!=''">
+            AND STATION_CODE=#{stationCode}
+        </if>
+        <if test="startDate!=null and startDate!=''">
+            AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        </if>
+        ORDER BY START_DATE desc
+    </select>
+
+    <select id="summaryByMonth" resultType="com.wzmtr.dom.dto.res.traffic.MonthSummaryResDTO">
+        SELECT
+        SUM(TYPE1_PRE_COUNT) AS TYPE1_PRE_COUNT,SUM(TYPE1_COUNT) AS TYPE1_COUNT,
+        SUM(TYPE2_PRE_COUNT) AS TYPE2_PRE_COUNT,SUM(TYPE2_COUNT) AS TYPE2_COUNT,
+        SUM(TYPE3_PRE_COUNT) AS TYPE3_PRE_COUNT,SUM(TYPE3_COUNT) AS TYPE3_COUNT,
+        SUM(TYPE4_PRE_COUNT) AS TYPE4_PRE_COUNT,SUM(TYPE4_COUNT) AS TYPE4_COUNT,
+        SUM(TYPE5_PRE_COUNT) AS TYPE5_PRE_COUNT,SUM(TYPE5_COUNT) AS TYPE5_COUNT,
+        SUM(TYPE6_PRE_COUNT) AS TYPE6_PRE_COUNT,SUM(TYPE6_COUNT) AS TYPE6_COUNT
+
+        FROM TRAFFIC_PRODUCTION_SUMMARY
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE = #{dataType}
+        AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+    </select>
+
     <select id="checkExist" resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM TRAFFIC_PRODUCTION_SUMMARY

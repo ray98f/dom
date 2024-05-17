@@ -2,9 +2,12 @@ package com.wzmtr.dom.service.traffic;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.traffic.ProductionSummaryRecordReqDTO;
+import com.wzmtr.dom.dto.res.traffic.MonthSummaryResDTO;
 import com.wzmtr.dom.dto.res.traffic.ProductionSummaryResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
+
+import java.util.List;
 
 /**
  * 客运部-安全生产情况汇总
@@ -25,6 +28,16 @@ public interface ProductionSummaryService {
      * @return 客流总体情况列表
      */
     Page<ProductionSummaryResDTO> list(String dataType,String stationCode, String startDate, String endDate, PageReqDTO pageReqDTO);
+
+    /**
+     * 安全生产情况月统计
+     * @param dataType 查询参数
+     * @param stationCode 查询参数
+     * @param startDate 查询参数
+     * @param endDate 查询参数
+     * @return 安全生产情况月统计
+     */
+    MonthSummaryResDTO summaryByMonth(String dataType, String stationCode, String startDate, String endDate);
 
     /**
      * 安全生产情况汇总-详情

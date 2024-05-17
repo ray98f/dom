@@ -4,10 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.traffic.PassengerInfoReqDTO;
 import com.wzmtr.dom.dto.req.traffic.PassengerRecordReqDTO;
 import com.wzmtr.dom.dto.req.traffic.ProductionSummaryRecordReqDTO;
-import com.wzmtr.dom.dto.res.traffic.PassengerDetailResDTO;
-import com.wzmtr.dom.dto.res.traffic.PassengerInfoResDTO;
-import com.wzmtr.dom.dto.res.traffic.PassengerResDTO;
-import com.wzmtr.dom.dto.res.traffic.ProductionSummaryResDTO;
+import com.wzmtr.dom.dto.res.traffic.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -34,6 +31,28 @@ public interface ProductionSummaryMapper {
      * @return 列表
      */
     Page<ProductionSummaryResDTO> list(Page<ProductionSummaryResDTO> page, String dataType, String stationCode,String startDate, String endDate);
+
+    /**
+     * 列表
+     * @param page 分页参数
+     * @param dataType 查询参数
+     * @param stationCode 查询参数
+     * @param startDate 查询参数
+     * @param endDate 查询参数
+     * @return 列表
+     */
+    List<ProductionSummaryResDTO> listAll(String dataType, String stationCode,String startDate, String endDate);
+
+
+    /**
+     * 列表
+     * @param dataType 查询参数
+     * @param stationCode 查询参数
+     * @param startDate 查询参数
+     * @param endDate 查询参数
+     * @return 列表
+     */
+    MonthSummaryResDTO summaryByMonth(String dataType, String stationCode,String startDate, String endDate);
 
     /**
      * 校验数据是否存在

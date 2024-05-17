@@ -218,7 +218,7 @@
     </update>
 
     <select id="eventPage" resultType="com.wzmtr.dom.dto.res.traffic.ProductionInfoResDTO">
-        SELECT t1.ID, t1.RECORD_ID,t1.STATION_CODE,t1.PRODUCTION_TYPE,t1.TITLE,t1.WORK_TIME,t1.WORK_TIME_END,t1.WORK_DEPT,t1.WORK_CONTENT,
+        SELECT t1.ID, t1.RECORD_ID,t1.STATION_CODE,t1.PRODUCTION_TYPE,t1.TITLE,t1.WORK_TIME,t1.WORK_TIME_END,t1.WORK_CODE,t1.WORK_DEPT,t1.WORK_CONTENT,
         t1.EVENT_TIME,t1.EVENT_DESC,t1.EVENT_AFFECT,t1.EVENT_HANDLE,t1.PIC_URL,t1.IS_CLOSE,t1.RESULT,t2.STATION_NAME,
         t1.DATA_TYPE,t1.VERSION
         FROM TRAFFIC_PRODUCTION_INFO t1
@@ -311,6 +311,9 @@
         <if test="workTimeEnd!=null and workTimeEnd!=''">
             WORK_TIME_END,
         </if>
+        <if test="workCode!=null and workCode!=''">
+            WORK_CODE,
+        </if>
         <if test="workDept!=null and workDept!=''">
             WORK_DEPT,
         </if>
@@ -352,6 +355,9 @@
         </if>
         <if test="workTimeEnd!=null and workTimeEnd!=''">
             to_date(#{workTimeEnd},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        <if test="workCode!=null and workCode!=''">
+            #{workCode},
         </if>
         <if test="workDept!=null and workDept!=''">
             #{workDept},
@@ -418,6 +424,9 @@
         </if>
         <if test="workTimeEnd!=null and workTimeEnd!=''">
             WORK_TIME_END=to_date(#{workTimeEnd},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        <if test="workCode!=null and workCode!=''">
+            WORK_CODE=#{workCode},
         </if>
         <if test="workDept!=null and workDept!=''">
             WORK_DEPT=#{workDept},

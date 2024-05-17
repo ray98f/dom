@@ -231,6 +231,24 @@ public interface TrafficReportMapper {
     void modifyMonthlyByFlow(ReportUpdateReqDTO reqDTO);
 
     /**
+     * 根据流程修改日报状态
+     * @param reqDTO 报表修改参数
+     */
+    void modifyDailyByChild(ReportUpdateReqDTO reqDTO);
+
+    /**
+     * 根据流程修改周报状态
+     * @param reqDTO 报表修改参数
+     */
+    void modifyWeeklyByChild(ReportUpdateReqDTO reqDTO);
+
+    /**
+     * 根据流程修改月报状态
+     * @param reqDTO 报表修改参数
+     */
+    void modifyMonthlyByChild(ReportUpdateReqDTO reqDTO);
+
+    /**
      * 获取最新日报
      * @return 获取最新日报
      */

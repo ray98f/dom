@@ -2,6 +2,7 @@ package com.wzmtr.dom.controller.traffic;
 
 import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.dto.req.traffic.ProductionSummaryRecordReqDTO;
+import com.wzmtr.dom.dto.res.traffic.MonthSummaryResDTO;
 import com.wzmtr.dom.dto.res.traffic.ProductionSummaryResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
@@ -16,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 客运部-安全生产情况汇总
@@ -48,6 +50,23 @@ public class ProductionSummaryController {
                                                       @RequestParam String dataType,
                                                       @Valid PageReqDTO pageReqDTO) {
         return PageResponse.of(productionSummaryService.list(dataType, currentLoginUser.getStationCode(), startDate, endDate, pageReqDTO));
+    }
+
+    /**
+     * 安全生产情况汇总-列表
+     * @param startDate  开始时间
+     * @param endDate    结束时间
+     * @param dataType   数据类型 1:日报 2:周报 3:月报
+     * @return 安全生产情况汇总-列表
+     */
+    @GetMapping("/summaryByMonth")
+    @ApiOperation(value = "安全生产情况月汇总")
+    public DataResponse<MonthSummaryResDTO> summaryByMonth(@CurrUser CurrentLoginUser currentLoginUser,
+                                          @RequestParam String startDate,
+                                          @RequestParam String endDate,
+                                          @RequestParam String dataType) {
+
+         return DataResponse.of(productionSummaryService.summaryByMonth(dataType, currentLoginUser.getStationCode(), startDate, endDate));
     }
 
     /**

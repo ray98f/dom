@@ -269,6 +269,13 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                         }
                     }
                 }
+
+                //更新主表为审批中1
+                ReportUpdateReqDTO reqDTO = new ReportUpdateReqDTO();
+                reqDTO.setId(todoReqDTO.getReportId());
+                reqDTO.setStatus(CommonConstants.ONE_STRING);
+                reqDTO.setUpdateBy(TokenUtils.getCurrentPersonId());
+                trafficReportMapper.modifyDailyByChild(reqDTO);
             }
         } else {
             // 客运部报表子待办/主待办联动修改
@@ -358,8 +365,11 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                             user, CommonConstants.ZERO_STRING, null);
                     // 判断子报表状态 为1审批中则发送待办
                     for (WeeklyReportResDTO r : weeklyList) {
-                        if(CommonConstants.ONE_STRING.equals(r.getStatus()) || (CommonConstants.THREE_STRING.equals(r.getStatus())
-                                && CommonConstants.TRAFFIC_WEEKLY_NODE3.equals(todoResDTO.getCurrentNode()))){
+                        if(CommonConstants.ONE_STRING.equals(r.getStatus())
+                                || (CommonConstants.THREE_STRING.equals(r.getStatus())
+                                && CommonConstants.TRAFFIC_WEEKLY_NODE3.equals(todoResDTO.getCurrentNode()))
+                                || (CommonConstants.THREE_STRING.equals(r.getStatus())
+                                && CommonConstants.TRAFFIC_WEEKLY_NODE2.equals(todoResDTO.getCurrentNode()))){
                             addTodo(title, r.getId(), CommonConstants.TRAFFIC_WEEKLY_REPORT,
                                     nodeDetail.getNodeType(), CommonConstants.DATA_TYPE_WEEKLY,
                                     nodeDetail.getFlowId(), nodeDetail.getNodeId(),
@@ -367,6 +377,13 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                         }
                     }
                 }
+
+                //更新主表为审批中1
+                ReportUpdateReqDTO reqDTO = new ReportUpdateReqDTO();
+                reqDTO.setId(todoReqDTO.getReportId());
+                reqDTO.setStatus(CommonConstants.ONE_STRING);
+                reqDTO.setUpdateBy(TokenUtils.getCurrentPersonId());
+                trafficReportMapper.modifyWeeklyByChild(reqDTO);
             }
         } else {
             // 客运部报表子待办/主待办联动修改
@@ -420,7 +437,9 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                         for (WeeklyReportResDTO r : weeklyList) {
                             if(CommonConstants.ONE_STRING.equals(r.getStatus())
                                     || (CommonConstants.THREE_STRING.equals(r.getStatus())
-                                    && CommonConstants.TRAFFIC_WEEKLY_NODE3.equals(todoResDTO.getCurrentNode()))){
+                                    && CommonConstants.TRAFFIC_WEEKLY_NODE3.equals(todoResDTO.getCurrentNode()))
+                                    || (CommonConstants.THREE_STRING.equals(r.getStatus())
+                                    && CommonConstants.TRAFFIC_WEEKLY_NODE2.equals(todoResDTO.getCurrentNode()))){
                                 addTodo(title, r.getId(), CommonConstants.TRAFFIC_WEEKLY_REPORT,
                                         nodeDetail.getNodeType(), CommonConstants.DATA_TYPE_WEEKLY,
                                         nodeDetail.getFlowId(), nodeDetail.getNodeId(),
@@ -477,7 +496,9 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                     for (MonthlyReportResDTO r : monthlyList) {
                         if(CommonConstants.ONE_STRING.equals(r.getStatus())
                                 || (CommonConstants.THREE_STRING.equals(r.getStatus())
-                                && CommonConstants.TRAFFIC_MONTHLY_NODE3.equals(todoResDTO.getCurrentNode()))){
+                                && CommonConstants.TRAFFIC_MONTHLY_NODE3.equals(todoResDTO.getCurrentNode()))
+                                || (CommonConstants.THREE_STRING.equals(r.getStatus())
+                                && CommonConstants.TRAFFIC_MONTHLY_NODE2.equals(todoResDTO.getCurrentNode()))){
                             addTodo(title, r.getId(), CommonConstants.TRAFFIC_MONTHLY_REPORT,
                                     nodeDetail.getNodeType(), CommonConstants.DATA_TYPE_MONTHLY,
                                     nodeDetail.getFlowId(), nodeDetail.getNodeId(),
@@ -485,32 +506,44 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                         }
                     }
                 }
+
+                //更新主表为审批中1
+                ReportUpdateReqDTO reqDTO = new ReportUpdateReqDTO();
+                reqDTO.setId(todoReqDTO.getReportId());
+                reqDTO.setStatus(CommonConstants.ONE_STRING);
+                reqDTO.setUpdateBy(TokenUtils.getCurrentPersonId());
+                trafficReportMapper.modifyMonthlyByChild(reqDTO);
             }
         } else {
             // 客运部月报子待办/主待办联动修改
             ReportUpdateReqDTO modifyReq = childTodoUpdate(todoReqDTO, todoResDTO);
             // 获取各子报表
             String goNextFlag = CommonConstants.ONE_STRING;
-            for (MonthlyReportResDTO monthly : monthlyList) {
-                // 存在草稿、一级审核状态下，不流转
-                if(!todoReqDTO.getReportId().equals(monthly.getId())){
-                    if("traffic_weekly_node3".equals(todoResDTO.getCurrentNode())){
-                        if(CommonConstants.TWO_STRING.equals(todoReqDTO.getApprovalStatus())){
-                            goNextFlag = CommonConstants.ZERO_STRING;
-                            break;
-                        }
-                        if (CommonConstants.THREE_STRING.equals(monthly.getStatus()) || CommonConstants.ZERO_STRING.equals(monthly.getStatus())) {
-                            goNextFlag = CommonConstants.ZERO_STRING;
-                            break;
-                        }
-                    }else{
-                        if (CommonConstants.ONE_STRING.equals(monthly.getStatus()) || CommonConstants.ZERO_STRING.equals(monthly.getStatus())) {
-                            goNextFlag = CommonConstants.ZERO_STRING;
-                            break;
+            if(CommonConstants.TWO_STRING.equals(todoReqDTO.getApprovalStatus())){
+                goNextFlag = CommonConstants.ZERO_STRING;
+            }else{
+                for (MonthlyReportResDTO monthly : monthlyList) {
+                    // 存在草稿、一级审核状态下，不流转
+                    if(!todoReqDTO.getReportId().equals(monthly.getId())){
+                        if(CommonConstants.TRAFFIC_MONTHLY_NODE3.equals(todoResDTO.getCurrentNode())){
+                            if(CommonConstants.TWO_STRING.equals(todoReqDTO.getApprovalStatus())){
+                                goNextFlag = CommonConstants.ZERO_STRING;
+                                break;
+                            }
+                            if (CommonConstants.THREE_STRING.equals(monthly.getStatus()) || CommonConstants.ZERO_STRING.equals(monthly.getStatus())) {
+                                goNextFlag = CommonConstants.ZERO_STRING;
+                                break;
+                            }
+                        }else{
+                            if (CommonConstants.ONE_STRING.equals(monthly.getStatus()) || CommonConstants.ZERO_STRING.equals(monthly.getStatus())) {
+                                goNextFlag = CommonConstants.ZERO_STRING;
+                                break;
+                            }
                         }
                     }
                 }
             }
+
             // 子报表都审核完毕,流转下一节点
             if (goNextFlag.equals(CommonConstants.ONE_STRING)) {
                 String nextNode = workbenchMapper.queryNextNode(todoResDTO.getCurrentNode());
@@ -537,7 +570,9 @@ public class WorkbenchServiceImpl implements WorkbenchService {
                         for (MonthlyReportResDTO r : monthlyList) {
                             if(CommonConstants.ONE_STRING.equals(r.getStatus())
                                     || (CommonConstants.THREE_STRING.equals(r.getStatus())
-                                    && CommonConstants.TRAFFIC_MONTHLY_NODE3.equals(todoResDTO.getCurrentNode()))){
+                                    && CommonConstants.TRAFFIC_MONTHLY_NODE3.equals(todoResDTO.getCurrentNode()))
+                                    || (CommonConstants.THREE_STRING.equals(r.getStatus())
+                                    && CommonConstants.TRAFFIC_MONTHLY_NODE2.equals(todoResDTO.getCurrentNode()))){
                                 addTodo(title, r.getId(), CommonConstants.TRAFFIC_MONTHLY_REPORT,
                                         nodeDetail.getNodeType(), CommonConstants.DATA_TYPE_MONTHLY,
                                         nodeDetail.getFlowId(), nodeDetail.getNodeId(),

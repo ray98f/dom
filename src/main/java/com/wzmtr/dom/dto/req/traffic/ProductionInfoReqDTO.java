@@ -55,6 +55,12 @@ public class ProductionInfoReqDTO extends BaseEntity {
     private String workTimeEnd;
 
     /**
+     * 施工作业代码
+     */
+    @ApiModelProperty(value = "施工作业代码")
+    private String workCode;
+
+    /**
      * 施工作业单位
      */
     @ApiModelProperty(value = "施工作业单位")

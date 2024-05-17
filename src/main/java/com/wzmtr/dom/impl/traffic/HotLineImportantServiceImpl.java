@@ -1,6 +1,7 @@
 package com.wzmtr.dom.impl.traffic;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.date.DateUtil;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dataobject.traffic.TrafficHotlineImportantDO;
 import com.wzmtr.dom.dataobject.traffic.TrafficHotlineSummaryDO;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -122,6 +124,13 @@ public class HotLineImportantServiceImpl implements HotLineImportantService {
 
     @Override
     public void autoModifyByDaily(String dataType,String startDate,String endDate){
+        //获取周 周一、周日
+        Date monday = DateUtil.beginOfWeek(DateUtil.parseDate(startDate));
+        Date sunday = DateUtil.endOfWeek(DateUtil.parseDate(endDate));
+        //更新周报
+        //hotLineImportantMapper.autoModifyByDaily();
 
+
+        //获取月 月初、月末
     }
 }
