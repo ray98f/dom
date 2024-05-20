@@ -84,38 +84,41 @@ public class WorkbenchServiceImpl implements WorkbenchService {
         todoReqDTO.setUpdateBy(TokenUtils.getCurrentPersonId());
         // 更新为已办
         workbenchMapper.todoApproval(todoReqDTO);
+
         // 相同阶段的待办删除
-//        if (StringUtils.isNotEmpty(todoReqDTO.getId()) && !todoReqDTO.getProcessKey().contains(CommonConstants.VEHICLE_CONTAINS)) {
-            workbenchMapper.sameStageTodoDelete(res, TokenUtils.getCurrentPersonId());
-//        }
+        workbenchMapper.sameStageTodoDelete(res, TokenUtils.getCurrentPersonId());
+
 
         // 根据流程名进行审核流程
-        switch (Objects.requireNonNull(BpmnFlowEnum.find(todoReqDTO.getProcessKey()))) {
-            // 车辆部报表
-            case vehicle_daily:
-            case vehicle_weekly:
-            case vehicle_monthly:
-                vehicleReportApproval(todoReqDTO, res);
-                break;
-            // 客运部报表
-            case traffic_daily:
-                trafficDailyApproval(todoReqDTO, res);
-                break;
-            case traffic_weekly:
-                trafficWeeklyApproval(todoReqDTO, res);
-                break;
-            case traffic_monthly:
-                trafficMonthlyApproval(todoReqDTO, res);
-                break;
-            // 运营报表
-            case operate_daily:
-            case operate_weekly:
-            case operate_monthly:
-                operateReportApproval(todoReqDTO, res);
-                break;
-            default:
-                break;
+        if(CommonConstants.ONE_STRING.equals(res.getTodoType())){
+            switch (Objects.requireNonNull(BpmnFlowEnum.find(todoReqDTO.getProcessKey()))) {
+                // 车辆部报表
+                case vehicle_daily:
+                case vehicle_weekly:
+                case vehicle_monthly:
+                    vehicleReportApproval(todoReqDTO, res);
+                    break;
+                // 客运部报表
+                case traffic_daily:
+                    trafficDailyApproval(todoReqDTO, res);
+                    break;
+                case traffic_weekly:
+                    trafficWeeklyApproval(todoReqDTO, res);
+                    break;
+                case traffic_monthly:
+                    trafficMonthlyApproval(todoReqDTO, res);
+                    break;
+                // 运营报表
+                case operate_daily:
+                case operate_weekly:
+                case operate_monthly:
+                    operateReportApproval(todoReqDTO, res);
+                    break;
+                default:
+                    break;
+            }
         }
+
     }
 
     @Override

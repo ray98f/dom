@@ -168,47 +168,47 @@ public class MonthSummaryResDTO extends BaseEntity {
     private List<String> type6Keyword;
 
     public List<String> getType1Desc() {
-        return type1Desc;
+        return Optional.ofNullable(type1Desc).orElse(new ArrayList<>());
     }
 
     public List<String> getType2Desc() {
-        return type2Desc;
+        return Optional.ofNullable(type2Desc).orElse(new ArrayList<>());
     }
 
     public List<String> getType3Desc() {
-        return type3Desc;
+        return Optional.ofNullable(type3Desc).orElse(new ArrayList<>());
     }
 
     public List<String> getType4Desc() {
-        return type4Desc;
+        return Optional.ofNullable(type4Desc).orElse(new ArrayList<>());
     }
 
     public List<String> getType5Desc() {
-        return type5Desc;
+        return Optional.ofNullable(type5Desc).orElse(new ArrayList<>());
     }
 
     public List<String> getType6Desc() {
-        return type6Desc;
+        return Optional.ofNullable(type6Desc).orElse(new ArrayList<>());
     }
 
     public List<String> getType1Keyword() {
-        return type1Keyword;
+        return Optional.ofNullable(type1Keyword).orElse(new ArrayList<>());
     }
 
     public List<String> getType2Keyword() {
-        return type2Keyword;
+        return Optional.ofNullable(type2Keyword).orElse(new ArrayList<>());
     }
 
     public List<String> getType3Keyword() {
-        return type3Keyword;
+        return Optional.ofNullable(type3Keyword).orElse(new ArrayList<>());
     }
 
     public List<String> getType4Keyword() {
-        return type4Keyword;
+        return Optional.ofNullable(type4Keyword).orElse(new ArrayList<>());
     }
 
     public List<String> getType5Keyword() {
-        return type5Keyword;
+        return Optional.ofNullable(type5Keyword).orElse(new ArrayList<>());
     }
 
     public List<String> getType6Keyword() {
