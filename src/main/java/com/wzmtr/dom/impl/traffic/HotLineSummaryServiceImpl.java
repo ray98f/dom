@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -113,6 +114,9 @@ public class HotLineSummaryServiceImpl implements HotLineSummaryService {
 
         //日报数据编辑后，更新周报/月报统计
         if(CommonConstants.DATA_TYPE_DAILY.equals(reqDTO.getDataType())){
+            autoModifyByDaily(reqDTO.getDataType(), DateUtil.formatDate(reqDTO.getStartDate()),
+                    DateUtil.formatDate(reqDTO.getEndDate()));
+
             hotLineImportantService.autoModify(reqDTO.getDataType(), DateUtil.formatDate(reqDTO.getStartDate()),
                     DateUtil.formatDate(reqDTO.getEndDate()));
 
@@ -147,6 +151,24 @@ public class HotLineSummaryServiceImpl implements HotLineSummaryService {
     @Override
     public HotLineSummaryDetailResDTO acc(SidReqDTO reqDTO) {
         return null;
+    }
+
+
+    @Override
+    public void autoModifyByDaily(String dataType, String startDate, String endDate) {
+        //获取周 周一、周日
+        Date monday = DateUtil.beginOfWeek(DateUtil.parseDate(startDate));
+        Date sunday = DateUtil.endOfWeek(DateUtil.parseDate(endDate));
+
+        //获取月 月初、月末
+        Date monthStart = DateUtil.beginOfMonth(DateUtil.parseDate(startDate));
+        Date monthEnd = DateUtil.endOfMonth(DateUtil.parseDate(startDate));
+
+        //更新周报
+        hotLineSummaryMapper.autoModifyByDaily(CommonConstants.DATA_TYPE_WEEKLY,DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
+
+        //更新月报
+        hotLineSummaryMapper.autoModifyByDaily(CommonConstants.DATA_TYPE_MONTHLY,DateUtil.formatDate(monthStart),DateUtil.formatDate(monthEnd));
     }
 
 

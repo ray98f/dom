@@ -30,16 +30,6 @@ public interface ProductionSummaryService {
     Page<ProductionSummaryResDTO> list(String dataType,String stationCode, String startDate, String endDate, PageReqDTO pageReqDTO);
 
     /**
-     * 安全生产情况月统计
-     * @param dataType 查询参数
-     * @param stationCode 查询参数
-     * @param startDate 查询参数
-     * @param endDate 查询参数
-     * @return 安全生产情况月统计
-     */
-    MonthSummaryResDTO summaryByMonth(String dataType, String stationCode, String startDate, String endDate);
-
-    /**
      * 安全生产情况汇总-详情
      * @return 客流总体情况-详情
      */

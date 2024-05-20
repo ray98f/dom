@@ -27,4 +27,12 @@ public interface HotLineSummaryService {
     Page<HotLineSummaryListResDTO> list(HotLineSummaryListReqDTO reqDTO);
 
     HotLineSummaryDetailResDTO acc(SidReqDTO reqDTO);
+
+    /**
+     * 自动更新(周报/月报)报表统计
+     * @param dataType 查询参数
+     * @param startDate 查询参数
+     * @param endDate 查询参数
+     */
+    void autoModifyByDaily(String dataType,String startDate,String endDate);
 }

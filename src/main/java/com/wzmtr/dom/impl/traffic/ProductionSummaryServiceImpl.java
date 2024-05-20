@@ -13,6 +13,7 @@ import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
 import com.wzmtr.dom.mapper.traffic.ProductionSummaryMapper;
 import com.wzmtr.dom.service.traffic.ProductionSummaryService;
+import com.wzmtr.dom.utils.StringUtils;
 import com.wzmtr.dom.utils.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,41 +42,6 @@ public class ProductionSummaryServiceImpl implements ProductionSummaryService {
         return productionSummaryMapper.list(pageReqDTO.of(), dataType, stationCode, startDate, endDate);
     }
 
-    @Override
-    public MonthSummaryResDTO summaryByMonth(String dataType, String stationCode, String startDate, String endDate) {
-        List<ProductionSummaryResDTO> monthList = productionSummaryMapper.listAll(dataType, stationCode, startDate, endDate);
-        MonthSummaryResDTO res = productionSummaryMapper.summaryByMonth(dataType, stationCode, startDate, endDate);
-        if(Objects.nonNull(res)){
-            List<String> listType1Keyword = res.getType1Keyword();
-            List<String> listType2Keyword = res.getType2Keyword();
-            List<String> listType3Keyword = res.getType3Keyword();
-            List<String> listType4Keyword = res.getType4Keyword();
-            List<String> listType5Keyword = res.getType5Keyword();
-            List<String> listType6Keyword = res.getType6Keyword();
-            List<String> listType1Desc = res.getType1Desc();
-            List<String> listType2Desc = res.getType2Desc();
-            List<String> listType3Desc = res.getType3Desc();
-            List<String> listType4Desc = res.getType4Desc();
-            List<String> listType5Desc = res.getType5Desc();
-            List<String> listType6Desc = res.getType6Desc();
-            for(ProductionSummaryResDTO p:monthList){
-                listType1Keyword.add(p.getType1Keyword());
-                listType1Desc.add(p.getType1Desc());
-                listType2Keyword.add(p.getType2Keyword());
-                listType2Desc.add(p.getType2Desc());
-                listType3Keyword.add(p.getType3Keyword());
-                listType3Desc.add(p.getType3Desc());
-                listType4Keyword.add(p.getType4Keyword());
-                listType4Desc.add(p.getType4Desc());
-                listType5Keyword.add(p.getType5Keyword());
-                listType5Desc.add(p.getType5Desc());
-                listType6Keyword.add(p.getType6Keyword());
-                listType6Desc.add(p.getType6Desc());
-            }
-        }
-        //res.setType1Keyword(listType1Keyword);
-        return res;
-    }
 
     @Override
     public ProductionSummaryResDTO detail(String recordId, String startDate, String endDate) {
@@ -141,4 +107,5 @@ public class ProductionSummaryServiceImpl implements ProductionSummaryService {
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
     }
+
 }

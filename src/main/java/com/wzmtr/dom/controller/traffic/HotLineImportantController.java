@@ -36,11 +36,7 @@ public class HotLineImportantController {
     private HotLineImportantService hotLineImportantService;
     @Autowired
     private HotLineSummaryService hotLineSummaryService;
-    // /** 直接调HotLineSummary 的list
-    //  * 重要热线内容-列表
-    //  *
-    //  * @return 重要热线内容
-    //  */
+
      @PostMapping("/list")
      @ApiOperation(value = "重要热线内容-列表")
      public PageResponse<HotLineSummaryListResDTO> page(@RequestBody HotLineSummaryListReqDTO reqDTO) {

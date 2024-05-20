@@ -124,7 +124,7 @@ public class HotLineHandoverController {
      * @return 成功
      */
     @PostMapping("/order/delete")
-    @ApiOperation(value = "删除调度命令详情")
+    @ApiOperation(value = "删除需转交其他部门做处理事项详情")
     public DataResponse<T> deleteOrder(@RequestBody BaseIdsEntity baseIdsEntity) {
         hotLineHandoverService.deleteOrder(baseIdsEntity.getIds());
         return DataResponse.success();
