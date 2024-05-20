@@ -18,7 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 客运部-安全生产情况汇总
@@ -43,22 +45,35 @@ public class ProductionSummaryServiceImpl implements ProductionSummaryService {
     public MonthSummaryResDTO summaryByMonth(String dataType, String stationCode, String startDate, String endDate) {
         List<ProductionSummaryResDTO> monthList = productionSummaryMapper.listAll(dataType, stationCode, startDate, endDate);
         MonthSummaryResDTO res = productionSummaryMapper.summaryByMonth(dataType, stationCode, startDate, endDate);
-        for(ProductionSummaryResDTO p:monthList){
-            res.getType1Keyword().add(p.getType1Keyword());
-            res.getType1Desc().add(p.getType1Desc());
-            res.getType2Keyword().add(p.getType2Keyword());
-            res.getType2Desc().add(p.getType2Desc());
-            res.getType3Keyword().add(p.getType3Keyword());
-            res.getType3Desc().add(p.getType3Desc());
-            res.getType4Keyword().add(p.getType4Keyword());
-            res.getType4Desc().add(p.getType4Desc());
-            res.getType5Keyword().add(p.getType5Keyword());
-            res.getType5Desc().add(p.getType5Desc());
-            res.getType6Keyword().add(p.getType6Keyword());
-            res.getType6Desc().add(p.getType6Desc());
+        if(Objects.nonNull(res)){
+            List<String> listType1Keyword = res.getType1Keyword();
+            List<String> listType2Keyword = res.getType2Keyword();
+            List<String> listType3Keyword = res.getType3Keyword();
+            List<String> listType4Keyword = res.getType4Keyword();
+            List<String> listType5Keyword = res.getType5Keyword();
+            List<String> listType6Keyword = res.getType6Keyword();
+            List<String> listType1Desc = res.getType1Desc();
+            List<String> listType2Desc = res.getType2Desc();
+            List<String> listType3Desc = res.getType3Desc();
+            List<String> listType4Desc = res.getType4Desc();
+            List<String> listType5Desc = res.getType5Desc();
+            List<String> listType6Desc = res.getType6Desc();
+            for(ProductionSummaryResDTO p:monthList){
+                listType1Keyword.add(p.getType1Keyword());
+                listType1Desc.add(p.getType1Desc());
+                listType2Keyword.add(p.getType2Keyword());
+                listType2Desc.add(p.getType2Desc());
+                listType3Keyword.add(p.getType3Keyword());
+                listType3Desc.add(p.getType3Desc());
+                listType4Keyword.add(p.getType4Keyword());
+                listType4Desc.add(p.getType4Desc());
+                listType5Keyword.add(p.getType5Keyword());
+                listType5Desc.add(p.getType5Desc());
+                listType6Keyword.add(p.getType6Keyword());
+                listType6Desc.add(p.getType6Desc());
+            }
         }
-
-
+        //res.setType1Keyword(listType1Keyword);
         return res;
     }
 
