@@ -192,5 +192,21 @@
         WHERE ID=#{id} and VERSION=#{version}
     </update>
 
+    <update id="autoModify">
+        <if test="stationCode!=null and stationCode!=''">
+            UPDATE TRAFFIC_PRODUCTION_SUMMARY SET
+            TYPE1_PRE_COUNT = (SELECT TYPE1_PRE_COUNT FROM TRAFFIC_PRODUCTION_SUMMARY WHERE DEL_FLAG ='0' AND STATION_CODE=#{stationCode} AND DATA_TYPE=#{dataType} AND START_DATE=(to_date(#{startDate}, 'yyyy-mm-dd hh24:mi:ss') -1) AND END_DATE=(to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss') -1)),
+
+            UPDATE_DATE=sysdate
+            WHERE DEL_FLAG ='0'
+            AND STATION_CODE=#{stationCode}
+            AND DATA_TYPE=#{dataType}
+            AND START_DATE=to_date(#{startDate}, 'yyyy-mm-dd hh24:mi:ss')
+            AND END_DATE=to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="stationCode==null">
+
+        </if>
+    </update>
 
 </mapper>

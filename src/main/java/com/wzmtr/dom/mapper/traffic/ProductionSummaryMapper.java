@@ -103,4 +103,13 @@ public interface ProductionSummaryMapper {
      */
     int modify(ProductionSummaryRecordReqDTO productionSummaryRecordReqDTO);
 
+    /**
+     * 更新数据
+     * @param stationCode 入参数
+     * @param dataType 入参数
+     * @param startDate 入参数
+     * @param endDate 入参数
+     */
+    void autoModify(String stationCode,String dataType, String startDate, String endDate);
+
 }

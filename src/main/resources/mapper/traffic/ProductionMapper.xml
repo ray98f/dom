@@ -40,7 +40,9 @@
         FROM TRAFFIC_PRODUCTION_RECORD
         WHERE DEL_FLAG='0'
         AND DATA_TYPE=#{dataType}
-        AND STATION_CODE=#{stationCode}
+        <if test="stationCode!=null and stationCode！=''">
+            AND STATION_CODE=#{stationCode}
+        </if>
         <if test="startDate!=null">
             AND START_DATE=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>

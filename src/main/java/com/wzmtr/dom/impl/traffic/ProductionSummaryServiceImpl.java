@@ -65,10 +65,21 @@ public class ProductionSummaryServiceImpl implements ProductionSummaryService {
         if (currentLoginUser.getStationCode() == null) {
             throw new CommonException(ErrorCode.USER_NOT_BIND_STATION);
         }
-        int existFlag = productionSummaryMapper.checkExist(productionSummaryRecordReqDTO.getDataType(),
-                currentLoginUser.getStationCode(),
-                productionSummaryRecordReqDTO.getStartDate(),
-                productionSummaryRecordReqDTO.getEndDate());
+
+        //日报按车站检索
+        int existFlag = 0;
+        if(CommonConstants.DATA_TYPE_DAILY.equals(productionSummaryRecordReqDTO.getDataType())){
+            existFlag = productionSummaryMapper.checkExist(productionSummaryRecordReqDTO.getDataType(),
+                    currentLoginUser.getStationCode(),
+                    productionSummaryRecordReqDTO.getStartDate(),
+                    productionSummaryRecordReqDTO.getEndDate());
+            productionSummaryRecordReqDTO.setStationCode(currentLoginUser.getStationCode());
+        }else{
+            existFlag = productionSummaryMapper.checkExist(productionSummaryRecordReqDTO.getDataType(),
+                    null,
+                    productionSummaryRecordReqDTO.getStartDate(),
+                    productionSummaryRecordReqDTO.getEndDate());
+        }
         if (existFlag > 0) {
             throw new CommonException(ErrorCode.DATA_EXIST);
         }
@@ -80,11 +91,9 @@ public class ProductionSummaryServiceImpl implements ProductionSummaryService {
             if (!productionSummaryRecordReqDTO.getStartDate().equals(productionSummaryRecordReqDTO.getEndDate())) {
                 throw new CommonException(ErrorCode.DATE_ERROR);
             }
-
             productionSummaryRecordReqDTO.setDataDate(productionSummaryRecordReqDTO.getStartDate());
         }
 
-        productionSummaryRecordReqDTO.setStationCode(currentLoginUser.getStationCode());
         productionSummaryRecordReqDTO.setCreateBy(currentLoginUser.getPersonId());
         productionSummaryRecordReqDTO.setUpdateBy(currentLoginUser.getPersonId());
         productionSummaryRecordReqDTO.setId(TokenUtils.getUuId());
@@ -107,5 +116,11 @@ public class ProductionSummaryServiceImpl implements ProductionSummaryService {
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
     }
+
+    @Override
+    public void autoModify(String stationCode,String dataType, String startDate, String endDate) {
+
+    }
+
 
 }

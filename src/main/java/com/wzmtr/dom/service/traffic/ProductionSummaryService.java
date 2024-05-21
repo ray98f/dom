@@ -49,4 +49,12 @@ public interface ProductionSummaryService {
      */
     void modify(CurrentLoginUser currentLoginUser, ProductionSummaryRecordReqDTO productionSummaryRecordReqDTO);
 
+    /**
+     * 周报/月报数据更新
+     * @param dataType 查询参数
+     * @param startDate 查询参数
+     * @param endDate 查询参数
+     * @return 周报/月报数据更新
+     */
+    void autoModify(String stationCode,String dataType, String startDate, String endDate);
 }
