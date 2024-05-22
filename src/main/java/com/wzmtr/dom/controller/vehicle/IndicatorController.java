@@ -58,6 +58,8 @@ public class IndicatorController {
         System.out.println(DateUtil.formatDate(sunday));
         System.out.println(DateUtil.formatDate(monthStart));
         System.out.println(DateUtil.formatDate(monthEnd));
+        System.out.println(DateUtil.compare(monday,sunday));
+
 
         List<ProductionSummaryResDTO> monthList = new ArrayList<>();
         for(int i =0;i<10;i++){

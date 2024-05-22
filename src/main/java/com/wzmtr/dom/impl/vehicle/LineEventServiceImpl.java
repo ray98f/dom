@@ -3,6 +3,7 @@ package com.wzmtr.dom.impl.vehicle;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
+import com.oracle.jrockit.jfr.EventInfo;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.vehicle.LineEventInfoReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.LineEventRecordReqDTO;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -100,7 +102,14 @@ public class LineEventServiceImpl implements LineEventService {
         }
 
         //更新事件统计
-        updateSummaryCount(lineEventInfoReqDTO.getStartDate(),lineEventInfoReqDTO.getEndDate());
+        //updateSummaryCount(lineEventInfoReqDTO.getStartDate(),lineEventInfoReqDTO.getEndDate());
+        if(CommonConstants.DATA_TYPE_DAILY.equals(lineEventInfoReqDTO.getDataType())){
+            autoModifyByDaily(CommonConstants.DATA_TYPE_DAILY,lineEventInfoReqDTO.getStartDate()
+                    ,lineEventInfoReqDTO.getEndDate());
+        }else{
+            autoModify(CommonConstants.DATA_TYPE_DAILY,lineEventInfoReqDTO.getStartDate()
+                    ,lineEventInfoReqDTO.getEndDate());
+        }
     }
 
     @Override
@@ -112,11 +121,18 @@ public class LineEventServiceImpl implements LineEventService {
         }
 
         //更新事件统计
-        List<String> ids = new ArrayList<>();
-        ids.add(lineEventInfoReqDTO.getId());
-        LineEventInfoResDTO eventInfo = lineEventMapper.queryDateRange(ids);
-        updateSummaryCount(DateUtil.formatDate(eventInfo.getStartDate()),DateUtil.formatDate(eventInfo.getEndDate()));
 
+        //List<String> ids = new ArrayList<>();
+        //ids.add(lineEventInfoReqDTO.getId());
+        //LineEventInfoResDTO eventInfo = lineEventMapper.queryDateRange(ids);
+        //updateSummaryCount(DateUtil.formatDate(eventInfo.getStartDate()),DateUtil.formatDate(eventInfo.getEndDate()));
+        if(CommonConstants.DATA_TYPE_DAILY.equals(lineEventInfoReqDTO.getDataType())){
+            autoModifyByDaily(CommonConstants.DATA_TYPE_DAILY,lineEventInfoReqDTO.getStartDate()
+                    ,lineEventInfoReqDTO.getEndDate());
+        }else{
+            autoModify(CommonConstants.DATA_TYPE_DAILY,lineEventInfoReqDTO.getStartDate()
+                    ,lineEventInfoReqDTO.getEndDate());
+        }
     }
 
     @Override
@@ -130,8 +146,31 @@ public class LineEventServiceImpl implements LineEventService {
             }
 
             //更新事件统计
-            updateSummaryCount(DateUtil.formatDate(eventInfo.getStartDate()),DateUtil.formatDate(eventInfo.getEndDate()));
+            //updateSummaryCount(DateUtil.formatDate(eventInfo.getStartDate()),DateUtil.formatDate(eventInfo.getEndDate()));
+            //TODO 先默认只在日报界面删除数据
+            autoModifyByDaily(CommonConstants.DATA_TYPE_DAILY,DateUtil.formatDate(eventInfo.getStartDate())
+                    ,DateUtil.formatDate(eventInfo.getEndDate()));
         }
+    }
+
+    @Override
+    public void autoModify(String dataType, String startDate, String endDate) {
+        lineEventMapper.autoModify(dataType,startDate,endDate);
+    }
+
+    @Override
+    public void autoModifyByDaily(String dataType, String startDate, String endDate) {
+        lineEventMapper.autoModify(dataType,startDate,endDate);
+
+        //获取周 周一、周日
+        Date monday = DateUtil.beginOfWeek(DateUtil.parseDate(startDate));
+        Date sunday = DateUtil.endOfWeek(DateUtil.parseDate(startDate));
+        lineEventMapper.autoModify(CommonConstants.DATA_TYPE_WEEKLY,DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
+
+        //获取月 月初、月末
+        Date monthStart = DateUtil.beginOfMonth(DateUtil.parseDate(startDate));
+        Date monthEnd = DateUtil.endOfMonth(DateUtil.parseDate(startDate));
+        lineEventMapper.autoModify(CommonConstants.DATA_TYPE_MONTHLY,DateUtil.formatDate(monthStart),DateUtil.formatDate(monthEnd));
     }
 
     /**

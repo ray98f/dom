@@ -33,12 +33,12 @@ public interface DispatchMapper {
     /**
      * 获取调度命令详情列表
      * @param page 分页参数
-     * @param id 记录id
+     * @param dataType 记录id
      * @param startDate 开始时间
      * @param endDate 结束时间
      * @return 调度命令详情列表
      */
-    Page<DispatchOrderResDTO> pageOrder(Page<DispatchOrderResDTO> page, String id, String startDate, String endDate);
+    Page<DispatchOrderResDTO> pageOrder(Page<DispatchOrderResDTO> page, String dataType, String startDate, String endDate);
 
     List<DispatchOrderResDTO> orderList(String recordId, String dataType, String startDate, String endDate);
 
@@ -52,11 +52,23 @@ public interface DispatchMapper {
     List<String> orderIds( String id, String startDate, String endDate);
 
     /**
+     * 删除调度命令详情列表
+     * @param id 记录id
+     * @param startDate 开始时间
+     * @param endDate 结束时间
+     * @return 删除调度命令详情列表
+     */
+    void deleteOrder(String id, String startDate, String endDate);
+
+    /**
      * 根据id获取调度命令记录
      * @param id id
+     * @param dataType 入参数
+     * @param startDate 入参数
+     * @param endDate 入参数
      * @return 调度命令记录
      */
-    DispatchRecordResDTO getRecordDetail(String id);
+    DispatchRecordResDTO getRecordDetail(String id,String dataType,String startDate,String endDate);
 
     /**
      * 根据id获取调度命令详情
@@ -119,4 +131,20 @@ public interface DispatchMapper {
      * @param userId 用户id
      */
     void deleteOrder(List<String> recordIds, List<String> ids, String userId);
+
+    /**
+     * 更新统计数据
+     * @param dataType dataType
+     * @param startDate startDate
+     * @param endDate endDate
+     */
+    void autoModify(String dataType,String startDate,String endDate);
+
+    /**
+     * 更新统计数据
+     * @param dataType dataType
+     * @param startDate startDate
+     * @param endDate endDate
+     */
+    void autoModifyByDaily(String dataType,String startDate,String endDate);
 }

@@ -112,4 +112,11 @@ public interface ProductionSummaryMapper {
      */
     void autoModify(String stationCode,String dataType, String startDate, String endDate);
 
+    /**
+     * 更新数据
+     * @param dataType 入参数
+     * @param startDate 入参数
+     * @param endDate 入参数
+     */
+    void autoModifyByDaily(String dataType, String startDate, String endDate);
 }

@@ -40,7 +40,7 @@ public class DispatchRecordReqDTO extends BaseEntity {
      * 数据类型 1:日报 2:周报 3:月报
      */
     @ApiModelProperty(value = "数据类型 1:日报 2:周报 3:月报")
-    private Integer dataType;
+    private String dataType;
 
     /**
      * 数据起始日期

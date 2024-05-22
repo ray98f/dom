@@ -72,10 +72,10 @@ public class IndicatorServiceImpl implements IndicatorService {
         }
 
         //周报/月报数据统计
-        if(CommonConstants.DATA_TYPE_WEEKLY.equals(indicatorReqDTO.getDataType())
-                || CommonConstants.DATA_TYPE_MONTHLY.equals(indicatorReqDTO.getDataType())){
-            updateRecordCount(indicatorReqDTO.getId(),indicatorReqDTO.getStartDate(),indicatorReqDTO.getEndDate());
-        }
+//        if(CommonConstants.DATA_TYPE_WEEKLY.equals(indicatorReqDTO.getDataType())
+//                || CommonConstants.DATA_TYPE_MONTHLY.equals(indicatorReqDTO.getDataType())){
+//            updateRecordCount(indicatorReqDTO.getId(),indicatorReqDTO.getStartDate(),indicatorReqDTO.getEndDate());
+//        }
     }
 
     @Override
@@ -89,7 +89,6 @@ public class IndicatorServiceImpl implements IndicatorService {
 
         //日报情况下，更新周报/月报统计数据
         if(CommonConstants.ONE_STRING.equals(indicator.getDataType())){
-            //TODO
             Date dataDate = indicator.getDataDate();
             Date monday = DateUtil.beginOfWeek(dataDate);
             Date sunday = DateUtil.endOfWeek(dataDate);
@@ -106,6 +105,29 @@ public class IndicatorServiceImpl implements IndicatorService {
         if (StringUtils.isNotEmpty(ids)) {
             indicatorMapper.delete(ids, TokenUtils.getCurrentPersonId());
         }
+    }
+
+    @Override
+    public void autoModify(String dataType, String startDate, String endDate) {
+
+    }
+
+    @Override
+    public void autoModifyByDaily(String dataType, String startDate, String endDate) {
+
+        indicatorMapper.autoModifyByDaily(dataType,startDate,endDate);
+
+        //获取周 周一、周日
+        Date monday = DateUtil.beginOfWeek(DateUtil.parseDate(startDate));
+        Date sunday = DateUtil.endOfWeek(DateUtil.parseDate(startDate));
+
+        indicatorMapper.autoModifyByDaily(CommonConstants.DATA_TYPE_WEEKLY,DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
+
+        //获取月 月初、月末
+        Date monthStart = DateUtil.beginOfMonth(DateUtil.parseDate(startDate));
+        Date monthEnd = DateUtil.endOfMonth(DateUtil.parseDate(startDate));
+
+        indicatorMapper.autoModifyByDaily(CommonConstants.DATA_TYPE_MONTHLY,DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
     }
 
     /**

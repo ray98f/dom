@@ -195,8 +195,21 @@
     <update id="autoModify">
         <if test="stationCode!=null and stationCode!=''">
             UPDATE TRAFFIC_PRODUCTION_SUMMARY SET
-            TYPE1_PRE_COUNT = (SELECT TYPE1_PRE_COUNT FROM TRAFFIC_PRODUCTION_SUMMARY WHERE DEL_FLAG ='0' AND STATION_CODE=#{stationCode} AND DATA_TYPE=#{dataType} AND START_DATE=(to_date(#{startDate}, 'yyyy-mm-dd hh24:mi:ss') -1) AND END_DATE=(to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss') -1)),
-
+            (TYPE1_PRE_COUNT,TYPE2_PRE_COUNT,TYPE3_PRE_COUNT,TYPE4_PRE_COUNT,TYPE5_PRE_COUNT,TYPE6_PRE_COUNT) =
+            (SELECT
+                CASE WHEN t0.TYPE1_COUNT IS NULL then 0 ELSE t0.TYPE1_COUNT END AS TYPE1_PRE_COUNT,
+                CASE WHEN t0.TYPE2_COUNT IS NULL then 0 ELSE t0.TYPE2_COUNT END AS TYPE2_PRE_COUNT,
+                CASE WHEN t0.TYPE3_COUNT IS NULL then 0 ELSE t0.TYPE3_COUNT END AS TYPE3_PRE_COUNT,
+                CASE WHEN t0.TYPE4_COUNT IS NULL then 0 ELSE t0.TYPE4_COUNT END AS TYPE4_PRE_COUNT,
+                CASE WHEN t0.TYPE5_COUNT IS NULL then 0 ELSE t0.TYPE5_COUNT END AS TYPE5_PRE_COUNT,
+                CASE WHEN t0.TYPE6_COUNT IS NULL then 0 ELSE t0.TYPE6_COUNT END AS TYPE6_PRE_COUNT
+            FROM (SELECT TYPE1_COUNT,TYPE2_COUNT,TYPE3_COUNT,TYPE4_COUNT,TYPE5_COUNT,TYPE6_COUNT
+                  FROM TRAFFIC_PRODUCTION_SUMMARY
+                  WHERE DEL_FLAG ='0' AND STATION_CODE=#{stationCode}
+                  AND DATA_TYPE=#{dataType} AND START_DATE=(to_date(#{startDate}, 'yyyy-mm-dd hh24:mi:ss') -1)
+                  AND END_DATE=(to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss') -1)
+                )
+            t0),
             UPDATE_DATE=sysdate
             WHERE DEL_FLAG ='0'
             AND STATION_CODE=#{stationCode}
@@ -204,9 +217,87 @@
             AND START_DATE=to_date(#{startDate}, 'yyyy-mm-dd hh24:mi:ss')
             AND END_DATE=to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss')
         </if>
-        <if test="stationCode==null">
-
+        <if test="stationCode==null and dataType=='2'">
+            UPDATE TRAFFIC_PRODUCTION_SUMMARY SET
+            (TYPE1_PRE_COUNT,TYPE2_PRE_COUNT,TYPE3_PRE_COUNT,TYPE4_PRE_COUNT,TYPE5_PRE_COUNT,TYPE6_PRE_COUNT) =
+            (SELECT
+            CASE WHEN t0.TYPE1_COUNT IS NULL then 0 ELSE t0.TYPE1_COUNT END AS TYPE1_PRE_COUNT,
+            CASE WHEN t0.TYPE2_COUNT IS NULL then 0 ELSE t0.TYPE2_COUNT END AS TYPE2_PRE_COUNT,
+            CASE WHEN t0.TYPE3_COUNT IS NULL then 0 ELSE t0.TYPE3_COUNT END AS TYPE3_PRE_COUNT,
+            CASE WHEN t0.TYPE4_COUNT IS NULL then 0 ELSE t0.TYPE4_COUNT END AS TYPE4_PRE_COUNT,
+            CASE WHEN t0.TYPE5_COUNT IS NULL then 0 ELSE t0.TYPE5_COUNT END AS TYPE5_PRE_COUNT,
+            CASE WHEN t0.TYPE6_COUNT IS NULL then 0 ELSE t0.TYPE6_COUNT END AS TYPE6_PRE_COUNT
+            FROM (SELECT TYPE1_COUNT,TYPE2_COUNT,TYPE3_COUNT,TYPE4_COUNT,TYPE5_COUNT,TYPE6_COUNT
+            FROM TRAFFIC_PRODUCTION_SUMMARY
+            WHERE DEL_FLAG ='0' AND DATA_TYPE=#{dataType}
+            AND START_DATE=(to_date(#{startDate}, 'yyyy-mm-dd hh24:mi:ss') -7)
+            AND END_DATE=(to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss') -7))
+            t0),
+            (TYPE1_COUNT,TYPE2_COUNT,TYPE3_COUNT,TYPE4_COUNT,TYPE5_COUNT,TYPE6_COUNT) =
+            (SELECT
+            SUM(TYPE1_COUNT) AS TYPE1_COUNT,
+            SUM(TYPE2_COUNT) AS TYPE2_COUNT,
+            SUM(TYPE3_COUNT) AS TYPE3_COUNT,
+            SUM(TYPE4_COUNT) AS TYPE4_COUNT,
+            SUM(TYPE5_COUNT) AS TYPE5_COUNT,
+            SUM(TYPE6_COUNT) AS TYPE6_COUNT
+            FROM TRAFFIC_PRODUCTION_SUMMARY
+            WHERE DEL_FLAG ='0' AND DATA_TYPE='1'
+            AND START_DATE >=to_date(#{startDate}, 'yyyy-mm-dd hh24:mi:ss')
+            AND to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss') >= END_DATE
+            ),
+            UPDATE_DATE=sysdate
+            WHERE DEL_FLAG ='0'
+            AND DATA_TYPE=#{dataType}
+            AND START_DATE=to_date(#{startDate}, 'yyyy-mm-dd hh24:mi:ss')
+            AND END_DATE=to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="stationCode==null and dataType=='3'">
+            UPDATE TRAFFIC_PRODUCTION_SUMMARY SET
+            (TYPE1_PRE_COUNT,TYPE2_PRE_COUNT,TYPE3_PRE_COUNT,TYPE4_PRE_COUNT,TYPE5_PRE_COUNT,TYPE6_PRE_COUNT) =
+            (SELECT
+            CASE WHEN t0.TYPE1_COUNT IS NULL then 0 ELSE t0.TYPE1_COUNT END AS TYPE1_PRE_COUNT,
+            CASE WHEN t0.TYPE2_COUNT IS NULL then 0 ELSE t0.TYPE2_COUNT END AS TYPE2_PRE_COUNT,
+            CASE WHEN t0.TYPE3_COUNT IS NULL then 0 ELSE t0.TYPE3_COUNT END AS TYPE3_PRE_COUNT,
+            CASE WHEN t0.TYPE4_COUNT IS NULL then 0 ELSE t0.TYPE4_COUNT END AS TYPE4_PRE_COUNT,
+            CASE WHEN t0.TYPE5_COUNT IS NULL then 0 ELSE t0.TYPE5_COUNT END AS TYPE5_PRE_COUNT,
+            CASE WHEN t0.TYPE6_COUNT IS NULL then 0 ELSE t0.TYPE6_COUNT END AS TYPE6_PRE_COUNT
+            FROM (SELECT TYPE1_COUNT,TYPE2_COUNT,TYPE3_COUNT,TYPE4_COUNT,TYPE5_COUNT,TYPE6_COUNT
+            FROM TRAFFIC_PRODUCTION_SUMMARY
+            WHERE DEL_FLAG ='0' AND DATA_TYPE=#{dataType}
+            AND START_DATE=(ADD_MONTHS(TO_DATE(#{startDate}, 'yyyy-mm-dd hh24:mi:ss'), -1))
+            AND END_DATE=(ADD_MONTHS(TO_DATE(#{endDate}, 'yyyy-mm-dd hh24:mi:ss'), -1)))
+            t0),
+            (TYPE1_COUNT,TYPE2_COUNT,TYPE3_COUNT,TYPE4_COUNT,TYPE5_COUNT,TYPE6_COUNT) =
+            (SELECT
+            SUM(TYPE1_COUNT) AS TYPE1_COUNT,
+            SUM(TYPE2_COUNT) AS TYPE2_COUNT,
+            SUM(TYPE3_COUNT) AS TYPE3_COUNT,
+            SUM(TYPE4_COUNT) AS TYPE4_COUNT,
+            SUM(TYPE5_COUNT) AS TYPE5_COUNT,
+            SUM(TYPE6_COUNT) AS TYPE6_COUNT
+            FROM TRAFFIC_PRODUCTION_SUMMARY
+            WHERE DEL_FLAG ='0' AND DATA_TYPE='1'
+            AND START_DATE >=to_date(#{startDate}, 'yyyy-mm-dd hh24:mi:ss')
+            AND to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss') >= END_DATE
+            ),
+            UPDATE_DATE=sysdate
+            WHERE DEL_FLAG ='0'
+            AND DATA_TYPE=#{dataType}
+            AND START_DATE=to_date(#{startDate}, 'yyyy-mm-dd hh24:mi:ss')
+            AND END_DATE=to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss')
         </if>
     </update>
 
+    <update id="autoModifyByDaily">
+        UPDATE TRAFFIC_PRODUCTION_SUMMARY SET
+        (TYPE1_COUNT,TYPE2_COUNT,TYPE3_COUNT,TYPE4_COUNT,TYPE5_COUNT,TYPE6_COUNT) =
+        (SELECT TYPE1_COUNT,TYPE2_COUNT,TYPE3_COUNT,TYPE4_COUNT,TYPE5_COUNT,TYPE6_COUNT FROM TRAFFIC_PRODUCTION_INFO WHERE DEL_FLAG='0' AND DATA_TYPE=#{dataType}
+        AND START_DATE=to_date(#{startDate}, 'yyyy-mm-dd hh24:mi:ss')
+        AND END_DATE=to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss'))
+        WHERE DEL_FLAG ='0'
+        AND DATA_TYPE=#{dataType}
+        AND START_DATE=to_date(#{startDate}, 'yyyy-mm-dd hh24:mi:ss')
+        AND END_DATE=to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss')
+    </update>
 </mapper>

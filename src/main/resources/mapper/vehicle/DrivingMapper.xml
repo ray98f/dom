@@ -55,22 +55,19 @@
         <if test="dataType!=null and dataType!=''">
             AND DATA_TYPE=#{dataType}
         </if>
-        <if test="dataType=='1'.toString()">
-            <if test="startDate!=null and startDate!=''">
-                AND DATA_DATE>=to_date(#{startDate},'YYYY-MM-DD')
-            </if>
-            <if test="endDate!=null and endDate!=''">
-                AND to_date(#{endDate},'YYYY-MM-DD')>=DATA_DATE
-            </if>
+        <if test="startDate!=null and startDate!=''">
+            AND START_DATE>=to_date(#{startDate},'YYYY-MM-DD')
         </if>
-        <if test="dataType!='1'.toString()">
-            <if test="startDate!=null and startDate!=''">
-                AND START_DATE>=to_date(#{startDate},'YYYY-MM-DD')
-            </if>
-            <if test="endDate!=null and endDate!=''">
-                AND to_date(#{endDate},'YYYY-MM-DD')>=END_DATE
-            </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'YYYY-MM-DD')>=END_DATE
         </if>
+    </select>
+
+    <select id="queryInfoDataById" resultType="com.wzmtr.dom.dto.res.vehicle.DrivingInfoResDTO">
+        SELECT *
+        FROM VEHICLE_DRIVING_INFO
+        WHERE DEL_FLAG='0'
+        AND ID=#{id}
     </select>
 
     <select id="checkExist" resultType="java.lang.Integer">
@@ -158,14 +155,64 @@
 
     <update id="modifyRecordCount">
         UPDATE VEHICLE_DRIVING_RECORD SET
-        TRAIN_COUNT1=(SELECT REAL_DEPARTURE FROM VEHICLE_DRIVING_DEPOT WHERE DEL_FLAG='0' AND DEPOT_CODE='280' AND RECORD_ID=#{id}),
-        TRAIN_COUNT2=(SELECT REAL_DEPARTURE FROM VEHICLE_DRIVING_DEPOT WHERE DEL_FLAG='0' AND DEPOT_CODE='281' AND RECORD_ID=#{id}),
+        TRAIN_COUNT1=(SELECT REAL_DEPARTURE FROM VEHICLE_DRIVING_DEPOT WHERE DEL_FLAG='0' AND DEPOT_CODE='280'
+        <if test="id!=null and id!=''">
+            AND RECORD_ID=#{id}
+        </if>
+        <if test="dataType!=null and dataType!=''">
+            AND DATA_TYPE=#{dataType}
+        </if>
+        <if test="startDate!=null and startDate!=''">
+            AND START_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'YYYY-MM-DD')>=END_DATE
+        </if>
+        ),
+        TRAIN_COUNT2=(SELECT REAL_DEPARTURE FROM VEHICLE_DRIVING_DEPOT WHERE DEL_FLAG='0' AND DEPOT_CODE='281'
+        <if test="id!=null and id!=''">
+            AND RECORD_ID=#{id}
+        </if>
+        <if test="dataType!=null and dataType!=''">
+            AND DATA_TYPE=#{dataType}
+        </if>
+        <if test="startDate!=null and startDate!=''">
+            AND START_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'YYYY-MM-DD')>=END_DATE
+        </if>
+        ),
         (DRIVER_COUNT,MILEAGE_TOTAL)
         =
         (SELECT DRIVER_COUNT,MILEAGE_TOTAL FROM VEHICLE_DRIVING_INFO
         WHERE DEL_FLAG='0'
-        AND RECORD_ID=#{id})
-        WHERE ID=#{id}
+        <if test="id!=null and id!=''">
+            AND RECORD_ID=#{id}
+        </if>
+        <if test="dataType!=null and dataType!=''">
+            AND DATA_TYPE=#{dataType}
+        </if>
+        <if test="startDate!=null and startDate!=''">
+            AND START_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'YYYY-MM-DD')>=END_DATE
+        </if>
+        )
+        WHERE DEL_FLAG='0'
+        <if test="id!=null and id!=''">
+            AND ID=#{id}
+        </if>
+        <if test="dataType!=null and dataType!=''">
+            AND DATA_TYPE=#{dataType}
+        </if>
+        <if test="startDate!=null and startDate!=''">
+            AND START_DATE=to_date(#{startDate},'YYYY-MM-DD')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'YYYY-MM-DD')=END_DATE
+        </if>
     </update>
 
     <delete id="delete">
@@ -272,8 +319,12 @@
         AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
         AND DEPOT_CODE=#{depotCode}
-        AND ID != #{id})
-        WHERE ID=#{id}
+        )
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE=#{dataType}
+        AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')=END_DATE
+        AND DEPOT_CODE=#{depotCode}
     </update>
 
     <insert id="createInfoData">
@@ -377,6 +428,7 @@
         =
         (SELECT DRIVER_COUNT,MILEAGE_TOTAL,AVG_MILEAGE FROM VEHICLE_DRIVING_INFO
         WHERE DEL_FLAG='0'
+        AND DATA_TYPE='1'
         AND START_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
         AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')),
         (PLAN_ATTEND,REAL_ATTEND,SUPPORT_COUNT,MILEAGE,TEST_MILEAGE)
@@ -389,6 +441,8 @@
         AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
         )
-        WHERE ID=#{id}
+        WHERE DATA_TYPE =#{dataType}
+        AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
     </update>
 </mapper>

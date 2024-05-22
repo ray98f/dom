@@ -177,4 +177,18 @@
         </foreach>
         )
     </delete>
+
+    <update id="autoModify">
+        UPDATE VEHICLE_LINE_EVENT_RECORD SET
+        TYPE1_COUNT = (SELECT COUNT(1) AS TYPE1_COUNT FROM VEHICLE_LINE_EVENT_INFO WHERE DEL_FLAG='0' AND EVENT_TYPE ='1' AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE ),
+        TYPE2_COUNT = (SELECT COUNT(1) AS TYPE1_COUNT FROM VEHICLE_LINE_EVENT_INFO WHERE DEL_FLAG='0' AND EVENT_TYPE ='2' AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE ),
+        TYPE3_COUNT = (SELECT COUNT(1) AS TYPE1_COUNT FROM VEHICLE_LINE_EVENT_INFO WHERE DEL_FLAG='0' AND EVENT_TYPE ='3' AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE ),
+        TYPE4_COUNT = (SELECT COUNT(1) AS TYPE1_COUNT FROM VEHICLE_LINE_EVENT_INFO WHERE DEL_FLAG='0' AND EVENT_TYPE ='4' AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE ),
+        TYPE5_COUNT = (SELECT COUNT(1) AS TYPE1_COUNT FROM VEHICLE_LINE_EVENT_INFO WHERE DEL_FLAG='0' AND EVENT_TYPE ='5' AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE ),
+        UPDATE_DATE=sysdate
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE=#{dataType}
+        AND START_DATE=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+    </update>
 </mapper>

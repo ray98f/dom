@@ -105,4 +105,19 @@ public interface LineEventMapper {
      */
     void deleteEvent(List<String> ids, String userId);
 
+    /**
+     * 更新统计数据
+     * @param dataType dataType
+     * @param startDate startDate
+     * @param endDate endDate
+     */
+    void autoModify(String dataType,String startDate,String endDate);
+
+    /**
+     * 更新统计数据
+     * @param dataType dataType
+     * @param startDate startDate
+     * @param endDate endDate
+     */
+    void autoModifyByDaily(String dataType,String startDate,String endDate);
 }

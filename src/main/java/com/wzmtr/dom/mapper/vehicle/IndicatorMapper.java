@@ -88,4 +88,7 @@ public interface IndicatorMapper {
      * @param userId 用户id
      */
     void delete(List<String> ids, String userId);
+
+    void autoModify(String dataType,String startDate,String endDate);
+    void autoModifyByDaily(String dataType,String startDate,String endDate);
 }

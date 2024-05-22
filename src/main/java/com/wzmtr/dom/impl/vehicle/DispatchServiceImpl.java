@@ -53,16 +53,10 @@ public class DispatchServiceImpl implements DispatchService {
 
     @Override
     public Page<DispatchOrderResDTO> pageOrder(String recordId, String dataType, PageReqDTO pageReqDTO) {
-        if (CommonConstants.ONE_STRING.equals(dataType)) {
-            return dispatchMapper.pageOrder(pageReqDTO.of(), recordId, null, null);
-        } else {
-            DispatchRecordResDTO res = dispatchMapper.getRecordDetail(recordId);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            if (!Objects.isNull(res)) {
-                return dispatchMapper.pageOrder(pageReqDTO.of(), null, sdf.format(res.getStartDate()), sdf.format(res.getEndDate()));
-            }
-        }
-        return new Page<>();
+        DispatchRecordResDTO res = dispatchMapper.getRecordDetail(recordId,null,null,null);
+
+        return dispatchMapper.pageOrder(pageReqDTO.of(), CommonConstants.DATA_TYPE_DAILY,
+                DateUtil.formatDate(res.getStartDate()), DateUtil.formatDate(res.getEndDate()));
     }
 
     @Override
@@ -74,39 +68,31 @@ public class DispatchServiceImpl implements DispatchService {
     @Transactional(rollbackFor = Exception.class)
     public List<DispatchOrderResDTO> getCsmDispatch(String recordId, String dataType,String startDate,String endDate) {
         try {
-            Date date = DateUtil.parse(endDate);
-            String endDateNext = DateUtil.formatDate(DateUtil.offsetDay(date, 1)) + CommonConstants.SYNC_DATA_TIME;
-            OpenDispatchOrderReqDTO req = OpenDispatchOrderReqDTO.builder()
-                    .startTime(startDate + CommonConstants.SYNC_DATA_TIME)
-                    .endTime(endDateNext)
-                    .dispatchorderStatus(DispatchOrderStatusEnum.RELEASED.value())
-                    .build();
-            List<OpenDispatchOrderRes> res = thirdService.getCsmDispatchOrder(req);
+            if(CommonConstants.DATA_TYPE_DAILY.equals(dataType)){
+                Date date = DateUtil.parse(endDate);
+                String endDateNext = DateUtil.formatDate(DateUtil.offsetDay(date, 1)) + CommonConstants.SYNC_DATA_TIME;
+                OpenDispatchOrderReqDTO req = OpenDispatchOrderReqDTO.builder()
+                        .startTime(startDate + CommonConstants.SYNC_DATA_TIME)
+                        .endTime(endDateNext)
+                        .dispatchorderStatus(DispatchOrderStatusEnum.RELEASED.value())
+                        .build();
+                List<OpenDispatchOrderRes> res = thirdService.getCsmDispatchOrder(req);
 
-            if(res != null && res.size() > 0){
-                List<DispatchOrderReqDTO> addList = new ArrayList<>();
+                if(res != null && res.size() > 0){
 
-                //获取现在所有调度命令,不存在的插入
-                List<String> orderIds = dispatchMapper.orderIds(dataType,startDate ,endDate);
-                addList = res.stream().filter(e->!orderIds.contains(e.getDispatchorderId())).map(this::dispatchOrderCopy).collect(Collectors.toList());
-                if(addList.size()>0){
-                    addOrder(recordId,TokenUtils.getCurrentPersonId(), startDate, endDate,addList);
+                    //删除后，再插入
+                    dispatchMapper.deleteOrder(dataType,startDate ,endDate);
+                    List<DispatchOrderReqDTO> addList = res.stream().map(this::dispatchOrderCopy).collect(Collectors.toList());
+                    if(addList.size()>0){
+                        addOrder(recordId,TokenUtils.getCurrentPersonId(), startDate, endDate,addList);
+                    }
                 }
+                autoModifyByDaily(dataType,startDate,endDate);
             }
         }catch (Exception e){
             throw new CommonException(ErrorCode.NORMAL_ERROR, "同步失败");
         }
         return null;
-    }
-
-    private DispatchOrderReqDTO dispatchOrderCopy(OpenDispatchOrderRes res){
-        DispatchOrderReqDTO dto = new DispatchOrderReqDTO();
-        dto.setId(res.getDispatchorderId());
-        dto.setOrderCode(res.getOrderCode());
-        dto.setOrderDesc(res.getDispatchorderDesc());
-        dto.setOrderTime(DateUtil.parseDate(res.getOrderTime()));
-
-        return dto;
     }
 
     @Override
@@ -120,10 +106,14 @@ public class DispatchServiceImpl implements DispatchService {
         dispatchRecordReqDTO.setOrderNum(0);
         dispatchRecordReqDTO.setCreateBy(TokenUtils.getCurrentPersonId());
         dispatchMapper.addRecord(dispatchRecordReqDTO);
+
+        autoModify(dispatchRecordReqDTO.getDataType(),DateUtil.formatDate(dispatchRecordReqDTO.getStartDate())
+                ,DateUtil.formatDate(dispatchRecordReqDTO.getEndDate()));
     }
 
     @Override
     public void modifyOrder(DispatchOrderReqDTO dispatchOrderReqDTO) {
+
         // 判断修改数据版本号是否一致
         Integer result = dispatchMapper.selectOrderIsExist(dispatchOrderReqDTO);
         if (result == 0) {
@@ -154,8 +144,39 @@ public class DispatchServiceImpl implements DispatchService {
         }
     }
 
+    @Override
+    public void autoModify(String dataType, String startDate, String endDate) {
+        dispatchMapper.autoModify(dataType,startDate,endDate);
+    }
+
+    @Override
+    public void autoModifyByDaily(String dataType, String startDate, String endDate) {
+
+        dispatchMapper.autoModify(dataType,startDate,endDate);
+
+        //获取周 周一、周日
+        Date monday = DateUtil.beginOfWeek(DateUtil.parseDate(startDate));
+        Date sunday = DateUtil.endOfWeek(DateUtil.parseDate(startDate));
+        dispatchMapper.autoModify(CommonConstants.DATA_TYPE_WEEKLY,DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
+
+        //获取月 月初、月末
+        Date monthStart = DateUtil.beginOfMonth(DateUtil.parseDate(startDate));
+        Date monthEnd = DateUtil.endOfMonth(DateUtil.parseDate(startDate));
+        dispatchMapper.autoModify(CommonConstants.DATA_TYPE_MONTHLY,DateUtil.formatDate(monthStart),DateUtil.formatDate(monthEnd));
+    }
+
     private void addOrder(String recordId,String createBy,String startDate,String endDate,List<DispatchOrderReqDTO> list){
         dispatchMapper.addOrderBatch(recordId,createBy,startDate,endDate,list);
+    }
+
+    private DispatchOrderReqDTO dispatchOrderCopy(OpenDispatchOrderRes res){
+        DispatchOrderReqDTO dto = new DispatchOrderReqDTO();
+        dto.setId(res.getDispatchorderId());
+        dto.setOrderCode(res.getOrderCode());
+        dto.setOrderDesc(res.getDispatchorderDesc());
+        dto.setOrderTime(DateUtil.parseDate(res.getOrderTime()));
+
+        return dto;
     }
 
 }

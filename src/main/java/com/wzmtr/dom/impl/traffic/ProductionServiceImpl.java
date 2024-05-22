@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -123,10 +124,22 @@ public class ProductionServiceImpl implements ProductionService {
         if (currentLoginUser.getStationCode() == null) {
             throw new CommonException(ErrorCode.USER_NOT_BIND_STATION);
         }
-        int existFlag = productionMapper.checkExist(productionRecordReqDTO.getDataType(),
-                currentLoginUser.getStationCode(),
-                productionRecordReqDTO.getStartDate(),
-                productionRecordReqDTO.getEndDate());
+        int existFlag = 0;
+
+        //日报按车站隔离
+        if(CommonConstants.DATA_TYPE_DAILY.equals(productionRecordReqDTO.getDataType())){
+            existFlag = productionMapper.checkExist(productionRecordReqDTO.getDataType(),
+                    currentLoginUser.getStationCode(),
+                    productionRecordReqDTO.getStartDate(),
+                    productionRecordReqDTO.getEndDate());
+            productionRecordReqDTO.setStationCode(currentLoginUser.getStationCode());
+        }else{
+            existFlag = productionMapper.checkExist(productionRecordReqDTO.getDataType(),
+                    null,
+                    productionRecordReqDTO.getStartDate(),
+                    productionRecordReqDTO.getEndDate());
+        }
+
         if (existFlag > 0) {
             throw new CommonException(ErrorCode.DATA_EXIST);
         }
@@ -142,7 +155,6 @@ public class ProductionServiceImpl implements ProductionService {
             productionRecordReqDTO.setDataDate(productionRecordReqDTO.getStartDate());
         }
 
-        productionRecordReqDTO.setStationCode(currentLoginUser.getStationCode());
         productionRecordReqDTO.setCreateBy(currentLoginUser.getPersonId());
         productionRecordReqDTO.setUpdateBy(currentLoginUser.getPersonId());
         productionRecordReqDTO.setId(TokenUtils.getUuId());
@@ -330,8 +342,9 @@ public class ProductionServiceImpl implements ProductionService {
             productionMapper.createEventDetail(currentLoginUser.getPersonId(),productionInfoReqDTO.getId(), productionInfoReqDTO.getEventDetailList());
         }
 
-        //更新事件统计
+        //更新事件统计 TODO
         updateSummaryCount(productionInfoReqDTO.getStationCode(), productionInfoReqDTO.getStartDate(), productionInfoReqDTO.getEndDate());
+        autoModifyByDaily(productionInfoReqDTO.getStationCode(),productionInfoReqDTO.getDataType(),productionInfoReqDTO.getStartDate(),productionInfoReqDTO.getEndDate());
     }
 
     @Override
@@ -351,12 +364,12 @@ public class ProductionServiceImpl implements ProductionService {
             productionMapper.createEventDetail(currentLoginUser.getPersonId(),productionInfoReqDTO.getId(),productionInfoReqDTO.getEventDetailList());
         }
 
-        //更新事件统计
-        List<String> ids = new ArrayList<>();
-        ids.add(productionInfoReqDTO.getId());
-        ProductionInfoResDTO eventInfo = productionMapper.queryDateRange(ids);
-        updateSummaryCount(eventInfo.getStationCode(),
-                DateUtil.formatDate(eventInfo.getStartDate()), DateUtil.formatDate(eventInfo.getEndDate()));
+        //更新事件统计 TODO
+//        List<String> ids = new ArrayList<>();
+//        ids.add(productionInfoReqDTO.getId());
+//        ProductionInfoResDTO eventInfo = productionMapper.queryDateRange(ids);
+//        updateSummaryCount(eventInfo.getStationCode(),
+//                DateUtil.formatDate(eventInfo.getStartDate()), DateUtil.formatDate(eventInfo.getEndDate()));
     }
 
     @Override
@@ -382,13 +395,33 @@ public class ProductionServiceImpl implements ProductionService {
         return productionMapper.queryApproval(pageReqDTO.of(), startDate, endDate);
     }
 
+    @Override
+    public void autoModifyByDaily(String stationCode, String dataType, String startDate, String endDate) {
+        //获取周 周一、周日
+        Date monday = DateUtil.beginOfWeek(DateUtil.parseDate(startDate));
+        Date sunday = DateUtil.endOfWeek(DateUtil.parseDate(startDate));
+
+        productionMapper.autoModifyByDaily(CommonConstants.DATA_TYPE_WEEKLY,DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
+        productionSummaryMapper.autoModifyByDaily(CommonConstants.DATA_TYPE_WEEKLY,DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
+
+
+        //获取月 月初、月末
+        Date monthStart = DateUtil.beginOfMonth(DateUtil.parseDate(startDate));
+        Date monthEnd = DateUtil.endOfMonth(DateUtil.parseDate(startDate));
+
+        productionMapper.autoModifyByDaily(CommonConstants.DATA_TYPE_MONTHLY,DateUtil.formatDate(monthStart),DateUtil.formatDate(monthEnd));
+        productionSummaryMapper.autoModifyByDaily(CommonConstants.DATA_TYPE_MONTHLY,DateUtil.formatDate(monthStart),DateUtil.formatDate(monthEnd));
+
+    }
+
     /**
      * 事件统计更新
      */
     @Transactional(rollbackFor = Exception.class)
     private void updateSummaryCount(String stationCode, String startDate, String endDate) {
         try {
-            List<ProductionRecordResDTO> res = productionMapper.listAll(stationCode, startDate, endDate);
+            //查这个时间段内的日报数据
+            List<ProductionRecordResDTO> res = productionMapper.listAll(stationCode,CommonConstants.DATA_TYPE_DAILY, startDate, endDate);
             if (StringUtils.isNotEmpty(res)) {
                 for (ProductionRecordResDTO item : res) {
                     //更新记录统计数据
@@ -408,6 +441,9 @@ public class ProductionServiceImpl implements ProductionService {
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
 
+
     }
+
+
 
 }

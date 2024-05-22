@@ -55,7 +55,7 @@ public interface DrivingService {
      * 行车情况-数据提取
      * @param recordId 入参数
      */
-    void syncData(CurrentLoginUser currentLoginUser,String recordId);
+    void syncData(CurrentLoginUser currentLoginUser,String recordId,String dataType,String startDate,String endDate);
 
     /**
      * 行车情况-车场
@@ -77,4 +77,12 @@ public interface DrivingService {
      * @param drivingInfoResDTO 入参数
      */
     void driverModify(CurrentLoginUser currentLoginUser, DrivingInfoReqDTO drivingInfoResDTO);
+
+    /**
+     * 更新周报/月报统计
+     * @param dataType 查询参数
+     * @param starDate 查询参数
+     * @param endDate 分页参数
+     */
+    void autoModifyByDaily(String dataType,String starDate,String endDate);
 }

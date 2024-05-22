@@ -66,7 +66,7 @@ public class ProductionSummaryServiceImpl implements ProductionSummaryService {
             throw new CommonException(ErrorCode.USER_NOT_BIND_STATION);
         }
 
-        //日报按车站检索
+        //日报按车站隔离
         int existFlag = 0;
         if(CommonConstants.DATA_TYPE_DAILY.equals(productionSummaryRecordReqDTO.getDataType())){
             existFlag = productionSummaryMapper.checkExist(productionSummaryRecordReqDTO.getDataType(),
@@ -102,6 +102,12 @@ public class ProductionSummaryServiceImpl implements ProductionSummaryService {
         } catch (Exception e) {
             throw new CommonException(ErrorCode.INSERT_ERROR);
         }
+
+        //同步更新统计数据,日报更新前一日数据统计，周报/月报更新前一周/月数据统计和本周/月数据统计
+        autoModify(productionSummaryRecordReqDTO.getStationCode(),
+                productionSummaryRecordReqDTO.getDataType(),
+                productionSummaryRecordReqDTO.getStartDate(),
+                productionSummaryRecordReqDTO.getEndDate());
     }
 
     @Override
@@ -119,7 +125,7 @@ public class ProductionSummaryServiceImpl implements ProductionSummaryService {
 
     @Override
     public void autoModify(String stationCode,String dataType, String startDate, String endDate) {
-
+        productionSummaryMapper.autoModify(stationCode,dataType,startDate,endDate);
     }
 
 

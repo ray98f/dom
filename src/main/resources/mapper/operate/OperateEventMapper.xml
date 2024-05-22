@@ -364,6 +364,9 @@
         <if test="eventDesc!=null and eventDesc!=''">
             EVENT_DESC=#{eventDesc},
         </if>
+        <if test="eventContent!=null and eventContent!=''">
+            EVENT_CONTENT=#{eventContent},
+        </if>
         <if test="isRectified!=null and isRectified!=''">
             IS_RECTIFIED=#{isRectified},
         </if>

@@ -71,4 +71,6 @@ public interface MaintenanceService {
      * @param ids ids
      */
     void deleteEvent(List<String> ids);
+
+     void autoModifyByDaily(String dataType, String startDate, String endDate);
 }

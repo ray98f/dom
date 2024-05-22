@@ -140,8 +140,7 @@ public class ThirdServiceImpl implements ThirdService {
 
         JSONObject res = JSONObject.parseObject(HttpUtils.doGet(depotStatisticsApi+"?date="+date,null), JSONObject.class);
         if(Objects.nonNull(res)){
-            OpenDepotStatisticsRes result = JSON.parseObject(res.getJSONObject(CommonConstants.API_RES_DATA).toJSONString(),OpenDepotStatisticsRes.class);
-            return result;
+            return JSON.parseObject(res.getJSONObject(CommonConstants.API_RES_DATA).toJSONString(),OpenDepotStatisticsRes.class);
         }
         return null;
     }
