@@ -98,4 +98,14 @@ public interface DepotConstructMapper {
      * @param ids ids
      */
     void deletePlan(List<String> ids);
+
+    /**
+     * 更新数据
+     * @param depotCode 查询参数
+     * @param dataType 查询参数
+     * @param startDate 查询参数
+     * @param endDate 查询参数
+     * @return 列表
+     */
+    void autoModify(String depotCode, String dataType, String startDate, String endDate);
 }

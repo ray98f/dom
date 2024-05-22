@@ -1,5 +1,6 @@
 package com.wzmtr.dom.utils.task;
 
+import cn.hutool.core.date.DateUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -23,12 +24,60 @@ public class DailyDataModifyTask {
     // 若是周一，更新上周一到周日的周报数据
     // 若是月初第一天，更新上一个月的月初到月末的月报数据
 
-
-    @Scheduled(cron = "0 1 5 * * ?")
+    /**
+     * 车辆部每日数据新增
+     * */
+    @Scheduled(cron = "0 1 1 * * ?")
     @Transactional(rollbackFor = Exception.class)
-    public void syncData() {
+    public void vehicleAutoCreateTask() {
+        String today = DateUtil.today();
 
     }
 
+    /**
+     * 客运部每日数据新增
+     * */
+    @Scheduled(cron = "0 10 1 * * ?")
+    @Transactional(rollbackFor = Exception.class)
+    public void trafficAutoCreateTask() {
+        String today = DateUtil.today();
 
+    }
+
+    /**
+     * 运营日报每日数据新增
+     * */
+    @Scheduled(cron = "0 20 1 * * ?")
+    @Transactional(rollbackFor = Exception.class)
+    public void operateAutoCreateTask() {
+        String today = DateUtil.today();
+
+    }
+
+    /**
+     * 车辆部每日数据同步更新
+     * */
+    @Scheduled(cron = "0 1 5 * * ?")
+    @Transactional(rollbackFor = Exception.class)
+    public void vehicleSyncData() {
+
+    }
+
+    /**
+     * 客运部每日数据同步更新
+     * */
+    @Scheduled(cron = "0 10 5 * * ?")
+    @Transactional(rollbackFor = Exception.class)
+    public void trafficSyncData() {
+
+    }
+
+    /**
+     * 运营日报每日数据同步更新
+     * */
+    @Scheduled(cron = "0 20 5 * * ?")
+    @Transactional(rollbackFor = Exception.class)
+    public void operateSyncData() {
+
+    }
 }

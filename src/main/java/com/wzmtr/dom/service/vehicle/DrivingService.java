@@ -81,8 +81,8 @@ public interface DrivingService {
     /**
      * 更新周报/月报统计
      * @param dataType 查询参数
-     * @param starDate 查询参数
+     * @param startDate 查询参数
      * @param endDate 分页参数
      */
-    void autoModifyByDaily(String dataType,String starDate,String endDate);
+    void autoModifyByDaily(String dataType,String startDate,String endDate);
 }

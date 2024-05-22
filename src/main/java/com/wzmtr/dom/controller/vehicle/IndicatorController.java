@@ -54,7 +54,7 @@ public class IndicatorController {
         Date sunday = DateUtil.endOfWeek(date1);
         Date monthStart = DateUtil.beginOfMonth(date1);
         Date monthEnd = DateUtil.endOfMonth(date1);
-        System.out.println(DateUtil.formatDate(monday));
+        System.out.println(DateUtil.today());
         System.out.println(DateUtil.formatDate(sunday));
         System.out.println(DateUtil.formatDate(monthStart));
         System.out.println(DateUtil.formatDate(monthEnd));
