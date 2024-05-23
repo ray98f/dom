@@ -37,12 +37,12 @@ sso:
 
 cas:
   serverUrlPrefix: "${sso.url}"
-  serviceUrlPrefix: "http://192.168.30.140:8100/dom"
+  serviceUrlPrefix: "http://localhost:8100/dom"
   casFilterUrlPattern: "/cas"
   loginUrlPattern: "/login"
   logoutUrlPattern: "/logout"
   successUrlPattern: "/index"
-  serviceFront: "http://192.168.30.140:8199/index.html"
+  serviceFront: "http://localhost:3334/index.html"
 
 diboot:
   core:

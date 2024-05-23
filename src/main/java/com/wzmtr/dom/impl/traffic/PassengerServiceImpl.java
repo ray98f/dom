@@ -198,7 +198,7 @@ public class PassengerServiceImpl implements PassengerService {
 
             //新增
             if (infoReqDTOList != null && infoReqDTOList.size() > 0) {
-                doCreatePassengerBatch(infoReqDTOList);
+                doCreatePassengerBatch(infoReqDTOList,passengerRecordReqDTO);
             }
 
         }
@@ -207,7 +207,9 @@ public class PassengerServiceImpl implements PassengerService {
     /**
      * 新增车站客流
      */
-    private void doCreatePassengerBatch(List<PassengerInfoReqDTO> infoReqDTOList) {
+    private void doCreatePassengerBatch(List<PassengerInfoReqDTO> infoReqDTOList,PassengerRecordReqDTO passengerRecordReqDTO) {
+
+        //先删
 
         SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH, false);
         try {
