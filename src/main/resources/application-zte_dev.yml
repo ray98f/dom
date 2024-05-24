@@ -106,6 +106,8 @@ open-api:
   acc:
     api-app-key: "EvbhN1NZFmsuFM0j1T3Fi3tKQAxpd52r"
     person-count: "http://dxp.wzmtr.com:9080/v2/ACC/ACC13"
+  eam:
+    faultStatistics: ${eam.host}/eam/statistic/subject/fault/open
 
 pro:
   name: dom

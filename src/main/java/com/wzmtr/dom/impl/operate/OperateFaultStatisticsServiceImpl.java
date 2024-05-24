@@ -1,16 +1,19 @@
 package com.wzmtr.dom.impl.operate;
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.operate.OperateFaultStatisticsReqDTO;
 import com.wzmtr.dom.dto.res.common.DateResDTO;
+import com.wzmtr.dom.dto.res.common.OpenFaultStatisticsRes;
 import com.wzmtr.dom.dto.res.operate.fault.FaultStatisticsResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
 import com.wzmtr.dom.mapper.operate.OperateFaultStatisticsMapper;
+import com.wzmtr.dom.service.common.ThirdService;
 import com.wzmtr.dom.service.operate.OperateFaultStatisticsService;
 import com.wzmtr.dom.utils.DateUtils;
 import com.wzmtr.dom.utils.StringUtils;
@@ -21,7 +24,9 @@ import org.springframework.stereotype.Service;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * description:
@@ -36,6 +41,9 @@ public class OperateFaultStatisticsServiceImpl implements OperateFaultStatistics
     @Autowired
     private OperateFaultStatisticsMapper operateFaultStatisticsMapper;
 
+    @Autowired
+    private ThirdService thirdService;
+
     @Override
     public Page<FaultStatisticsResDTO> list(String dataType, String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
@@ -43,6 +51,7 @@ public class OperateFaultStatisticsServiceImpl implements OperateFaultStatistics
         List<FaultStatisticsResDTO> list = page.getRecords();
         if (StringUtils.isNotEmpty(list)) {
             for (FaultStatisticsResDTO res : list) {
+                res.setSum(CommonConstants.ZERO_LONG);
                 if (CommonConstants.ONE_STRING.equals(res.getDataType())) {
                     res.setSum(getFaultSum(res));
                 } else {
@@ -127,5 +136,99 @@ public class OperateFaultStatisticsServiceImpl implements OperateFaultStatistics
         if (StringUtils.isNotEmpty(ids)) {
             operateFaultStatisticsMapper.delete(ids, TokenUtils.getCurrentPersonId());
         }
+    }
+
+    @Override
+    public void syncData(String dataType, String startDate, String endDate) {
+        //TODO 同步EAM故障统计数据
+        Date date = DateUtil.parse(endDate);
+        String endDateNext = DateUtil.formatDate(DateUtil.offsetDay(date, 1)) + CommonConstants.SYNC_DATA_TIME;
+
+        List<OpenFaultStatisticsRes> rs = thirdService.getEamFaultStatistics(startDate + CommonConstants.SYNC_DATA_TIME,endDateNext);
+
+        if(Objects.nonNull(rs)){
+            OperateFaultStatisticsReqDTO operateEventInfoReqDTO = new OperateFaultStatisticsReqDTO();
+            operateEventInfoReqDTO.setDataType(dataType);
+            operateEventInfoReqDTO.setStartDate(DateUtil.parseDate(startDate));
+            operateEventInfoReqDTO.setEndDate(DateUtil.parseDate(endDate));
+            for(OpenFaultStatisticsRes r : rs){
+                switch (r.getSubjectCode()){
+                    case CommonConstants.SUBJECT_CODE_1:
+
+                        break;
+                    case CommonConstants.SUBJECT_CODE_2:
+                        operateEventInfoReqDTO.setEscalatorNum(r.getFaultNum());
+                        break;
+                    case CommonConstants.SUBJECT_CODE_3:
+                        operateEventInfoReqDTO.setHydropowerNum(r.getFaultNum());
+                        break;
+                    case CommonConstants.SUBJECT_CODE_4:
+                        break;
+                    case CommonConstants.SUBJECT_CODE_5:
+                        break;
+                    case CommonConstants.SUBJECT_CODE_6:
+                        break;
+                    case CommonConstants.SUBJECT_CODE_7:
+                        operateEventInfoReqDTO.setVehicleNum(r.getFaultNum());
+                        break;
+                    case CommonConstants.SUBJECT_CODE_8:
+                        operateEventInfoReqDTO.setCommunicationNum(r.getFaultNum());
+                        break;
+                    case CommonConstants.SUBJECT_CODE_9:
+                        operateEventInfoReqDTO.setSignalNum(r.getFaultNum());
+                        break;
+                    case CommonConstants.SUBJECT_CODE_10:
+                        operateEventInfoReqDTO.setMonitorNum(r.getFaultNum());
+                        break;
+                    case CommonConstants.SUBJECT_CODE_11:
+                        operateEventInfoReqDTO.setAfcNum(r.getFaultNum());
+                        break;
+                    case CommonConstants.SUBJECT_CODE_12:
+                        operateEventInfoReqDTO.setContactNetworkNum(r.getFaultNum());
+                        break;
+                    case CommonConstants.SUBJECT_CODE_13:
+                        operateEventInfoReqDTO.setChangeDistributionNum(r.getFaultNum());
+                        break;
+                    case CommonConstants.SUBJECT_CODE_14:
+                        break;
+                    case CommonConstants.SUBJECT_CODE_15:
+                        break;
+                    case CommonConstants.SUBJECT_CODE_16:
+                        break;
+                    case CommonConstants.SUBJECT_CODE_17:
+                        operateEventInfoReqDTO.setEngineeringVehicleNum(r.getFaultNum());
+                        break;
+                    case CommonConstants.SUBJECT_CODE_70:
+                        break;
+                    default:
+                        break;
+                }
+            }
+            //更新日报数据
+            operateFaultStatisticsMapper.autoModify(operateEventInfoReqDTO);
+            autoModifyByDaily(dataType,startDate,endDate);
+        }
+
+
+
+    }
+
+    @Override
+    public void autoModify(String dataType, String startDate, String endDate) {
+
+    }
+
+    @Override
+    public void autoModifyByDaily(String dataType, String startDate, String endDate) {
+        //获取周 周一、周日
+        Date monday = DateUtil.beginOfWeek(DateUtil.parseDate(startDate));
+        Date sunday = DateUtil.endOfWeek(DateUtil.parseDate(startDate));
+
+
+        operateFaultStatisticsMapper.autoModifyByDaily(CommonConstants.DATA_TYPE_WEEKLY,DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
+        //获取月 月初、月末
+        Date monthStart = DateUtil.beginOfMonth(DateUtil.parseDate(startDate));
+        Date monthEnd = DateUtil.endOfMonth(DateUtil.parseDate(startDate));
+        operateFaultStatisticsMapper.autoModifyByDaily(CommonConstants.DATA_TYPE_MONTHLY,DateUtil.formatDate(monthStart),DateUtil.formatDate(monthEnd));
     }
 }
