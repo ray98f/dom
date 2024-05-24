@@ -6,7 +6,13 @@ import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInt
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
- 
+
+/**
+ * MybatisPlus配置
+ * @author  Ray
+ * @version 1.0
+ * @date 2024/03/06
+ */
 @Configuration
 public class MybatisPlusConfig {
 

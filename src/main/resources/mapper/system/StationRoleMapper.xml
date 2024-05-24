@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzmtr.dom.mapper.system.StationRoleMapper">
+
+    <select id="page" resultType="com.wzmtr.dom.dto.res.system.StationRoleResDTO">
+        SELECT sr.ID, sr.STATION_CODE, sr.STATION_NAME, sr.START_TIME, sr.END_TIME, sr.CREATE_DATE, u.NAME AS CREATE_BY
+        FROM SYS_STATION_ROLE sr
+        LEFT JOIN SYS_USER u on u.ID=sr.CREATE_BY
+        WHERE sr.DEL_FLAG='0'
+        ORDER BY sr.CREATE_DATE desc
+    </select>
+
+    <select id="detail" resultType="com.wzmtr.dom.dto.res.system.StationRoleResDTO">
+        SELECT sr.ID, sr.STATION_CODE, sr.STATION_NAME, sr.START_TIME, sr.END_TIME, sr.CREATE_DATE, u.NAME AS CREATE_BY
+        FROM SYS_STATION_ROLE sr
+        LEFT JOIN SYS_USER u on u.ID=sr.CREATE_BY
+        WHERE sr.DEL_FLAG='0' AND sr.ID=#{id}
+    </select>
+
+    <select id="getCurrentStation" resultType="com.wzmtr.dom.dto.res.system.StationRoleResDTO">
+        SELECT *
+        FROM SYS_STATION_ROLE
+        WHERE DEL_FLAG='0'
+        AND sysdate >= START_TIME
+        AND END_TIME >= sysdate
+    </select>
+
+    <insert id="add">
+        INSERT INTO SYS_STATION_ROLE (ID, STATION_CODE, STATION_NAME,
+        START_TIME, END_TIME, CREATE_BY, CREATE_DATE)
+        VALUES (#{id}, #{stationCode}, #{stationName},
+        #{startTime}, #{endTime}, #{createBy}, sysdate)
+    </insert>
+
+    <update id="modify">
+        UPDATE SYS_STATION_ROLE SET
+        <if test="stationCode!=null">
+            STATION_CODE=#{stationCode},
+        </if>
+        <if test="stationName!=null">
+            STATION_NAME=#{stationName},
+        </if>
+        <if test="startTime!=null">
+            START_TIME=#{startTime},
+        </if>
+        <if test="endDate!=null">
+            END_TIME=#{endDate},
+        </if>
+        UPDATE_BY=#{updateBy}, UPDATE_DATE=sysdate
+        WHERE ID=#{id}
+    </update>
+
+    <update id="delete">
+        UPDATE SYS_STATION_ROLE SET
+        DEL_FLAG='1', UPDATE_BY=#{userId}, UPDATE_DATE=sysdate
+        WHERE ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+
+</mapper>

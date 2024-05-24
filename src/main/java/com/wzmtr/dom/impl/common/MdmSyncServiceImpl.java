@@ -88,7 +88,7 @@ public class MdmSyncServiceImpl implements MdmSyncService {
         requestMessage.setNoun("allPersonList");
         message.setOperType(1);
         message.setIfPhoto(0);
-        message.setSyscode("EAM");
+        message.setSyscode("DOM");
         requestMessage.setMessage(message);
         List<SysUser> personList = new ArrayList<>();
         try {
@@ -120,7 +120,7 @@ public class MdmSyncServiceImpl implements MdmSyncService {
         requestMessage.setVerb("Get");
         requestMessage.setNoun("allSuppContactsList");
         message.setOperType(1);
-        message.setSyscode("EAM");
+        message.setSyscode("DOM");
         requestMessage.setMessage(message);
         List<SysUser> personList = new ArrayList<>();
         try {
@@ -151,7 +151,7 @@ public class MdmSyncServiceImpl implements MdmSyncService {
         requestMessage.setVerb("Get");
         requestMessage.setNoun("allPersonPlusList");
         message.setOperType(1);
-        message.setSyscode("EAM");
+        message.setSyscode("DOM");
         requestMessage.setMessage(message);
         List<Map<String, Object>> plusList = new ArrayList<>();
         try {
@@ -189,7 +189,7 @@ public class MdmSyncServiceImpl implements MdmSyncService {
         requestMessage.setVerb("Get");
         requestMessage.setNoun("allOrgList");
         message.setOperType(1);
-        message.setSyscode("EAM");
+        message.setSyscode("DOM");
         requestMessage.setMessage(message);
         List<SysOffice> orgList = new ArrayList<>();
         try {
@@ -221,7 +221,7 @@ public class MdmSyncServiceImpl implements MdmSyncService {
         requestMessage.setVerb("Get");
         requestMessage.setNoun("allSuppList");
         message.setOperType(1);
-        message.setSyscode("EAM");
+        message.setSyscode("DOM");
         requestMessage.setMessage(message);
         List<SysOffice> orgList = new ArrayList<>();
         try {
@@ -254,7 +254,7 @@ public class MdmSyncServiceImpl implements MdmSyncService {
         requestMessage.setVerb("Get");
         requestMessage.setNoun("allExtraOrgList");
         message.setOperType(1);
-        message.setSyscode("EAM");
+        message.setSyscode("DOM");
         requestMessage.setMessage(message);
         List<SysOffice> orgList = new ArrayList<>();
         try {
@@ -287,7 +287,7 @@ public class MdmSyncServiceImpl implements MdmSyncService {
         requestMessage.setVerb("Get");
         requestMessage.setNoun("allEmpJobInfoList");
         message.setOperType(1);
-        message.setSyscode("EAM");
+        message.setSyscode("DOM");
         requestMessage.setMessage(message);
         List<SysOrgUser> empJobList = new ArrayList<>();
         try {
@@ -338,8 +338,8 @@ public class MdmSyncServiceImpl implements MdmSyncService {
             com.wzmtr.dom.soft.mdm.suppcontactsquery.vo.Result result2 = (com.wzmtr.dom.soft.mdm.suppcontactsquery.vo.Result) result;
             if (!StringUtils.isEmpty(result2.getPerId()) && !CommonConstants.PROCESS_ERROR_CODE.equals(result2.getExtraOrg())
                     && !StringUtils.isEmpty(result2.getExtraOrg()) && CommonConstants.ONE_STRING.equals(result2.getIsUse())) {
-                String parentIds = organizationMapper.selectCompanyIdByOfficeId(result2.getExtraOrg());
-                if (parentIds != null) {
+                String parentIds = organizationMapper.selectParentIdsByOfficeId(result2.getExtraOrg());
+                if (com.wzmtr.dom.utils.StringUtils.isNotNull(parentIds)) {
                     user.setId(result2.getPerId());
                     user.setLoginName(result2.getPhone());
                     user.setPassword(personDefaultConfig.getPassword());
@@ -369,8 +369,7 @@ public class MdmSyncServiceImpl implements MdmSyncService {
         if (result instanceof com.wzmtr.dom.soft.mdm.orgquery.vo.Result) {
             //内部组织
             com.wzmtr.dom.soft.mdm.orgquery.vo.Result result1 = (com.wzmtr.dom.soft.mdm.orgquery.vo.Result) result;
-            if (result1.getOrgCode() != null && !StringUtils.isEmpty(result1.getOrgCode())
-                    && result1.getOrgName() != null && !StringUtils.isEmpty(result1.getOrgName())
+            if (StringUtils.isNotEmpty(result1.getOrgCode()) && StringUtils.isNotEmpty(result1.getOrgName())
                     && CommonConstants.ONE_STRING.equals(result1.getStatus())) {
                 org.setId(result1.getOrgCode());
                 org.setParentId(result1.getParentOrgCode() == null ? "-1" : result1.getParentOrgCode());

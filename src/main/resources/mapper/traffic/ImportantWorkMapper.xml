@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzmtr.dom.mapper.traffic.ImportantWorkMapper">
+
+    <select id="list" resultType="com.wzmtr.dom.dto.res.traffic.ImportantWorkResDTO">
+        SELECT *
+        FROM TRAFFIC_IMPORTANT_WORK
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE=#{dataType}
+        <if test="startDate != null and startDate!=''">
+            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null and endDate!=''">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        </if>
+        ORDER BY CREATE_DATE desc
+    </select>
+
+    <select id="checkExist" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM TRAFFIC_IMPORTANT_WORK
+        WHERE DEL_FLAG = '0'
+        AND DATA_TYPE=#{dataType}
+        <if test="startDate != null">
+            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+    </select>
+
+    <select id="queryInfoById" resultType="com.wzmtr.dom.dto.res.traffic.ImportantWorkResDTO">
+        SELECT *
+        FROM TRAFFIC_IMPORTANT_WORK
+        WHERE ID=#{id} AND DEL_FLAG = '0'
+    </select>
+
+    <insert id="add">
+        INSERT INTO TRAFFIC_IMPORTANT_WORK (ID,DATA_TYPE,
+        <if test="dataDate != null">
+            DATA_DATE,
+        </if>
+        START_DATE,
+        END_DATE,
+        CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+        VALUES
+        (#{id}, #{dataType},
+        <if test="dataDate != null">
+            to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
+        to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
+        #{createBy}, sysdate,#{createBy}, sysdate)
+    </insert>
+
+    <update id="modify">
+        UPDATE TRAFFIC_IMPORTANT_WORK SET
+        <if test="remark != null">
+            REMARK=#{remark},
+        </if>
+            VERSION = VERSION+1,
+            UPDATE_BY=#{updateBy},
+            UPDATE_DATE=sysdate
+        WHERE ID=#{id} and VERSION=#{version}
+    </update>
+    <update id="modify">
+        UPDATE TRAFFIC_IMPORTANT_WORK SET
+        <if test="remark != null">
+            REMARK=#{remark},
+        </if>
+        VERSION = VERSION+1,
+        UPDATE_BY=#{updateBy},
+        UPDATE_DATE=sysdate
+        WHERE ID=#{id} and VERSION=#{version}
+    </update>
+
+</mapper>

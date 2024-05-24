@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzmtr.dom.mapper.vehicle.SecurityMapper">
+
+    <select id="list" resultType="com.wzmtr.dom.dto.res.vehicle.SecurityResDTO">
+        SELECT ID, REMARK, VERSION, DATA_TYPE,DATA_DATE,START_DATE, CREATE_DATE,END_DATE, UPDATE_DATE
+        FROM VEHICLE_SECURITY_RECORD
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE=#{dataType}
+        <if test="startDate != null and startDate!=''">
+            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null and endDate!=''">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        </if>
+        ORDER BY START_DATE desc
+    </select>
+
+    <select id="checkExist" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM VEHICLE_SECURITY_RECORD
+        WHERE DEL_FLAG = '0'
+        AND DATA_TYPE=#{dataType}
+        <if test="startDate != null">
+            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+    </select>
+
+    <select id="queryInfoById" resultType="com.wzmtr.dom.dto.res.vehicle.SecurityResDTO">
+        SELECT ID, REMARK, VERSION
+        FROM VEHICLE_SECURITY_RECORD
+        WHERE ID=#{id} AND DEL_FLAG = '0'
+    </select>
+
+    <insert id="add">
+        INSERT INTO VEHICLE_SECURITY_RECORD (ID,DATA_TYPE,
+        <if test="remark != null">
+            REMARK,
+        </if>
+        START_DATE,
+        END_DATE,
+        CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+        VALUES
+        (#{id}, #{dataType},
+        <if test="remark != null">
+            #{remark},
+        </if>
+        <if test="dataDate != null">
+            to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
+        to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
+        #{createBy}, sysdate,#{createBy}, sysdate)
+    </insert>
+
+    <update id="modify">
+        UPDATE VEHICLE_SECURITY_RECORD SET
+            REMARK=#{remark},
+            VERSION = VERSION+1,
+            UPDATE_BY=#{updateBy},
+            UPDATE_DATE=sysdate
+        WHERE ID=#{id} and VERSION=#{version}
+    </update>
+
+</mapper>

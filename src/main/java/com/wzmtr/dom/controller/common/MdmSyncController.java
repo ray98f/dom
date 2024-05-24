@@ -32,7 +32,7 @@ public class MdmSyncController {
      * @return 成功
      */
     @ApiOperation(value = "全量获取主数据人员数据")
-    @GetMapping("/syncAllPerson")
+    @GetMapping("/person")
     public DataResponse<T> syncAllPerson() {
         mdmSyncService.syncAllPerson();
         return DataResponse.success();
@@ -43,7 +43,7 @@ public class MdmSyncController {
      * @return 成功
      */
     @ApiOperation(value = "全量获取外部单位人员数据")
-    @GetMapping("/syncAllSuppContact")
+    @GetMapping("/contact/supp")
     public DataResponse<T> syncAllSuppContact() {
         mdmSyncService.syncAllSuppContact();
         return DataResponse.success();
@@ -54,7 +54,7 @@ public class MdmSyncController {
      * @return 成功
      */
     @ApiOperation(value = "全量获取主数据人员扩展数据")
-    @GetMapping("/syncPersonPlus")
+    @GetMapping("/person/plus")
     public DataResponse<T> syncPersonPlus() {
         mdmSyncService.syncPersonPlus();
         return DataResponse.success();
@@ -65,7 +65,7 @@ public class MdmSyncController {
      * @return 成功
      */
     @ApiOperation(value = "全量获取主数据组织机构数据")
-    @GetMapping("/syncAllOrg")
+    @GetMapping("/org")
     public DataResponse<T> syncAllOrg() {
         mdmSyncService.syncAllOrg();
         return DataResponse.success();
@@ -76,7 +76,7 @@ public class MdmSyncController {
      * @return 成功
      */
     @ApiOperation(value = "全量获取主数据供应商数据")
-    @GetMapping("/syncSuppOrg")
+    @GetMapping("/org/supp")
     public DataResponse<T> syncSuppOrg() {
         mdmSyncService.syncSuppOrg();
         return DataResponse.success();
@@ -87,7 +87,7 @@ public class MdmSyncController {
      * @return 成功
      */
     @ApiOperation(value = "全量获取主数据外部组织机构数据")
-    @GetMapping("/syncAllExtraOrg")
+    @GetMapping("/org/extra")
     public DataResponse<T> syncAllExtraOrg() {
         mdmSyncService.syncAllExtraOrg();
         return DataResponse.success();
@@ -98,7 +98,7 @@ public class MdmSyncController {
      * @return 成功
      */
     @ApiOperation(value = "全量获取主数据员工任职信息数据")
-    @GetMapping("/syncAllEmpJob")
+    @GetMapping("/job/emp")
     public DataResponse<T> syncAllEmpJob() {
         mdmSyncService.syncAllEmpJob();
         return DataResponse.success();

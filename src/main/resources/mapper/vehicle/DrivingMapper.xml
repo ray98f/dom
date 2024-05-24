@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzmtr.dom.mapper.vehicle.DrivingMapper">
+
+    <select id="list" resultType="com.wzmtr.dom.dto.res.vehicle.DrivingRecordResDTO">
+        SELECT ID, TRAIN_COUNT1, TRAIN_COUNT2, DRIVER_COUNT, MILEAGE_TOTAL, VERSION, DATA_DATE,END_DATE,START_DATE,DATA_TYPE, CREATE_DATE, UPDATE_DATE
+        FROM VEHICLE_DRIVING_RECORD
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE=#{dataType}
+        <if test="startDate != null and startDate!=''">
+            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null and endDate!=''">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        </if>
+        ORDER BY START_DATE desc
+    </select>
+
+    <select id="depot" resultType="com.wzmtr.dom.dto.res.vehicle.DrivingDepotResDTO">
+        SELECT t1.ID, t1.RECORD_ID, t1.DEPOT_CODE,t2.STATION_NAME AS DEPOT_NAME, t1.PLAN_DEPARTURE,
+        t1.PLAN_RECEIVE,t1.REAL_DEPARTURE,t1.REAL_RECEIVE,t1.RAILCAR_DEPARTURE,t1.RAILCAR_RECEIVE,
+        t1.VERSION, t1.CREATE_DATE, t1.UPDATE_DATE,t3.NAME AS UPDATE_BY
+        FROM VEHICLE_DRIVING_DEPOT t1
+        LEFT JOIN SYS_STATION t2 on t1.DEPOT_CODE=t2.STATION_CODE
+        LEFT JOIN SYS_USER t3 on t1.update_BY=t3.LOGIN_NAME
+        WHERE t1.DEL_FLAG='0'
+        AND t1.RECORD_ID=#{recordId}
+        ORDER BY t1.CREATE_DATE desc
+    </select>
+
+    <select id="driveInfo" resultType="com.wzmtr.dom.dto.res.vehicle.DrivingInfoResDTO">
+        SELECT ID, RECORD_ID,
+        DRIVER_COUNT,
+        PLAN_ATTEND,
+        REAL_ATTEND,
+        REAL_ATTEND,
+        SUPPORT_COUNT,
+        MILEAGE,
+        AVG_MILEAGE,
+        TEST_MILEAGE,
+        MILEAGE_TOTAL,
+        VERSION
+        FROM VEHICLE_DRIVING_INFO
+        WHERE DEL_FLAG='0'
+        AND RECORD_ID=#{recordId}
+    </select>
+
+    <select id="queryInfoById" resultType="com.wzmtr.dom.dto.res.vehicle.DrivingRecordDetailResDTO">
+        SELECT ID, REMARK, VERSION, DATA_TYPE, DATA_TYPE, DATA_DATE, START_DATE, END_DATE
+        FROM VEHICLE_DRIVING_RECORD
+        WHERE DEL_FLAG='0'
+        <if test="id!=null and id!=''">
+            AND ID=#{id}
+        </if>
+        <if test="dataType!=null and dataType!=''">
+            AND DATA_TYPE=#{dataType}
+        </if>
+        <if test="startDate!=null and startDate!=''">
+            AND START_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'YYYY-MM-DD')>=END_DATE
+        </if>
+    </select>
+
+    <select id="queryInfoDataById" resultType="com.wzmtr.dom.dto.res.vehicle.DrivingInfoResDTO">
+        SELECT *
+        FROM VEHICLE_DRIVING_INFO
+        WHERE DEL_FLAG='0'
+        AND ID=#{id}
+    </select>
+
+    <select id="checkExist" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM VEHICLE_DRIVING_RECORD
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE=#{dataType}
+        <if test="startDate != null">
+            AND START_DATE=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+    </select>
+
+    <insert id="add">
+        INSERT INTO VEHICLE_DRIVING_RECORD (ID,DATA_TYPE,
+        <if test="trainCount1 != null">
+            TRAIN_COUNT1,
+        </if>
+        <if test="trainCount2 != null">
+            TRAIN_COUNT2,
+        </if>
+        <if test="driverCount != null">
+            DRIVER_COUNT,
+        </if>
+        <if test="mileageTotal != null">
+            MILEAGE_TOTAL,
+        </if>
+        <if test="dataDate != null">
+            DATA_DATE,
+        </if>
+        START_DATE,
+        END_DATE,
+        CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+        VALUES (#{id},#{dataType},
+        <if test="trainCount1 != null">
+            #{trainCount1},
+        </if>
+        <if test="trainCount2 != null">
+            #{trainCount2},
+        </if>
+        <if test="driverCount != null">
+            #{driverCount},
+        </if>
+        <if test="mileageTotal != null">
+            #{mileageTotal},
+        </if>
+        <if test="dataDate != null">
+            to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
+        to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
+        #{createBy}, sysdate,#{createBy}, sysdate)
+    </insert>
+
+    <update id="modify">
+        UPDATE VEHICLE_DRIVING_RECORD SET
+        <if test="remark != null">
+            REMARK=#{remark},
+        </if>
+        VERSION=VERSION+1,
+        UPDATE_BY=#{updateBy},
+        UPDATE_DATE=sysdate
+        WHERE ID=#{id} and VERSION=#{version}
+    </update>
+
+    <update id="modifyDayCount">
+        UPDATE VEHICLE_DRIVING_RECORD SET
+        <if test="trainCount1 != null ">
+            TRAIN_COUNT1=#{trainCount1},
+        </if>
+        <if test="trainCount2 != null ">
+            TRAIN_COUNT2=#{trainCount2},
+        </if>
+        <if test="driverCount != null ">
+            DRIVER_COUNT=#{driverCount},
+        </if>
+        <if test="mileageTotal != null ">
+            MILEAGE_TOTAL=#{mileageTotal},
+        </if>
+        UPDATE_DATE=sysdate
+        WHERE ID=#{id}
+    </update>
+
+    <update id="modifyRecordCount">
+        UPDATE VEHICLE_DRIVING_RECORD SET
+        TRAIN_COUNT1=(SELECT REAL_DEPARTURE FROM VEHICLE_DRIVING_DEPOT WHERE DEL_FLAG='0' AND DEPOT_CODE='280'
+        <if test="id!=null and id!=''">
+            AND RECORD_ID=#{id}
+        </if>
+        <if test="dataType!=null and dataType!=''">
+            AND DATA_TYPE=#{dataType}
+        </if>
+        <if test="startDate!=null and startDate!=''">
+            AND START_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'YYYY-MM-DD')>=END_DATE
+        </if>
+        ),
+        TRAIN_COUNT2=(SELECT REAL_DEPARTURE FROM VEHICLE_DRIVING_DEPOT WHERE DEL_FLAG='0' AND DEPOT_CODE='281'
+        <if test="id!=null and id!=''">
+            AND RECORD_ID=#{id}
+        </if>
+        <if test="dataType!=null and dataType!=''">
+            AND DATA_TYPE=#{dataType}
+        </if>
+        <if test="startDate!=null and startDate!=''">
+            AND START_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'YYYY-MM-DD')>=END_DATE
+        </if>
+        ),
+        (DRIVER_COUNT,MILEAGE_TOTAL)
+        =
+        (SELECT DRIVER_COUNT,MILEAGE_TOTAL FROM VEHICLE_DRIVING_INFO
+        WHERE DEL_FLAG='0'
+        <if test="id!=null and id!=''">
+            AND RECORD_ID=#{id}
+        </if>
+        <if test="dataType!=null and dataType!=''">
+            AND DATA_TYPE=#{dataType}
+        </if>
+        <if test="startDate!=null and startDate!=''">
+            AND START_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'YYYY-MM-DD')>=END_DATE
+        </if>
+        )
+        WHERE DEL_FLAG='0'
+        <if test="id!=null and id!=''">
+            AND ID=#{id}
+        </if>
+        <if test="dataType!=null and dataType!=''">
+            AND DATA_TYPE=#{dataType}
+        </if>
+        <if test="startDate!=null and startDate!=''">
+            AND START_DATE=to_date(#{startDate},'YYYY-MM-DD')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'YYYY-MM-DD')=END_DATE
+        </if>
+    </update>
+
+    <delete id="delete">
+        DELETE FROM VEHICLE_DRIVING_RECORD
+        WHERE ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </delete>
+
+    <insert id="createDepotData">
+        INSERT INTO VEHICLE_DRIVING_DEPOT (ID,RECORD_ID, DEPOT_CODE,
+        <if test="planDeparture != null">
+            PLAN_DEPARTURE,
+        </if>
+        <if test="planReceive != null">
+            PLAN_RECEIVE,
+        </if>
+        <if test="realDeparture != null">
+            REAL_DEPARTURE,
+        </if>
+        <if test="realReceive != null">
+            REAL_RECEIVE,
+        </if>
+        <if test="railcarDeparture != null">
+            RAILCAR_DEPARTURE,
+        </if>
+        <if test="railcarReceive != null">
+            RAILCAR_RECEIVE,
+        </if>
+        DATA_TYPE, START_DATE,END_DATE,CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+        VALUES
+        (#{id},
+        #{recordId},
+        #{depotCode},
+        <if test="planDeparture != null">
+            #{planDeparture},
+        </if>
+        <if test="planReceive != null">
+            #{planReceive},
+        </if>
+        <if test="realDeparture != null">
+            #{realDeparture},
+        </if>
+        <if test="realReceive != null">
+            #{realReceive},
+        </if>
+        <if test="railcarDeparture != null">
+            #{railcarDeparture},
+        </if>
+        <if test="railcarReceive != null">
+            #{railcarReceive},
+        </if>
+        #{dataType},
+        to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
+        to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
+        #{createBy},
+        sysdate,
+        #{createBy},
+        sysdate)
+    </insert>
+
+    <update id="modifyDepotData">
+        UPDATE VEHICLE_DRIVING_DEPOT SET
+        <if test="planDeparture !=null">
+            PLAN_DEPARTURE=#{planDeparture},
+        </if>
+        <if test="planReceive !=null">
+            PLAN_RECEIVE=#{planReceive},
+        </if>
+        <if test="realDeparture !=null">
+            REAL_DEPARTURE=#{realDeparture},
+        </if>
+        <if test="realReceive !=null">
+            REAL_RECEIVE=#{realReceive},
+        </if>
+        <if test="railcarDeparture !=null">
+            RAILCAR_DEPARTURE=#{railcarDeparture},
+        </if>
+        <if test="railcarReceive !=null">
+            RAILCAR_RECEIVE=#{railcarReceive},
+        </if>
+        VERSION=VERSION+1,
+        UPDATE_BY=#{updateBy},
+        UPDATE_DATE=sysdate
+        WHERE ID=#{id}
+        AND VERSION=#{version}
+    </update>
+
+    <update id="modifyDepotCount">
+        UPDATE VEHICLE_DRIVING_DEPOT SET
+        (PLAN_DEPARTURE,PLAN_RECEIVE,REAL_DEPARTURE,REAL_RECEIVE,RAILCAR_DEPARTURE,RAILCAR_RECEIVE)
+        =
+        (SELECT SUM(PLAN_DEPARTURE) AS PLAN_DEPARTURE,
+        SUM(PLAN_RECEIVE) AS PLAN_RECEIVE,
+        SUM(REAL_DEPARTURE) AS PLAN_RECEIVE,
+        SUM(REAL_RECEIVE) AS PLAN_RECEIVE,
+        SUM(RAILCAR_DEPARTURE) AS PLAN_RECEIVE,
+        SUM(RAILCAR_RECEIVE) AS PLAN_RECEIVE
+        FROM VEHICLE_DRIVING_DEPOT
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE='1'
+        AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        AND DEPOT_CODE=#{depotCode}
+        )
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE=#{dataType}
+        AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')=END_DATE
+        AND DEPOT_CODE=#{depotCode}
+    </update>
+
+    <insert id="createInfoData">
+        INSERT INTO VEHICLE_DRIVING_INFO (ID, RECORD_ID,
+        <if test="driverCount != null">
+            DRIVER_COUNT,
+        </if>
+        <if test="planAttend != null">
+            PLAN_ATTEND,
+        </if>
+        <if test="realAttend != null">
+            REAL_ATTEND,
+        </if>
+        <if test="supportCount != null">
+            SUPPORT_COUNT,
+        </if>
+        <if test="mileage != null">
+            MILEAGE,
+        </if>
+        <if test="testMileage != null">
+            TEST_MILEAGE,
+        </if>
+        <if test="mileageTotal != null">
+            MILEAGE_TOTAL,
+        </if>
+        <if test="avgMileage != null">
+            AVG_MILEAGE,
+        </if>
+        DATA_TYPE, START_DATE,END_DATE, CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+        VALUES (#{id},
+        #{recordId},
+        <if test="driverCount != null">
+            #{driverCount},
+        </if>
+        <if test="planAttend != null">
+            #{planAttend},
+        </if>
+        <if test="realAttend != null">
+            #{realAttend},
+        </if>
+        <if test="supportCount != null">
+            #{supportCount},
+        </if>
+        <if test="mileage != null">
+            #{mileage},
+        </if>
+        <if test="testMileage != null">
+            #{testMileage},
+        </if>
+        <if test="mileageTotal != null">
+            #{mileageTotal},
+        </if>
+        <if test="avgMileage != null">
+            #{avgMileage},
+        </if>
+        #{dataType},
+        to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
+        to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
+        #{createBy},
+        sysdate,
+        #{createBy},
+        sysdate)
+    </insert>
+
+    <update id="modifyInfoData">
+        UPDATE VEHICLE_DRIVING_INFO SET
+        <if test="driverCount !=null">
+            DRIVER_COUNT=#{driverCount},
+        </if>
+        <if test="planAttend !=null">
+            PLAN_ATTEND=#{planAttend},
+        </if>
+        <if test="realAttend !=null">
+            REAL_ATTEND=#{realAttend},
+        </if>
+        <if test="supportCount !=null">
+            SUPPORT_COUNT=#{supportCount},
+        </if>
+        <if test="mileage !=null">
+            MILEAGE=#{mileage},
+        </if>
+        <if test="testMileage !=null">
+            TEST_MILEAGE=#{testMileage},
+        </if>
+        <if test="mileageTotal !=null">
+            MILEAGE_TOTAL=#{mileageTotal},
+        </if>
+        <if test="avgMileage !=null">
+            AVG_MILEAGE=#{avgMileage},
+        </if>
+        VERSION=VERSION+1,
+        UPDATE_BY=#{updateBy},
+        UPDATE_DATE=sysdate
+        WHERE ID=#{id}
+        AND VERSION=#{version}
+    </update>
+
+    <update id="modifyInfoCount">
+        UPDATE VEHICLE_DRIVING_INFO SET
+        (DRIVER_COUNT,MILEAGE_TOTAL,AVG_MILEAGE)
+        =
+        (SELECT DRIVER_COUNT,MILEAGE_TOTAL,AVG_MILEAGE FROM VEHICLE_DRIVING_INFO
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE='1'
+        AND START_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')),
+        (PLAN_ATTEND,REAL_ATTEND,SUPPORT_COUNT,MILEAGE,TEST_MILEAGE)
+        =
+        (
+        SELECT SUM(PLAN_ATTEND) AS PLAN_ATTEND,SUM(REAL_ATTEND) AS REAL_ATTEND,SUM(SUPPORT_COUNT) AS SUPPORT_COUNT,SUM(MILEAGE) AS MILEAGE,SUM(TEST_MILEAGE) AS TEST_MILEAGE
+        FROM VEHICLE_DRIVING_INFO
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE='1'
+        AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        )
+        WHERE DATA_TYPE =#{dataType}
+        AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+    </update>
+</mapper>

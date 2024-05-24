@@ -1,10 +1,20 @@
 package com.wzmtr.dom.config;
 
 import io.minio.MinioClient;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * MinIO配置
+ * @author  Ray
+ * @version 1.0
+ * @date 2024/03/06
+ */
+@Setter
+@Getter
 @Configuration
 @ConfigurationProperties(prefix = "minio")
 public class MinioConfig {
@@ -28,48 +38,9 @@ public class MinioConfig {
      */
     private String secretKey;
 
-
-    public String getUrl()
-    {
-        return url;
-    }
-
-    public void setUrl(String url)
-    {
-        this.url = url;
-    }
-
-    public String getAccessKey()
-    {
-        return accessKey;
-    }
-
-    public void setAccessKey(String accessKey)
-    {
-        this.accessKey = accessKey;
-    }
-
-    public String getSecretKey()
-    {
-        return secretKey;
-    }
-
-    public void setSecretKey(String secretKey)
-    {
-        this.secretKey = secretKey;
-    }
-
     @Bean
-    public MinioClient getMinioClient()
-    {
+    public MinioClient getMinioClient() {
         return MinioClient.builder().endpoint(url).credentials(accessKey, secretKey).build();
     }
 
-    public String getImgPath() {
-        return imgPath;
-    }
-
-    public void setImgPath(String imgPath) {
-        this.imgPath = imgPath;
-    }
 }

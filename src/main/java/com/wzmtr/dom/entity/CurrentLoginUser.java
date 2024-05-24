@@ -1,10 +1,12 @@
 package com.wzmtr.dom.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.io.Serializable;
 
 @Data
+@AllArgsConstructor
 public class CurrentLoginUser implements Serializable {
 
     private String personId;
@@ -32,4 +34,11 @@ public class CurrentLoginUser implements Serializable {
     private String phone;
 
     private String names;
+
+    /**
+     * 所属车站编码
+     * */
+    private String stationCode;
+
+    public CurrentLoginUser() {}
 }

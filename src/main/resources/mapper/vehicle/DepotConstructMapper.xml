@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzmtr.dom.mapper.vehicle.DepotConstructMapper">
+
+    <select id="list" resultType="com.wzmtr.dom.dto.res.vehicle.DepotConstructRecordResDTO">
+        SELECT ID, DEPOT_CODE,PLAN_CONSTRUCT,REAL_CONSTRUCT, VERSION, DATA_TYPE, DATA_DATE, START_DATE,END_DATE,CREATE_DATE, UPDATE_DATE
+        FROM VEHICLE_CONSTRUCT_RECORD
+        WHERE DEL_FLAG='0'
+        AND DEPOT_CODE=#{depotCode}
+        AND DATA_TYPE=#{dataType}
+        <if test="startDate != null and startDate!=''">
+            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null and endDate!=''">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        </if>
+        ORDER BY START_DATE desc
+    </select>
+
+    <select id="queryInfoById" resultType="com.wzmtr.dom.dto.res.vehicle.DepotConstructDetailResDTO">
+        SELECT ID, DEPOT_CODE,PLAN_CONSTRUCT,REAL_CONSTRUCT,
+        A1_PLAN,
+        B_PLAN,
+        DAY_SUP_PLAN,
+        TEMP_PLAN,
+        A1_COMPLETE,
+        B_COMPLETE,
+        DAY_SUP_COMPLETE,
+        TEMP_COMPLETE,
+        POWER_SUPPLY,
+        SHUNT_COUNT,
+        SHUNT_HOOK,
+        SHUNT_TIME,
+        IN_OUT_STORAGE,
+        CLEAN_COUNT,
+        REMARK,
+        VERSION, DATA_DATE,DATA_TYPE,START_DATE,END_DATE
+        FROM VEHICLE_CONSTRUCT_RECORD
+        WHERE ID=#{id} AND DEL_FLAG = '0'
+    </select>
+
+    <select id="checkExist" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM VEHICLE_CONSTRUCT_RECORD
+        WHERE DEL_FLAG = '0'
+        AND DEPOT_CODE=#{depotCode}
+        AND DATA_TYPE=#{dataType}
+        <if test="startDate != null">
+            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+    </select>
+
+    <insert id="add">
+        INSERT INTO VEHICLE_CONSTRUCT_RECORD (ID,DEPOT_CODE,DATA_TYPE,
+        <if test="planConstruct != null">
+            PLAN_CONSTRUCT,
+        </if>
+        <if test="realConstruct != null">
+            REAL_CONSTRUCT,
+        </if>
+        <if test="a1Plan != null">
+            A1_PLAN,
+        </if>
+        <if test="bPlan != null">
+            B_PLAN,
+        </if>
+        <if test="daySupPlan != null">
+            DAY_SUP_PLAN,
+        </if>
+        <if test="tempPlan != null">
+            TEMP_PLAN,
+        </if>
+        <if test="a1Complete != null">
+            A1_COMPLETE,
+        </if>
+        <if test="bComplete != null">
+            B_COMPLETE,
+        </if>
+        <if test="daySupComplete != null">
+            DAY_SUP_COMPLETE,
+        </if>
+        <if test="tempComplete != null">
+            TEMP_COMPLETE,
+        </if>
+        <if test="powerSupply != null">
+            POWER_SUPPLY,
+        </if>
+        <if test="shuntCount != null">
+            SHUNT_COUNT,
+        </if>
+        <if test="shuntHook != null">
+            SHUNT_HOOK,
+        </if>
+        <if test="shuntTime != null">
+            SHUNT_TIME,
+        </if>
+        <if test="inOutStorage != null">
+            IN_OUT_STORAGE,
+        </if>
+        <if test="cleanCount != null">
+            CLEAN_COUNT,
+        </if>
+        <if test="remark != null">
+            REMARK,
+        </if>
+        <if test="dataDate != null">
+            DATA_DATE,
+        </if>
+        START_DATE,
+        END_DATE,
+        CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+        VALUES
+        (#{id},#{depotCode},#{dataType},
+
+        <if test="planConstruct != null">
+            #{planConstruct},
+        </if>
+        <if test="realConstruct != null">
+            #{realConstruct},
+        </if>
+        <if test="a1Plan != null">
+            #{a1Plan},
+        </if>
+        <if test="bPlan != null">
+            #{bPlan},
+        </if>
+        <if test="daySupPlan != null">
+            #{daySupPlan},
+        </if>
+        <if test="tempPlan != null">
+            #{tempPlan},
+        </if>
+        <if test="a1Complete != null">
+            #{a1Complete},
+        </if>
+        <if test="bComplete != null">
+            #{bComplete},
+        </if>
+        <if test="daySupComplete != null">
+            #{daySupComplete},
+        </if>
+        <if test="tempComplete != null">
+            #{tempComplete},
+        </if>
+        <if test="powerSupply != null">
+            #{powerSupply},
+        </if>
+        <if test="shuntCount != null">
+            #{shuntCount},
+        </if>
+        <if test="shuntHook != null">
+            #{shuntHook},
+        </if>
+        <if test="shuntTime != null">
+            #{shuntTime},
+        </if>
+        <if test="inOutStorage != null">
+            #{inOutStorage},
+        </if>
+        <if test="remark != null">
+            #{remark},
+        </if>
+
+        <if test="dataDate != null">
+            to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
+        to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
+        #{createBy}, sysdate,#{createBy}, sysdate)
+    </insert>
+
+    <update id="modify">
+        UPDATE VEHICLE_CONSTRUCT_RECORD SET
+        <if test="planConstruct != null">
+            PLAN_CONSTRUCT=#{planConstruct},
+        </if>
+        <if test="realConstruct != null">
+            REAL_CONSTRUCT=#{realConstruct},
+        </if>
+        <if test="a1Plan != null">
+            A1_PLAN=#{a1Plan},
+        </if>
+        <if test="bPlan != null">
+            B_PLAN=#{bPlan},
+        </if>
+        <if test="daySupPlan != null">
+            DAY_SUP_PLAN=#{daySupPlan},
+        </if>
+        <if test="tempPlan != null">
+            TEMP_PLAN=#{tempPlan},
+        </if>
+        <if test="a1Complete != null">
+            A1_COMPLETE=#{a1Complete},
+        </if>
+        <if test="bComplete != null">
+            B_COMPLETE=#{bComplete},
+        </if>
+        <if test="daySupComplete != null">
+            DAY_SUP_COMPLETE=#{daySupComplete},
+        </if>
+        <if test="tempComplete != null">
+            TEMP_COMPLETE=#{tempComplete},
+        </if>
+        <if test="powerSupply != null">
+            POWER_SUPPLY=#{powerSupply},
+        </if>
+        <if test="shuntCount != null">
+            SHUNT_COUNT=#{shuntCount},
+        </if>
+        <if test="shuntHook != null">
+            SHUNT_HOOK=#{shuntHook},
+        </if>
+        <if test="shuntTime != null">
+            SHUNT_TIME=#{shuntTime},
+        </if>
+        <if test="inOutStorage != null">
+            IN_OUT_STORAGE=#{inOutStorage},
+        </if>
+        <if test="cleanCount != null">
+            CLEAN_COUNT=#{cleanCount},
+        </if>
+        <if test="remark != null">
+            REMARK=#{remark},
+        </if>
+        VERSION = VERSION+1,
+        UPDATE_BY=#{updateBy},
+        UPDATE_DATE=sysdate
+        WHERE ID=#{id} and VERSION=#{version}
+    </update>
+
+    <update id="modifyCount">
+        UPDATE VEHICLE_CONSTRUCT_RECORD SET
+        <trim suffixOverrides=",">
+            <if test="planConstruct != null">
+                PLAN_CONSTRUCT=#{planConstruct},
+            </if>
+            <if test="realConstruct != null">
+                REAL_CONSTRUCT=#{realConstruct},
+            </if>
+            <if test="a1Plan != null">
+                A1_PLAN=#{a1Plan},
+            </if>
+            <if test="bPlan != null">
+                B_PLAN=#{bPlan},
+            </if>
+            <if test="daySupPlan != null">
+                DAY_SUP_PLAN=#{daySupPlan},
+            </if>
+            <if test="tempPlan != null">
+                TEMP_PLAN=#{tempPlan},
+            </if>
+            <if test="a1Complete != null">
+                A1_COMPLETE=#{a1Complete},
+            </if>
+            <if test="bComplete != null">
+                B_COMPLETE=#{bComplete},
+            </if>
+            <if test="daySupComplete != null">
+                DAY_SUP_COMPLETE=#{daySupComplete},
+            </if>
+            <if test="tempComplete != null">
+                TEMP_COMPLETE=#{tempComplete},
+            </if>
+            <if test="powerSupply != null">
+                POWER_SUPPLY=#{powerSupply},
+            </if>
+            <if test="shuntCount != null">
+                SHUNT_COUNT=#{shuntCount},
+            </if>
+            <if test="shuntHook != null">
+                SHUNT_HOOK=#{shuntHook},
+            </if>
+            <if test="shuntTime != null">
+                SHUNT_TIME=#{shuntTime},
+            </if>
+            <if test="inOutStorage != null">
+                IN_OUT_STORAGE=#{inOutStorage},
+            </if>
+        </trim>
+        WHERE ID=#{id}
+    </update>
+
+    <update id="modifyDepotCount">
+        UPDATE VEHICLE_CONSTRUCT_RECORD SET
+        (PLAN_CONSTRUCT,REAL_CONSTRUCT,A1_PLAN,B_PLAN,DAY_SUP_PLAN,TEMP_PLAN,A1_COMPLETE,B_COMPLETE,DAY_SUP_COMPLETE,TEMP_COMPLETE,POWER_SUPPLY,SHUNT_COUNT,SHUNT_HOOK,SHUNT_TIME,IN_OUT_STORAGE)
+        =
+        (SELECT SUM(A1_PLAN+B_PLAN+DAY_SUP_PLAN+TEMP_PLAN) AS PLAN_CONSTRUCT,
+        SUM(A1_COMPLETE+B_COMPLETE+DAY_SUP_COMPLETE+TEMP_COMPLETE) AS REAL_CONSTRUCT,
+        SUM(A1_PLAN) AS A1_PLAN,
+        SUM(B_PLAN) AS B_PLAN,
+        SUM(DAY_SUP_PLAN) AS DAY_SUP_PLAN,
+        SUM(TEMP_PLAN) AS TEMP_PLAN,
+        SUM(A1_COMPLETE) AS A1_COMPLETE,
+        SUM(B_COMPLETE) AS B_COMPLETE,
+        SUM(DAY_SUP_COMPLETE) AS DAY_SUP_COMPLETE,
+        SUM(TEMP_COMPLETE) AS TEMP_COMPLETE,
+        SUM(POWER_SUPPLY) AS POWER_SUPPLY,
+        SUM(SHUNT_COUNT) AS SHUNT_COUNT,
+        SUM(SHUNT_HOOK) AS SHUNT_HOOK,
+        SUM(SHUNT_TIME) AS SHUNT_TIME,
+        SUM(IN_OUT_STORAGE) AS IN_OUT_STORAGE
+        FROM VEHICLE_CONSTRUCT_RECORD
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE = '1'
+        AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        AND DEPOT_CODE=#{depotCode})
+        WHERE ID=#{id}
+    </update>
+
+    <select id="planList" resultType="com.wzmtr.dom.dto.res.vehicle.DepotConstructPlanResDTO">
+        SELECT ID, RECORD_ID,DEPOT_CODE,WORK_CODE,WORK_NAME,WORK_DEPT,WORK_AREA,WORK_DETAIL,POWER_REQ
+        VERSION, DATA_TYPE, DATA_DATE, START_DATE,END_DATE,CREATE_DATE, UPDATE_DATE
+        FROM VEHICLE_CONSTRUCT_PLAN
+        WHERE DEL_FLAG='0'
+        AND DEPOT_CODE=#{depotCode}
+        <if test="startDate != null">
+            AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        </if>
+        ORDER BY CREATE_DATE desc
+    </select>
+
+    <insert id="createPlan">
+        INSERT INTO VEHICLE_CONSTRUCT_PLAN (ID,
+        RECORD_ID,
+        DEPOT_CODE,
+        DATA_TYPE,
+        <if test="constructPlanId != null">
+            CONSTRUCT_PLAN_ID,
+        </if>
+        <if test="workType != null">
+            WORK_TYPE,
+        </if>
+        <if test="workconcentId != null">
+            WORKCONCENT_ID,
+        </if>
+        <if test="workCode != null">
+            WORK_CODE,
+        </if>
+        <if test="workName != null">
+            WORK_NAME,
+        </if>
+        <if test="workDept != null">
+            WORK_DEPT,
+        </if>
+        <if test="workArea != null">
+            WORK_AREA,
+        </if>
+        <if test="workDetail != null">
+            WORK_DETAIL,
+        </if>
+        <if test="powerReq != null">
+            POWER_REQ,
+        </if>
+
+        <if test="dataDate != null">
+            DATA_DATE,
+        </if>
+        START_DATE,
+        END_DATE,
+        CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+        VALUES
+        (#{id},
+        #{recordId},
+        #{depotCode},
+        #{dataType},
+        <if test="constructPlanId != null">
+            #{constructPlanId},
+        </if>
+        <if test="workType != null">
+            #{workType},
+        </if>
+        <if test="workconcentId != null">
+            #{workconcentId},
+        </if>
+        <if test="workCode != null">
+            #{workCode},
+        </if>
+        <if test="workName != null">
+            #{workName},
+        </if>
+        <if test="workDept != null">
+            #{workDept},
+        </if>
+        <if test="workArea != null">
+            #{workArea},
+        </if>
+        <if test="workDetail != null">
+            #{workDetail},
+        </if>
+        <if test="powerReq != null">
+            #{powerReq},
+        </if>
+        <if test="dataDate != null">
+            to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
+        to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
+        #{createBy}, sysdate,#{createBy}, sysdate)
+    </insert>
+
+    <delete id="deletePlan">
+        DELETE FROM VEHICLE_CONSTRUCT_PLAN
+        WHERE ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </delete>
+
+
+    <update id="autoModify">
+        UPDATE VEHICLE_CONSTRUCT_RECORD SET
+        (PLAN_CONSTRUCT,REAL_CONSTRUCT,A1_PLAN,B_PLAN,DAY_SUP_PLAN,TEMP_PLAN,A1_COMPLETE,B_COMPLETE,DAY_SUP_COMPLETE,TEMP_COMPLETE,POWER_SUPPLY,SHUNT_COUNT,SHUNT_HOOK,SHUNT_TIME,IN_OUT_STORAGE)
+        =
+        (SELECT SUM(A1_PLAN+B_PLAN+DAY_SUP_PLAN+TEMP_PLAN) AS PLAN_CONSTRUCT,
+        SUM(A1_COMPLETE+B_COMPLETE+DAY_SUP_COMPLETE+TEMP_COMPLETE) AS REAL_CONSTRUCT,
+        SUM(A1_PLAN) AS A1_PLAN,
+        SUM(B_PLAN) AS B_PLAN,
+        SUM(DAY_SUP_PLAN) AS DAY_SUP_PLAN,
+        SUM(TEMP_PLAN) AS TEMP_PLAN,
+        SUM(A1_COMPLETE) AS A1_COMPLETE,
+        SUM(B_COMPLETE) AS B_COMPLETE,
+        SUM(DAY_SUP_COMPLETE) AS DAY_SUP_COMPLETE,
+        SUM(TEMP_COMPLETE) AS TEMP_COMPLETE,
+        SUM(POWER_SUPPLY) AS POWER_SUPPLY,
+        SUM(SHUNT_COUNT) AS SHUNT_COUNT,
+        SUM(SHUNT_HOOK) AS SHUNT_HOOK,
+        SUM(SHUNT_TIME) AS SHUNT_TIME,
+        SUM(IN_OUT_STORAGE) AS IN_OUT_STORAGE
+        FROM VEHICLE_CONSTRUCT_RECORD
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE = '1'
+        AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        AND DEPOT_CODE=#{depotCode})
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE = #{dataType}
+        AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+    </update>
+</mapper>

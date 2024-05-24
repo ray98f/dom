@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzmtr.dom.mapper.operate.OperateEventMapper">
+
+    <select id="list" resultType="com.wzmtr.dom.dto.res.operate.OperateEventResDTO">
+        SELECT *
+        FROM OPERATE_EVENT_RECORD
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE=#{dataType}
+        <if test="startDate!=null and startDate!=''">
+            AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        </if>
+        ORDER BY START_DATE desc
+    </select>
+
+    <select id="listAll" resultType="com.wzmtr.dom.dto.res.operate.OperateEventResDTO">
+        SELECT *
+        FROM OPERATE_EVENT_RECORD
+        WHERE DEL_FLAG='0'
+        <if test="startDate!=null">
+            AND to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')>=START_DATE
+        </if>
+        <if test="endDate!=null">
+            AND END_DATE>=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        ORDER BY START_DATE desc
+    </select>
+
+    <select id="queryInfoById" resultType="com.wzmtr.dom.dto.res.operate.OperateEventResDTO">
+        SELECT *
+        FROM OPERATE_EVENT_RECORD
+        WHERE DEL_FLAG = '0'
+        <if test="id!=null">
+            AND ID=#{id}
+        </if>
+        <if test="startDate!=null">
+            AND to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')>=START_DATE
+        </if>
+        <if test="endDate!=null">
+            AND END_DATE>=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+    </select>
+
+    <select id="checkExist" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM OPERATE_EVENT_RECORD
+        WHERE DEL_FLAG = '0'
+        AND DATA_TYPE=#{dataType}
+        <if test="startDate!=null">
+            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate!=null">
+            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+    </select>
+
+    <insert id="add">
+        INSERT INTO OPERATE_EVENT_RECORD (ID,DATA_TYPE,
+        <if test="eventCount!=null">
+            EVENT_COUNT,
+        </if>
+        <if test="dataDate!=null">
+            DATA_DATE,
+        </if>
+        START_DATE,
+        END_DATE,
+        CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+        VALUES (#{id},#{dataType},
+        <if test="eventCount!=null">
+            #{eventCount},
+        </if>
+        <if test="dataDate!=null">
+            to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
+        to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
+        #{createBy}, sysdate,#{createBy}, sysdate)
+    </insert>
+
+    <update id="modifyCount">
+        UPDATE OPERATE_EVENT_RECORD SET
+        EVENT_COUNT=(SELECT COUNT(1) FROM OPERATE_EVENT_INFO WHERE DEL_FLAG='0' AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE)
+        WHERE ID=#{id}
+    </update>
+
+    <select id="eventList" resultType="com.wzmtr.dom.dto.res.operate.OperateEventInfoResDTO">
+        SELECT *
+        FROM OPERATE_EVENT_INFO
+        WHERE DEL_FLAG='0'
+        <if test="startDate!=null">
+            AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate!=null">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        </if>
+        ORDER BY CREATE_DATE desc
+    </select>
+
+    <select id="eventDetailById" resultType="com.wzmtr.dom.dto.res.operate.OperateEventDetailResDTO">
+        SELECT *
+        FROM OPERATE_EVENT_DETAIL
+        WHERE DEL_FLAG='0'
+        AND EVENT_ID = #{eventId}
+        ORDER BY NODE_TIME ASC
+    </select>
+
+    <select id="eventCount" resultType="com.wzmtr.dom.dto.res.operate.EventCountResDTO">
+        SELECT RTRIM(MAJOR_TYPE) AS MAJOR_TYPE, COUNT(*) AS count
+        FROM OPERATE_EVENT_INFO
+        WHERE DEL_FLAG='0'
+        <if test="startDate!=null">
+            AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate!=null">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        </if>
+        GROUP BY MAJOR_TYPE
+    </select>
+
+    <select id="queryDateRange" resultType="com.wzmtr.dom.dto.res.operate.OperateEventInfoResDTO">
+        SELECT MIN(START_DATE) AS START_DATE,MAX(END_DATE) AS END_DATE
+        FROM OPERATE_EVENT_INFO
+        WHERE ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </select>
+
+    <insert id="createEvent">
+        INSERT INTO OPERATE_EVENT_INFO (ID, RECORD_ID,
+        <if test="majorType!=null and majorType!=''">
+            MAJOR_TYPE,
+        </if>
+        <if test="title!=null and title!=''">
+            TITLE,
+        </if>
+        <if test="offLineCount!=null">
+            OFF_LINE_COUNT,
+        </if>
+        <if test="rescueCount!=null">
+            RESCUE_COUNT,
+        </if>
+        <if test="rutineGuestCount!=null">
+            RUTINE_GUEST_COUNT,
+        </if>
+        <if test="addCount!=null">
+            ADD_COUNT,
+        </if>
+        <if test="delay1Count!=null">
+            DELAY1_COUNT,
+        </if>
+        <if test="delay2Count!=null">
+            DELAY2_COUNT,
+        </if>
+        <if test="stopCount!=null">
+            STOP_COUNT,
+        </if>
+        <if test="delay1EventCount!=null">
+            DELAY1_EVENT_COUNT,
+        </if>
+        <if test="delay1VehicleCount!=null">
+            DELAY1_VEHICLE_COUNT,
+        </if>
+        <if test="delay2EventCount!=null">
+            DELAY2_EVENT_COUNT,
+        </if>
+        <if test="delay1VehicleCount!=null">
+            DELAY2_VEHICLE_COUNT,
+        </if>
+        <if test="gateFaultCount!=null">
+            GATE_FAULT_COUNT,
+        </if>
+        <if test="lineFaultCount!=null">
+            LINE_FAULT_COUNT,
+        </if>
+        <if test="vehicleFaultCount!=null">
+            VEHICLE_FAULT_COUNT,
+        </if>
+        <if test="signalFaultCount!=null">
+            SIGNAL_FAULT_COUNT,
+        </if>
+        <if test="powerFaultCount!=null">
+            POWER_FAULT_COUNT,
+        </if>
+        <if test="isRectified!=null and isRectified!=''">
+            IS_RECTIFIED,
+        </if>
+        <if test="effect!=null and effect!=''">
+            EFFECT,
+        </if>
+        <if test="eventLevel!=null and eventLevel!=''">
+            EVENT_LEVEL,
+        </if>
+        <if test="isClose!=null">
+            IS_CLOSE,
+        </if>
+
+        DATA_TYPE,
+        <if test="dataDate!=null">
+            DATA_DATE,
+        </if>
+        START_DATE,
+        END_DATE,
+        CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+        VALUES ( #{id},
+        #{recordId},
+        <if test="majorType!=null and majorType!=''">
+            #{majorType},
+        </if>
+        <if test="title!=null and title!=''">
+            #{title},
+        </if>
+        <if test="offLineCount!=null">
+            #{offLineCount},
+        </if>
+        <if test="rescueCount!=null">
+            #{rescueCount},
+        </if>
+        <if test="rutineGuestCount!=null">
+            #{rutineGuestCount},
+        </if>
+        <if test="addCount!=null">
+            #{addCount},
+        </if>
+        <if test="delay1Count!=null">
+            #{delay1Count},
+        </if>
+        <if test="delay2Count!=null">
+            #{delay2Count},
+        </if>
+        <if test="stopCount!=null">
+            #{stopCount},
+        </if>
+        <if test="delay1EventCount!=null">
+            #{delay1EventCount},
+        </if>
+        <if test="delay1VehicleCount!=null">
+            #{delay1VehicleCount},
+        </if>
+        <if test="delay2EventCount!=null">
+            #{delay2EventCount},
+        </if>
+        <if test="delay2VehicleCount!=null">
+            #{delay2VehicleCount},
+        </if>
+        <if test="gateFaultCount!=null">
+            #{gateFaultCount},
+        </if>
+        <if test="lineFaultCount!=null">
+            #{lineFaultCount},
+        </if>
+        <if test="vehicleFaultCount!=null">
+            #{vehicleFaultCount},
+        </if>
+        <if test="signalFaultCount!=null">
+            #{signalFaultCount},
+        </if>
+        <if test="powerFaultCount!=null">
+            #{powerFaultCount},
+        </if>
+        <if test="isRectified!=null and isRectified!=''">
+            #{isRectified},
+        </if>
+        <if test="effect!=null and effect!=''">
+            #{effect},
+        </if>
+        <if test="eventLevel!=null and eventLevel!=''">
+            #{eventLevel},
+        </if>
+        <if test="isClose!=null">
+            #{isClose},
+        </if>
+
+        #{dataType},
+        <if test="dataDate!=null">
+            to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
+        to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
+        #{createBy}, sysdate,#{createBy}, sysdate)
+    </insert>
+
+    <insert id="createEventDetail">
+        insert ALL
+        <foreach collection="list" index="index" item="item" separator=" ">
+            INTO OPERATE_EVENT_DETAIL (
+            EVENT_ID,
+            NODE_TIME,
+            EVENT_CONTENT,
+            CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+            VALUES (
+            #{parentId},
+            to_date(#{item.nodeTime},'yyyy-mm-dd hh24:mi:ss'),
+            #{item.eventContent},
+            #{createBy}, sysdate,#{createBy}, sysdate)
+        </foreach>
+        SELECT * FROM dual
+    </insert>
+
+    <update id="modifyEvent">
+        UPDATE OPERATE_EVENT_INFO SET
+        <if test="majorType!=null and majorType!=''">
+            MAJOR_TYPE=#{majorType},
+        </if>
+        <if test="title!=null and title!=''">
+            TITLE=#{title},
+        </if>
+        <if test="offLineCount!=null">
+            OFF_LINE_COUNT=#{offLineCount},
+        </if>
+        <if test="rescueCount!=null">
+            RESCUE_COUNT=#{rescueCount},
+        </if>
+        <if test="rutineGuestCount!=null">
+            RUTINE_GUEST_COUNT=#{rutineGuestCount},
+        </if>
+        <if test="addCount!=null">
+            ADD_COUNT=#{addCount},
+        </if>
+        <if test="delay1Count!=null">
+            DELAY1_COUNT=#{delay1Count},
+        </if>
+        <if test="delay2Count!=null">
+            DELAY2_COUNT=#{delay2Count},
+        </if>
+        <if test="stopCount!=null">
+            STOP_COUNT=#{stopCount},
+        </if>
+        <if test="delay1EventCount!=null">
+            DELAY1_EVENT_COUNT=#{delay1EventCount},
+        </if>
+        <if test="delay1VehicleCount!=null">
+            DELAY1_VEHICLE_COUNT=#{delay1VehicleCount},
+        </if>
+        <if test="delay2EventCount!=null">
+            DELAY2_EVENT_COUNT=#{delay2EventCount},
+        </if>
+        <if test="delay1VehicleCount!=null">
+            DELAY2_VEHICLE_COUNT=#{delay1VehicleCount},
+        </if>
+        <if test="gateFaultCount!=null">
+            GATE_FAULT_COUNT=#{gateFaultCount},
+        </if>
+        <if test="lineFaultCount!=null">
+            LINE_FAULT_COUNT=#{lineFaultCount},
+        </if>
+        <if test="vehicleFaultCount!=null">
+            VEHICLE_FAULT_COUNT=#{vehicleFaultCount},
+        </if>
+        <if test="signalFaultCount!=null">
+            SIGNAL_FAULT_COUNT=#{signalFaultCount},
+        </if>
+        <if test="powerFaultCount!=null">
+            POWER_FAULT_COUNT=#{powerFaultCount},
+        </if>
+        <if test="isClose!=null">
+            IS_CLOSE=#{isClose},
+        </if>
+
+        <if test="eventDesc!=null and eventDesc!=''">
+            EVENT_DESC=#{eventDesc},
+        </if>
+        <if test="eventContent!=null and eventContent!=''">
+            EVENT_CONTENT=#{eventContent},
+        </if>
+        <if test="isRectified!=null and isRectified!=''">
+            IS_RECTIFIED=#{isRectified},
+        </if>
+        <if test="effect!=null and effect!=''">
+            EFFECT=#{effect},
+        </if>
+        <if test="eventLevel!=null and eventLevel!=''">
+            EVENT_LEVEL=#{eventLevel},
+        </if>
+        VERSION = VERSION+1,
+        UPDATE_BY=#{updateBy},
+        UPDATE_DATE=sysdate
+        WHERE ID=#{id}
+        AND VERSION=#{version}
+    </update>
+
+    <delete id="deleteEvent">
+        DELETE FROM OPERATE_EVENT_INFO
+        WHERE ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </delete>
+
+    <delete id="deleteEventDetail">
+        DELETE FROM OPERATE_EVENT_DETAIL
+        WHERE EVENT_ID = #{id}
+    </delete>
+
+    <delete id="deleteEventDetailBatch">
+        DELETE FROM OPERATE_EVENT_DETAIL
+        WHERE EVENT_ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </delete>
+</mapper>

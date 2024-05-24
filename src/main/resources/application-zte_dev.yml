@@ -1,4 +1,4 @@
-# 中兴测试环境
+# 中兴开发环境
 spring:
   datasource:
     url: jdbc:oracle:thin:@192.168.30.113:1521/xe
@@ -33,16 +33,16 @@ excluded:
 
 sso:
   url: http://zxgd.softether.net:4443/cas
-  home: http://192.168.30.140:8002/dom/
+  home: http://192.168.30.140:8100/dom/
 
 cas:
   serverUrlPrefix: "${sso.url}"
-  serviceUrlPrefix: "http://192.168.30.140:8002/dom"
+  serviceUrlPrefix: "http://localhost:8100/dom"
   casFilterUrlPattern: "/cas"
   loginUrlPattern: "/login"
   logoutUrlPattern: "/logout"
   successUrlPattern: "/index"
-  serviceFront: "http://192.168.30.140:8899/index.html"
+  serviceFront: "http://localhost:3334/index.html"
 
 diboot:
   core:
@@ -74,7 +74,7 @@ mdm:
     address: "http://esb.wzmtr.com:7003/mdmwebservice/ps/getAllPersonPlusList?wsdl"
 
 local:
-  base-url: http://192.168.30.140:8002/dom
+  base-url: http://192.168.30.140:8900/dom
   data-sync: off
 
 minio:
@@ -82,6 +82,30 @@ minio:
   imgPath: http://192.168.30.113:9000
   accessKey: miniominio
   secretKey: miniominio
+
+#乘务、eam、施工调度、行车调度
+ocm:
+  host: http://nocm.wzmtr.com:2443
+eam:
+  host: http://192.168.30.140:8002
+csm:
+  host: http://192.168.30.140:8005
+odm:
+  host: http://10.11.82.27:8181
+
+
+open-api:
+  csm:
+    constructPlan: ${csm.host}/csm/constructPlan/open/getPlanList
+    importantConstruct: ${csm.host}/csm/constructPlan/open/getImportantPlanList
+    unsaturationConstruct: ${csm.host}/csm/report/open/getUnsaturationPlan
+    planStatistics: ${csm.host}/csm/report/open/getPlanStatistics
+    dispatchOrder: ${csm.host}/csm/dispatch/order/open/list
+  odm:
+    depotStatistics: ${odm.host}/api/statistics/anon/day
+  acc:
+    api-app-key: "EvbhN1NZFmsuFM0j1T3Fi3tKQAxpd52r"
+    person-count: "http://dxp.wzmtr.com:9080/v2/ACC/ACC13"
 
 pro:
   name: dom

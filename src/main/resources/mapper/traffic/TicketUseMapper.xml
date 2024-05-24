@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzmtr.dom.mapper.traffic.TicketUseMapper">
+
+    <select id="page" resultType="com.wzmtr.dom.dto.res.traffic.TicketUseResDTO">
+        SELECT ID, ONE_WAY_TICKET, ONE_WAY_RATIO,
+        CITIZEN_CARD_REGULAR, CITIZEN_CARD_REGULAR_RATIO,
+        CITIZEN_CARD_DISCOUNT, CITIZEN_CARD_DISCOUNT_RATIO,
+        CITIZEN_CARD_LOVE, CITIZEN_CARD_LOVE_RATIO,
+        CITIZEN_CARD_PREFER, CITIZEN_CARD_PREFER_RATIO,
+        ONE_CARD, ONE_CARD_RATIO,
+        UNION_CARD, UNION_CARD_RATIO,
+        QRCODE, QRCODE_RATIO,
+        EMP_CARD, EMP_CARD_RATIO,
+        TIME_TICKET, TIME_TICKET_RATIO,
+        COUNTING_TICKET, COUNTING_TICKET_RATIO,
+        DATA_DATE, DATA_TYPE, START_DATE, END_DATE, VERSION
+        FROM TRAFFIC_TICKET_USE_RECORD
+        WHERE DEL_FLAG='0'
+        <if test="dataType!=null and dataType!=''">
+            AND DATA_TYPE=#{dataType}
+        </if>
+        <if test="dataType=='1'.toString()">
+            <if test="startDate!=null and startDate!=''">
+                AND DATA_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+            </if>
+            <if test="endDate!=null and endDate!=''">
+                AND to_date(#{endDate},'YYYY-MM-DD')>=DATA_DATE
+            </if>
+            ORDER BY DATA_DATE desc
+        </if>
+        <if test="dataType!='1'.toString()">
+            <if test="startDate!=null and startDate!=''">
+                AND START_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+            </if>
+            <if test="endDate!=null and endDate!=''">
+                AND to_date(#{endDate},'YYYY-MM-DD')>=END_DATE
+            </if>
+            ORDER BY START_DATE desc
+        </if>
+    </select>
+
+    <select id="detail" resultType="com.wzmtr.dom.dto.res.traffic.TicketUseResDTO">
+        SELECT ID, ONE_WAY_TICKET, ONE_WAY_RATIO,
+        CITIZEN_CARD_REGULAR, CITIZEN_CARD_REGULAR_RATIO,
+        CITIZEN_CARD_DISCOUNT, CITIZEN_CARD_DISCOUNT_RATIO,
+        CITIZEN_CARD_LOVE, CITIZEN_CARD_LOVE_RATIO,
+        CITIZEN_CARD_PREFER, CITIZEN_CARD_PREFER_RATIO,
+        ONE_CARD, ONE_CARD_RATIO,
+        UNION_CARD, UNION_CARD_RATIO,
+        QRCODE, QRCODE_RATIO,
+        EMP_CARD, EMP_CARD_RATIO,
+        TIME_TICKET, TIME_TICKET_RATIO,
+        COUNTING_TICKET, COUNTING_TICKET_RATIO,
+        DATA_DATE, DATA_TYPE, START_DATE, END_DATE, VERSION
+        FROM TRAFFIC_TICKET_USE_RECORD
+        WHERE DEL_FLAG='0'
+        <if test="id!=null and startDate!=''">
+            AND ID=#{id}
+        </if>
+        <if test="startDate!=null and startDate!=''">
+            AND START_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'YYYY-MM-DD')>=END_DATE
+        </if>
+    </select>
+
+    <select id="getLastDetail" resultType="com.wzmtr.dom.dto.res.traffic.TicketUseResDTO">
+        SELECT ID, ONE_WAY_TICKET, ONE_WAY_RATIO,
+        CITIZEN_CARD_REGULAR, CITIZEN_CARD_REGULAR_RATIO,
+        CITIZEN_CARD_DISCOUNT, CITIZEN_CARD_DISCOUNT_RATIO,
+        CITIZEN_CARD_LOVE, CITIZEN_CARD_LOVE_RATIO,
+        CITIZEN_CARD_PREFER, CITIZEN_CARD_PREFER_RATIO,
+        ONE_CARD, ONE_CARD_RATIO,
+        UNION_CARD, UNION_CARD_RATIO,
+        QRCODE, QRCODE_RATIO,
+        EMP_CARD, EMP_CARD_RATIO,
+        TIME_TICKET, TIME_TICKET_RATIO,
+        COUNTING_TICKET, COUNTING_TICKET_RATIO,
+        DATA_DATE, DATA_TYPE, START_DATE, END_DATE, VERSION
+        FROM TRAFFIC_TICKET_USE_RECORD
+        WHERE DEL_FLAG='0'
+        <if test="dataDate!=null">
+            AND DATA_DATE=to_date(#{dataDate},'YYYY-MM-DD')
+        </if>
+        <if test="startDate!=null">
+            AND START_DATE=to_date(#{startDate},'YYYY-MM-DD')
+        </if>
+    </select>
+
+    <select id="selectIsExist" resultType="java.lang.Integer">
+        select count(1) from TRAFFIC_TICKET_USE_RECORD
+        WHERE
+        <if test="dataType=='1'.toString()">
+            DATA_DATE=#{dataDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="dataType!='1'.toString()">
+            START_DATE=#{startDate,jdbcType=TIMESTAMP} and END_DATE=#{endDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="version!=null and version!=''">
+            AND VERSION=#{version,jdbcType=VARCHAR}
+        </if>
+        AND DEL_FLAG='0' AND rownum=1
+    </select>
+
+    <insert id="add" parameterType="com.wzmtr.dom.dto.req.traffic.TicketUseReqDTO">
+        INSERT INTO TRAFFIC_TICKET_USE_RECORD
+        (ID,
+        <if test="oneWayTicket!=null">
+            ONE_WAY_TICKET,
+        </if>
+        <if test="oneWayRatio!=null">
+            ONE_WAY_RATIO,
+        </if>
+        <if test="citizenCardRegular!=null">
+            CITIZEN_CARD_REGULAR,
+        </if>
+        <if test="citizenCardRegularRatio!=null">
+            CITIZEN_CARD_REGULAR_RATIO,
+        </if>
+        <if test="citizenCardDiscount!=null">
+            CITIZEN_CARD_DISCOUNT,
+        </if>
+        <if test="citizenCardDiscountRatio!=null">
+            CITIZEN_CARD_DISCOUNT_RATIO,
+        </if>
+        <if test="citizenCardLove!=null">
+            CITIZEN_CARD_LOVE,
+        </if>
+        <if test="citizenCardLoveRatio!=null">
+            CITIZEN_CARD_LOVE_RATIO,
+        </if>
+        <if test="citizenCardPrefer!=null">
+            CITIZEN_CARD_PREFER,
+        </if>
+        <if test="citizenCardPreferRatio!=null">
+            CITIZEN_CARD_PREFER_RATIO,
+        </if>
+        <if test="oneCard!=null">
+            ONE_CARD,
+        </if>
+        <if test="oneCardRatio!=null">
+            ONE_CARD_RATIO,
+        </if>
+        <if test="unionCard!=null">
+            UNION_CARD,
+        </if>
+        <if test="unionCardRatio!=null">
+            UNION_CARD_RATIO,
+        </if>
+        <if test="qrcode!=null">
+            QRCODE,
+        </if>
+        <if test="qrcodeRatio!=null">
+            QRCODE_RATIO,
+        </if>
+        <if test="empCard!=null">
+            EMP_CARD,
+        </if>
+        <if test="empCardRatio!=null">
+            EMP_CARD_RATIO,
+        </if>
+        <if test="timeTicket!=null">
+            TIME_TICKET,
+        </if>
+        <if test="timeTicketRatio!=null">
+            TIME_TICKET_RATIO,
+        </if>
+        <if test="countingTicket!=null">
+            COUNTING_TICKET,
+        </if>
+        <if test="countingTicketRatio!=null">
+            COUNTING_TICKET_RATIO,
+        </if>
+        <if test="dataType!=null and dataType!=''">
+            DATA_TYPE,
+        </if>
+        <if test="startDate!=null">
+            START_DATE,
+        </if>
+        <if test="endDate!=null">
+            END_DATE,
+        </if>
+        <if test="dataDate!=null">
+            DATA_DATE,
+        </if>
+        CREATE_BY, CREATE_DATE)
+        VALUES (#{id},
+        <if test="oneWayTicket!=null">
+            #{oneWayTicket},
+        </if>
+        <if test="oneWayRatio!=null">
+            #{oneWayRatio},
+        </if>
+        <if test="citizenCardRegular!=null">
+            #{citizenCardRegular},
+        </if>
+        <if test="citizenCardRegularRatio!=null">
+            #{citizenCardRegularRatio},
+        </if>
+        <if test="citizenCardDiscount!=null">
+            #{citizenCardDiscount},
+        </if>
+        <if test="citizenCardDiscountRatio!=null">
+            #{citizenCardDiscountRatio},
+        </if>
+        <if test="citizenCardLove!=null">
+            #{citizenCardLove},
+        </if>
+        <if test="citizenCardLoveRatio!=null">
+            #{citizenCardLoveRatio},
+        </if>
+        <if test="citizenCardPrefer!=null">
+            #{citizenCardPrefer},
+        </if>
+        <if test="citizenCardPreferRatio!=null">
+            #{citizenCardPreferRatio},
+        </if>
+        <if test="oneCard!=null">
+            #{oneCard},
+        </if>
+        <if test="oneCardRatio!=null">
+            #{oneCardRatio},
+        </if>
+        <if test="unionCard!=null">
+            #{unionCard},
+        </if>
+        <if test="unionCardRatio!=null">
+            #{unionCardRatio},
+        </if>
+        <if test="qrcode!=null">
+            #{qrcode},
+        </if>
+        <if test="qrcodeRatio!=null">
+            #{qrcodeRatio},
+        </if>
+        <if test="empCard!=null">
+            #{empCard},
+        </if>
+        <if test="empCardRatio!=null">
+            #{empCardRatio},
+        </if>
+        <if test="timeTicket!=null">
+            #{timeTicket},
+        </if>
+        <if test="timeTicketRatio!=null">
+            #{timeTicketRatio},
+        </if>
+        <if test="countingTicket!=null">
+            #{countingTicket},
+        </if>
+        <if test="countingTicketRatio!=null">
+            #{countingTicketRatio},
+        </if>
+        <if test="dataType!=null and dataType!=''">
+            #{dataType},
+        </if>
+        <if test="startDate!=null">
+            #{startDate},
+        </if>
+        <if test="endDate!=null">
+            #{endDate},
+        </if>
+        <if test="dataDate!=null">
+            #{dataDate},
+        </if>
+        #{createBy}, sysdate)
+    </insert>
+
+    <update id="modify">
+        UPDATE TRAFFIC_TICKET_USE_RECORD SET
+        <if test="oneWayTicket!=null">
+            ONE_WAY_TICKET=#{oneWayTicket},
+        </if>
+        <if test="oneWayRatio!=null">
+            ONE_WAY_RATIO=#{oneWayRatio},
+        </if>
+        <if test="citizenCardRegular!=null">
+            CITIZEN_CARD_REGULAR=#{citizenCardRegular},
+        </if>
+        <if test="citizenCardRegularRatio!=null">
+            CITIZEN_CARD_REGULAR_RATIO=#{citizenCardRegularRatio},
+        </if>
+        <if test="citizenCardDiscount!=null">
+            CITIZEN_CARD_DISCOUNT=#{citizenCardDiscount},
+        </if>
+        <if test="citizenCardDiscountRatio!=null">
+            CITIZEN_CARD_DISCOUNT_RATIO=#{citizenCardDiscountRatio},
+        </if>
+        <if test="citizenCardLove!=null">
+            CITIZEN_CARD_LOVE=#{citizenCardLove},
+        </if>
+        <if test="citizenCardLoveRatio!=null">
+            CITIZEN_CARD_LOVE_RATIO=#{citizenCardLoveRatio},
+        </if>
+        <if test="citizenCardPrefer!=null">
+            CITIZEN_CARD_PREFER=#{citizenCardPrefer},
+        </if>
+        <if test="citizenCardPreferRatio!=null">
+            CITIZEN_CARD_PREFER_RATIO=#{citizenCardPreferRatio},
+        </if>
+        <if test="oneCard!=null">
+            ONE_CARD=#{oneCard},
+        </if>
+        <if test="oneCardRatio!=null">
+            ONE_CARD_RATIO=#{oneCardRatio},
+        </if>
+        <if test="unionCard!=null">
+            UNION_CARD=#{unionCard},
+        </if>
+        <if test="unionCardRatio!=null">
+            UNION_CARD_RATIO=#{unionCardRatio},
+        </if>
+        <if test="qrcode!=null">
+            QRCODE=#{qrcode},
+        </if>
+        <if test="qrcodeRatio!=null">
+            QRCODE_RATIO=#{qrcodeRatio},
+        </if>
+        <if test="empCard!=null">
+            EMP_CARD=#{empCard},
+        </if>
+        <if test="empCardRatio!=null">
+            EMP_CARD_RATIO=#{empCardRatio},
+        </if>
+        <if test="timeTicket!=null">
+            TIME_TICKET=#{timeTicket},
+        </if>
+        <if test="timeTicketRatio!=null">
+            TIME_TICKET_RATIO=#{timeTicketRatio},
+        </if>
+        <if test="countingTicket!=null">
+            COUNTING_TICKET=#{countingTicket},
+        </if>
+        <if test="countingTicketRatio!=null">
+            COUNTING_TICKET_RATIO=#{countingTicketRatio},
+        </if>
+        <if test="dataType!=null">
+            DATA_TYPE=#{dataType},
+        </if>
+        <if test="startDate!=null">
+            START_DATE=#{startDate},
+        </if>
+        <if test="endDate!=null">
+            END_DATE=#{endDate},
+        </if>
+        VERSION=VERSION+1, UPDATE_BY=#{updateBy}, UPDATE_DATE=sysdate
+        WHERE ID=#{id} and VERSION=#{version}
+    </update>
+
+    <update id="delete">
+        UPDATE TRAFFIC_TICKET_USE_RECORD SET
+        DEL_FLAG='1', UPDATE_BY=#{userId}, UPDATE_DATE=sysdate
+        WHERE ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+
+    <update id="autoModify">
+        UPDATE TRAFFIC_TICKET_USE_RECORD SET
+        ONE_WAY_TICKET = (SELECT SUM(ONE_WAY_TICKET) AS ONE_WAY_TICKET FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        ONE_WAY_RATIO = (SELECT AVG(ONE_WAY_RATIO) AS ONE_WAY_RATIO FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+
+        CITIZEN_CARD_REGULAR = (SELECT SUM(CITIZEN_CARD_REGULAR) AS CITIZEN_CARD_REGULAR FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        CITIZEN_CARD_REGULAR_RATIO = (SELECT AVG(CITIZEN_CARD_REGULAR_RATIO) AS CITIZEN_CARD_REGULAR_RATIO FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+
+        CITIZEN_CARD_DISCOUNT = (SELECT SUM(CITIZEN_CARD_DISCOUNT) AS CITIZEN_CARD_DISCOUNT FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        CITIZEN_CARD_DISCOUNT_RATIO = (SELECT AVG(CITIZEN_CARD_DISCOUNT_RATIO) AS CITIZEN_CARD_DISCOUNT_RATIO FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+
+        CITIZEN_CARD_LOVE = (SELECT SUM(CITIZEN_CARD_LOVE) AS CITIZEN_CARD_LOVE FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        CITIZEN_CARD_LOVE_RATIO = (SELECT AVG(CITIZEN_CARD_LOVE_RATIO) AS CITIZEN_CARD_LOVE_RATIO FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+
+        CITIZEN_CARD_PREFER = (SELECT SUM(CITIZEN_CARD_PREFER) AS CITIZEN_CARD_PREFER FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        CITIZEN_CARD_PREFER_RATIO = (SELECT AVG(CITIZEN_CARD_PREFER_RATIO) AS CITIZEN_CARD_PREFER_RATIO FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+
+        ONE_CARD = (SELECT SUM(ONE_CARD) AS ONE_CARD FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        ONE_CARD_RATIO = (SELECT AVG(ONE_CARD_RATIO) AS ONE_CARD_RATIO FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+
+        UNION_CARD = (SELECT SUM(UNION_CARD) AS UNION_CARD FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        UNION_CARD_RATIO = (SELECT AVG(UNION_CARD_RATIO) AS UNION_CARD_RATIO FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+
+        QRCODE = (SELECT SUM(QRCODE) AS QRCODE FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        QRCODE_RATIO = (SELECT AVG(QRCODE_RATIO) AS QRCODE_RATIO FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+
+        EMP_CARD = (SELECT SUM(EMP_CARD) AS EMP_CARD FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        EMP_CARD_RATIO = (SELECT AVG(EMP_CARD_RATIO) AS EMP_CARD_RATIO FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+
+        TIME_TICKET = (SELECT SUM(TIME_TICKET) AS TIME_TICKET FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        TIME_TICKET_RATIO = (SELECT AVG(TIME_TICKET_RATIO) AS TIME_TICKET_RATIO FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        COUNTING_TICKET = (SELECT SUM(COUNTING_TICKET) AS COUNTING_TICKET FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        COUNTING_TICKET_RATIO = (SELECT AVG(COUNTING_TICKET_RATIO) AS COUNTING_TICKET_RATIO FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        UPDATE_DATE=sysdate
+        WHERE DATA_TYPE = #{dataType}
+        AND START_DATE=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+    </update>
+</mapper>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzmtr.dom.mapper.operate.OperateFaultStatisticsMapper">
+    <select id="list" resultType="com.wzmtr.dom.dto.res.operate.fault.FaultStatisticsResDTO">
+        SELECT *
+        FROM OPERATE_FAULT_STATISTICS
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE=#{dataType}
+        <if test="startDate!=null and startDate!=''">
+            AND START_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'YYYY-MM-DD')>=END_DATE
+        </if>
+        ORDER BY START_DATE desc
+    </select>
+
+    <select id="getDayDetail" resultType="com.wzmtr.dom.dto.res.operate.fault.FaultStatisticsResDTO">
+        SELECT * FROM OPERATE_FAULT_STATISTICS
+        WHERE DEL_FLAG='0' AND DATA_DATE=#{date} AND DATA_TYPE='1'
+    </select>
+
+    <select id="getCurrentDetail" resultType="com.wzmtr.dom.dto.res.operate.fault.FaultStatisticsResDTO">
+        SELECT
+        SUM(VEHICLE_NUM) AS VEHICLE_NUM,
+        SUM(SIGNAL_NUM) AS SIGNAL_NUM,
+        SUM(COMMUNICATION_NUM) AS COMMUNICATION_NUM,
+        SUM(AFC_NUM) AS AFC_NUM,
+        SUM(CHANGE_DISTRIBUTION_NUM) AS CHANGE_DISTRIBUTION_NUM,
+        SUM(CONTACT_NETWORK_NUM) AS CONTACT_NETWORK_NUM,
+        SUM(PLATFORM_DOORS_NUM) AS PLATFORM_DOORS_NUM,
+        SUM(FAS_NUM) AS FAS_NUM,
+        SUM(BUILDING_CONSTRUCTION_NUM) AS BUILDING_CONSTRUCTION_NUM,
+        SUM(MONITOR_NUM) AS MONITOR_NUM,
+        SUM(HYDROPOWER_NUM) AS HYDROPOWER_NUM,
+        SUM(ESCALATOR_NUM) AS ESCALATOR_NUM,
+        SUM(OFFICIAL_DUTIES_NUM) AS OFFICIAL_DUTIES_NUM,
+        SUM(BRIDGE_TUNNEL_NUM) AS BRIDGE_TUNNEL_NUM,
+        SUM(ENGINEERING_VEHICLE_NUM) AS ENGINEERING_VEHICLE_NUM
+        FROM OPERATE_FAULT_STATISTICS
+        WHERE DEL_FLAG='0' AND DATA_TYPE='1'
+        <if test="startDate!=null and startDate!=''">
+            AND DATA_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'YYYY-MM-DD')>=DATA_DATE
+        </if>
+        ORDER BY START_DATE desc
+    </select>
+
+    <select id="selectIsExist" resultType="java.lang.Integer">
+        SELECT count(1) FROM OPERATE_FAULT_STATISTICS
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE=#{dataType}
+        AND START_DATE=#{startDate,jdbcType=TIMESTAMP} AND END_DATE=#{endDate,jdbcType=TIMESTAMP}
+        AND DEL_FLAG='0' AND rownum=1
+    </select>
+
+    <insert id="add">
+        INSERT INTO OPERATE_FAULT_STATISTICS (ID,DATA_TYPE,
+        <if test="dataDate!=null">
+            DATA_DATE,
+        </if>
+        START_DATE,
+        END_DATE,
+        CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+        VALUES (#{id},#{dataType},
+        <if test="dataDate!=null">
+            #{dataDate},
+        </if>
+        #{startDate},
+        #{endDate},
+        #{createBy}, sysdate,#{createBy}, sysdate)
+    </insert>
+
+    <update id="modify">
+        UPDATE OPERATE_FAULT_STATISTICS SET
+        <if test="vehicleNum!=null and vehicleNum!=''">
+            VEHICLE_NUM=#{vehicleNum},
+        </if>
+        <if test="signalNum!=null and signalNum!=''">
+            SIGNAL_NUM=#{signalNum},
+        </if>
+        <if test="communicationNum!=null and communicationNum!=''">
+            COMMUNICATION_NUM=#{communicationNum},
+        </if>
+        <if test="afcNum!=null and afcNum!=''">
+            AFC_NUM=#{afcNum},
+        </if>
+        <if test="changeDistributionNum!=null and changeDistributionNum!=''">
+            CHANGE_DISTRIBUTION_NUM=#{changeDistributionNum},
+        </if>
+        <if test="contactNetworkNum!=null and contactNetworkNum!=''">
+            CONTACT_NETWORK_NUM=#{contactNetworkNum},
+        </if>
+        <if test="platformDoorsNum!=null and platformDoorsNum!=''">
+            PLATFORM_DOORS_NUM=#{platformDoorsNum},
+        </if>
+        <if test="fasNum!=null and fasNum!=''">
+            FAS_NUM=#{fasNum},
+        </if>
+        <if test="buildingConstructionNum!=null and buildingConstructionNum!=''">
+            BUILDING_CONSTRUCTION_NUM=#{buildingConstructionNum},
+        </if>
+        <if test="monitorNum!=null and monitorNum!=''">
+            MONITOR_NUM=#{monitorNum},
+        </if>
+        <if test="hydropowerNum!=null and hydropowerNum!=''">
+            HYDROPOWER_NUM=#{hydropowerNum},
+        </if>
+        <if test="escalatorNum!=null and escalatorNum!=''">
+            ESCALATOR_NUM=#{escalatorNum},
+        </if>
+        <if test="officialDutiesNum!=null and officialDutiesNum!=''">
+            OFFICIAL_DUTIES_NUM=#{officialDutiesNum},
+        </if>
+        <if test="bridgeTunnelNum!=null and bridgeTunnelNum!=''">
+            BRIDGE_TUNNEL_NUM=#{bridgeTunnelNum},
+        </if>
+        <if test="engineeringVehicleNum!=null and engineeringVehicleNum!=''">
+            ENGINEERING_VEHICLE_NUM=#{engineeringVehicleNum},
+        </if>
+        VERSION=VERSION+1,
+        UPDATE_BY=#{updateBy},
+        UPDATE_DATE=sysdate
+        WHERE ID=#{id}
+        AND VERSION=#{version}
+    </update>
+
+    <update id="delete">
+        UPDATE OPERATE_FAULT_STATISTICS SET
+        DEL_FLAG='1', UPDATE_BY=#{userId}, UPDATE_DATE=sysdate
+        WHERE ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+
+</mapper>

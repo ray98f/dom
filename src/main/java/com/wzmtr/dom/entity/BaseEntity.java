@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -23,7 +22,6 @@ public class BaseEntity {
     /**
      * id
      */
-    @NotNull(message = "32000006",groups = {ValidationGroup.update.class})
     private String id;
 
     /**
@@ -66,5 +64,5 @@ public class BaseEntity {
     @JsonIgnore
     @TableLogic
     @TableField(value = "del_flag", fill = FieldFill.INSERT)
-    private Integer delFlag;
+    private String delFlag;
 }

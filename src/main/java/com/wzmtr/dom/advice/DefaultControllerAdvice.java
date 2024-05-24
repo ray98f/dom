@@ -3,6 +3,7 @@ package com.wzmtr.dom.advice;
 import com.wzmtr.dom.entity.response.BaseResponse;
 import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
+import com.wzmtr.dom.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -63,11 +64,11 @@ public class DefaultControllerAdvice {
             defaultMessage = Objects.requireNonNull(fieldError).getDefaultMessage();
         }
         Locale locale = LocaleContextHolder.getLocale();
-        if (null != defaultMessage) {
+        if (StringUtils.isNotNull(defaultMessage)) {
             Integer code = Integer.valueOf(defaultMessage);
             Object[] arguments = Objects.requireNonNull(fieldError).getArguments();
             String field = fieldError.getField();
-            if (null != arguments) {
+            if (StringUtils.isNotNull(arguments)) {
                 String message = null;
                 if (arguments.length >= THREE) {
                     message = messageSource.getMessage(ErrorCode.messageOf(code),

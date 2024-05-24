@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzmtr.dom.mapper.traffic.PassengerMapper">
+
+    <select id="list" resultType="com.wzmtr.dom.dto.res.traffic.PassengerResDTO">
+        SELECT *
+        FROM TRAFFIC_PASSENGER_RECORD
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE=#{dataType}
+        <if test="startDate!=null and startDate!=''">
+            AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        </if>
+        ORDER BY START_DATE desc
+    </select>
+
+    <select id="checkExist" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM TRAFFIC_PASSENGER_RECORD
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE=#{dataType}
+        <if test="startDate!=null">
+            AND START_DATE=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate!=null">
+            AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+    </select>
+
+    <select id="queryInfoById" resultType="com.wzmtr.dom.dto.res.traffic.PassengerDetailResDTO">
+        SELECT *
+        FROM TRAFFIC_PASSENGER_RECORD
+        WHERE DEL_FLAG='0'
+        <if test="dataType!=null">
+            AND DATA_TYPE=#{dataType}
+        </if>
+        <if test="startDate!=null">
+            AND START_DATE=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate!=null">
+            AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="id!=null">
+            AND ID=#{id}
+        </if>
+    </select>
+
+    <insert id="add">
+        INSERT INTO TRAFFIC_PASSENGER_RECORD (ID,DATA_TYPE,
+        <if test="dataDate!=null">
+            DATA_DATE,
+        </if>
+        START_DATE,
+        END_DATE,
+        CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+        VALUES
+        (#{id}, #{dataType},
+        <if test="dataDate!=null">
+            to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
+        to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
+        #{createBy}, sysdate,#{createBy}, sysdate)
+    </insert>
+
+    <update id="modify">
+        UPDATE TRAFFIC_PASSENGER_RECORD SET
+        <if test="wiringDayPassenger!=null">
+            WIRING_DAY_PASSENGER=#{wiringDayPassenger},
+        </if>
+        <if test="wiringWeekPassenger!=null">
+            WIRING_WEEK_PASSENGER=#{wiringWeekPassenger},
+        </if>
+        <if test="wiringMonthPassenger!=null">
+            WIRING_MONTH_PASSENGER=#{wiringMonthPassenger},
+        </if>
+        <if test="wiringYearPassenger!=null">
+            WIRING_YEAR_PASSENGER=#{wiringYearPassenger},
+        </if>
+        <if test="transferCount!=null">
+            TRANSFER_COUNT=#{transferCount},
+        </if>
+        <if test="s2TransferIn!=null">
+            S2_TRANSFER_IN=#{s2TransferIn},
+        </if>
+        <if test="s2TransferOut!=null">
+            S2_TRANSFER_OUT=#{s2TransferOut},
+        </if>
+        <if test="s2In!=null">
+            S2_IN=#{s2In},
+        </if>
+        <if test="inSuccess!=null">
+            IN_SUCCESS=#{inSuccess},
+        </if>
+        <if test="cardIn!=null">
+            CARD_IN=#{cardIn},
+        </if>
+        <if test="s2Out!=null">
+            S2_OUT=#{s2Out},
+        </if>
+        <if test="outSuccess!=null">
+            OUT_SUCCESS=#{outSuccess},
+        </if>
+        <if test="cardOut!=null">
+            CARD_OUT=#{cardOut},
+        </if>
+            VERSION=VERSION+1,
+            UPDATE_BY=#{updateBy},
+            UPDATE_DATE=sysdate
+        WHERE ID=#{id} and VERSION=#{version}
+    </update>
+
+    <update id="modifyCount">
+        UPDATE TRAFFIC_PASSENGER_RECORD SET
+        DAY_PASSENGER=(SELECT SUM(PASSENGER) AS PASSENGER_SUM FROM TRAFFIC_PASSENGER_INFO WHERE START_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss') AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')),
+        WEEK_PASSENGER=(SELECT SUM(PASSENGER) AS PASSENGER_SUM FROM TRAFFIC_PASSENGER_INFO WHERE START_DATE>=TRUNC(NEXT_DAY(to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')-8,1)+1) AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        MONTH_PASSENGER=(SELECT SUM(PASSENGER) AS PASSENGER_SUM FROM TRAFFIC_PASSENGER_INFO WHERE TO_CHAR(START_DATE,'YYYY-MM')=TO_CHAR(to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),'YYYY-MM')),
+        YEAR_PASSENGER=(SELECT SUM(PASSENGER) AS PASSENGER_SUM FROM TRAFFIC_PASSENGER_INFO WHERE TO_CHAR(START_DATE,'YYYY')=TO_CHAR(to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),'YYYY') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=START_DATE),
+        UPDATE_DATE=sysdate
+        WHERE ID=#{id}
+    </update>
+
+    <select id="stationPassenger" resultType="com.wzmtr.dom.dto.res.traffic.PassengerInfoResDTO">
+        SELECT t1.ID,t1.RECORD_ID,t1.STATION_CODE,t1.PASSENGER,VERSION,t2.STATION_NAME
+        FROM TRAFFIC_PASSENGER_INFO t1
+        LEFT JOIN SYS_STATION t2 on t1.STATION_CODE=t2.STATION_CODE
+        WHERE  DEL_FLAG='0'
+        AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        ORDER BY t1.PASSENGER DESC
+    </select>
+
+    <insert id="createStationPassenger">
+        INSERT INTO TRAFFIC_PASSENGER_INFO (ID,RECORD_ID,STATION_CODE,PASSENGER,DATA_TYPE,
+        <if test="dataDate!=null">
+            DATA_DATE,
+        </if>
+        START_DATE,
+        END_DATE,
+        CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+        VALUES
+        (#{id}, #{recordId},#{stationCode},#{passenger},#{dataType},
+        <if test="dataDate!=null">
+            to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
+        to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
+        #{createBy}, sysdate,#{createBy}, sysdate)
+    </insert>
+
+    <update id="modifyStationPassenger">
+        UPDATE TRAFFIC_PASSENGER_INFO SET
+        PASSENGER=#{passenger},
+        VERSION=VERSION+1,
+        UPDATE_BY=#{updateBy},
+        UPDATE_DATE=sysdate
+        WHERE ID=#{id} and VERSION=#{version}
+    </update>
+
+    <delete id="deleteStationPassenger">
+        DELETE FROM TRAFFIC_PASSENGER_INFO
+        WHERE DATA_TYPE = '1'
+        AND START_DATE=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+    </delete>
+
+    <update id="autoModify">
+        UPDATE TRAFFIC_PASSENGER_RECORD SET
+        DAY_PASSENGER=(SELECT SUM(PASSENGER) AS PASSENGER_SUM FROM TRAFFIC_PASSENGER_INFO WHERE START_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss') AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')),
+        WEEK_PASSENGER=(SELECT SUM(PASSENGER) AS PASSENGER_SUM FROM TRAFFIC_PASSENGER_INFO WHERE START_DATE>=TRUNC(NEXT_DAY(to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')-8,1)+1) AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        MONTH_PASSENGER=(SELECT SUM(PASSENGER) AS PASSENGER_SUM FROM TRAFFIC_PASSENGER_INFO WHERE TO_CHAR(START_DATE,'YYYY-MM')=TO_CHAR(to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),'YYYY-MM')),
+        YEAR_PASSENGER=(SELECT SUM(PASSENGER) AS PASSENGER_SUM FROM TRAFFIC_PASSENGER_INFO WHERE TO_CHAR(START_DATE,'YYYY')=TO_CHAR(to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),'YYYY') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=START_DATE),
+        UPDATE_DATE=sysdate
+        WHERE DATA_TYPE = #{dataType}
+        AND START_DATE=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+    </update>
+
+    <update id="autoModifyByDaily">
+        UPDATE TRAFFIC_PASSENGER_RECORD SET
+        DAY_PASSENGER=(SELECT SUM(PASSENGER) AS PASSENGER_SUM FROM TRAFFIC_PASSENGER_INFO WHERE START_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss') AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')),
+        WEEK_PASSENGER=(SELECT SUM(PASSENGER) AS PASSENGER_SUM FROM TRAFFIC_PASSENGER_INFO WHERE START_DATE>=TRUNC(NEXT_DAY(to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')-8,1)+1) AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        MONTH_PASSENGER=(SELECT SUM(PASSENGER) AS PASSENGER_SUM FROM TRAFFIC_PASSENGER_INFO WHERE TO_CHAR(START_DATE,'YYYY-MM')=TO_CHAR(to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),'YYYY-MM')),
+        YEAR_PASSENGER=(SELECT SUM(PASSENGER) AS PASSENGER_SUM FROM TRAFFIC_PASSENGER_INFO WHERE TO_CHAR(START_DATE,'YYYY')=TO_CHAR(to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),'YYYY') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=START_DATE),
+        WIRING_DAY_PASSENGER=(SELECT WIRING_DAY_PASSENGER FROM TRAFFIC_PASSENGER_RECORD WHERE START_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss') AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')),
+        WIRING_WEEK_PASSENGER=(SELECT SUM(WIRING_DAY_PASSENGER) AS WIRING_WEEK_PASSENGER FROM TRAFFIC_PASSENGER_RECORD WHERE START_DATE>=TRUNC(NEXT_DAY(to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')-8,1)+1) AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        WIRING_MONTH_PASSENGER=(SELECT SUM(WIRING_DAY_PASSENGER) AS WIRING_MONTH_PASSENGER FROM TRAFFIC_PASSENGER_RECORD WHERE TO_CHAR(START_DATE,'YYYY-MM')=TO_CHAR(to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),'YYYY-MM')),
+        WIRING_YEAR_PASSENGER=(SELECT SUM(WIRING_DAY_PASSENGER) AS WIRING_YEAR_PASSENGER FROM TRAFFIC_PASSENGER_RECORD WHERE TO_CHAR(START_DATE,'YYYY')=TO_CHAR(to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),'YYYY') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=START_DATE),
+        (TRANSFER_COUNT,S2_TRANSFER_IN,S2_TRANSFER_OUT,S2_IN,IN_SUCCESS,CARD_IN,S2_OUT,OUT_SUCCESS,CARD_OUT)
+        = (SELECT
+        SUM(TRANSFER_COUNT) AS TRANSFER_COUNT,
+        SUM(S2_TRANSFER_IN) AS S2_TRANSFER_IN,
+        SUM(S2_TRANSFER_OUT) AS S2_TRANSFER_OUT,
+        SUM(S2_IN) AS S2_IN,
+        SUM(IN_SUCCESS) AS IN_SUCCESS,
+        SUM(CARD_IN) AS CARD_IN,
+        SUM(S2_OUT) AS S2_OUT,
+        SUM(OUT_SUCCESS) AS OUT_SUCCESS,
+        SUM(CARD_OUT) AS CARD_OUT
+        FROM TRAFFIC_PASSENGER_RECORD WHERE DATA_TYPE = '1' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss') >= END_DATE),
+        UPDATE_DATE=sysdate
+        WHERE DATA_TYPE = #{dataType}
+        AND START_DATE=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+
+    </update>
+</mapper>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzmtr.dom.mapper.traffic.HotLineImportantMapper">
+
+    <insert id="insertList">
+        INSERT ALL
+        <foreach collection="list" item="it" separator=" ">
+            INTO TRAFFIC_HOTLINE_IMPORTANT(
+            ID,
+            <if test="it.count!=null">
+                COUNT,
+            </if>
+            <if test="it.content!=null and it.content!=''">
+                CONTENT,
+            </if>
+            <if test="it.result!=null and it.result!=''">
+                RESULT,
+            </if>
+            <if test="it.keyword!=null and it.keyword!=''">
+                KEYWORD,
+            </if>
+            <if test="it.hotlineType!=null and it.hotlineType!=''">
+                HOTLINE_TYPE,
+            </if>
+            <if test="it.dataDate!=null">
+                DATA_DATE,
+            </if>
+            <if test="it.dataType!=null and it.dataType!=''">
+                DATA_TYPE,
+            </if>
+            <if test="it.startDate!=null">
+                START_DATE,
+            </if>
+            <if test="it.endDate!=null">
+                END_DATE,
+            </if>
+            VERSION,
+            CREATE_DATE,
+            CREATE_BY)
+            VALUES (
+            #{it.id,jdbcType=VARCHAR},
+            <if test="it.count!=null">
+                #{it.count,jdbcType=NUMERIC},
+            </if>
+            <if test="it.content!=null and it.content!=''">
+                #{it.content,jdbcType=VARCHAR},
+            </if>
+            <if test="it.result!=null and it.result!=''">
+                #{it.result,jdbcType=VARCHAR},
+            </if>
+            <if test="it.keyword!=null and it.keyword!=''">
+                #{it.keyword,jdbcType=VARCHAR},
+            </if>
+            <if test="it.hotlineType!=null and it.hotlineType!=''">
+                #{it.hotlineType,jdbcType=VARCHAR},
+            </if>
+            <if test="it.dataDate!=null">
+                #{it.dataDate,jdbcType=DATE},
+            </if>
+            <if test="it.dataType!=null and it.dataType!=''">
+                #{it.dataType,jdbcType=VARCHAR},
+            </if>
+            <if test="it.startDate!=null">
+                #{it.startDate,jdbcType=DATE},
+            </if>
+            <if test="it.endDate!=null">
+                #{it.endDate,jdbcType=DATE},
+            </if>
+            '1',
+            SYSDATE,
+            #{it.createBy,jdbcType=VARCHAR})
+        </foreach>
+        SELECT * FROM dual
+    </insert>
+
+    <select id="list" resultType="com.wzmtr.dom.dto.res.traffic.hotline.HotLineImportantListResDTO">
+        SELECT *
+        FROM TRAFFIC_HOTLINE_IMPORTANT
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE=#{req.dataType}
+        <if test="req.startDate != null and req.startDate!=''">
+            AND START_DATE >= to_date(#{req.startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="req.endDate != null and req.endDate!=''">
+            AND to_date(#{req.endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        </if>
+    </select>
+    <select id="selectIsExist" resultType="java.lang.Integer">
+        SELECT count(1) FROM TRAFFIC_HOTLINE_IMPORTANT
+        WHERE
+        <if test="dataType=='1'.toString()">
+            DATA_DATE=#{dataDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="dataType!='1'.toString()">
+            START_DATE=#{startDate,jdbcType=TIMESTAMP} AND END_DATE=#{endDate,jdbcType=TIMESTAMP}
+        </if>
+        AND DEL_FLAG='0' AND rownum=1
+    </select>
+    <select id="selectByDate" resultType="com.wzmtr.dom.dto.res.traffic.hotline.HotLineImportantDetailResDTO">
+        select *
+        from TRAFFIC_HOTLINE_IMPORTANT
+        WHERE DEL_FLAG='0'
+        <if test="dataType!=null and dataType!=''">
+            AND DATA_TYPE=#{dataType}
+        </if>
+        <if test="startDate != null and startDate!=''">
+            AND START_DATE=to_date(#{startDate}, 'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null and endDate!=''">
+            AND END_DATE=to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss')
+        </if>
+    </select>
+
+    <update id="autoModify">
+        UPDATE TRAFFIC_HOTLINE_IMPORTANT SET
+        COUNT = #{count},
+        UPDATE_DATE=sysdate
+        WHERE HOTLINE_TYPE=#{hotlineType}
+        AND DATA_TYPE = #{dataType}
+        AND START_DATE=to_date(#{startDate}, 'yyyy-mm-dd hh24:mi:ss')
+        AND END_DATE=to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss')
+    </update>
+
+    <update id="autoModifyByDaily">
+        UPDATE TRAFFIC_HOTLINE_IMPORTANT SET
+        COUNT = (SELECT SUM(COUNT) AS COUNT FROM TRAFFIC_HOTLINE_IMPORTANT WHERE DEL_FLAG = '0' AND DATA_TYPE = '1' AND HOTLINE_TYPE=#{hotlineType} AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        UPDATE_DATE=sysdate
+        WHERE HOTLINE_TYPE=#{hotlineType}
+        AND DATA_TYPE = #{dataType}
+        AND START_DATE=to_date(#{startDate}, 'yyyy-mm-dd hh24:mi:ss')
+        AND END_DATE=to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss')
+    </update>
+</mapper>

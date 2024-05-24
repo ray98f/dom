@@ -3,13 +3,11 @@ package com.wzmtr.dom.config;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import lombok.Data;
 
-
 /**
- * description:
- *
- * @author chentong
+ * RequestHeader配置
+ * @author  Ray
  * @version 1.0
- * @date 2020/4/30 15:00
+ * @date 2024/03/06
  */
 @Data
 public class RequestHeaderContext {

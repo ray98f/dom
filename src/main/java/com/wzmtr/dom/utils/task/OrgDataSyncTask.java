@@ -36,7 +36,7 @@ public class OrgDataSyncTask {
         if (CommonConstants.OFF.equals(dataSync)) {
             return;
         }
-        String syncPersonUrl = "/mdmSync/syncAllPerson";
+        String syncPersonUrl = "/mdm/sync/person";
         log.info("人员信息同步：" + localUrl + syncPersonUrl);
         mdmSyncService.syncAllPerson();
     }
@@ -47,7 +47,7 @@ public class OrgDataSyncTask {
         if (CommonConstants.OFF.equals(dataSync)) {
             return;
         }
-        String syncSuppContactUrl = "/mdmSync/syncAllSuppContact";
+        String syncSuppContactUrl = "/mdm/sync/contact/supp";
         log.info("人员信息同步：" + localUrl + syncSuppContactUrl);
         mdmSyncService.syncAllSuppContact();
     }
@@ -58,7 +58,7 @@ public class OrgDataSyncTask {
         if (CommonConstants.OFF.equals(dataSync)) {
             return;
         }
-        String syncPersonPlusUrl = "/mdmSync/syncPersonPlus";
+        String syncPersonPlusUrl = "/mdm/sync/person/plus";
         log.info("人员附加信息同步：" + localUrl + syncPersonPlusUrl);
         mdmSyncService.syncPersonPlus();
     }
@@ -69,7 +69,7 @@ public class OrgDataSyncTask {
         if (CommonConstants.OFF.equals(dataSync)) {
             return;
         }
-        String syncOrgUrl = "/mdmSync/syncAllOrg";
+        String syncOrgUrl = "/mdm/sync/org";
         log.info("部门信息同步：" + localUrl + syncOrgUrl);
         mdmSyncService.syncAllOrg();
     }
@@ -80,7 +80,7 @@ public class OrgDataSyncTask {
         if (CommonConstants.OFF.equals(dataSync)) {
             return;
         }
-        String syncSuppOrgUrl = "/mdmSync/syncSuppOrg";
+        String syncSuppOrgUrl = "/mdm/sync/org/supp";
         log.info("供应商信息同步：" + localUrl + syncSuppOrgUrl);
         mdmSyncService.syncSuppOrg();
     }
@@ -91,7 +91,7 @@ public class OrgDataSyncTask {
         if (CommonConstants.OFF.equals(dataSync)) {
             return;
         }
-        String syncExtraOrgUrl = "/mdmSync/syncAllExtraOrg";
+        String syncExtraOrgUrl = "/mdm/sync/org/extra";
         log.info("外部部门信息同步：" + localUrl + syncExtraOrgUrl);
         mdmSyncService.syncAllExtraOrg();
     }
@@ -102,7 +102,7 @@ public class OrgDataSyncTask {
         if (CommonConstants.OFF.equals(dataSync)) {
             return;
         }
-        String syncEmpJobUrl = "/mdmSync/syncAllEmpJob";
+        String syncEmpJobUrl = "/mdm/sync/job/emp";
         log.info("人员岗位信息同步：" + localUrl + syncEmpJobUrl);
         mdmSyncService.syncAllEmpJob();
     }

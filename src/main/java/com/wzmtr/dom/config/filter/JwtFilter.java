@@ -18,6 +18,12 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 
+/**
+ * Jwt校验过滤器
+ * @author  Ray
+ * @version 1.0
+ * @date 2024/03/06
+ */
 @Slf4j
 @Component
 public class JwtFilter implements Filter {
@@ -48,7 +54,7 @@ public class JwtFilter implements Filter {
             return;
         }
         if (Arrays.asList(pages).contains(uri) || Arrays.asList(swaggerPages).contains(uri)
-                || uri.contains("mdmSync") || uri.contains("swagger")) {
+                || uri.contains("mdm/sync") || uri.contains("swagger")) {
             chain.doFilter(httpRequest, httpResponse);
         } else {
             String token = httpRequest.getHeader("Authorization");

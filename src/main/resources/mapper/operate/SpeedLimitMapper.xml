@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzmtr.dom.mapper.operate.SpeedLimitMapper">
+
+    <select id="recordPage" resultType="com.wzmtr.dom.dto.res.operate.SpeedLimitRecordResDTO">
+        SELECT ID, LIMIT_NUM, VERSION, DATA_DATE
+        FROM OPERATE_SPEED_LIMIT_RECORD
+        WHERE DEL_FLAG='0'
+        <if test="startDate!=null and startDate!=''">
+            AND DATA_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'YYYY-MM-DD')>=DATA_DATE
+        </if>
+        ORDER BY DATA_DATE DESC
+    </select>
+
+    <select id="infoPage" resultType="com.wzmtr.dom.dto.res.operate.SpeedLimitInfoResDTO">
+        SELECT li.ID, li.SERIAL_NO, li.REASON, li.LIMIT_START_TIME, li.LIMIT_END_TIME, li.LIMIT_SECTION,
+        li.LIMIT_VALUE, li.APPLICATION_DEPT, li.APPLICATION_DEPT_NAME, li.DUTY, li.VERSION, li.RECORD_ID
+        FROM OPERATE_SPEED_LIMIT_INFO li
+        LEFT JOIN OPERATE_SPEED_LIMIT_RECORD lr ON li.RECORD_ID=lr.ID AND lr.DEL_FLAG='0'
+        WHERE li.DEL_FLAG='0'
+        <if test="id!=null and id!=''">
+            AND li.RECORD_ID=#{id}
+        </if>
+        <if test="startDate!=null and startDate!=''">
+            AND lr.DATA_DATE>=to_date(#{startDate},'YYYY-MM-DD')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'YYYY-MM-DD')>=lr.DATA_DATE
+        </if>
+        ORDER BY li.SERIAL_NO ASC
+    </select>
+
+    <select id="getInfoDetail" resultType="com.wzmtr.dom.dto.res.operate.SpeedLimitInfoResDTO">
+        SELECT ID, SERIAL_NO, REASON, LIMIT_START_TIME, LIMIT_END_TIME, LIMIT_SECTION,
+        LIMIT_VALUE, APPLICATION_DEPT, APPLICATION_DEPT_NAME, DUTY, VERSION, RECORD_ID
+        FROM OPERATE_SPEED_LIMIT_INFO
+        WHERE DEL_FLAG='0' AND ID=#{id}
+    </select>
+
+    <select id="selectRecordIsExist" resultType="java.lang.Integer">
+        SELECT count(1) FROM OPERATE_SPEED_LIMIT_RECORD
+        WHERE DATA_DATE=#{dataDate,jdbcType=TIMESTAMP}
+        <if test="version!=null and version!=''">
+            AND VERSION=#{version,jdbcType=VARCHAR}
+        </if>
+        AND DEL_FLAG='0' AND rownum=1
+    </select>
+
+    <insert id="addRecord">
+        INSERT INTO OPERATE_SPEED_LIMIT_RECORD
+        (ID,
+        <if test="limitNum!=null">
+            LIMIT_NUM,
+        </if>
+        <if test="dataDate!=null">
+            DATA_DATE,
+        </if>
+        CREATE_BY, CREATE_DATE)
+        VALUES (#{id},
+        <if test="limitNum!=null">
+            #{limitNum},
+        </if>
+        <if test="dataDate!=null">
+            #{dataDate},
+        </if>
+        #{createBy}, sysdate)
+    </insert>
+
+    <insert id="addInfo">
+        INSERT INTO OPERATE_SPEED_LIMIT_INFO
+        (ID,
+        <if test="recordId!=null and recordId!=''">
+            RECORD_ID,
+        </if>
+        <if test="serialNo!=null">
+            SERIAL_NO,
+        </if>
+        <if test="reason!=null and reason!=''">
+            REASON,
+        </if>
+        <if test="limitStartTime!=null">
+            LIMIT_START_TIME,
+        </if>
+        <if test="limitEndTime!=null">
+            LIMIT_END_TIME,
+        </if>
+        <if test="limitSection!=null and limitSection!=''">
+            LIMIT_SECTION,
+        </if>
+        <if test="limitValue!=null and limitValue!=''">
+            LIMIT_VALUE,
+        </if>
+        <if test="applicationDept!=null and applicationDept!=''">
+            APPLICATION_DEPT,
+        </if>
+        <if test="applicationDeptName!=null and applicationDeptName!=''">
+            APPLICATION_DEPT_NAME,
+        </if>
+        <if test="duty!=null and duty!=''">
+            DUTY,
+        </if>
+        CREATE_BY, CREATE_DATE)
+        VALUES (#{id},
+        <if test="recordId!=null and recordId!=''">
+            #{recordId},
+        </if>
+        <if test="serialNo!=null">
+            #{serialNo},
+        </if>
+        <if test="reason!=null and reason!=''">
+            #{reason},
+        </if>
+        <if test="limitStartTime!=null">
+            #{limitStartTime},
+        </if>
+        <if test="limitEndTime!=null">
+            #{limitEndTime},
+        </if>
+        <if test="limitSection!=null and limitSection!=''">
+            #{limitSection},
+        </if>
+        <if test="limitValue!=null and limitValue!=''">
+            #{limitValue},
+        </if>
+        <if test="applicationDept!=null and applicationDept!=''">
+            #{applicationDept},
+        </if>
+        <if test="applicationDeptName!=null and applicationDeptName!=''">
+            #{applicationDeptName},
+        </if>
+        <if test="duty!=null and duty!=''">
+            #{duty},
+        </if>
+        #{createBy}, sysdate)
+    </insert>
+
+    <update id="incrementRecord">
+        UPDATE OPERATE_SPEED_LIMIT_RECORD SET
+        LIMIT_NUM=LIMIT_NUM+${num}
+        WHERE ID=#{recordId}
+    </update>
+
+    <update id="modifyRecord">
+        UPDATE OPERATE_SPEED_LIMIT_RECORD SET
+        <if test="limitNum!=null">
+            LIMIT_NUM=#{limitNum},
+        </if>
+        VERSION=VERSION+1, UPDATE_BY=#{updateBy}, UPDATE_DATE=sysdate
+        WHERE ID=#{id} and VERSION=#{version}
+    </update>
+
+    <update id="modifyInfo">
+        UPDATE OPERATE_SPEED_LIMIT_INFO SET
+        <if test="reason!=null">
+            REASON=#{reason},
+        </if>
+        <if test="limitStartTime!=null">
+            LIMIT_START_TIME=#{limitStartTime},
+        </if>
+        <if test="limitEndTime!=null">
+            LIMIT_END_TIME=#{limitEndTime},
+        </if>
+        <if test="limitSection!=null">
+            LIMIT_SECTION=#{limitSection},
+        </if>
+        <if test="limitValue!=null">
+            LIMIT_VALUE=#{limitValue},
+        </if>
+        <if test="applicationDept!=null">
+            APPLICATION_DEPT=#{applicationDept},
+        </if>
+        <if test="applicationDeptName!=null">
+            APPLICATION_DEPT_NAME=#{applicationDeptName},
+        </if>
+        <if test="duty!=null">
+            DUTY=#{duty},
+        </if>
+        VERSION=VERSION+1, UPDATE_BY=#{updateBy}, UPDATE_DATE=sysdate
+        WHERE ID=#{id} and VERSION=#{version}
+    </update>
+
+    <update id="deleteRecord">
+        UPDATE OPERATE_SPEED_LIMIT_RECORD SET
+        DEL_FLAG='1', UPDATE_BY=#{userId}, UPDATE_DATE=sysdate
+        WHERE ID IN (
+        <foreach collection="ids" index="index" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+
+    <update id="deleteInfo">
+        UPDATE OPERATE_SPEED_LIMIT_INFO SET
+        DEL_FLAG='1', UPDATE_BY=#{userId}, UPDATE_DATE=sysdate
+        <if test="parentIds!=null and parentIds.size()>0">
+            WHERE RECORD_ID IN (
+            <foreach collection="parentIds" index="index" item="parentId" separator=",">
+                #{parentId}
+            </foreach>
+            )
+        </if>
+        <if test="ids!=null and ids.size()>0">
+            WHERE ID IN (
+            <foreach collection="ids" index="index" item="id" separator=",">
+                #{id}
+            </foreach>
+            )
+        </if>
+    </update>
+
+</mapper>

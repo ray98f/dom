@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzmtr.dom.mapper.system.StationMapper">
+
+    <select id="allList" resultType="com.wzmtr.dom.dto.res.system.StationResDTO">
+        SELECT *
+        FROM SYS_STATION
+        WHERE OPEN_FLAG='1'
+        AND DEPOT_FLAG='0'
+        AND VIRTUAL_FLAG='0'
+        <if test="lineCode!=null and lineCode!=''">
+            AND LINE_CODE=#{lineCode}
+        </if>
+        ORDER BY STATION_ORDER ASC
+    </select>
+    <select id="listByCodes" resultType="com.wzmtr.dom.dto.res.system.StationResDTO">
+        SELECT *
+        FROM SYS_STATION
+        WHERE STATION_CODE IN
+        <foreach collection="stationCode" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+
+</mapper>

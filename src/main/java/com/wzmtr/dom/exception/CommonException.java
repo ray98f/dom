@@ -4,6 +4,12 @@ import com.wzmtr.dom.enums.ErrorCode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+/**
+ * 通用异常
+ * @author  Ray
+ * @version 1.0
+ * @date 2024/03/06
+ */
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class CommonException extends RuntimeException {

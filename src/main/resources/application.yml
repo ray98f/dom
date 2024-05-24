@@ -1,5 +1,5 @@
 server:
-  port: 8900
+  port: 8100
   tomcat:
     uri-encoding: UTF-8
   servlet:
@@ -34,7 +34,7 @@ spring:
       matching-strategy: ant_path_matcher
 
 mybatis-plus:
-  mapper-locations: classpath:/mapper/*.xml
+  mapper-locations: classpath:/mapper/*.xml,classpath:/mapper/*/*.xml
   configuration:
     log-impl: org.apache.ibatis.logging.log4j2.Log4j2Impl
 #      log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl

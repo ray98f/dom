@@ -11,79 +11,129 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * 公共分类-组织机构管理
+ * @author  Ray
+ * @version 1.0
+ * @date 2024/03/06
+ */
 @Mapper
 @Repository
 public interface OrganizationMapper {
 
+    /**
+     * 获取组织结构根目录
+     * @return 组织结构根目录
+     */
     CompanyStructureTree getRoot();
 
+    /**
+     * 获取根目录下一级组织结构
+     * @param root 根目录
+     * @return 一级组织结构
+     */
     List<CompanyStructureTree> listExtraRootList(@Param("root") String root);
 
+    /**
+     * 获取根目录下非一级组织结构
+     * @param root 根目录
+     * @return 非一级组织结构
+     */
     List<CompanyStructureTree> listExtraBodyList(@Param("root") String root);
 
+    /**
+     * 获取公司列表
+     * @return 公司列表
+     */
     List<CompanyStructureTree> listCompanyList();
 
+    /**
+     * 分页查询组织机构人员列表
+     * @param page 分页参数
+     * @param id 组织机构id
+     * @param name 姓名
+     * @return 人员列表
+     */
     Page<MemberResDTO> pageMember(Page<MemberResDTO> page, @Param("id") String id, @Param("name") String name);
 
+    /**
+     * 根据areaId获取组织机构id
+     * @param id areaId
+     * @return 组织机构id
+     */
     String getIdByAreaId(@Param("id") String id);
 
-    List<MemberResDTO> listMember(@Param("id") String id);
+    /**
+     * 查询组织机构人员列表
+     * @param id 组织机构id
+     * @param name 姓名
+     * @return 人员列表
+     */
+    List<MemberResDTO> listMember(@Param("id") String id, @Param("name") String name);
 
+    /**
+     * 分页查询组织机构下人员
+     * @param page 分页参数
+     * @param id 组织机构id
+     * @return 人员列表
+     */
     Page<MemberResDTO> pageUserByOffice(Page<MemberResDTO> page, @Param("id") String id);
 
+    /**
+     * 查询组织机构下人员
+     * @param id 组织机构id
+     * @return 人员列表
+     */
     List<MemberResDTO> listUserByOffice(@Param("id") String id);
 
-    String selectOfficeNameById(String id);
-
-    String getOrgNameByOrgCode(String id);
-
-    Integer cleanOrg();
-
-    Integer createOrg(SysOffice office);
-
-    Integer cleanSupplier();
-
-    Integer cleanExtra();
-
-    List<OrgParentResDTO> searchParent();
-
-    Integer updateParent(OrgParentResDTO orgParentResDTO);
-
-    List<String> downRecursion(@Param("id") String id);
-
-    String selectCompanyIdByOfficeId(@Param("officeId") String officeId);
-
-    String getExtraOrgByAreaId(@Param("areaId") String areaId);
-
-    String getOrgById(@Param("id") String id);
-
-    SysOffice getByNames(@Param("names") String names);
-
-    String getNamesById(@Param("id") String id);
+    List<MemberResDTO> listUserByOfficeAndName(@Param("id") String id,@Param("name") String name);
 
     /**
-     * 根据组织机构id获取组织机构名称
-     * @param id 组织机构id
+     * 根据id查询组织机构名称
+     * @param id id
      * @return 组织机构名称
      */
-    String getNameById(@Param("id") String id);
+    String selectOfficeNameById(String id);
 
     /**
-     * 获取父级组织机构编号
-     * @param orgCode 组织机构编号
-     * @return 父级组织机构编号
+     * 清除组织机构
      */
-    String getParentCodeByCode(String orgCode);
+    void cleanOrg();
 
     /**
-     * 获取子级组织机构编号
-     * @param orgCode 组织机构编号
-     * @param majorCode 专业编号
-     * @param lineCode 线路编号
-     * @param orgType 组织机构类型编号
-     * @return 子级组织机构编号
+     * 新增组织机构
+     * @param office 组织机构信息
      */
-    String getChildCodeByCodeAndMajorLineType(String orgCode, String majorCode, String lineCode, String orgType);
+    void createOrg(SysOffice office);
+
+    /**
+     * 清除供应商
+     */
+    void cleanSupplier();
+
+    /**
+     * 清除外部组织
+     */
+    void cleanExtra();
+
+    /**
+     * 查询父级组织机构
+     * @return 父级组织机构
+     */
+    List<OrgParentResDTO> searchParent();
+
+    /**
+     * 更新父级路径
+     * @param orgParentResDTO 父级路径更新参数
+     */
+    void updateParent(OrgParentResDTO orgParentResDTO);
+
+    /**
+     * 根据组织机构id获取父级路径
+     * @param officeId 组织机构id
+     * @return 父级路径
+     */
+    String selectParentIdsByOfficeId(@Param("officeId") String officeId);
 
     /**
      * 获取中铁通根目录
