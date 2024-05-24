@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dataobject.traffic.TrafficOnewaySaleDO;
 import com.wzmtr.dom.dto.req.traffic.onewaysale.OneWaySaleDetailReqDTO;
 import com.wzmtr.dom.dto.req.traffic.onewaysale.OnewaySaleListReqDTO;
+import com.wzmtr.dom.dto.res.traffic.oneway.OnewaySaleDetailResDTO;
 import com.wzmtr.dom.dto.res.traffic.oneway.OnewaySaleListResDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -28,4 +29,22 @@ public interface OnewaySaleMapper extends BaseMapper<TrafficOnewaySaleDO> {
     Page<OnewaySaleListResDTO> list(Page<Object> of, @Param("req") OnewaySaleListReqDTO req);
 
     TrafficOnewaySaleDO detail(OneWaySaleDetailReqDTO reqDTO);
+
+    OnewaySaleDetailResDTO selectDetailById(String id,String dataType,String startDate,String endDate);
+
+    /**
+     * 数据更新
+     * @param dataType 入参数
+     * @param startDate 入参数
+     * @param endDate 入参数
+     */
+    void autoModify(String dataType,String startDate,String endDate);
+
+    /**
+     * 数据更新
+     * @param dataType 入参数
+     * @param startDate 入参数
+     * @param endDate 入参数
+     */
+    void autoModifyByDaily(String dataType,String startDate,String endDate);
 }

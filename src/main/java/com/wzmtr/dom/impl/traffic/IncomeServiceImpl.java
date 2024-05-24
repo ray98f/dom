@@ -1,9 +1,11 @@
 package com.wzmtr.dom.impl.traffic;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
+import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dataobject.traffic.IncomeRecordDO;
 import com.wzmtr.dom.dto.req.traffic.income.IncomeAddReqDTO;
 import com.wzmtr.dom.dto.req.traffic.income.IncomeDetailReqDTO;
@@ -19,6 +21,8 @@ import com.wzmtr.dom.utils.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 /**
  * @Author: Li.Wang
@@ -56,6 +60,10 @@ public class IncomeServiceImpl implements IncomeService {
         reqDTO.setUpdateBy(TokenUtils.getCurrentPersonId());
         reqDTO.setId(TokenUtils.getUuId());
         incomeMapper.add(reqDTO);
+        //周报/月报数据统计
+        if(!CommonConstants.DATA_TYPE_DAILY.equals(reqDTO.getDataType())){
+            autoModify(reqDTO.getDataType(),reqDTO.getStartDate(),reqDTO.getEndDate());
+        }
     }
 
 
@@ -67,5 +75,29 @@ public class IncomeServiceImpl implements IncomeService {
         incomeRecordDO.setUpdateBy(currentLoginUser.getPersonId());
         incomeRecordDO.setVersion(String.valueOf(Integer.parseInt(now.getVersion()) + 1));
         incomeMapper.updateById(incomeRecordDO);
+        if(CommonConstants.DATA_TYPE_DAILY.equals(now.getDataType())){
+            autoModify(now.getDataType(),DateUtil.formatDate(now.getStartDate()),DateUtil.formatDate(now.getEndDate()));
+            autoModifyByDaily(now.getDataType(),DateUtil.formatDate(now.getStartDate()),DateUtil.formatDate(now.getEndDate()));
+        }
+    }
+
+    @Override
+    public void autoModify(String dataType, String startDate, String endDate) {
+        incomeMapper.autoModify(dataType,startDate,endDate);
+    }
+
+    @Override
+    public void autoModifyByDaily(String dataType, String startDate, String endDate) {
+        //获取周 周一、周日
+        Date monday = DateUtil.beginOfWeek(DateUtil.parseDate(startDate));
+        Date sunday = DateUtil.endOfWeek(DateUtil.parseDate(startDate));
+
+        incomeMapper.autoModify(CommonConstants.DATA_TYPE_WEEKLY,DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
+
+        //获取月 月初、月末
+        Date monthStart = DateUtil.beginOfMonth(DateUtil.parseDate(startDate));
+        Date monthEnd = DateUtil.endOfMonth(DateUtil.parseDate(startDate));
+
+        incomeMapper.autoModify(CommonConstants.DATA_TYPE_MONTHLY,DateUtil.formatDate(monthStart),DateUtil.formatDate(monthEnd));
     }
 }

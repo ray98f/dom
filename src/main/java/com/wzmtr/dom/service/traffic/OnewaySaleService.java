@@ -22,5 +22,22 @@ public interface OnewaySaleService {
 
     Page<OnewaySaleListResDTO> list(OnewaySaleListReqDTO reqDTO);
 
-    OnewaySaleDetailResDTO acc(String date);
+    OnewaySaleDetailResDTO acc(String dataType, String startDate, String endDate);
+
+
+    /**
+     * 数据统计
+     * @param dataType 入参数
+     * @param startDate 入参数
+     * @param endDate 入参数
+     */
+    void autoModify(String dataType, String startDate, String endDate);
+
+    /**
+     * 数据统计
+     * @param dataType 入参数
+     * @param startDate 入参数
+     * @param endDate 入参数
+     */
+    void autoModifyByDaily(String dataType, String startDate, String endDate);
 }

@@ -84,9 +84,33 @@ public interface PassengerMapper {
     void createStationPassenger(PassengerInfoReqDTO passengerRecordReqDTO);
 
     /**
+     * 车站客流数据删除
+     * @param dataType 入参数
+     * @param startDate 入参数
+     * @param endDate 入参数
+     */
+    void deleteStationPassenger(String dataType,String startDate,String endDate);
+
+    /**
      * 编辑车站客流
      * @param passengerInfoReqDTO 入参数
      * @return 更新数
      */
     int modifyStationPassenger(PassengerInfoReqDTO passengerInfoReqDTO);
+
+    /**
+     * 客流数据更新
+     * @param dataType 入参数
+     * @param startDate 入参数
+     * @param endDate 入参数
+     */
+    void autoModify(String dataType,String startDate,String endDate);
+
+    /**
+     * 客流数据更新
+     * @param dataType 入参数
+     * @param startDate 入参数
+     * @param endDate 入参数
+     */
+    void autoModifyByDaily(String dataType,String startDate,String endDate);
 }

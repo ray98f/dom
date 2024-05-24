@@ -27,5 +27,19 @@ public interface IncomeService {
 
     void modify(CurrentLoginUser currentLoginUser, IncomeAddReqDTO passengerRecordReqDTO);
 
+    /**
+     * 客流统计
+     * @param dataType 入参数
+     * @param startDate 入参数
+     * @param endDate 入参数
+     */
+    void autoModify(String dataType, String startDate, String endDate);
 
+    /**
+     * 客流统计
+     * @param dataType 入参数
+     * @param startDate 入参数
+     * @param endDate 入参数
+     */
+    void autoModifyByDaily(String dataType, String startDate, String endDate);
 }

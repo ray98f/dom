@@ -159,6 +159,51 @@
         WHERE ID=#{id} and VERSION=#{version}
     </update>
 
+    <delete id="deleteStationPassenger">
+        DELETE FROM TRAFFIC_PASSENGER_INFO
+        WHERE DATA_TYPE = '1'
+        AND START_DATE=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+    </delete>
 
+    <update id="autoModify">
+        UPDATE TRAFFIC_PASSENGER_RECORD SET
+        DAY_PASSENGER=(SELECT SUM(PASSENGER) AS PASSENGER_SUM FROM TRAFFIC_PASSENGER_INFO WHERE START_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss') AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')),
+        WEEK_PASSENGER=(SELECT SUM(PASSENGER) AS PASSENGER_SUM FROM TRAFFIC_PASSENGER_INFO WHERE START_DATE>=TRUNC(NEXT_DAY(to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')-8,1)+1) AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        MONTH_PASSENGER=(SELECT SUM(PASSENGER) AS PASSENGER_SUM FROM TRAFFIC_PASSENGER_INFO WHERE TO_CHAR(START_DATE,'YYYY-MM')=TO_CHAR(to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),'YYYY-MM')),
+        YEAR_PASSENGER=(SELECT SUM(PASSENGER) AS PASSENGER_SUM FROM TRAFFIC_PASSENGER_INFO WHERE TO_CHAR(START_DATE,'YYYY')=TO_CHAR(to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),'YYYY') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=START_DATE),
+        UPDATE_DATE=sysdate
+        WHERE DATA_TYPE = #{dataType}
+        AND START_DATE=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+    </update>
 
+    <update id="autoModifyByDaily">
+        UPDATE TRAFFIC_PASSENGER_RECORD SET
+        DAY_PASSENGER=(SELECT SUM(PASSENGER) AS PASSENGER_SUM FROM TRAFFIC_PASSENGER_INFO WHERE START_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss') AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')),
+        WEEK_PASSENGER=(SELECT SUM(PASSENGER) AS PASSENGER_SUM FROM TRAFFIC_PASSENGER_INFO WHERE START_DATE>=TRUNC(NEXT_DAY(to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')-8,1)+1) AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        MONTH_PASSENGER=(SELECT SUM(PASSENGER) AS PASSENGER_SUM FROM TRAFFIC_PASSENGER_INFO WHERE TO_CHAR(START_DATE,'YYYY-MM')=TO_CHAR(to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),'YYYY-MM')),
+        YEAR_PASSENGER=(SELECT SUM(PASSENGER) AS PASSENGER_SUM FROM TRAFFIC_PASSENGER_INFO WHERE TO_CHAR(START_DATE,'YYYY')=TO_CHAR(to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),'YYYY') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=START_DATE),
+        WIRING_DAY_PASSENGER=(SELECT WIRING_DAY_PASSENGER FROM TRAFFIC_PASSENGER_RECORD WHERE START_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss') AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')),
+        WIRING_WEEK_PASSENGER=(SELECT SUM(WIRING_DAY_PASSENGER) AS WIRING_WEEK_PASSENGER FROM TRAFFIC_PASSENGER_RECORD WHERE START_DATE>=TRUNC(NEXT_DAY(to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')-8,1)+1) AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        WIRING_MONTH_PASSENGER=(SELECT SUM(WIRING_DAY_PASSENGER) AS WIRING_MONTH_PASSENGER FROM TRAFFIC_PASSENGER_RECORD WHERE TO_CHAR(START_DATE,'YYYY-MM')=TO_CHAR(to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),'YYYY-MM')),
+        WIRING_YEAR_PASSENGER=(SELECT SUM(WIRING_DAY_PASSENGER) AS WIRING_YEAR_PASSENGER FROM TRAFFIC_PASSENGER_RECORD WHERE TO_CHAR(START_DATE,'YYYY')=TO_CHAR(to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),'YYYY') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=START_DATE),
+        (TRANSFER_COUNT,S2_TRANSFER_IN,S2_TRANSFER_OUT,S2_IN,IN_SUCCESS,CARD_IN,S2_OUT,OUT_SUCCESS,CARD_OUT)
+        = (SELECT
+        SUM(TRANSFER_COUNT) AS TRANSFER_COUNT,
+        SUM(S2_TRANSFER_IN) AS S2_TRANSFER_IN,
+        SUM(S2_TRANSFER_OUT) AS S2_TRANSFER_OUT,
+        SUM(S2_IN) AS S2_IN,
+        SUM(IN_SUCCESS) AS IN_SUCCESS,
+        SUM(CARD_IN) AS CARD_IN,
+        SUM(S2_OUT) AS S2_OUT,
+        SUM(OUT_SUCCESS) AS OUT_SUCCESS,
+        SUM(CARD_OUT) AS CARD_OUT
+        FROM TRAFFIC_PASSENGER_RECORD WHERE DATA_TYPE = '1' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss') >= END_DATE),
+        UPDATE_DATE=sysdate
+        WHERE DATA_TYPE = #{dataType}
+        AND START_DATE=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+
+    </update>
 </mapper>

@@ -2,6 +2,7 @@ package com.wzmtr.dom.controller.vehicle;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.Week;
+import cn.hutool.core.util.NumberUtil;
 import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.constant.ValidationGroup;
@@ -45,8 +46,23 @@ public class IndicatorController {
 
     public static void main(String[] args){
 
+        double a = 1.22;
+        double b =2.33;
+        Double c = NumberUtil.div((a-b), b, 2);
         String dateStr = "2024-05-11";
         Date date1 = DateUtil.parseDate(dateStr);
+
+        // 获取当前日期
+        Date now = DateUtil.date();
+        // 获取上个月的第一天
+        Date firstDayOfLastMonth = DateUtil.beginOfMonth(DateUtil.offsetMonth(date1, -1));
+        // 获取上个月的最后一天
+        Date lastDayOfLastMonth = DateUtil.endOfMonth(DateUtil.offsetMonth(date1, -1));
+
+        // 打印结果
+        System.out.println("上个月第一天：" + DateUtil.formatDateTime(firstDayOfLastMonth));
+        System.out.println("上个月最后一天：" + DateUtil.formatDateTime(lastDayOfLastMonth));
+
         // 获取当前周的周一
         Date monday = DateUtil.beginOfWeek(date1);
 

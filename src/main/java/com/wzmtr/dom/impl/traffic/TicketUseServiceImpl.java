@@ -1,5 +1,6 @@
 package com.wzmtr.dom.impl.traffic;
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
@@ -15,6 +16,7 @@ import com.wzmtr.dom.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -55,6 +57,13 @@ public class TicketUseServiceImpl implements TicketUseService {
     @Override
     public TicketUseResDTO acc(String dataType, String startDate, String endDate) {
         // todo 根据日期获取当天 ACC系统线 网车票过闸使用情况
+
+        //同步后更新日报
+        //modify
+        //更新周/月报
+        if(CommonConstants.DATA_TYPE_DAILY.equals(dataType)){
+            autoModifyByDaily(dataType,startDate,endDate);
+        }
         return new TicketUseResDTO();
     }
 
@@ -68,6 +77,11 @@ public class TicketUseServiceImpl implements TicketUseService {
         ticketUseReqDTO.setId(TokenUtils.getUuId());
         ticketUseReqDTO.setCreateBy(TokenUtils.getCurrentPersonId());
         ticketUseMapper.add(ticketUseReqDTO);
+
+        // 统计周/月报数据
+        if(!CommonConstants.DATA_TYPE_DAILY.equals(ticketUseReqDTO.getDataType())){
+            autoModifyByDaily(ticketUseReqDTO.getDataType(),DateUtil.formatDate(ticketUseReqDTO.getStartDate()),DateUtil.formatDate(ticketUseReqDTO.getEndDate()));
+        }
     }
 
     @Override
@@ -79,6 +93,11 @@ public class TicketUseServiceImpl implements TicketUseService {
         }
         ticketUseReqDTO.setUpdateBy(TokenUtils.getCurrentPersonId());
         ticketUseMapper.modify(ticketUseReqDTO);
+
+        // 统计周/月报数据
+        if(CommonConstants.DATA_TYPE_DAILY.equals(ticketUseReqDTO.getDataType())){
+            autoModifyByDaily(ticketUseReqDTO.getDataType(),DateUtil.formatDate(ticketUseReqDTO.getStartDate()),DateUtil.formatDate(ticketUseReqDTO.getEndDate()));
+        }
     }
 
     @Override
@@ -86,6 +105,26 @@ public class TicketUseServiceImpl implements TicketUseService {
         if (StringUtils.isNotEmpty(ids)) {
             ticketUseMapper.delete(ids, TokenUtils.getCurrentPersonId());
         }
+    }
+
+    @Override
+    public void autoModify(String dataType, String startDate, String endDate) {
+        ticketUseMapper.autoModify(dataType,startDate,endDate);
+    }
+
+    @Override
+    public void autoModifyByDaily(String dataType, String startDate, String endDate) {
+        //获取周 周一、周日
+        Date monday = DateUtil.beginOfWeek(DateUtil.parseDate(startDate));
+        Date sunday = DateUtil.endOfWeek(DateUtil.parseDate(startDate));
+
+        ticketUseMapper.autoModify(CommonConstants.DATA_TYPE_WEEKLY,DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
+
+        //获取月 月初、月末
+        Date monthStart = DateUtil.beginOfMonth(DateUtil.parseDate(startDate));
+        Date monthEnd = DateUtil.endOfMonth(DateUtil.parseDate(startDate));
+
+        ticketUseMapper.autoModify(CommonConstants.DATA_TYPE_MONTHLY,DateUtil.formatDate(monthStart),DateUtil.formatDate(monthEnd));
     }
 
     private void buildTicketUseQoq(TicketUseResDTO res, TicketUseResDTO lastRes) {

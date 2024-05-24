@@ -286,7 +286,7 @@ public class DrivingServiceImpl implements DrivingService {
         Date monthStart = DateUtil.beginOfMonth(DateUtil.parseDate(startDate));
         Date monthEnd = DateUtil.endOfMonth(DateUtil.parseDate(startDate));
 
-        updateRecordCount(null,CommonConstants.DATA_TYPE_MONTHLY,DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
+        updateRecordCount(null,CommonConstants.DATA_TYPE_MONTHLY,DateUtil.formatDate(monthStart),DateUtil.formatDate(monthEnd));
 
 
     }
