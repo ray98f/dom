@@ -28,7 +28,7 @@
         and VERSION=#{version}
     </update>
     <select id="eachStation" resultType="com.wzmtr.dom.dto.res.traffic.PassengerInfoResDTO">
-        SELECT t1.ID,t1.RECORD_ID,t1.STATION_CODE,t1.PASSENGER,VERSION,t2.STATION_NAME
+        SELECT t1.ID,t1.RECORD_ID,t1.STATION_CODE,t1.PASSENGER,t1.VERSION,t2.STATION_NAME
         FROM TRAFFIC_PASSENGER_INFO t1
         LEFT JOIN SYS_STATION t2 on t1.STATION_CODE=t2.STATION_CODE
         WHERE DEL_FLAG='0'
@@ -37,35 +37,38 @@
         ORDER BY t1.PASSENGER DESC
     </select>
     <select id="topThree" resultType="java.lang.String">
-        select ss.STATION_NAME
-        from OPERATE_PASSENGER_FLOW_INFO op
+        SELECT STATION_NAME FROM (
+        select op.STATION_CODE,sum(op.PASSENGER) as passenger,ss.STATION_NAME
+        from TRAFFIC_PASSENGER_INFO op
         left join SYS_STATION ss ON op.STATION_CODE=ss.STATION_CODE
-        where DEL_FLAG='0'
+        where op.DEL_FLAG='0'
         <if test="startDate!=null and startDate!=''">
-            AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+            AND op.START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
         <if test="endDate!=null and endDate!=''">
-            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=op.END_DATE
         </if>
-        AND DATA_TYPE=#{dataType}
-        AND rownum=3
-        order by op.PASSENGER desc
+        GROUP BY op.STATION_CODE,ss.STATION_NAME
+        order by passenger DESC
+        ) where  3 >= rownum
     </select>
 
     <select id="lastThree" resultType="java.lang.String">
-        select ss.STATION_NAME
-        from OPERATE_PASSENGER_FLOW_INFO op
+        SELECT STATION_NAME FROM (
+        select op.STATION_CODE,sum(op.PASSENGER) as passenger,ss.STATION_NAME
+        from TRAFFIC_PASSENGER_INFO op
         left join SYS_STATION ss ON op.STATION_CODE=ss.STATION_CODE
-        where DEL_FLAG='0'
+        where op.DEL_FLAG='0'
         <if test="startDate!=null and startDate!=''">
-            AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+            AND op.START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
         <if test="endDate!=null and endDate!=''">
-            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=op.END_DATE
         </if>
-        AND DATA_TYPE=#{dataType}
-        AND rownum=3
-        order by op.PASSENGER
+        GROUP BY op.STATION_CODE,ss.STATION_NAME
+        order by passenger ASC
+        ) where  3 >= rownum
+
     </select>
 
 </mapper>

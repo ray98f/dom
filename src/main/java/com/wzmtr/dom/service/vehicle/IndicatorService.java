@@ -56,4 +56,6 @@ public interface IndicatorService {
      */
     void delete(List<String> ids);
 
+    void autoModify(String dataType,String startDate,String endDate);
+    void autoModifyByDaily(String dataType,String startDate,String endDate);
 }

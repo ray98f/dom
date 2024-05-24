@@ -53,23 +53,6 @@ public class ProductionSummaryController {
     }
 
     /**
-     * 安全生产情况汇总-列表
-     * @param startDate  开始时间
-     * @param endDate    结束时间
-     * @param dataType   数据类型 1:日报 2:周报 3:月报
-     * @return 安全生产情况汇总-列表
-     */
-    @GetMapping("/summaryByMonth")
-    @ApiOperation(value = "安全生产情况月汇总")
-    public DataResponse<MonthSummaryResDTO> summaryByMonth(@CurrUser CurrentLoginUser currentLoginUser,
-                                          @RequestParam String startDate,
-                                          @RequestParam String endDate,
-                                          @RequestParam String dataType) {
-
-         return DataResponse.of(productionSummaryService.summaryByMonth(dataType, currentLoginUser.getStationCode(), startDate, endDate));
-    }
-
-    /**
      * 安全生产情况汇总-详情
      * @param id id
      * @return 安全生产情况汇总详情

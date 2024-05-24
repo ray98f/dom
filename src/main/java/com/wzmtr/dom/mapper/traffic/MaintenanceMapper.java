@@ -113,4 +113,6 @@ public interface MaintenanceMapper {
      */
     void deleteEvent(List<String> ids, String userId);
 
+    void autoModifyByDaily(String dataType, String startDate, String endDate);
+
 }

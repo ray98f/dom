@@ -19,6 +19,7 @@ import com.wzmtr.dom.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -92,6 +93,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 
         //更新事件统计
         updateSummaryCount(maintenanceInfoReqDTO.getStartDate(), maintenanceInfoReqDTO.getEndDate());
+        autoModifyByDaily(maintenanceInfoReqDTO.getDataType(),maintenanceInfoReqDTO.getStartDate(),maintenanceInfoReqDTO.getEndDate());
     }
 
     @Override
@@ -101,6 +103,7 @@ public class MaintenanceServiceImpl implements MaintenanceService {
         if (res <= 0) {
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
+        autoModifyByDaily(maintenanceInfoReqDTO.getDataType(),maintenanceInfoReqDTO.getStartDate(),maintenanceInfoReqDTO.getEndDate());
     }
 
     @Override
@@ -115,7 +118,20 @@ public class MaintenanceServiceImpl implements MaintenanceService {
 
             //更新事件统计
             updateSummaryCount(DateUtil.formatDate(eventInfo.getStartDate()), DateUtil.formatDate(eventInfo.getEndDate()));
+            autoModifyByDaily(eventInfo.getDataType(),DateUtil.formatDate(eventInfo.getStartDate()),DateUtil.formatDate(eventInfo.getEndDate()));
         }
+    }
+
+    @Override
+    public void autoModifyByDaily(String dataType, String startDate, String endDate) {
+        //获取周 周一、周日
+        Date monday = DateUtil.beginOfWeek(DateUtil.parseDate(startDate));
+        Date sunday = DateUtil.endOfWeek(DateUtil.parseDate(startDate));
+        maintenanceMapper.autoModifyByDaily(CommonConstants.DATA_TYPE_WEEKLY,DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
+        //获取月 月初、月末
+        Date monthStart = DateUtil.beginOfMonth(DateUtil.parseDate(startDate));
+        Date monthEnd = DateUtil.endOfMonth(DateUtil.parseDate(startDate));
+        maintenanceMapper.autoModifyByDaily(CommonConstants.DATA_TYPE_MONTHLY,DateUtil.formatDate(monthStart),DateUtil.formatDate(monthEnd));
     }
 
     /**

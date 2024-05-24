@@ -77,7 +77,7 @@ public class DispatchController {
 
     /**
      * 提取施工调度调度命令数据
-     * @param recordId 记录id
+     * @param id 记录id
      * @param dataType 数据类型
      * @param startDate 开始日期
      * @param endDate 结束日期
@@ -85,11 +85,11 @@ public class DispatchController {
      */
     @GetMapping("/csm")
     @ApiOperation(value = "提取施工调度调度命令数据")
-    public DataResponse<List<DispatchOrderResDTO>> getCsmDispatch(@RequestParam String startDate,
-                                                                  @RequestParam String endDate,
-                                                                  @RequestParam String recordId,
-                                                                  @RequestParam String dataType) {
-        return DataResponse.of(dispatchService.getCsmDispatch(recordId,dataType,startDate,endDate));
+    public DataResponse<List<DispatchOrderResDTO>> getCsmDispatch(@RequestParam(required = false) String startDate,
+                                                                  @RequestParam(required = false) String endDate,
+                                                                  @RequestParam(required = false) String id,
+                                                                  @RequestParam(required = false) String dataType) {
+        return DataResponse.of(dispatchService.getCsmDispatch(id,dataType,startDate,endDate));
     }
 
     /**

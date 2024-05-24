@@ -58,4 +58,20 @@ public interface TicketUseService {
      * @param ids ids
      */
     void delete(List<String> ids);
+
+    /**
+     * 线网车票过闸使用情况统计
+     * @param dataType 入参数
+     * @param startDate 入参数
+     * @param endDate 入参数
+     */
+    void autoModify(String dataType, String startDate, String endDate);
+
+    /**
+     * 线网车票过闸使用情况统计
+     * @param dataType 入参数
+     * @param startDate 入参数
+     * @param endDate 入参数
+     */
+    void autoModifyByDaily(String dataType, String startDate, String endDate);
 }

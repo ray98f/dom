@@ -131,8 +131,11 @@ public class PassengerServiceImpl implements PassengerService {
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
 
-        //PassengerDetailResDTO detail = passengerMapper.queryInfoById(passengerRecordReqDTO.getId(),null,null,null);
-        //passengerMapper.modifyCount(detail.getId(), DateUtil.formatDate(detail.getStartDate()),  DateUtil.formatDate(detail.getEndDate()));
+        PassengerDetailResDTO detail = passengerMapper.queryInfoById(passengerRecordReqDTO.getId(),null,null,null);
+        if(CommonConstants.DATA_TYPE_DAILY.equals(detail.getDataType())){
+            //更新周/月客流统计
+            autoModifyByDaily(detail.getDataType(),DateUtil.formatDate(detail.getStartDate()),  DateUtil.formatDate(detail.getEndDate()));
+        }
     }
 
     @Override
@@ -146,6 +149,7 @@ public class PassengerServiceImpl implements PassengerService {
         } catch (Exception e) {
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
+
     }
 
     @Override
@@ -156,6 +160,32 @@ public class PassengerServiceImpl implements PassengerService {
         req.setStartDate(DateUtil.formatDate(detail.getStartDate()));
         req.setEndDate(DateUtil.formatDate(detail.getEndDate()));
         syncACCdata(req);
+
+        //更新本日客流统计
+        autoModify(dataType,startDate,  endDate);
+
+        //更新周/月客流统计
+        autoModifyByDaily(dataType,startDate,  endDate);
+    }
+
+    @Override
+    public void autoModify(String dataType, String startDate, String endDate) {
+        passengerMapper.autoModify(dataType,startDate,endDate);
+    }
+
+    @Override
+    public void autoModifyByDaily(String dataType, String startDate, String endDate) {
+        //获取周 周一、周日
+        Date monday = DateUtil.beginOfWeek(DateUtil.parseDate(startDate));
+        Date sunday = DateUtil.endOfWeek(DateUtil.parseDate(startDate));
+
+        passengerMapper.autoModifyByDaily(CommonConstants.DATA_TYPE_WEEKLY,DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
+
+        //获取月 月初、月末
+        Date monthStart = DateUtil.beginOfMonth(DateUtil.parseDate(startDate));
+        Date monthEnd = DateUtil.endOfMonth(DateUtil.parseDate(startDate));
+
+        passengerMapper.autoModifyByDaily(CommonConstants.DATA_TYPE_MONTHLY,DateUtil.formatDate(monthStart),DateUtil.formatDate(monthEnd));
     }
 
     /**
@@ -195,10 +225,9 @@ public class PassengerServiceImpl implements PassengerService {
                 }
             }
 
-
             //新增
             if (infoReqDTOList != null && infoReqDTOList.size() > 0) {
-                doCreatePassengerBatch(infoReqDTOList);
+                doCreatePassengerBatch(infoReqDTOList,passengerRecordReqDTO);
             }
 
         }
@@ -207,8 +236,10 @@ public class PassengerServiceImpl implements PassengerService {
     /**
      * 新增车站客流
      */
-    private void doCreatePassengerBatch(List<PassengerInfoReqDTO> infoReqDTOList) {
+    private void doCreatePassengerBatch(List<PassengerInfoReqDTO> infoReqDTOList,PassengerRecordReqDTO passengerRecordReqDTO) {
 
+        //先删当天所有车站的客流数据，再插入
+        passengerMapper.deleteStationPassenger(passengerRecordReqDTO.getDataType(),passengerRecordReqDTO.getStartDate(),passengerRecordReqDTO.getEndDate());
         SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH, false);
         try {
             PassengerMapper mapper = sqlSession.getMapper(PassengerMapper.class);

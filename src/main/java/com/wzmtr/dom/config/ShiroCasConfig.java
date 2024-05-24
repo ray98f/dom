@@ -180,7 +180,7 @@ public class ShiroCasConfig {
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
 
         filterChainDefinitionMap.put(casFilterUrlPattern, CAS_FILTER);
-        filterChainDefinitionMap.put("/rights/index", "authc");
+        filterChainDefinitionMap.put("/index", "authc");
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
     }

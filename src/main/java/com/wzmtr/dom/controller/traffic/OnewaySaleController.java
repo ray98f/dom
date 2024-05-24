@@ -54,8 +54,10 @@ public class OnewaySaleController {
 
     @GetMapping("/acc")
     @ApiOperation(value = "获取ACC数据")
-    public DataResponse<OnewaySaleDetailResDTO> acc(@RequestParam String date) {
-        return DataResponse.of(onewaySaleService.acc(date));
+    public DataResponse<OnewaySaleDetailResDTO> acc(@RequestParam String dataType,
+                                                    @RequestParam String startDate,
+                                                    @RequestParam String endDate) {
+        return DataResponse.of(onewaySaleService.acc(dataType, startDate, endDate));
     }
 
     /**

@@ -9,24 +9,13 @@
         <if test="dataType!=null and dataType!=''">
             AND DATA_TYPE=#{dataType}
         </if>
-        <if test="dataType=='1'.toString()">
-            <if test="startDate!=null and startDate!=''">
-                AND DATA_DATE>=to_date(#{startDate},'YYYY-MM-DD')
-            </if>
-            <if test="endDate!=null and endDate!=''">
-                AND to_date(#{endDate},'YYYY-MM-DD')>=DATA_DATE
-            </if>
-            ORDER BY DATA_DATE desc
+        <if test="startDate!=null and startDate!=''">
+            AND START_DATE>=to_date(#{startDate},'YYYY-MM-DD')
         </if>
-        <if test="dataType!='1'.toString()">
-            <if test="startDate!=null and startDate!=''">
-                AND START_DATE>=to_date(#{startDate},'YYYY-MM-DD')
-            </if>
-            <if test="endDate!=null and endDate!=''">
-                AND to_date(#{endDate},'YYYY-MM-DD')>=END_DATE
-            </if>
-            ORDER BY START_DATE desc
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'YYYY-MM-DD')>=END_DATE
         </if>
+        ORDER BY START_DATE desc
     </select>
 
     <select id="pageInfo" resultType="com.wzmtr.dom.dto.res.traffic.hotline.HotLineHandoverDetailResDTO">
@@ -66,7 +55,7 @@
     </select>
 
     <select id="getInfoDetail" resultType="com.wzmtr.dom.dto.res.traffic.hotline.HotLineHandoverDetailResDTO">
-        SELECT ID, RECORD_ID, MAIN_CONTENT, SOURCE, COUNT, RESULT, VERSION
+        SELECT ID, RECORD_ID, MAIN_CONTENT, SOURCE, COUNT, RESULT, VERSION,DATA_DATE, DATA_TYPE, START_DATE, END_DATE
         FROM TRAFFIC_HOTLINE_HANDOVER
         WHERE DEL_FLAG='0' AND ID=#{id}
     </select>
@@ -147,6 +136,18 @@
         <if test="result!=null and result!=''">
             RESULT,
         </if>
+        <if test="dataType!=null and dataType!=''">
+            DATA_TYPE,
+        </if>
+        <if test="startDate!=null">
+            START_DATE,
+        </if>
+        <if test="endDate!=null">
+            END_DATE,
+        </if>
+        <if test="dataDate!=null">
+            DATA_DATE,
+        </if>
         CREATE_BY, CREATE_DATE)
         VALUES (#{id}, #{recordId},
         <if test="mainContent!=null and mainContent!=''">
@@ -160,6 +161,18 @@
         </if>
         <if test="result!=null and result!=''">
             #{result},
+        </if>
+        <if test="dataType!=null and dataType!=''">
+            #{dataType},
+        </if>
+        <if test="startDate!=null">
+            #{startDate},
+        </if>
+        <if test="endDate!=null">
+            #{endDate},
+        </if>
+        <if test="dataDate!=null">
+            #{dataDate},
         </if>
         #{createBy}, sysdate)
     </insert>
@@ -201,9 +214,8 @@
         )
     </update>
 
-    <update id="deleteInfo">
-        UPDATE TRAFFIC_HOTLINE_HANDOVER SET
-        DEL_FLAG='1', UPDATE_BY=#{userId}, UPDATE_DATE=sysdate
+    <delete id="deleteInfo">
+        DELETE FROM TRAFFIC_HOTLINE_HANDOVER
         <if test="recordIds!=null and recordIds.size()>0">
             WHERE RECORD_ID IN (
             <foreach collection="recordIds" index="index" item="recordId" separator=",">
@@ -218,6 +230,15 @@
             </foreach>
             )
         </if>
-    </update>
+    </delete>
 
+    <update id="autoModifyByDaily">
+        UPDATE TRAFFIC_HANDOVER_RECORD SET
+        HANDOVER_COUNT = (SELECT SUM(HANDOVER_COUNT) AS HANDOVER_COUNT FROM TRAFFIC_HANDOVER_RECORD WHERE DEL_FLAG = '0' AND DATA_TYPE = '1' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        UPDATE_DATE=sysdate
+        WHERE  DEL_FLAG = '0'
+        AND DATA_TYPE = #{dataType}
+        AND START_DATE=to_date(#{startDate}, 'yyyy-mm-dd hh24:mi:ss')
+        AND END_DATE=to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss')
+    </update>
 </mapper>

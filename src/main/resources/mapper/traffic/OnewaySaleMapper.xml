@@ -20,10 +20,22 @@
         </if>
     </select>
 
-    <select id="selectDetailById" resultType="com.wzmtr.dom.dataobject.traffic.IncomeRecordDO">
+    <select id="selectDetailById" resultType="com.wzmtr.dom.dto.res.traffic.oneway.OnewaySaleDetailResDTO">
         SELECT *
         FROM TRAFFIC_ONEWAY_SALE
-        WHERE ID=#{id} AND DEL_FLAG='0'
+        WHERE DEL_FLAG='0'
+        <if test="id!=null and id!=''">
+            AND ID=#{id}
+        </if>
+        <if test="dataType!=null and dataType!=''">
+            AND DATA_TYPE=#{dataType}
+        </if>
+        <if test="startDate!=null and startDate!=''">
+            AND START_DATE=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
     </select>
 
     <insert id="add">
@@ -170,5 +182,44 @@
         WHERE ID=#{id} and VERSION=#{version}
     </update>
 
+    <update id="autoModify">
+        UPDATE TRAFFIC_ONEWAY_SALE SET
+        CASH = (SELECT SUM(CASH) AS CASH FROM TRAFFIC_ONEWAY_SALE WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        CASH_RATIO = (SELECT AVG(CASH_RATIO) AS CASH_RATIO FROM TRAFFIC_ONEWAY_SALE WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+
+        UNION_CARD = (SELECT SUM(UNION_CARD) AS UNION_CARD FROM TRAFFIC_ONEWAY_SALE WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        UNION_CARD_RATIO = (SELECT AVG(UNION_CARD_RATIO) AS UNION_CARD_RATIO FROM TRAFFIC_ONEWAY_SALE WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+
+        TVM_CODE = (SELECT SUM(TVM_CODE) AS TVM_CODE FROM TRAFFIC_ONEWAY_SALE WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        TVM_CODE_RATIO = (SELECT AVG(TVM_CODE_RATIO) AS TVM_CODE_RATIO FROM TRAFFIC_ONEWAY_SALE WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+
+        ITVM_CODE = (SELECT SUM(ITVM_CODE) AS ITVM_CODE FROM TRAFFIC_ONEWAY_SALE WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        ITVM_CODE_RATIO = (SELECT AVG(ITVM_CODE_RATIO) AS ITVM_CODE_RATIO FROM TRAFFIC_ONEWAY_SALE WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+
+        BOM_CODE = (SELECT SUM(BOM_CODE) AS BOM_CODE FROM TRAFFIC_ONEWAY_SALE WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        BOM_CODE_RATIO = (SELECT AVG(BOM_CODE_RATIO) AS BOM_CODE_RATIO FROM TRAFFIC_ONEWAY_SALE WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+
+        IBOM_CODE = (SELECT SUM(IBOM_CODE) AS IBOM_CODE FROM TRAFFIC_ONEWAY_SALE WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        IBOM_CODE_RATIO = (SELECT AVG(IBOM_CODE_RATIO) AS IBOM_CODE_RATIO FROM TRAFFIC_ONEWAY_SALE WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+
+        FREE_TICKET = (SELECT SUM(FREE_TICKET) AS FREE_TICKET FROM TRAFFIC_ONEWAY_SALE WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        FREE_TICKET_RATIO = (SELECT AVG(FREE_TICKET_RATIO) AS FREE_TICKET_RATIO FROM TRAFFIC_ONEWAY_SALE WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+
+        OFF20_TICKET = (SELECT SUM(OFF20_TICKET) AS OFF20_TICKET FROM TRAFFIC_ONEWAY_SALE WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        OFF20_TICKET_RATIO = (SELECT AVG(OFF20_TICKET_RATIO) AS OFF20_TICKET_RATIO FROM TRAFFIC_ONEWAY_SALE WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+
+        PAY_EXIT = (SELECT SUM(PAY_EXIT) AS PAY_EXIT FROM TRAFFIC_ONEWAY_SALE WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        PAY_EXIT_RATIO = (SELECT AVG(PAY_EXIT_RATIO) AS PAY_EXIT_RATIO FROM TRAFFIC_ONEWAY_SALE WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+
+        FREE_EXIT = (SELECT SUM(FREE_EXIT) AS FREE_EXIT FROM TRAFFIC_ONEWAY_SALE WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        FREE_EXIT_RATIO = (SELECT AVG(FREE_EXIT_RATIO) AS FREE_EXIT_RATIO FROM TRAFFIC_ONEWAY_SALE WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        PRE_ASSIGN = (SELECT SUM(PRE_ASSIGN) AS PRE_ASSIGN FROM TRAFFIC_ONEWAY_SALE WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        PRE_ASSIGN_RATIO = (SELECT AVG(PRE_ASSIGN_RATIO) AS PRE_ASSIGN_RATIO FROM TRAFFIC_ONEWAY_SALE WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+
+        UPDATE_DATE=sysdate
+        WHERE DATA_TYPE = #{dataType}
+        AND START_DATE=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+    </update>
 
 </mapper>

@@ -1,7 +1,9 @@
 package com.wzmtr.dom.impl.traffic;
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
+import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.traffic.hotline.HandoverAddDataReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineHandoverAddReqDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineHandoverDetailResDTO;
@@ -17,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -54,6 +57,13 @@ public class HotLineHandoverServiceImpl implements HotLineHandoverService {
         handoverAddReqDTO.setHandoverCount(0L);
         handoverAddReqDTO.setCreateBy(TokenUtils.getCurrentPersonId());
         hotLineHandoverMapper.addRecord(handoverAddReqDTO);
+
+        //周报/月报 新增时，统计数据
+        if(!CommonConstants.DATA_TYPE_DAILY.equals(handoverAddReqDTO.getDataType()+"")){
+            hotLineHandoverMapper.autoModifyByDaily(handoverAddReqDTO.getDataType()+"",
+                    DateUtil.formatDate(handoverAddReqDTO.getStartDate())
+                    ,DateUtil.formatDate(handoverAddReqDTO.getEndDate()));
+        }
     }
 
     @Override
@@ -61,11 +71,20 @@ public class HotLineHandoverServiceImpl implements HotLineHandoverService {
         handoverAddDataReqDTO.setId(TokenUtils.getUuId());
         handoverAddDataReqDTO.setCreateBy(TokenUtils.getCurrentPersonId());
         hotLineHandoverMapper.addInfo(handoverAddDataReqDTO);
+
         // 修改记录需转交件数
         HotLineHandoverAddReqDTO handoverAddReq = new HotLineHandoverAddReqDTO();
         handoverAddReq.setUpdateBy(TokenUtils.getCurrentPersonId());
         handoverAddReq.setId(handoverAddDataReqDTO.getRecordId());
         hotLineHandoverMapper.modifyRecord(handoverAddReq);
+
+        //更新周报/月报统计数据
+        if(CommonConstants.DATA_TYPE_DAILY.equals(handoverAddDataReqDTO.getDataType()+"")){
+            autoModifyByDaily(handoverAddDataReqDTO.getDataType()+"",
+                    DateUtil.formatDate(handoverAddDataReqDTO.getStartDate())
+                    ,DateUtil.formatDate(handoverAddDataReqDTO.getEndDate()));
+        }
+
     }
 
     @Override
@@ -90,13 +109,37 @@ public class HotLineHandoverServiceImpl implements HotLineHandoverService {
     @Override
     public void deleteOrder(List<String> ids) {
         if (StringUtils.isNotEmpty(ids)) {
-            hotLineHandoverMapper.deleteInfo(null, ids, TokenUtils.getCurrentPersonId());
             HotLineHandoverDetailResDTO res = hotLineHandoverMapper.getInfoDetail(ids.get(0));
+            hotLineHandoverMapper.deleteInfo(null, ids, TokenUtils.getCurrentPersonId());
+
             HotLineHandoverAddReqDTO req = new HotLineHandoverAddReqDTO();
             req.setId(res.getRecordId());
             req.setUpdateBy(TokenUtils.getCurrentPersonId());
             hotLineHandoverMapper.modifyRecord(req);
+
+            //更新周报/月报统计数据
+            if(CommonConstants.DATA_TYPE_DAILY.equals(res.getDataType()+"")){
+                autoModifyByDaily(res.getDataType()+"",
+                        DateUtil.formatDate(res.getStartDate())
+                        ,DateUtil.formatDate(res.getEndDate()));
+            }
         }
+    }
+
+
+    @Override
+    public void autoModifyByDaily(String dataType, String startDate, String endDate) {
+
+        //获取周 周一、周日
+        Date monday = DateUtil.beginOfWeek(DateUtil.parseDate(startDate));
+        Date sunday = DateUtil.endOfWeek(DateUtil.parseDate(endDate));
+
+        //获取月 月初、月末
+        Date monthStart = DateUtil.beginOfMonth(DateUtil.parseDate(startDate));
+        Date monthEnd = DateUtil.endOfMonth(DateUtil.parseDate(startDate));
+
+        hotLineHandoverMapper.autoModifyByDaily(CommonConstants.DATA_TYPE_WEEKLY,DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
+        hotLineHandoverMapper.autoModifyByDaily(CommonConstants.DATA_TYPE_MONTHLY,DateUtil.formatDate(monthStart),DateUtil.formatDate(monthEnd));
     }
 
 

@@ -31,5 +31,5 @@ public interface HotLineImportantMapper extends BaseMapper<TrafficHotlineImporta
 
     void autoModify(Long count,String hotlineType,String dataType,String startDate, String endDate);
 
-    void autoModifyByDaily(Long count,String hotlineType,String dataType,String startDate, String endDate);
+    void autoModifyByDaily(String hotlineType,String dataType,String startDate, String endDate);
 }

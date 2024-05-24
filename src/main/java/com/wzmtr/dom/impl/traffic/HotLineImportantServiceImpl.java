@@ -51,7 +51,7 @@ public class HotLineImportantServiceImpl implements HotLineImportantService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void add(HotLineImportantAddReqDTO req) {
         List<TrafficHotlineImportantDO> list = new ArrayList<>();
         List<DictResDTO> dictList = dictMapper.list(CommonConstants.HOTLINE_TYPE, null, CommonConstants.ZERO_STRING);
@@ -72,9 +72,9 @@ public class HotLineImportantServiceImpl implements HotLineImportantService {
             hotLineImportantMapper.insertList(list);
         }
 
-        //周报月报的情况统计
+        //周报月报新增时，统计数据
         if(!(CommonConstants.ONE_STRING).equals(req.getDataType())){
-
+            autoModifyByDaily(req.getDataType(),DateUtil.formatDate(req.getStartDate()),DateUtil.formatDate(req.getEndDate()));
         }
     }
 
@@ -87,6 +87,11 @@ public class HotLineImportantServiceImpl implements HotLineImportantService {
             convert.setUpdateDate(DateUtils.currentDate());
             hotLineImportantMapper.updateById(convert);
         });
+
+        // 日报数据更新时,更新周报/月报
+        if((CommonConstants.ONE_STRING).equals(reqDTO.getDataType())){
+            autoModifyByDaily(reqDTO.getDataType(),DateUtil.formatDate(reqDTO.getStartDate()),DateUtil.formatDate(reqDTO.getEndDate()));
+        }
     }
 
 
@@ -127,10 +132,30 @@ public class HotLineImportantServiceImpl implements HotLineImportantService {
         //获取周 周一、周日
         Date monday = DateUtil.beginOfWeek(DateUtil.parseDate(startDate));
         Date sunday = DateUtil.endOfWeek(DateUtil.parseDate(endDate));
-        //更新周报
-        //hotLineImportantMapper.autoModifyByDaily();
-
 
         //获取月 月初、月末
+        Date monthStart = DateUtil.beginOfMonth(DateUtil.parseDate(startDate));
+        Date monthEnd = DateUtil.endOfMonth(DateUtil.parseDate(startDate));
+
+        //更新周报
+        hotLineImportantMapper.autoModifyByDaily(CommonConstants.ONE_STRING,CommonConstants.DATA_TYPE_WEEKLY,DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
+        hotLineImportantMapper.autoModifyByDaily(CommonConstants.TWO_STRING,CommonConstants.DATA_TYPE_WEEKLY,DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
+        hotLineImportantMapper.autoModifyByDaily(CommonConstants.THREE_STRING,CommonConstants.DATA_TYPE_WEEKLY,DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
+        hotLineImportantMapper.autoModifyByDaily(CommonConstants.FOUR_STRING,CommonConstants.DATA_TYPE_WEEKLY,DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
+        hotLineImportantMapper.autoModifyByDaily(CommonConstants.FIVE_STRING,CommonConstants.DATA_TYPE_WEEKLY,DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
+        hotLineImportantMapper.autoModifyByDaily(CommonConstants.SIX_STRING,CommonConstants.DATA_TYPE_WEEKLY,DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
+        hotLineImportantMapper.autoModifyByDaily(CommonConstants.SEVEN_STRING,CommonConstants.DATA_TYPE_WEEKLY,DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
+        hotLineImportantMapper.autoModifyByDaily(CommonConstants.NINE_STRING,CommonConstants.DATA_TYPE_WEEKLY,DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
+
+        //获取月 月初、月末
+        hotLineImportantMapper.autoModifyByDaily(CommonConstants.ONE_STRING,CommonConstants.DATA_TYPE_MONTHLY,DateUtil.formatDate(monthStart),DateUtil.formatDate(monthEnd));
+        hotLineImportantMapper.autoModifyByDaily(CommonConstants.TWO_STRING,CommonConstants.DATA_TYPE_MONTHLY,DateUtil.formatDate(monthStart),DateUtil.formatDate(monthEnd));
+        hotLineImportantMapper.autoModifyByDaily(CommonConstants.THREE_STRING,CommonConstants.DATA_TYPE_MONTHLY,DateUtil.formatDate(monthStart),DateUtil.formatDate(monthEnd));
+        hotLineImportantMapper.autoModifyByDaily(CommonConstants.FOUR_STRING,CommonConstants.DATA_TYPE_MONTHLY,DateUtil.formatDate(monthStart),DateUtil.formatDate(monthEnd));
+        hotLineImportantMapper.autoModifyByDaily(CommonConstants.FIVE_STRING,CommonConstants.DATA_TYPE_MONTHLY,DateUtil.formatDate(monthStart),DateUtil.formatDate(monthEnd));
+        hotLineImportantMapper.autoModifyByDaily(CommonConstants.SIX_STRING,CommonConstants.DATA_TYPE_MONTHLY,DateUtil.formatDate(monthStart),DateUtil.formatDate(monthEnd));
+        hotLineImportantMapper.autoModifyByDaily(CommonConstants.SEVEN_STRING,CommonConstants.DATA_TYPE_MONTHLY,DateUtil.formatDate(monthStart),DateUtil.formatDate(monthEnd));
+        hotLineImportantMapper.autoModifyByDaily(CommonConstants.NINE_STRING,CommonConstants.DATA_TYPE_MONTHLY,DateUtil.formatDate(monthStart),DateUtil.formatDate(monthEnd));
+
     }
 }

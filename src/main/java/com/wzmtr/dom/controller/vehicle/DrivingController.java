@@ -101,8 +101,11 @@ public class DrivingController {
     @GetMapping("/syncData")
     @ApiOperation(value = "行车情况-数据提取")
     public DataResponse<T> syncData(@CurrUser CurrentLoginUser currentLoginUser,
-            @RequestParam String recordId) {
-        drivingService.syncData(currentLoginUser,recordId);
+                                    @RequestParam(required = false) String recordId,
+                                    @RequestParam(required = false) String dataType,
+                                    @RequestParam(required = false) String startDate,
+                                    @RequestParam(required = false) String endDate) {
+        drivingService.syncData(currentLoginUser,recordId,dataType,startDate,endDate);
         return DataResponse.success();
     }
 

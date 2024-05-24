@@ -13,12 +13,15 @@ import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
 import com.wzmtr.dom.mapper.traffic.ProductionSummaryMapper;
 import com.wzmtr.dom.service.traffic.ProductionSummaryService;
+import com.wzmtr.dom.utils.StringUtils;
 import com.wzmtr.dom.utils.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 客运部-安全生产情况汇总
@@ -39,28 +42,6 @@ public class ProductionSummaryServiceImpl implements ProductionSummaryService {
         return productionSummaryMapper.list(pageReqDTO.of(), dataType, stationCode, startDate, endDate);
     }
 
-    @Override
-    public MonthSummaryResDTO summaryByMonth(String dataType, String stationCode, String startDate, String endDate) {
-        List<ProductionSummaryResDTO> monthList = productionSummaryMapper.listAll(dataType, stationCode, startDate, endDate);
-        MonthSummaryResDTO res = productionSummaryMapper.summaryByMonth(dataType, stationCode, startDate, endDate);
-        for(ProductionSummaryResDTO p:monthList){
-            res.getType1Keyword().add(p.getType1Keyword());
-            res.getType1Desc().add(p.getType1Desc());
-            res.getType2Keyword().add(p.getType2Keyword());
-            res.getType2Desc().add(p.getType2Desc());
-            res.getType3Keyword().add(p.getType3Keyword());
-            res.getType3Desc().add(p.getType3Desc());
-            res.getType4Keyword().add(p.getType4Keyword());
-            res.getType4Desc().add(p.getType4Desc());
-            res.getType5Keyword().add(p.getType5Keyword());
-            res.getType5Desc().add(p.getType5Desc());
-            res.getType6Keyword().add(p.getType6Keyword());
-            res.getType6Desc().add(p.getType6Desc());
-        }
-
-
-        return res;
-    }
 
     @Override
     public ProductionSummaryResDTO detail(String recordId, String startDate, String endDate) {
@@ -84,10 +65,21 @@ public class ProductionSummaryServiceImpl implements ProductionSummaryService {
         if (currentLoginUser.getStationCode() == null) {
             throw new CommonException(ErrorCode.USER_NOT_BIND_STATION);
         }
-        int existFlag = productionSummaryMapper.checkExist(productionSummaryRecordReqDTO.getDataType(),
-                currentLoginUser.getStationCode(),
-                productionSummaryRecordReqDTO.getStartDate(),
-                productionSummaryRecordReqDTO.getEndDate());
+
+        //日报按车站隔离
+        int existFlag = 0;
+        if(CommonConstants.DATA_TYPE_DAILY.equals(productionSummaryRecordReqDTO.getDataType())){
+            existFlag = productionSummaryMapper.checkExist(productionSummaryRecordReqDTO.getDataType(),
+                    currentLoginUser.getStationCode(),
+                    productionSummaryRecordReqDTO.getStartDate(),
+                    productionSummaryRecordReqDTO.getEndDate());
+            productionSummaryRecordReqDTO.setStationCode(currentLoginUser.getStationCode());
+        }else{
+            existFlag = productionSummaryMapper.checkExist(productionSummaryRecordReqDTO.getDataType(),
+                    null,
+                    productionSummaryRecordReqDTO.getStartDate(),
+                    productionSummaryRecordReqDTO.getEndDate());
+        }
         if (existFlag > 0) {
             throw new CommonException(ErrorCode.DATA_EXIST);
         }
@@ -99,11 +91,9 @@ public class ProductionSummaryServiceImpl implements ProductionSummaryService {
             if (!productionSummaryRecordReqDTO.getStartDate().equals(productionSummaryRecordReqDTO.getEndDate())) {
                 throw new CommonException(ErrorCode.DATE_ERROR);
             }
-
             productionSummaryRecordReqDTO.setDataDate(productionSummaryRecordReqDTO.getStartDate());
         }
 
-        productionSummaryRecordReqDTO.setStationCode(currentLoginUser.getStationCode());
         productionSummaryRecordReqDTO.setCreateBy(currentLoginUser.getPersonId());
         productionSummaryRecordReqDTO.setUpdateBy(currentLoginUser.getPersonId());
         productionSummaryRecordReqDTO.setId(TokenUtils.getUuId());
@@ -112,6 +102,12 @@ public class ProductionSummaryServiceImpl implements ProductionSummaryService {
         } catch (Exception e) {
             throw new CommonException(ErrorCode.INSERT_ERROR);
         }
+
+        //同步更新统计数据,日报更新前一日数据统计，周报/月报更新前一周/月数据统计和本周/月数据统计
+        autoModify(productionSummaryRecordReqDTO.getStationCode(),
+                productionSummaryRecordReqDTO.getDataType(),
+                productionSummaryRecordReqDTO.getStartDate(),
+                productionSummaryRecordReqDTO.getEndDate());
     }
 
     @Override
@@ -126,4 +122,11 @@ public class ProductionSummaryServiceImpl implements ProductionSummaryService {
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
     }
+
+    @Override
+    public void autoModify(String stationCode,String dataType, String startDate, String endDate) {
+        productionSummaryMapper.autoModify(stationCode,dataType,startDate,endDate);
+    }
+
+
 }

@@ -31,7 +31,7 @@ public class IndicatorDetailResDTO extends BaseEntity {
      * 上线列车数及备车数
      * */
     @ApiModelProperty(value = " 上线列车数及备车数")
-    private Integer trainCount;
+    private String trainCount;
 
     /**
      * 最小发车时间间隔(秒)
@@ -241,8 +241,8 @@ public class IndicatorDetailResDTO extends BaseEntity {
      * */
     private String serviceReliability;
 
-    public Integer getTrainCount() {
-        return Optional.ofNullable(trainCount).orElse(0);
+    public String getTrainCount() {
+        return Optional.ofNullable(trainCount).orElse("");
     }
 
     public Integer getSendTimeInterval() {

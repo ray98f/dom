@@ -120,5 +120,12 @@ public interface ProductionService {
      */
     Page<ProductionApprovalResDTO> queryApproval(CurrentLoginUser currentLoginUser, String startDate, String endDate, PageReqDTO pageReqDTO);
 
-
+    /**
+     * 更新数据
+     * @param stationCode 入参数
+     * @param dataType 入参数
+     * @param startDate 入参数
+     * @param endDate 入参数
+     */
+    void autoModifyByDaily(String stationCode,String dataType, String startDate, String endDate);
 }

@@ -30,4 +30,20 @@ public interface IncomeRecordMapper extends BaseMapper<IncomeRecordDO> {
     IncomeRecordDO selectDetailById(IncomeDetailReqDTO reqDTO);
 
     void add(IncomeAddReqDTO req);
+
+    /**
+     * 收益数据更新
+     * @param dataType 入参数
+     * @param startDate 入参数
+     * @param endDate 入参数
+     */
+    void autoModify(String dataType,String startDate,String endDate);
+
+    /**
+     * 收益数据更新
+     * @param dataType 入参数
+     * @param startDate 入参数
+     * @param endDate 入参数
+     */
+    void autoModifyByDaily(String dataType,String startDate,String endDate);
 }

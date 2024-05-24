@@ -53,7 +53,7 @@
     </select>
 
     <select id="queryUserByRole" resultType="java.lang.String">
-        SELECT USER_ID
+        SELECT DISTINCT USER_ID
         FROM SYS_USER_ROLE t1
         WHERE ROLE_ID IN (
         <foreach collection="ids" index="index" item="id" separator=",">

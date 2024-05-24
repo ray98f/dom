@@ -185,10 +185,12 @@ public class OnewaySaleDetailResDTO {
     )
     private Date endDate;
 
+    /**
+     * 前一日/周/月 详情
+     */
+    private OnewaySaleDetailResDTO preOnewaySaleDetail;
+
     public static OnewaySaleDetailResDTO buildRes(TrafficOnewaySaleDO trafficOnewaySaleDO) {
-        // todo 环比计算
-        OnewaySaleDetailResDTO res = BeanUtils.convert(trafficOnewaySaleDO, OnewaySaleDetailResDTO.class);
-        // res.setCashRatioQoqRatio((res.getCash() - res.getCashRatio()) / res.() * 100);
-        return res;
+        return BeanUtils.convert(trafficOnewaySaleDO, OnewaySaleDetailResDTO.class);
     }
 }

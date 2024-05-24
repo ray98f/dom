@@ -20,10 +20,10 @@ import java.util.Date;
 public class IndicatorResDTO extends BaseEntity {
 
     @ApiModelProperty(value = "收发车统计")
-    private Double trainCount;
+    private String trainCount;
 
     @ApiModelProperty(value = " 施工统计")
-    private Double constructCount;
+    private String constructCount;
 
     @ApiModelProperty(value = "责任晚点统计")
     private Integer delayCount;

@@ -142,6 +142,12 @@ public class OperateEventInfoReqDTO extends BaseEntity {
     private String eventDesc;
 
     /**
+     * 事件内容 事件处理经过
+     * */
+    @ApiModelProperty(value = "事件处理经过")
+    private String eventContent;
+
+    /**
      * 造成指标
      * */
     @ApiModelProperty(value = "造成指标")

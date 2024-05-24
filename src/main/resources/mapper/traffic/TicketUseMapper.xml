@@ -359,4 +359,42 @@
         )
     </update>
 
+    <update id="autoModify">
+        UPDATE TRAFFIC_TICKET_USE_RECORD SET
+        ONE_WAY_TICKET = (SELECT SUM(ONE_WAY_TICKET) AS ONE_WAY_TICKET FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        ONE_WAY_RATIO = (SELECT AVG(ONE_WAY_RATIO) AS ONE_WAY_RATIO FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+
+        CITIZEN_CARD_REGULAR = (SELECT SUM(CITIZEN_CARD_REGULAR) AS CITIZEN_CARD_REGULAR FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        CITIZEN_CARD_REGULAR_RATIO = (SELECT AVG(CITIZEN_CARD_REGULAR_RATIO) AS CITIZEN_CARD_REGULAR_RATIO FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+
+        CITIZEN_CARD_DISCOUNT = (SELECT SUM(CITIZEN_CARD_DISCOUNT) AS CITIZEN_CARD_DISCOUNT FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        CITIZEN_CARD_DISCOUNT_RATIO = (SELECT AVG(CITIZEN_CARD_DISCOUNT_RATIO) AS CITIZEN_CARD_DISCOUNT_RATIO FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+
+        CITIZEN_CARD_LOVE = (SELECT SUM(CITIZEN_CARD_LOVE) AS CITIZEN_CARD_LOVE FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        CITIZEN_CARD_LOVE_RATIO = (SELECT AVG(CITIZEN_CARD_LOVE_RATIO) AS CITIZEN_CARD_LOVE_RATIO FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+
+        CITIZEN_CARD_PREFER = (SELECT SUM(CITIZEN_CARD_PREFER) AS CITIZEN_CARD_PREFER FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        CITIZEN_CARD_PREFER_RATIO = (SELECT AVG(CITIZEN_CARD_PREFER_RATIO) AS CITIZEN_CARD_PREFER_RATIO FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+
+        ONE_CARD = (SELECT SUM(ONE_CARD) AS ONE_CARD FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        ONE_CARD_RATIO = (SELECT AVG(ONE_CARD_RATIO) AS ONE_CARD_RATIO FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+
+        UNION_CARD = (SELECT SUM(UNION_CARD) AS UNION_CARD FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        UNION_CARD_RATIO = (SELECT AVG(UNION_CARD_RATIO) AS UNION_CARD_RATIO FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+
+        QRCODE = (SELECT SUM(QRCODE) AS QRCODE FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        QRCODE_RATIO = (SELECT AVG(QRCODE_RATIO) AS QRCODE_RATIO FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+
+        EMP_CARD = (SELECT SUM(EMP_CARD) AS EMP_CARD FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        EMP_CARD_RATIO = (SELECT AVG(EMP_CARD_RATIO) AS EMP_CARD_RATIO FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+
+        TIME_TICKET = (SELECT SUM(TIME_TICKET) AS TIME_TICKET FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        TIME_TICKET_RATIO = (SELECT AVG(TIME_TICKET_RATIO) AS TIME_TICKET_RATIO FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        COUNTING_TICKET = (SELECT SUM(COUNTING_TICKET) AS COUNTING_TICKET FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        COUNTING_TICKET_RATIO = (SELECT AVG(COUNTING_TICKET_RATIO) AS COUNTING_TICKET_RATIO FROM TRAFFIC_TICKET_USE_RECORD WHERE DATA_TYPE = '1' AND  START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        UPDATE_DATE=sysdate
+        WHERE DATA_TYPE = #{dataType}
+        AND START_DATE=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+    </update>
 </mapper>

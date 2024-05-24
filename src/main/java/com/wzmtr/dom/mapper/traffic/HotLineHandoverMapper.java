@@ -112,4 +112,13 @@ public interface HotLineHandoverMapper extends BaseMapper<TrafficHotlineHandover
      */
     void deleteInfo(List<String> recordIds, List<String> ids, String userId);
 
+    /**
+     * 更新周报/月报统计数据
+     * @param dataType 数据类型
+     * @param startDate 开始日期
+     * @param endDate 结束日期
+     * @return 是否已存在
+     */
+    void autoModifyByDaily(String dataType,String startDate,String endDate);
+
 }

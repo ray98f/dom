@@ -21,6 +21,7 @@ import com.wzmtr.dom.mapper.vehicle.DepotConstructMapper;
 import com.wzmtr.dom.mapper.vehicle.IndicatorMapper;
 import com.wzmtr.dom.service.common.ThirdService;
 import com.wzmtr.dom.service.vehicle.DepotConstructService;
+import com.wzmtr.dom.service.vehicle.IndicatorService;
 import com.wzmtr.dom.utils.HttpUtils;
 import com.wzmtr.dom.utils.StringUtils;
 import com.wzmtr.dom.utils.TokenUtils;
@@ -61,6 +62,9 @@ public class DepotConstructServiceImpl implements DepotConstructService {
 
     @Autowired
     private DepotConstructMapper depotConstructMapper;
+
+    @Autowired
+    private IndicatorService indicatorService;
 
     @Autowired
     private IndicatorMapper indicatorMapper;
@@ -112,6 +116,8 @@ public class DepotConstructServiceImpl implements DepotConstructService {
                              depotConstructRecordReqDTO.getDepotCode(),
                              depotConstructRecordReqDTO.getStartDate(),
                              depotConstructRecordReqDTO.getEndDate());
+            indicatorService.autoModifyByDaily(depotConstructRecordReqDTO.getDataType(),
+                    depotConstructRecordReqDTO.getStartDate(),depotConstructRecordReqDTO.getEndDate());
         }
     }
 
@@ -131,28 +137,38 @@ public class DepotConstructServiceImpl implements DepotConstructService {
     @Override
     public void syncData(CurrentLoginUser currentLoginUser, String recordId) {
         DepotConstructDetailResDTO resDTO = depotConstructMapper.queryInfoById(recordId);
-        //TODO 调取数据 施工计划统计 行车调度统计
+        if(CommonConstants.DATA_TYPE_DAILY.equals(resDTO.getDataType())){
+            //TODO 调取数据 施工计划统计 行车调度统计
 
-        //TODO TEST
-        DepotConstructRecordReqDTO recordReqDTO = new DepotConstructRecordReqDTO();
-        recordReqDTO.setId(recordId);
-        recordReqDTO.setA1Plan(1);
-        recordReqDTO.setBPlan(2);
-        recordReqDTO.setDaySupPlan(3);
-        recordReqDTO.setTempPlan(4);
-        recordReqDTO.setA1Complete(5);
-        recordReqDTO.setBPlan(6);
-        recordReqDTO.setDaySupComplete(7);
-        recordReqDTO.setTempComplete(8);
-        recordReqDTO.setPlanConstruct(1+2+3+4);
-        recordReqDTO.setRealConstruct(5+6+7+8);
-        recordReqDTO.setPowerSupply(1);
-        recordReqDTO.setShuntCount(2);
-        recordReqDTO.setShuntHook(3);
-        recordReqDTO.setShuntTime(20);
-        //TODO 更新日统计数据 重要指标
-        depotConstructMapper.modifyCount(recordReqDTO);
-        indicatorMapper.modifyDayCount(DateUtil.formatDate(resDTO.getStartDate()),DateUtil.formatDate(resDTO.getEndDate()));
+            //TODO TEST
+            DepotConstructRecordReqDTO recordReqDTO = new DepotConstructRecordReqDTO();
+            recordReqDTO.setId(recordId);
+            recordReqDTO.setA1Plan(1);
+            recordReqDTO.setBPlan(2);
+            recordReqDTO.setDaySupPlan(3);
+            recordReqDTO.setTempPlan(4);
+            recordReqDTO.setA1Complete(5);
+            recordReqDTO.setBPlan(6);
+            recordReqDTO.setDaySupComplete(7);
+            recordReqDTO.setTempComplete(8);
+            recordReqDTO.setPlanConstruct(1+2+3+4);
+            recordReqDTO.setRealConstruct(5+6+7+8);
+            recordReqDTO.setPowerSupply(1);
+            recordReqDTO.setShuntCount(2);
+            recordReqDTO.setShuntHook(3);
+            recordReqDTO.setShuntTime(20);
+
+            //TODO 更新日统计数据
+            depotConstructMapper.modifyCount(recordReqDTO);
+
+            //更新周/月报数据统计
+            autoModifyByDaily(resDTO.getDepotCode(),resDTO.getDataType(),
+                    DateUtil.formatDate(resDTO.getStartDate()),DateUtil.formatDate(resDTO.getEndDate()));
+
+            // 重要指标
+            indicatorService.autoModifyByDaily(resDTO.getDataType(),
+                    DateUtil.formatDate(resDTO.getStartDate()),DateUtil.formatDate(resDTO.getEndDate()));
+        }
     }
 
     @Override
@@ -178,44 +194,6 @@ public class DepotConstructServiceImpl implements DepotConstructService {
                 .page(pageReqDTO.getPageNo())
                 .limit(pageReqDTO.getPageSize())
                 .build();
-
-
-        //TODO 调取施工调度计划
-        //JSONObject.toJSONString(convertDto(req));
-        String reqData = "{}";
-        JSONObject res = JSONObject.parseObject(HttpUtils.doPost(constructPlanApi, reqData, null), JSONObject.class);
-        /*List<DepotConstructPlanResDTO> list = JSONArray.parseArray(res.getJSONObject(
-                CommonConstants.API_RES_DATA).getJSONArray(CommonConstants.API_RES_LIST).toJSONString(),
-                DepotConstructPlanResDTO.class);
-        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        Page<DepotConstructPlanResDTO> page = new Page<>();
-        page.setRecords(list);
-        page.setCurrent(res.getJSONObject(CommonConstants.API_RES_DATA).getInteger("pageNum"));
-        page.setPages(res.getJSONObject(CommonConstants.API_RES_DATA).getInteger("pages"));
-        page.setTotal(res.getJSONObject(CommonConstants.API_RES_DATA).getInteger("total"));
-        page.setSize(res.getJSONObject(CommonConstants.API_RES_DATA).getInteger("size"));*/
-        //TODO TEST
-        String test1 = "{\n" +
-                "            \"constructPlanId\":\"d4ef94232cd44af69c09d9a69cf9a029\",\n" +
-                "            \"workType\":\"A1\",\n" +
-                "            \"workconcentId\":\"7ebc015e2d64430a819ab82226b99e8a\",\n" +
-                "            \"workCode\":\"S1A104-02\",\n" +
-                "            \"workName\":\"工程车动态验收\",\n" +
-                "            \"workDept\":\"中铁通轨道运营有限公司\",\n" +
-                "            \"workArea\":\"正线:动车南站-新桥站\",\n" +
-                "            \"workDetail\":\"123\",\n" +
-                "            \"powerReq\":\"正线分区：1A2带电\"\n" +
-                "        }";
-
-        List<DepotConstructPlanResDTO> list = new ArrayList<>();
-        list.add(JSONObject.parseObject(test1,DepotConstructPlanResDTO.class));
-        PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        Page<DepotConstructPlanResDTO> page = new Page<>();
-        page.setRecords(list);
-        page.setCurrent(1);
-        page.setPages(1);
-        page.setTotal(1);
-        page.setSize(10);
         return thirdService.getCsmConstructPlan(req);
     }
 
@@ -253,6 +231,29 @@ public class DepotConstructServiceImpl implements DepotConstructService {
         if (StringUtils.isNotEmpty(ids)) {
             depotConstructMapper.deletePlan(ids);
         }
+    }
+
+    @Override
+    public void autoModify(String depotCode, String dataType, String startDate, String endDate) {
+        depotConstructMapper.autoModify(depotCode,dataType,startDate,endDate);
+    }
+
+    @Override
+    public void autoModifyByDaily(String depotCode, String dataType, String startDate, String endDate) {
+        //获取周 周一、周日
+        Date monday = DateUtil.beginOfWeek(DateUtil.parseDate(startDate));
+        Date sunday = DateUtil.endOfWeek(DateUtil.parseDate(startDate));
+        depotConstructMapper.autoModify(depotCode,CommonConstants.DATA_TYPE_WEEKLY,DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
+
+        indicatorService.autoModifyByDaily(CommonConstants.DATA_TYPE_WEEKLY,
+                DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
+
+        //获取月 月初、月末
+        Date monthStart = DateUtil.beginOfMonth(DateUtil.parseDate(startDate));
+        Date monthEnd = DateUtil.endOfMonth(DateUtil.parseDate(startDate));
+        depotConstructMapper.autoModify(depotCode,CommonConstants.DATA_TYPE_MONTHLY,DateUtil.formatDate(monthStart),DateUtil.formatDate(monthEnd));
+        indicatorService.autoModifyByDaily(CommonConstants.DATA_TYPE_MONTHLY,
+                DateUtil.formatDate(monthStart),DateUtil.formatDate(monthEnd));
     }
 
     /**

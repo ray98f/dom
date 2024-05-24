@@ -123,7 +123,7 @@
 
     <update id="autoModifyByDaily">
         UPDATE TRAFFIC_HOTLINE_IMPORTANT SET
-        COUNT = #{count},
+        COUNT = (SELECT SUM(COUNT) AS COUNT FROM TRAFFIC_HOTLINE_IMPORTANT WHERE DEL_FLAG = '0' AND DATA_TYPE = '1' AND HOTLINE_TYPE=#{hotlineType} AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
         UPDATE_DATE=sysdate
         WHERE HOTLINE_TYPE=#{hotlineType}
         AND DATA_TYPE = #{dataType}

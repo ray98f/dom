@@ -43,4 +43,26 @@
         </if>
     </select>
 
+    <update id="autoModifyByDaily">
+        UPDATE TRAFFIC_HOTLINE_SUMMARY SET
+        COMPLAINT_TOTAL = (SELECT SUM(COMPLAINT_TOTAL) AS COMPLAINT_TOTAL FROM TRAFFIC_HOTLINE_SUMMARY WHERE DEL_FLAG = '0' AND DATA_TYPE = '1' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        PRAISE_TOTAL = (SELECT SUM(PRAISE_TOTAL) AS PRAISE_TOTAL FROM TRAFFIC_HOTLINE_SUMMARY WHERE DEL_FLAG = '0' AND DATA_TYPE = '1' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        ANSWER_TOTAL = (SELECT SUM(ANSWER_TOTAL) AS ANSWER_TOTAL FROM TRAFFIC_HOTLINE_SUMMARY WHERE DEL_FLAG = '0' AND DATA_TYPE = '1' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        APP_ANSWER = (SELECT SUM(APP_ANSWER) AS APP_ANSWER FROM TRAFFIC_HOTLINE_SUMMARY WHERE DEL_FLAG = '0' AND DATA_TYPE = '1' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        CONSULT = (SELECT SUM(CONSULT) AS CONSULT FROM TRAFFIC_HOTLINE_SUMMARY WHERE DEL_FLAG = '0' AND DATA_TYPE = '1' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        RESORT = (SELECT SUM(RESORT) AS RESORT FROM TRAFFIC_HOTLINE_SUMMARY WHERE DEL_FLAG = '0' AND DATA_TYPE = '1' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        TYPE1_COMPLAINT = (SELECT SUM(TYPE1_COMPLAINT) AS TYPE1_COMPLAINT FROM TRAFFIC_HOTLINE_SUMMARY WHERE DEL_FLAG = '0' AND DATA_TYPE = '1' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        TYPE2_COMPLAINT = (SELECT SUM(TYPE2_COMPLAINT) AS TYPE2_COMPLAINT FROM TRAFFIC_HOTLINE_SUMMARY WHERE DEL_FLAG = '0' AND DATA_TYPE = '1' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        TYPE1_PRAISE = (SELECT SUM(TYPE1_PRAISE) AS TYPE1_PRAISE FROM TRAFFIC_HOTLINE_SUMMARY WHERE DEL_FLAG = '0' AND DATA_TYPE = '1' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        TYPE2_PRAISE = (SELECT SUM(TYPE2_PRAISE) AS TYPE2_PRAISE FROM TRAFFIC_HOTLINE_SUMMARY WHERE DEL_FLAG = '0' AND DATA_TYPE = '1' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        PENNANT = (SELECT SUM(PENNANT) AS PENNANT FROM TRAFFIC_HOTLINE_SUMMARY WHERE DEL_FLAG = '0' AND DATA_TYPE = '1' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        S1_SWITCH = (SELECT SUM(S1_SWITCH) AS S1_SWITCH FROM TRAFFIC_HOTLINE_SUMMARY WHERE DEL_FLAG = '0' AND DATA_TYPE = '1' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        OTHER = (SELECT SUM(OTHER) AS OTHER FROM TRAFFIC_HOTLINE_SUMMARY WHERE DEL_FLAG = '0' AND DATA_TYPE = '1' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        SUGGEST = (SELECT SUM(SUGGEST) AS SUGGEST FROM TRAFFIC_HOTLINE_SUMMARY WHERE DEL_FLAG = '0' AND DATA_TYPE = '1' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        UPDATE_DATE=sysdate
+        WHERE DEL_FLAG = '0'
+        AND DATA_TYPE = #{dataType}
+        AND START_DATE=to_date(#{startDate}, 'yyyy-mm-dd hh24:mi:ss')
+        AND END_DATE=to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss')
+    </update>
 </mapper>

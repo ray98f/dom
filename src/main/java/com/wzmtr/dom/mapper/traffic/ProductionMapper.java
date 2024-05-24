@@ -1,6 +1,7 @@
 package com.wzmtr.dom.mapper.traffic;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.diboot.core.util.V;
 import com.wzmtr.dom.dto.req.operate.OperateEventDetailReqDTO;
 import com.wzmtr.dom.dto.req.traffic.ProEventDetailReqDTO;
 import com.wzmtr.dom.dto.req.traffic.ProductionApprovalReqDTO;
@@ -41,7 +42,7 @@ public interface ProductionMapper {
      * @param endDate 查询参数
      * @return 列表
      */
-    List<ProductionRecordResDTO> listAll(String stationCode, String startDate, String endDate);
+    List<ProductionRecordResDTO> listAll(String stationCode,String dataType, String startDate, String endDate);
 
     /**
      * 校验数据是否存在
@@ -226,5 +227,7 @@ public interface ProductionMapper {
      * @param userId 用户id
      */
     void deleteEvent(List<String> ids, String userId);
+
+    void autoModifyByDaily(String dataType, String startDate, String endDate);
 
 }
