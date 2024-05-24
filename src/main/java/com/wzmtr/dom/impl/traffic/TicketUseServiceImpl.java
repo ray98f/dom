@@ -1,11 +1,13 @@
 package com.wzmtr.dom.impl.traffic;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.NumberUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.traffic.TicketUseReqDTO;
 import com.wzmtr.dom.dto.res.traffic.TicketUseResDTO;
+import com.wzmtr.dom.dto.res.traffic.oneway.OnewaySaleDetailResDTO;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
@@ -44,13 +46,7 @@ public class TicketUseServiceImpl implements TicketUseService {
         if (Objects.isNull(res)) {
             throw new CommonException(ErrorCode.RESOURCE_NOT_EXIST);
         }
-        TicketUseResDTO lastRes;
-        if (CommonConstants.ONE_STRING.equals(res.getDataType())) {
-            lastRes = ticketUseMapper.getLastDetail(res.getDataDate(), null);
-        } else {
-            lastRes = ticketUseMapper.getLastDetail(null, res.getStartDate());
-        }
-        buildTicketUseQoq(res, lastRes);
+        compare(res);
         return res;
     }
 
@@ -127,21 +123,52 @@ public class TicketUseServiceImpl implements TicketUseService {
         ticketUseMapper.autoModify(CommonConstants.DATA_TYPE_MONTHLY,DateUtil.formatDate(monthStart),DateUtil.formatDate(monthEnd));
     }
 
-    private void buildTicketUseQoq(TicketUseResDTO res, TicketUseResDTO lastRes) {
-        if (Objects.isNull(lastRes)) {
-            return;
+    private TicketUseResDTO compare(TicketUseResDTO detail){
+
+        //获取前一日/周/月数据
+        TicketUseResDTO preDetail;
+
+        switch (detail.getDataType()){
+            case CommonConstants.DATA_TYPE_DAILY:
+                Date yesterday = DateUtil.offsetDay(detail.getStartDate(),-1);
+                preDetail = ticketUseMapper.selectDetailById(null,detail.getDataType(),DateUtil.formatDate(yesterday),DateUtil.formatDate(yesterday));
+                break;
+            case CommonConstants.DATA_TYPE_WEEKLY:
+                Date preMonday = DateUtil.offsetDay(detail.getStartDate(),-7);
+                Date preSunday = DateUtil.offsetDay(detail.getEndDate(),-7);
+                preDetail = ticketUseMapper.selectDetailById(null,detail.getDataType(),DateUtil.formatDate(preMonday),DateUtil.formatDate(preSunday));
+                break;
+            default:
+                // 获取上个月的第一天
+                Date firstDayOfLastMonth = DateUtil.beginOfMonth(DateUtil.offsetMonth(detail.getStartDate(), -1));
+                // 获取上个月的最后一天
+                Date lastDayOfLastMonth = DateUtil.endOfMonth(DateUtil.offsetMonth(detail.getStartDate(), -1));
+                preDetail = ticketUseMapper.selectDetailById(null,detail.getDataType(),DateUtil.formatDate(firstDayOfLastMonth),DateUtil.formatDate(lastDayOfLastMonth));
+                break;
         }
-        res.setOneWayQoqRatio((res.getOneWayRatio() - lastRes.getOneWayRatio()) / lastRes.getOneWayRatio() * 100);
-        res.setCitizenCardRegularQoqRatio((res.getCitizenCardRegularRatio() - lastRes.getCitizenCardRegularRatio()) / lastRes.getCitizenCardRegularRatio() * 100);
-        res.setCitizenCardDiscountQoqRatio((res.getCitizenCardDiscountRatio() - lastRes.getCitizenCardDiscountRatio()) / lastRes.getCitizenCardDiscountRatio() * 100);
-        res.setCitizenCardLoveQoqRatio((res.getCitizenCardLoveRatio() - lastRes.getCitizenCardLoveRatio()) / lastRes.getCitizenCardLoveRatio() * 100);
-        res.setCitizenCardPreferQoqRatio((res.getCitizenCardPreferRatio() - lastRes.getCitizenCardPreferRatio()) / lastRes.getCitizenCardPreferRatio() * 100);
-        res.setOneCardQoqRatio((res.getOneCardRatio() - lastRes.getOneCardRatio()) / lastRes.getOneCardRatio() * 100);
-        res.setUnionCardQoqRatio((res.getUnionCardRatio() - lastRes.getUnionCardRatio()) / lastRes.getUnionCardRatio() * 100);
-        res.setQrcodeQoqRatio((res.getQrcodeRatio() - lastRes.getQrcodeRatio()) / lastRes.getQrcodeRatio() * 100);
-        res.setEmpCardQoqRatio((res.getEmpCardRatio() - lastRes.getEmpCardRatio()) / lastRes.getEmpCardRatio() * 100);
-        res.setTimeTicketQoqRatio((res.getTimeTicketRatio() - lastRes.getTimeTicketRatio()) / lastRes.getTimeTicketRatio() * 100);
-        res.setCountingTicketQoqRatio((res.getCountingTicketRatio() - lastRes.getCountingTicketRatio()) / lastRes.getCountingTicketRatio() * 100);
+        // 环比计算
+        if(Objects.nonNull(preDetail)){
+            detail.setOneWayQoqRatio(getQoq(detail.getOneWayTicket(),preDetail.getOneWayTicket()));
+            detail.setCitizenCardRegularQoqRatio(getQoq(detail.getCitizenCardRegular(),preDetail.getCitizenCardRegular()));
+            detail.setCitizenCardDiscountQoqRatio(getQoq(detail.getCitizenCardDiscount(),preDetail.getCitizenCardDiscount()));
+            detail.setCitizenCardLoveQoqRatio(getQoq(detail.getCitizenCardLove(),preDetail.getCitizenCardLove()));
+            detail.setCitizenCardPreferQoqRatio(getQoq(detail.getCitizenCardPrefer(),preDetail.getCitizenCardPrefer()));
+            detail.setOneCardQoqRatio(getQoq(detail.getOneCard(),preDetail.getOneCard()));
+            detail.setUnionCardQoqRatio(getQoq(detail.getUnionCard(),preDetail.getUnionCard()));
+            detail.setQrcodeQoqRatio(getQoq(detail.getQrcode(),preDetail.getQrcode()));
+            detail.setEmpCardQoqRatio(getQoq(detail.getEmpCard(),preDetail.getEmpCard()));
+            detail.setTimeTicketQoqRatio(getQoq(detail.getTimeTicket(),preDetail.getTimeTicket()));
+            detail.setCountingTicketQoqRatio(getQoq(detail.getCountingTicket(),preDetail.getCountingTicket()));
+        }
+
+        return detail;
+    }
+    private Double getQoq(double source,double pre){
+        double res = 0.00;
+        if(pre > 0){
+            res = NumberUtil.div((source-pre), pre, 4) * 100;
+        }
+        return res;
     }
 
 }

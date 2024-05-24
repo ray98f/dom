@@ -89,6 +89,35 @@
         </if>
     </select>
 
+    <select id="selectDetailById" resultType="com.wzmtr.dom.dto.res.traffic.TicketUseResDTO">
+        SELECT ID, ONE_WAY_TICKET, ONE_WAY_RATIO,
+        CITIZEN_CARD_REGULAR, CITIZEN_CARD_REGULAR_RATIO,
+        CITIZEN_CARD_DISCOUNT, CITIZEN_CARD_DISCOUNT_RATIO,
+        CITIZEN_CARD_LOVE, CITIZEN_CARD_LOVE_RATIO,
+        CITIZEN_CARD_PREFER, CITIZEN_CARD_PREFER_RATIO,
+        ONE_CARD, ONE_CARD_RATIO,
+        UNION_CARD, UNION_CARD_RATIO,
+        QRCODE, QRCODE_RATIO,
+        EMP_CARD, EMP_CARD_RATIO,
+        TIME_TICKET, TIME_TICKET_RATIO,
+        COUNTING_TICKET, COUNTING_TICKET_RATIO,
+        DATA_DATE, DATA_TYPE, START_DATE, END_DATE, VERSION
+        FROM TRAFFIC_TICKET_USE_RECORD
+        WHERE DEL_FLAG='0'
+        <if test="id!=null and id!=''">
+            AND ID=#{id}
+        </if>
+        <if test="dataType!=null and dataType!=''">
+            AND DATA_TYPE=#{dataType}
+        </if>
+        <if test="startDate!=null and startDate!=''">
+            AND START_DATE=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+    </select>
+
     <select id="selectIsExist" resultType="java.lang.Integer">
         select count(1) from TRAFFIC_TICKET_USE_RECORD
         WHERE
