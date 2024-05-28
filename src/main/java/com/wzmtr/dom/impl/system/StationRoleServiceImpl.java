@@ -5,6 +5,8 @@ import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.dto.req.system.StationRoleReqDTO;
 import com.wzmtr.dom.dto.res.system.StationRoleResDTO;
 import com.wzmtr.dom.entity.PageReqDTO;
+import com.wzmtr.dom.enums.ErrorCode;
+import com.wzmtr.dom.exception.CommonException;
 import com.wzmtr.dom.mapper.system.StationRoleMapper;
 import com.wzmtr.dom.service.system.StationRoleService;
 import com.wzmtr.dom.utils.StringUtils;
@@ -41,6 +43,12 @@ public class StationRoleServiceImpl implements StationRoleService {
     public void add(StationRoleReqDTO stationRoleReqDTO) {
         stationRoleReqDTO.setId(TokenUtils.getUuId());
         stationRoleReqDTO.setCreateBy(TokenUtils.getCurrentPersonId());
+
+        Integer result = stationRoleMapper.checkExist(stationRoleReqDTO);
+        if (result > 0) {
+            throw new CommonException(ErrorCode.NORMAL_ERROR, "本月的审核站数据已存在，无法重复新增");
+        }
+
         stationRoleMapper.add(stationRoleReqDTO);
     }
 
