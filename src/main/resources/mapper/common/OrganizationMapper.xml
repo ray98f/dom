@@ -86,6 +86,14 @@
         ORDER BY su.ORDER_NUM ASC
     </select>
 
+    <select id="pageUserByOfficeAndName" parameterType="string" resultType="com.wzmtr.dom.dto.res.common.MemberResDTO">
+        select su.ID, su.NAME, su.PHONE, su.MOBILE, su.EMAIL, su.ROOM
+        from SYS_USER su
+        where su.OFFICE_ID=#{id} and su.EXPIRED=0 and su.DEL_FLAG=0
+        AND su.NAME like '%' || #{name} || '%'
+        ORDER BY su.ORDER_NUM ASC
+    </select>
+
     <select id="listUserByOffice" parameterType="string" resultType="com.wzmtr.dom.dto.res.common.MemberResDTO">
         select su.ID, su.NAME, su.PHONE, su.MOBILE, su.EMAIL, su.ROOM
         from SYS_USER su
