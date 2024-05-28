@@ -55,6 +55,12 @@ public class StationRoleServiceImpl implements StationRoleService {
     @Override
     public void modify(StationRoleReqDTO stationRoleReqDTO) {
         stationRoleReqDTO.setUpdateBy(TokenUtils.getCurrentPersonId());
+
+        Integer result = stationRoleMapper.checkExist(stationRoleReqDTO);
+        if (result > 0) {
+            throw new CommonException(ErrorCode.NORMAL_ERROR, "本月的审核站数据已存在，无法修改");
+        }
+
         stationRoleMapper.modify(stationRoleReqDTO);
     }
 
