@@ -43,6 +43,14 @@ public class DailyDataModifyTask {
     private DispatchHandoverService dispatchHandoverService;
     @Autowired
     private DrivingAttentionService drivingAttentionService;
+    @Autowired
+    private OtherRecordService otherRecordService;
+    @Autowired
+    private BadWeatherService badWeatherService;
+    @Autowired
+    private CrewEventService crewEventService;
+    @Autowired
+    private CrewDrillService crewDrillService;
 
     // TODO
     // 每日凌晨5点 更新一些需要同步其他系统数据的日报数据
@@ -169,8 +177,16 @@ public class DailyDataModifyTask {
         dispatchHandoverService.add(currentLoginUser,dispatchHandoverReqDTO);
 
         //行车注意事项-新增
+        DrivingAttentionReqDTO drivingAttentionReqDTO = DrivingAttentionReqDTO.builder().dataDate(DateUtil.parseDate(today)).build();
+        drivingAttentionService.add(currentLoginUser,drivingAttentionReqDTO);
 
+        //其他情况-新增
+        OtherRecordReqDTO otherRecordReqDTO = OtherRecordReqDTO.builder().dataType(CommonConstants.DATA_TYPE_DAILY).dataDate(DateUtil.parseDate(today)).build();
+        otherRecordService.add(currentLoginUser,otherRecordReqDTO);
 
+        //恶劣天气组织-新增
+        BadWeatherReqDTO badWeatherReqDTO = BadWeatherReqDTO.builder().dataType(CommonConstants.DATA_TYPE_DAILY).dataDate(DateUtil.parseDate(today)).build();
+        badWeatherService.add(currentLoginUser,badWeatherReqDTO);
 
     }
 
@@ -178,6 +194,31 @@ public class DailyDataModifyTask {
      * 车辆部每周数据新增
      * */
     private void vehicleWeeklyAuto(CurrentLoginUser currentLoginUser,String monday,String sunday){
+        //重要指标-新增
+        IndicatorReqDTO indicatorReqDTO = IndicatorReqDTO.builder().dataType(CommonConstants.DATA_TYPE_WEEKLY).startDate(monday).endDate(sunday).build();
+        indicatorService.add(currentLoginUser,indicatorReqDTO);
+
+        //行车情况-新增
+        DrivingRecordReqDTO drivingRecordReqDTO = DrivingRecordReqDTO.builder().dataType(CommonConstants.DATA_TYPE_WEEKLY).startDate(monday).endDate(sunday).build();
+        drivingService.add(currentLoginUser,drivingRecordReqDTO);
+
+        //正线及车场情况-新增
+        LineEventRecordReqDTO lineEventRecordReqDTO = LineEventRecordReqDTO.builder().dataType(CommonConstants.DATA_TYPE_WEEKLY).startDate(monday).endDate(sunday).build();
+        lineEventService.add(currentLoginUser,lineEventRecordReqDTO);
+
+        //周乘务中心行车事件总结-新增
+        CrewEventSummaryReqDTO crewEventSummaryReqDTO = CrewEventSummaryReqDTO.builder().dataType(CommonConstants.DATA_TYPE_WEEKLY).startDate(monday).endDate(sunday).build();
+        crewEventService.add(currentLoginUser,crewEventSummaryReqDTO);
+
+        //周乘务中心班组培训情况-新增
+        TrainRecordReqDTO trainRecordReqDTO = TrainRecordReqDTO.builder().dataType(CommonConstants.DATA_TYPE_WEEKLY).startDate(DateUtil.parseDate(monday)).endDate(DateUtil.parseDate(sunday)).build();
+        trainRecordService.add(currentLoginUser,trainRecordReqDTO);
+
+        //周乘务中心班组演练情况-新增
+        CrewDrillReqDTO crewDrillReqDTO = CrewDrillReqDTO.builder().dataType(CommonConstants.DATA_TYPE_WEEKLY).startDate(DateUtil.parseDate(monday)).endDate(DateUtil.parseDate(sunday)).build();
+        crewDrillService.add(currentLoginUser,crewDrillReqDTO);
+
+
 
     }
 

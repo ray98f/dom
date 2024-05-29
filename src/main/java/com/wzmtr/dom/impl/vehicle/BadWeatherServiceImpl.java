@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.dto.req.vehicle.BadWeatherReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.BadWeatherResDTO;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
@@ -40,14 +41,14 @@ public class BadWeatherServiceImpl implements BadWeatherService {
     }
 
     @Override
-    public void add(BadWeatherReqDTO badWeatherReqDTO) {
+    public void add(CurrentLoginUser currentLoginUser,BadWeatherReqDTO badWeatherReqDTO) {
         // 判断新增数据所属时间是否已存在数据
         Integer result = badWeatherMapper.selectIsExist(badWeatherReqDTO);
         if (result > 0) {
             throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期恶劣天气组织数据已存在，无法重复新增");
         }
         badWeatherReqDTO.setId(TokenUtils.getUuId());
-        badWeatherReqDTO.setCreateBy(TokenUtils.getCurrentPersonId());
+        badWeatherReqDTO.setCreateBy(currentLoginUser.getPersonId());
         badWeatherMapper.add(badWeatherReqDTO);
     }
 

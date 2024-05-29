@@ -1,8 +1,10 @@
 package com.wzmtr.dom.controller.vehicle;
 
+import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.dto.req.vehicle.CrewDrillReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.CrewDrillResDTO;
 import com.wzmtr.dom.entity.BaseIdsEntity;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.entity.response.PageResponse;
@@ -66,8 +68,8 @@ public class CrewDrillController {
      */
     @PostMapping("/add")
     @ApiOperation(value = "新增-乘务中心演练情况")
-    public DataResponse<T> add(@RequestBody CrewDrillReqDTO crewDrillReqDTO) {
-        crewDrillService.add(crewDrillReqDTO);
+    public DataResponse<T> add(@CurrUser CurrentLoginUser currentLoginUser, @RequestBody CrewDrillReqDTO crewDrillReqDTO) {
+        crewDrillService.add(currentLoginUser,crewDrillReqDTO);
         return DataResponse.success();
     }
 

@@ -1,8 +1,10 @@
 package com.wzmtr.dom.controller.vehicle;
 
+import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.dto.req.vehicle.OtherRecordReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.OtherRecordResDTO;
 import com.wzmtr.dom.entity.BaseIdsEntity;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.entity.response.PageResponse;
@@ -66,8 +68,8 @@ public class OtherRecordController {
      */
     @PostMapping("/add")
     @ApiOperation(value = "新增-其他情况说明")
-    public DataResponse<T> add(@RequestBody OtherRecordReqDTO otherRecordReqDTO) {
-        otherRecordService.add(otherRecordReqDTO);
+    public DataResponse<T> add(@CurrUser CurrentLoginUser currentLoginUser, @RequestBody OtherRecordReqDTO otherRecordReqDTO) {
+        otherRecordService.add(currentLoginUser,otherRecordReqDTO);
         return DataResponse.success();
     }
 

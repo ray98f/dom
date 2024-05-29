@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.dto.req.vehicle.OtherRecordReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.OtherRecordResDTO;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
@@ -40,14 +41,14 @@ public class OtherRecordServiceImpl implements OtherRecordService {
     }
 
     @Override
-    public void add(OtherRecordReqDTO otherRecordReqDTO) {
+    public void add(CurrentLoginUser currentLoginUser,OtherRecordReqDTO otherRecordReqDTO) {
         // 判断新增数据所属时间是否已存在数据
         Integer result = otherRecordMapper.selectIsExist(otherRecordReqDTO);
         if (result > 0) {
             throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期其他情况说明数据已存在，无法重复新增");
         }
         otherRecordReqDTO.setId(TokenUtils.getUuId());
-        otherRecordReqDTO.setCreateBy(TokenUtils.getCurrentPersonId());
+        otherRecordReqDTO.setCreateBy(currentLoginUser.getPersonId());
         otherRecordMapper.add(otherRecordReqDTO);
     }
 

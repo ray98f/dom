@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.dto.req.vehicle.CrewDrillReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.CrewDrillResDTO;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
@@ -40,14 +41,14 @@ public class CrewDrillServiceImpl implements CrewDrillService {
     }
 
     @Override
-    public void add(CrewDrillReqDTO crewDrillReqDTO) {
+    public void add(CurrentLoginUser currentLoginUser,CrewDrillReqDTO crewDrillReqDTO) {
         // 判断新增数据所属时间是否已存在数据
         Integer result = crewDrillMapper.selectIsExist(crewDrillReqDTO);
         if (result > 0) {
             throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期乘务中心演练情况数据已存在，无法重复新增");
         }
         crewDrillReqDTO.setId(TokenUtils.getUuId());
-        crewDrillReqDTO.setCreateBy(TokenUtils.getCurrentPersonId());
+        crewDrillReqDTO.setCreateBy(currentLoginUser.getPersonId());
         crewDrillMapper.add(crewDrillReqDTO);
     }
 
