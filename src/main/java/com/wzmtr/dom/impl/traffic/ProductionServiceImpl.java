@@ -179,7 +179,7 @@ public class ProductionServiceImpl implements ProductionService {
     public void submitApproval(CurrentLoginUser currentLoginUser, ProductionRecordReqDTO productionRecordReqDTO) {
         productionRecordReqDTO.setUpdateBy(currentLoginUser.getPersonId());
 
-        
+
         //设置为审核中
         productionRecordReqDTO.setStatus(CommonConstants.ONE_STRING);
         try {
@@ -254,10 +254,17 @@ public class ProductionServiceImpl implements ProductionService {
 
                 if (StringUtils.isNotEmpty(submitStation)) {
                     List<String> submitStationList = Arrays.asList(submitStation.split(CommonConstants.COMMA));
+                    List<String> newSubmitStationList = new ArrayList<>();
 
                     // 已提交车站中删除该车站
-                    submitStationList.removeIf(item -> item.equals(approvalRelationRes.getSubmitStation()));
-                    submitStation = String.join(CommonConstants.COMMA, submitStationList);
+                    for(String s:submitStationList){
+                        if(!s.equals(approvalRelationRes.getSubmitStation())){
+                            newSubmitStationList.add(s);
+                        }
+                    }
+                    //submitStationList.removeIf(item -> item.equals(approvalRelationRes.getSubmitStation()));
+
+                    submitStation = String.join(CommonConstants.COMMA, newSubmitStationList);
                 }
 
                 ProductionApprovalReqDTO approvalReq = new ProductionApprovalReqDTO();
