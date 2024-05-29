@@ -3,6 +3,7 @@ package com.wzmtr.dom.service.vehicle;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.vehicle.PersonRecordReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.PersonRecordResDTO;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 
 import java.util.List;
@@ -42,7 +43,7 @@ public interface PersonRecordService {
      * 新增当日人员情况
      * @param personRecordReqDTO 当日人员情况参数
      */
-    void add(PersonRecordReqDTO personRecordReqDTO);
+    void add(CurrentLoginUser currentLoginUser,PersonRecordReqDTO personRecordReqDTO);
 
     /**
      * 编辑当日人员情况

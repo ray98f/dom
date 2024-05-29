@@ -79,6 +79,8 @@ public interface OrganizationMapper {
      */
     Page<MemberResDTO> pageUserByOffice(Page<MemberResDTO> page, @Param("id") String id);
 
+    Page<MemberResDTO> pageUserByOfficeAndName(Page<MemberResDTO> page, @Param("id") String id,@Param("name") String name);
+
     /**
      * 查询组织机构下人员
      * @param id 组织机构id

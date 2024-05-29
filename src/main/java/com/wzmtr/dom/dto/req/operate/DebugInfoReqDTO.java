@@ -41,6 +41,7 @@ public class DebugInfoReqDTO extends BaseEntity {
     @ApiModelProperty(value = "施工计划列表")
     private List<DebugCsm> csmList;
 
+
     /**
      * 施工计划
      */
@@ -50,7 +51,7 @@ public class DebugInfoReqDTO extends BaseEntity {
          * 外部id
          */
         @ApiModelProperty(value = "外部id")
-        private String externalId;
+        private String constructPlanId;
 
         /**
          * 序号
@@ -62,12 +63,12 @@ public class DebugInfoReqDTO extends BaseEntity {
          * 施工计划
          */
         @ApiModelProperty(value = "施工计划")
-        private String csmPlan;
+        private String workName;
 
         /**
          * 限速开始时间
          */
-        @ApiModelProperty(value = "限速开始时间")
-        private String status;
+        @ApiModelProperty(value = "状态")
+        private String planStatus;
     }
 }

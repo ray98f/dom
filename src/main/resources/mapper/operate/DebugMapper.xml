@@ -84,7 +84,7 @@
             <if test="recordId!=null and recordId!=''">
                 RECORD_ID,
             </if>
-            <if test="csm.externalId!=null and csm.externalId!=''">
+            <if test="csm.constructPlanId!=null and csm.constructPlanId!=''">
                 EXTERNAL_ID,
             </if>
             <if test="csm.serialNo!=null">
@@ -93,10 +93,10 @@
             <if test="dataType!=null and dataType!=''">
                 DATA_TYPE,
             </if>
-            <if test="csm.csmPlan!=null and csm.csmPlan!=''">
+            <if test="csm.workName!=null and csm.workName!=''">
                 CSM_PLAN,
             </if>
-            <if test="csm.status!=null and csm.STATUS!=''">
+            <if test="csm.planStatus!=null and csm.planStatus!=''">
                 STATUS,
             </if>
             CREATE_BY, CREATE_DATE)
@@ -104,8 +104,8 @@
             <if test="recordId!=null and recordId!=''">
                 #{recordId},
             </if>
-            <if test="csm.externalId!=null and csm.externalId!=''">
-                #{csm.externalId},
+            <if test="csm.constructPlanId!=null and csm.constructPlanId!=''">
+                #{csm.constructPlanId},
             </if>
             <if test="csm.serialNo!=null">
                 #{csm.serialNo},
@@ -113,11 +113,11 @@
             <if test="dataType!=null and dataType!=''">
                 #{dataType},
             </if>
-            <if test="csm.csmPlan!=null and csm.csmPlan!=''">
-                #{csm.csmPlan},
+            <if test="csm.workName!=null and csm.workName!=''">
+                #{csm.workName},
             </if>
-            <if test="csm.status!=null and csm.status!=''">
-                #{csm.status},
+            <if test="csm.planStatus!=null and csm.planStatus!=''">
+                #{csm.planStatus},
             </if>
             #{createBy}, sysdate)
         </foreach>

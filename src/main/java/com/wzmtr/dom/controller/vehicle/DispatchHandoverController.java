@@ -1,8 +1,10 @@
 package com.wzmtr.dom.controller.vehicle;
 
+import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.dto.req.vehicle.DispatchHandoverReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.DispatchHandoverResDTO;
 import com.wzmtr.dom.entity.BaseIdsEntity;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.entity.response.PageResponse;
@@ -64,8 +66,8 @@ public class DispatchHandoverController {
      */
     @PostMapping("/add")
     @ApiOperation(value = "新增-车场调度员交接班情况")
-    public DataResponse<T> add(@RequestBody DispatchHandoverReqDTO dispatchHandoverReqDTO) {
-        dispatchHandoverService.add(dispatchHandoverReqDTO);
+    public DataResponse<T> add(@CurrUser CurrentLoginUser currentLoginUser, @RequestBody DispatchHandoverReqDTO dispatchHandoverReqDTO) {
+        dispatchHandoverService.add(currentLoginUser,dispatchHandoverReqDTO);
         return DataResponse.success();
     }
 

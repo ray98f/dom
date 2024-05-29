@@ -58,7 +58,12 @@ public class OrganizationServiceImpl implements OrganizationService {
         PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
         Page<MemberResDTO> page;
         String newId = organizationMapper.getIdByAreaId(id);
-        if (!Objects.isNull(newId)) {
+
+        if (!Objects.isNull(newId) && !Objects.isNull(name)) {
+            return organizationMapper.pageUserByOfficeAndName(pageReqDTO.of(), newId,name);
+        }
+
+        if (!Objects.isNull(newId) && Objects.isNull(name)) {
             return organizationMapper.pageUserByOffice(pageReqDTO.of(), newId);
         }
         if (CommonConstants.ROOT.equals(id)) {

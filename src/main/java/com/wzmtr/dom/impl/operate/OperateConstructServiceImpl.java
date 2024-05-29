@@ -133,6 +133,11 @@ public class OperateConstructServiceImpl implements OperateConstructService {
         req.setDepotChangedCount(req.getDepotChangedCount1() + req.getDepotChangedCount2() + req.getDepotChangedCount3());
         req.setDepotDelayCount(req.getDepotDelayCount1() + req.getDepotDelayCount2() + req.getDepotDelayCount3());
         operateConstructMapper.modifyBySync(req);
+
+        if(CommonConstants.DATA_TYPE_DAILY.equals(dataType)){
+            autoModifyByDaily(dataType,startDate,endDate);
+        }
+
     }
 
     @Override
@@ -179,15 +184,47 @@ public class OperateConstructServiceImpl implements OperateConstructService {
         } catch (Exception e) {
             throw new CommonException(ErrorCode.INSERT_ERROR);
         }
+
+        if(!CommonConstants.DATA_TYPE_DAILY.equals(constructRecordReqDTO.getDataType())){
+            autoModifyByDaily(constructRecordReqDTO.getDataType(),constructRecordReqDTO.getStartDate(),constructRecordReqDTO.getEndDate());
+        }
     }
 
     @Override
     public void modify(CurrentLoginUser currentLoginUser, ConstructRecordReqDTO constructRecordReqDTO) {
         constructRecordReqDTO.setUpdateBy(currentLoginUser.getPersonId());
+        constructRecordReqDTO.setTotalCount(constructRecordReqDTO.getPlan1Count()+constructRecordReqDTO.getPlan2Count()+constructRecordReqDTO.getPlan3Count());
+        constructRecordReqDTO.setRealCount(constructRecordReqDTO.getReal1Count()+constructRecordReqDTO.getReal2Count()+constructRecordReqDTO.getReal3Count());
         int res = operateConstructMapper.modify(constructRecordReqDTO);
         if (res <= 0) {
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
+
+        if(CommonConstants.DATA_TYPE_DAILY.equals(constructRecordReqDTO.getDataType())){
+            autoModifyByDaily(constructRecordReqDTO.getDataType(),constructRecordReqDTO.getStartDate(),constructRecordReqDTO.getEndDate());
+        }
+
+    }
+
+    @Override
+    public void autoModify(String dataType, String startDate, String endDate) {
+
+    }
+
+    @Override
+    public void autoModifyByDaily(String dataType, String startDate, String endDate) {
+        //获取周 周一、周日
+        Date monday = DateUtil.beginOfWeek(DateUtil.parseDate(startDate));
+        Date sunday = DateUtil.endOfWeek(DateUtil.parseDate(startDate));
+
+
+        operateConstructMapper.autoModifyByDaily(CommonConstants.DATA_TYPE_WEEKLY,DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
+        //获取月 月初、月末
+        Date monthStart = DateUtil.beginOfMonth(DateUtil.parseDate(startDate));
+        Date monthEnd = DateUtil.endOfMonth(DateUtil.parseDate(startDate));
+        operateConstructMapper.autoModifyByDaily(CommonConstants.DATA_TYPE_MONTHLY,DateUtil.formatDate(monthStart),DateUtil.formatDate(monthEnd));
+
+
     }
 
     @Override

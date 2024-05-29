@@ -3,6 +3,7 @@ package com.wzmtr.dom.mapper.traffic;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.traffic.TicketUseReqDTO;
 import com.wzmtr.dom.dto.res.traffic.TicketUseResDTO;
+import com.wzmtr.dom.dto.res.traffic.oneway.OnewaySaleDetailResDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -43,6 +44,8 @@ public interface TicketUseMapper {
      * @return 线网车票过闸使用情况详情
      */
     TicketUseResDTO getLastDetail(Date dataDate, Date startDate);
+
+    TicketUseResDTO selectDetailById(String id, String dataType, String startDate, String endDate);
 
     /**
      * 查询当天线网车票过闸使用情况是否已存在

@@ -102,6 +102,27 @@ public class CommonConstants {
     public static final double TEN_THOUSAND_DOUBLE = 10000.0;
 
     /**
+     *  专业编号
+     */
+    public static final String SUBJECT_CODE_1 = "01";
+    public static final String SUBJECT_CODE_2 = "02";
+    public static final String SUBJECT_CODE_3 = "03";
+    public static final String SUBJECT_CODE_4 = "04";
+    public static final String SUBJECT_CODE_5 = "05";
+    public static final String SUBJECT_CODE_6 = "06";
+    public static final String SUBJECT_CODE_7 = "07";
+    public static final String SUBJECT_CODE_8 = "08";
+    public static final String SUBJECT_CODE_9 = "09";
+    public static final String SUBJECT_CODE_10 = "10";
+    public static final String SUBJECT_CODE_11 = "11";
+    public static final String SUBJECT_CODE_12 = "12";
+    public static final String SUBJECT_CODE_13 = "13";
+    public static final String SUBJECT_CODE_14 = "14";
+    public static final String SUBJECT_CODE_15 = "15";
+    public static final String SUBJECT_CODE_16 = "16";
+    public static final String SUBJECT_CODE_17 = "17";
+    public static final String SUBJECT_CODE_70 = "70";
+    /**
      * 流程相关
      */
     public static final String CODE = "code";

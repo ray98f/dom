@@ -49,8 +49,9 @@ public class IndicatorController {
         double a = 1.22;
         double b =2.33;
         Double c = NumberUtil.div((a-b), b, 2);
-        String dateStr = "2024-05-11";
+        String dateStr = "2024-01-01";
         Date date1 = DateUtil.parseDate(dateStr);
+        int month = DateUtil.month(date1);
 
         // 获取当前日期
         Date now = DateUtil.date();

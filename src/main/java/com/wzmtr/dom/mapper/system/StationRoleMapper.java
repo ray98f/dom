@@ -1,6 +1,7 @@
 package com.wzmtr.dom.mapper.system;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wzmtr.dom.dataobject.traffic.TrafficOnewaySaleDO;
 import com.wzmtr.dom.dto.req.system.StationRoleReqDTO;
 import com.wzmtr.dom.dto.res.system.StationRoleResDTO;
 import org.apache.ibatis.annotations.Mapper;
@@ -37,6 +38,8 @@ public interface StationRoleMapper {
      * @return 审核站权限详情
      */
     StationRoleResDTO getCurrentStation();
+
+    Integer checkExist(StationRoleReqDTO stationRoleReqDTO);
 
     /**
      * 新增审核站权限

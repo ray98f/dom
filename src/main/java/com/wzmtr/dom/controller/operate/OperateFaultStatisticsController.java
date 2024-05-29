@@ -105,6 +105,14 @@ public class OperateFaultStatisticsController {
         return DataResponse.success();
     }
 
+    @GetMapping("/syncData")
+    @ApiOperation(value = "同步故障统计")
+    public DataResponse<T> syncData(@RequestParam String dataType,
+                                                      @RequestParam(required = false) String startDate,
+                                                      @RequestParam(required = false) String endDate) throws ParseException {
+        faultStatisticsService.syncData(dataType, startDate, endDate);
+        return DataResponse.success();
+    }
 
 
 }

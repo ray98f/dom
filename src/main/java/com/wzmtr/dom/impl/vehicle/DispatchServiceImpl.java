@@ -10,6 +10,7 @@ import com.wzmtr.dom.dto.req.vehicle.DispatchRecordReqDTO;
 import com.wzmtr.dom.dto.res.common.OpenDispatchOrderRes;
 import com.wzmtr.dom.dto.res.vehicle.DispatchOrderResDTO;
 import com.wzmtr.dom.dto.res.vehicle.DispatchRecordResDTO;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.DispatchOrderStatusEnum;
 import com.wzmtr.dom.enums.ErrorCode;
@@ -96,7 +97,7 @@ public class DispatchServiceImpl implements DispatchService {
     }
 
     @Override
-    public void addRecord(DispatchRecordReqDTO dispatchRecordReqDTO) {
+    public void addRecord(CurrentLoginUser currentLoginUser,DispatchRecordReqDTO dispatchRecordReqDTO) {
         // 判断新增数据所属时间是否已存在数据
         Integer result = dispatchMapper.selectRecordIsExist(dispatchRecordReqDTO);
         if (result > 0) {
@@ -104,7 +105,7 @@ public class DispatchServiceImpl implements DispatchService {
         }
         dispatchRecordReqDTO.setId(TokenUtils.getUuId());
         dispatchRecordReqDTO.setOrderNum(0);
-        dispatchRecordReqDTO.setCreateBy(TokenUtils.getCurrentPersonId());
+        dispatchRecordReqDTO.setCreateBy(currentLoginUser.getPersonId());
         dispatchMapper.addRecord(dispatchRecordReqDTO);
 
         autoModify(dispatchRecordReqDTO.getDataType(),DateUtil.formatDate(dispatchRecordReqDTO.getStartDate())

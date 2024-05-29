@@ -5,6 +5,7 @@ import com.wzmtr.dom.dto.req.common.OpenConstructPlanReqDTO;
 import com.wzmtr.dom.dto.req.common.OpenDispatchOrderReqDTO;
 import com.wzmtr.dom.dto.res.common.OpenDepotStatisticsRes;
 import com.wzmtr.dom.dto.res.common.OpenDispatchOrderRes;
+import com.wzmtr.dom.dto.res.common.OpenFaultStatisticsRes;
 import com.wzmtr.dom.dto.res.operate.ConstructPlanResDTO;
 import com.wzmtr.dom.dto.res.operate.PlanStatisticsResDTO;
 import com.wzmtr.dom.dto.res.operate.UnsaturationConstructResDTO;
@@ -54,4 +55,7 @@ public interface ThirdService {
      * @return 选择调度命令列表
      */
     OpenDepotStatisticsRes getOdmDepotStatistics(String date);
+
+    List<OpenFaultStatisticsRes> getEamFaultStatistics(String startTime,String endTime);
+
 }

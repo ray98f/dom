@@ -1,10 +1,12 @@
 package com.wzmtr.dom.controller.vehicle;
 
+import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.dto.req.vehicle.DispatchOrderReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.DispatchRecordReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.DispatchOrderResDTO;
 import com.wzmtr.dom.dto.res.vehicle.DispatchRecordResDTO;
 import com.wzmtr.dom.entity.BaseIdsEntity;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.entity.response.PageResponse;
@@ -99,8 +101,8 @@ public class DispatchController {
      */
     @PostMapping("/record/add")
     @ApiOperation(value = "新增调度命令记录")
-    public DataResponse<T> addRecord(@RequestBody DispatchRecordReqDTO dispatchRecordReqDTO) {
-        dispatchService.addRecord(dispatchRecordReqDTO);
+    public DataResponse<T> addRecord(@CurrUser CurrentLoginUser currentLoginUser, @RequestBody DispatchRecordReqDTO dispatchRecordReqDTO) {
+        dispatchService.addRecord(currentLoginUser,dispatchRecordReqDTO);
         return DataResponse.success();
     }
 
