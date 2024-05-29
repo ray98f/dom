@@ -179,6 +179,7 @@ public class ProductionServiceImpl implements ProductionService {
     public void submitApproval(CurrentLoginUser currentLoginUser, ProductionRecordReqDTO productionRecordReqDTO) {
         productionRecordReqDTO.setUpdateBy(currentLoginUser.getPersonId());
 
+        
         //设置为审核中
         productionRecordReqDTO.setStatus(CommonConstants.ONE_STRING);
         try {
