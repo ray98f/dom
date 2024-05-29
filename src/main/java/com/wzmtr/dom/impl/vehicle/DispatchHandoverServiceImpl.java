@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.dto.req.vehicle.DispatchHandoverReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.DispatchHandoverResDTO;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
@@ -40,14 +41,14 @@ public class DispatchHandoverServiceImpl implements DispatchHandoverService {
     }
 
     @Override
-    public void add(DispatchHandoverReqDTO dispatchHandoverReqDTO) {
+    public void add(CurrentLoginUser currentLoginUser,DispatchHandoverReqDTO dispatchHandoverReqDTO) {
         // 判断新增数据所属时间是否已存在数据
         Integer result = dispatchHandoverMapper.selectIsExist(dispatchHandoverReqDTO);
         if (result > 0) {
             throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期车场调度员交接班数据已存在，无法重复新增");
         }
         dispatchHandoverReqDTO.setId(TokenUtils.getUuId());
-        dispatchHandoverReqDTO.setCreateBy(TokenUtils.getCurrentPersonId());
+        dispatchHandoverReqDTO.setCreateBy(currentLoginUser.getPersonId());
         dispatchHandoverMapper.add(dispatchHandoverReqDTO);
     }
 

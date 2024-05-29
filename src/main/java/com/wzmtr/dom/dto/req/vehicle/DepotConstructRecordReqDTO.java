@@ -3,8 +3,7 @@ package com.wzmtr.dom.dto.req.vehicle;
 import com.wzmtr.dom.constant.ValidationGroup;
 import com.wzmtr.dom.entity.BaseEntity;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 
@@ -17,6 +16,9 @@ import javax.validation.constraints.NotNull;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class DepotConstructRecordReqDTO extends BaseEntity {
 
     /**

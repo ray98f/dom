@@ -1,8 +1,10 @@
 package com.wzmtr.dom.controller.vehicle;
 
+import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.dto.req.vehicle.TrainRecordReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.TrainRecordResDTO;
 import com.wzmtr.dom.entity.BaseIdsEntity;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.entity.response.PageResponse;
@@ -65,8 +67,8 @@ public class TrainRecordController {
      */
     @PostMapping("/add")
     @ApiOperation(value = "新增-班组培训情况")
-    public DataResponse<T> add(@RequestBody TrainRecordReqDTO trainRecordReqDTO) {
-        trainRecordService.add(trainRecordReqDTO);
+    public DataResponse<T> add(@CurrUser CurrentLoginUser currentLoginUser, @RequestBody TrainRecordReqDTO trainRecordReqDTO) {
+        trainRecordService.add(currentLoginUser,trainRecordReqDTO);
         return DataResponse.success();
     }
 

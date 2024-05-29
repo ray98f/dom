@@ -104,7 +104,7 @@
             AND DATA_TYPE=#{dataType}
         </if>
         <if test="dataType=='1'.toString()">
-            AND START_DATE=to_date(#{date}, 'yyyy-mm-dd hh24:mi:ss') AND END_DATE=to_date(#{date}, 'yyyy-mm-dd hh24:mi:ss')
+            AND START_DATE=to_date(#{startDate}, 'yyyy-mm-dd hh24:mi:ss') AND END_DATE=to_date(#{date}, 'yyyy-mm-dd hh24:mi:ss')
         </if>
         <if test="dataType!='1'.toString()">
             AND START_DATE=to_date(#{startDate}, 'yyyy-mm-dd hh24:mi:ss') AND END_DATE=to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss')
