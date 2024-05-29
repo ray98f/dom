@@ -112,4 +112,8 @@ public interface OperateConstructMapper {
      */
     void deleteEvent(List<String> ids, String userId);
 
+
+    void autoModify(String dataType,String startDate, String endDate);
+
+    void autoModifyByDaily(String dataType,String startDate, String endDate);
 }

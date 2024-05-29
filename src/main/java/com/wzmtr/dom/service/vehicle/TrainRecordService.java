@@ -3,6 +3,7 @@ package com.wzmtr.dom.service.vehicle;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.vehicle.TrainRecordReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.TrainRecordResDTO;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 
 import java.util.List;
@@ -35,7 +36,7 @@ public interface TrainRecordService {
      * 新增班组培训情况
      * @param trainRecordReqDTO 班组培训情况参数
      */
-    void add(TrainRecordReqDTO trainRecordReqDTO);
+    void add(CurrentLoginUser currentLoginUser,TrainRecordReqDTO trainRecordReqDTO);
 
     /**
      * 编辑班组培训情况

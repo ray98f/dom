@@ -3,6 +3,7 @@ package com.wzmtr.dom.service.vehicle;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.vehicle.DispatchHandoverReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.DispatchHandoverResDTO;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 
 import java.util.List;
@@ -35,7 +36,7 @@ public interface DispatchHandoverService {
      * 新增车场调度员交接班情况
      * @param dispatchHandoverReqDTO 车场调度员交接班情况参数
      */
-    void add(DispatchHandoverReqDTO dispatchHandoverReqDTO);
+    void add(CurrentLoginUser currentLoginUser,DispatchHandoverReqDTO dispatchHandoverReqDTO);
 
     /**
      * 编辑车场调度员交接班情况

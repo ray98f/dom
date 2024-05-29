@@ -40,7 +40,7 @@ public class StationRoleReqDTO extends BaseEntity {
             pattern = "yyyy-MM-dd",
             timezone = "GMT+8"
     )
-    private Date startTime;
+    private Date startDate;
 
     /**
      * 结束时间
@@ -51,5 +51,5 @@ public class StationRoleReqDTO extends BaseEntity {
             pattern = "yyyy-MM-dd",
             timezone = "GMT+8"
     )
-    private Date endTime;
+    private Date endDate;
 }

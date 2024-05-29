@@ -41,4 +41,9 @@ public interface OperateFaultStatisticsMapper {
     void modify(OperateFaultStatisticsReqDTO req);
 
     void delete(List<String> ids, String currentPersonId);
+
+    void autoModify(OperateFaultStatisticsReqDTO operateEventInfoReqDTO);
+
+    void autoModifyByDaily(String dataType,String startDate, String endDate);
+
 }

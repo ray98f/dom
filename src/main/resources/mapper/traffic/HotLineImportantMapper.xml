@@ -103,12 +103,8 @@
         <if test="dataType!=null and dataType!=''">
             AND DATA_TYPE=#{dataType}
         </if>
-        <if test="startDate != null and startDate!=''">
-            AND START_DATE=to_date(#{startDate}, 'yyyy-mm-dd hh24:mi:ss')
-        </if>
-        <if test="endDate != null and endDate!=''">
-            AND END_DATE=to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss')
-        </if>
+        AND START_DATE=to_date(#{startDate}, 'yyyy-mm-dd hh24:mi:ss') AND END_DATE=to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss')
+
     </select>
 
     <update id="autoModify">

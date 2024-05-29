@@ -137,4 +137,85 @@
         )
     </update>
 
+    <update id="autoModify">
+        UPDATE OPERATE_FAULT_STATISTICS SET
+        <if test="vehicleNum!=null and vehicleNum!=''">
+            VEHICLE_NUM=#{vehicleNum},
+        </if>
+        <if test="signalNum!=null and signalNum!=''">
+            SIGNAL_NUM=#{signalNum},
+        </if>
+        <if test="communicationNum!=null and communicationNum!=''">
+            COMMUNICATION_NUM=#{communicationNum},
+        </if>
+        <if test="afcNum!=null and afcNum!=''">
+            AFC_NUM=#{afcNum},
+        </if>
+        <if test="changeDistributionNum!=null and changeDistributionNum!=''">
+            CHANGE_DISTRIBUTION_NUM=#{changeDistributionNum},
+        </if>
+        <if test="contactNetworkNum!=null and contactNetworkNum!=''">
+            CONTACT_NETWORK_NUM=#{contactNetworkNum},
+        </if>
+        <if test="platformDoorsNum!=null and platformDoorsNum!=''">
+            PLATFORM_DOORS_NUM=#{platformDoorsNum},
+        </if>
+        <if test="fasNum!=null and fasNum!=''">
+            FAS_NUM=#{fasNum},
+        </if>
+        <if test="buildingConstructionNum!=null and buildingConstructionNum!=''">
+            BUILDING_CONSTRUCTION_NUM=#{buildingConstructionNum},
+        </if>
+        <if test="monitorNum!=null and monitorNum!=''">
+            MONITOR_NUM=#{monitorNum},
+        </if>
+        <if test="hydropowerNum!=null and hydropowerNum!=''">
+            HYDROPOWER_NUM=#{hydropowerNum},
+        </if>
+        <if test="escalatorNum!=null and escalatorNum!=''">
+            ESCALATOR_NUM=#{escalatorNum},
+        </if>
+        <if test="officialDutiesNum!=null and officialDutiesNum!=''">
+            OFFICIAL_DUTIES_NUM=#{officialDutiesNum},
+        </if>
+        <if test="bridgeTunnelNum!=null and bridgeTunnelNum!=''">
+            BRIDGE_TUNNEL_NUM=#{bridgeTunnelNum},
+        </if>
+        <if test="engineeringVehicleNum!=null and engineeringVehicleNum!=''">
+            ENGINEERING_VEHICLE_NUM=#{engineeringVehicleNum},
+        </if>
+        UPDATE_DATE=sysdate
+        WHERE DATA_TYPE = #{dataType}
+        AND START_DATE=#{startDate,jdbcType=TIMESTAMP}
+        AND END_DATE=#{endDate,jdbcType=TIMESTAMP}
+    </update>
+
+    <update id="autoModifyByDaily">
+        UPDATE OPERATE_FAULT_STATISTICS SET
+        (VEHICLE_NUM,SIGNAL_NUM,COMMUNICATION_NUM,AFC_NUM,CHANGE_DISTRIBUTION_NUM,CONTACT_NETWORK_NUM,PLATFORM_DOORS_NUM,FAS_NUM,BUILDING_CONSTRUCTION_NUM,MONITOR_NUM,HYDROPOWER_NUM,ESCALATOR_NUM,OFFICIAL_DUTIES_NUM,BRIDGE_TUNNEL_NUM,ENGINEERING_VEHICLE_NUM)
+        =(SELECT SUM(VEHICLE_NUM) AS VEHICLE_NUM,
+        SUM(SIGNAL_NUM) AS SIGNAL_NUM,
+        SUM(COMMUNICATION_NUM) AS COMMUNICATION_NUM,
+        SUM(AFC_NUM) AS AFC_NUM,
+        SUM(CHANGE_DISTRIBUTION_NUM) AS CHANGE_DISTRIBUTION_NUM,
+        SUM(CONTACT_NETWORK_NUM) AS CONTACT_NETWORK_NUM,
+        SUM(PLATFORM_DOORS_NUM) AS PLATFORM_DOORS_NUM,
+        SUM(FAS_NUM) AS FAS_NUM,
+        SUM(BUILDING_CONSTRUCTION_NUM) AS BUILDING_CONSTRUCTION_NUM,
+        SUM(MONITOR_NUM) AS MONITOR_NUM,
+        SUM(HYDROPOWER_NUM) AS HYDROPOWER_NUM,
+        SUM(ESCALATOR_NUM) AS ESCALATOR_NUM,
+        SUM(OFFICIAL_DUTIES_NUM) AS OFFICIAL_DUTIES_NUM,
+        SUM(BRIDGE_TUNNEL_NUM) AS BRIDGE_TUNNEL_NUM,
+        SUM(ENGINEERING_VEHICLE_NUM) AS ENGINEERING_VEHICLE_NUM
+        FROM OPERATE_FAULT_STATISTICS
+        WHERE DATA_TYPE = '1'
+        AND START_DATE>=to_date(#{startDate}, 'yyyy-mm-dd hh24:mi:ss')
+        AND to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        ),
+        UPDATE_DATE=sysdate
+        WHERE DATA_TYPE = #{dataType}
+        AND START_DATE=to_date(#{startDate}, 'yyyy-mm-dd hh24:mi:ss')
+        AND END_DATE=to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss')
+    </update>
 </mapper>

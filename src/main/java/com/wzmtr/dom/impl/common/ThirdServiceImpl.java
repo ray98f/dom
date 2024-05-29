@@ -1,5 +1,6 @@
 package com.wzmtr.dom.impl.common;
 
+import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -12,6 +13,7 @@ import com.wzmtr.dom.dto.req.common.OpenDispatchOrderReqDTO;
 import com.wzmtr.dom.dto.res.common.OpenConstructPlanResDTO;
 import com.wzmtr.dom.dto.res.common.OpenDepotStatisticsRes;
 import com.wzmtr.dom.dto.res.common.OpenDispatchOrderRes;
+import com.wzmtr.dom.dto.res.common.OpenFaultStatisticsRes;
 import com.wzmtr.dom.dto.res.operate.ConstructPlanResDTO;
 import com.wzmtr.dom.dto.res.operate.PlanStatisticsResDTO;
 import com.wzmtr.dom.dto.res.operate.UnsaturationConstructResDTO;
@@ -54,10 +56,13 @@ public class ThirdServiceImpl implements ThirdService {
 
     @Value("${open-api.odm.depotStatistics}")
     private String depotStatisticsApi;
+
+    @Value("${open-api.eam.faultStatistics}")
+    private String faultStatistics;
     @Override
     public List<UnsaturationConstructResDTO> getUnsaturationConstruct(String startTime,String endTime) {
         JSONObject res = JSONObject.parseObject(HttpUtils.doGet(unsaturationConstructApi+"?planBeginTime="+startTime+"&planEndTime="+endTime,null), JSONObject.class);
-        if(Objects.isNull(res)){
+        if(Objects.isNull(res) || Objects.isNull(res.getJSONArray(CommonConstants.API_RES_DATA))){
             return null;
         }
         return res.getJSONArray(CommonConstants.API_RES_DATA).toJavaList(UnsaturationConstructResDTO.class);
@@ -141,6 +146,19 @@ public class ThirdServiceImpl implements ThirdService {
         JSONObject res = JSONObject.parseObject(HttpUtils.doGet(depotStatisticsApi+"?date="+date,null), JSONObject.class);
         if(Objects.nonNull(res)){
             return JSON.parseObject(res.getJSONObject(CommonConstants.API_RES_DATA).toJSONString(),OpenDepotStatisticsRes.class);
+        }
+        return null;
+    }
+
+    @Override
+    public List<OpenFaultStatisticsRes> getEamFaultStatistics(String startTime, String endTime) {
+        String condition = "?startTime="+startTime+"&endTime="+endTime;
+        String result = HttpUtil.createGet(faultStatistics+condition)
+                .execute()
+                .body();
+        JSONObject res = JSONObject.parseObject(result, JSONObject.class);
+        if(Objects.nonNull(res)){
+            return res.getJSONArray(CommonConstants.API_RES_DATA).toJavaList(OpenFaultStatisticsRes.class);
         }
         return null;
     }

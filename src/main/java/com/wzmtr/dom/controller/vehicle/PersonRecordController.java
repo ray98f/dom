@@ -1,8 +1,10 @@
 package com.wzmtr.dom.controller.vehicle;
 
+import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.dto.req.vehicle.PersonRecordReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.PersonRecordResDTO;
 import com.wzmtr.dom.entity.BaseIdsEntity;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.entity.response.PageResponse;
@@ -75,8 +77,8 @@ public class PersonRecordController {
      */
     @PostMapping("/add")
     @ApiOperation(value = "新增-当日人员情况")
-    public DataResponse<T> add(@RequestBody PersonRecordReqDTO personRecordReqDTO) {
-        personRecordService.add(personRecordReqDTO);
+    public DataResponse<T> add(@CurrUser CurrentLoginUser currentLoginUser, @RequestBody PersonRecordReqDTO personRecordReqDTO) {
+        personRecordService.add(currentLoginUser,personRecordReqDTO);
         return DataResponse.success();
     }
 

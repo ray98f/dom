@@ -3,6 +3,7 @@ package com.wzmtr.dom.dto.req.vehicle;
 import com.wzmtr.dom.constant.ValidationGroup;
 import com.wzmtr.dom.entity.BaseEntity;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -16,6 +17,7 @@ import javax.validation.constraints.NotNull;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
+@Builder
 public class IndicatorReqDTO extends BaseEntity {
 
     @ApiModelProperty(value = "数据类型:1日报 2月报 3周报")

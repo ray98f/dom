@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.dto.req.vehicle.TrainRecordReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.TrainRecordResDTO;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
@@ -40,14 +41,14 @@ public class TrainRecordServiceImpl implements TrainRecordService {
     }
 
     @Override
-    public void add(TrainRecordReqDTO trainRecordReqDTO) {
+    public void add(CurrentLoginUser currentLoginUser,TrainRecordReqDTO trainRecordReqDTO) {
         // 判断新增数据所属时间是否已存在数据
         Integer result = trainRecordMapper.selectIsExist(trainRecordReqDTO);
         if (result > 0) {
             throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期班组培训数据已存在，无法重复新增");
         }
         trainRecordReqDTO.setId(TokenUtils.getUuId());
-        trainRecordReqDTO.setCreateBy(TokenUtils.getCurrentPersonId());
+        trainRecordReqDTO.setCreateBy(currentLoginUser.getPersonId());
         trainRecordMapper.add(trainRecordReqDTO);
     }
 

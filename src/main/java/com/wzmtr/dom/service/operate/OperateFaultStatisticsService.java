@@ -52,4 +52,28 @@ public interface OperateFaultStatisticsService {
      * @param ids ids
      */
     void delete(List<String> ids);
+
+    /**
+     * 同步数据
+     * @param dataType 入参数
+     * @param startDate 入参数
+     * @param endDate 入参数
+     */
+    void syncData(String dataType, String startDate, String endDate);
+
+    /**
+     * 数据统计
+     * @param dataType 入参数
+     * @param startDate 入参数
+     * @param endDate 入参数
+     */
+    void autoModify(String dataType, String startDate, String endDate);
+
+    /**
+     * 数据统计
+     * @param dataType 入参数
+     * @param startDate 入参数
+     * @param endDate 入参数
+     */
+    void autoModifyByDaily(String dataType, String startDate, String endDate);
 }

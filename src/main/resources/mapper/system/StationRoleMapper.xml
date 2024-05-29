@@ -25,11 +25,18 @@
         AND END_TIME >= sysdate
     </select>
 
+    <select id="checkExist" resultType="java.lang.Integer">
+        select count(1) from SYS_STATION_ROLE
+        WHERE DEL_FLAG='0'
+        AND START_TIME>=#{startDate}
+        AND #{endDate}>=END_TIME
+    </select>
+
     <insert id="add">
         INSERT INTO SYS_STATION_ROLE (ID, STATION_CODE, STATION_NAME,
         START_TIME, END_TIME, CREATE_BY, CREATE_DATE)
         VALUES (#{id}, #{stationCode}, #{stationName},
-        #{startTime}, #{endTime}, #{createBy}, sysdate)
+        #{startDate}, #{endDate}, #{createBy}, sysdate)
     </insert>
 
     <update id="modify">
@@ -41,7 +48,7 @@
             STATION_NAME=#{stationName},
         </if>
         <if test="startTime!=null">
-            START_TIME=#{startTime},
+            START_TIME=#{startDate},
         </if>
         <if test="endDate!=null">
             END_TIME=#{endDate},

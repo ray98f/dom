@@ -5,6 +5,7 @@ import com.wzmtr.dom.dto.req.vehicle.DispatchOrderReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.DispatchRecordReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.DispatchOrderResDTO;
 import com.wzmtr.dom.dto.res.vehicle.DispatchRecordResDTO;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 
 import java.util.List;
@@ -52,7 +53,7 @@ public interface DispatchService {
      * 新增调度命令记录
      * @param dispatchRecordReqDTO 调度命令记录参数
      */
-    void addRecord(DispatchRecordReqDTO dispatchRecordReqDTO);
+    void addRecord(CurrentLoginUser currentLoginUser,DispatchRecordReqDTO dispatchRecordReqDTO);
 
     /**
      * 编辑调度命令详情
