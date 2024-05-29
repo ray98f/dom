@@ -3,6 +3,7 @@ package com.wzmtr.dom.service.vehicle;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.vehicle.CrewDrillReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.CrewDrillResDTO;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public interface CrewDrillService {
      * 新增乘务中心演练情况
      * @param crewDrillReqDTO 乘务中心演练情况参数
      */
-    void add(CrewDrillReqDTO crewDrillReqDTO);
+    void add(CurrentLoginUser currentLoginUser,CrewDrillReqDTO crewDrillReqDTO);
 
     /**
      * 编辑乘务中心演练情况

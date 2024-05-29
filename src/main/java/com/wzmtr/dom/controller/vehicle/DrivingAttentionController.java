@@ -1,8 +1,10 @@
 package com.wzmtr.dom.controller.vehicle;
 
+import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.dto.req.vehicle.DrivingAttentionReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.DrivingAttentionResDTO;
 import com.wzmtr.dom.entity.BaseIdsEntity;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.entity.response.PageResponse;
@@ -64,8 +66,8 @@ public class DrivingAttentionController {
      */
     @PostMapping("/add")
     @ApiOperation(value = "新增-行车注意事项")
-    public DataResponse<T> add(@RequestBody DrivingAttentionReqDTO drivingAttentionReqDTO) {
-        drivingAttentionService.add(drivingAttentionReqDTO);
+    public DataResponse<T> add(@CurrUser CurrentLoginUser currentLoginUser, @RequestBody DrivingAttentionReqDTO drivingAttentionReqDTO) {
+        drivingAttentionService.add(currentLoginUser,drivingAttentionReqDTO);
         return DataResponse.success();
     }
 

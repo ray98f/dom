@@ -3,6 +3,7 @@ package com.wzmtr.dom.service.vehicle;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.vehicle.BadWeatherReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.BadWeatherResDTO;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public interface BadWeatherService {
      * 新增恶劣天气组织
      * @param badWeatherReqDTO 恶劣天气组织参数
      */
-    void add(BadWeatherReqDTO badWeatherReqDTO);
+    void add(CurrentLoginUser currentLoginUser,BadWeatherReqDTO badWeatherReqDTO);
 
     /**
      * 编辑恶劣天气组织

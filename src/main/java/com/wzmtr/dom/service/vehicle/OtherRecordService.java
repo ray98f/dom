@@ -3,6 +3,7 @@ package com.wzmtr.dom.service.vehicle;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.vehicle.OtherRecordReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.OtherRecordResDTO;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public interface OtherRecordService {
      * 新增其他情况说明
      * @param otherRecordReqDTO 其他情况说明参数
      */
-    void add(OtherRecordReqDTO otherRecordReqDTO);
+    void add(CurrentLoginUser currentLoginUser,OtherRecordReqDTO otherRecordReqDTO);
 
     /**
      * 编辑其他情况说明

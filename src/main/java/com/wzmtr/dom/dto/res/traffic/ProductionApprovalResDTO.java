@@ -1,9 +1,13 @@
 package com.wzmtr.dom.dto.res.traffic;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wzmtr.dom.entity.BaseEntity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
 
 /**
  * description:
@@ -50,19 +54,34 @@ public class ProductionApprovalResDTO extends BaseEntity {
      * 数据所属日期
      * */
     @ApiModelProperty(value = "数据所属日期")
-    private String dataDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd",
+            timezone = "GMT+8"
+    )
+    private Date dataDate;
 
     /**
      * 数据起始日期
      * */
     @ApiModelProperty(value = "数据起始日期")
-    private String startDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd",
+            timezone = "GMT+8"
+    )
+    private Date startDate;
 
     /**
      * 数据终止日期
      * */
     @ApiModelProperty(value = "数据终止日期")
-    private String endDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd",
+            timezone = "GMT+8"
+    )
+    private Date endDate;
 
     /**
      * 版本号

@@ -3,6 +3,7 @@ package com.wzmtr.dom.service.vehicle;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.vehicle.DrivingAttentionReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.DrivingAttentionResDTO;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 
 import java.util.List;
@@ -35,7 +36,7 @@ public interface DrivingAttentionService {
      * 新增行车注意事项
      * @param drivingAttentionReqDTO 行车注意事项参数
      */
-    void add(DrivingAttentionReqDTO drivingAttentionReqDTO);
+    void add(CurrentLoginUser currentLoginUser,DrivingAttentionReqDTO drivingAttentionReqDTO);
 
     /**
      * 编辑行车注意事项

@@ -1,8 +1,10 @@
 package com.wzmtr.dom.controller.vehicle;
 
+import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.dto.req.vehicle.BadWeatherReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.BadWeatherResDTO;
 import com.wzmtr.dom.entity.BaseIdsEntity;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.entity.response.PageResponse;
@@ -67,8 +69,8 @@ public class BadWeatherController {
      */
     @PostMapping("/add")
     @ApiOperation(value = "新增-恶劣天气组织")
-    public DataResponse<T> add(@RequestBody BadWeatherReqDTO badWeatherReqDTO) {
-        badWeatherService.add(badWeatherReqDTO);
+    public DataResponse<T> add(@CurrUser CurrentLoginUser currentLoginUser, @RequestBody BadWeatherReqDTO badWeatherReqDTO) {
+        badWeatherService.add(currentLoginUser,badWeatherReqDTO);
         return DataResponse.success();
     }
 
