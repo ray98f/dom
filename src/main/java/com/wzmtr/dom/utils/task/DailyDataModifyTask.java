@@ -51,6 +51,10 @@ public class DailyDataModifyTask {
     private CrewEventService crewEventService;
     @Autowired
     private CrewDrillService crewDrillService;
+    @Autowired
+    private CrewBusinessService crewBusinessService;
+    @Autowired
+    private CrewSummaryService crewSummaryService;
 
     // TODO
     // 每日凌晨5点 更新一些需要同步其他系统数据的日报数据
@@ -218,7 +222,27 @@ public class DailyDataModifyTask {
         CrewDrillReqDTO crewDrillReqDTO = CrewDrillReqDTO.builder().dataType(CommonConstants.DATA_TYPE_WEEKLY).startDate(DateUtil.parseDate(monday)).endDate(DateUtil.parseDate(sunday)).build();
         crewDrillService.add(currentLoginUser,crewDrillReqDTO);
 
+        //周乘务中心班组业务情况-新增
+        CrewBusinessReqDTO crewBusinessReqDTO = CrewBusinessReqDTO.builder().dataType(CommonConstants.DATA_TYPE_WEEKLY).startDate(DateUtil.parseDate(monday)).endDate(DateUtil.parseDate(sunday)).build();
+        crewBusinessService.add(currentLoginUser,crewBusinessReqDTO);
 
+        //周车场及施工情况记录-新增
+        DepotConstructRecordReqDTO depot280ConstructRecordReqDTO = DepotConstructRecordReqDTO.builder().depotCode(CommonConstants.STATION_280).dataType(CommonConstants.DATA_TYPE_WEEKLY).startDate(monday).endDate(sunday).build();
+        depotConstructService.add(currentLoginUser,depot280ConstructRecordReqDTO);
+        DepotConstructRecordReqDTO depot281ConstructRecordReqDTO = DepotConstructRecordReqDTO.builder().depotCode(CommonConstants.STATION_281).dataType(CommonConstants.DATA_TYPE_WEEKLY).startDate(monday).endDate(sunday).build();
+        depotConstructService.add(currentLoginUser,depot281ConstructRecordReqDTO);
+
+        //周乘务中心情况总结-新增
+        CrewSummaryReqDTO crewSummaryReqDTO = CrewSummaryReqDTO.builder().dataType(CommonConstants.DATA_TYPE_WEEKLY).startDate(DateUtil.parseDate(monday)).endDate(DateUtil.parseDate(sunday)).build();
+        crewSummaryService.add(currentLoginUser,crewSummaryReqDTO);
+
+        //周调度命令-新增
+        DispatchRecordReqDTO dispatchRecordReqDTO = DispatchRecordReqDTO.builder().dataType(CommonConstants.DATA_TYPE_DAILY).dataDate(DateUtil.parseDate(monday)).startDate(DateUtil.parseDate(monday)).endDate(DateUtil.parseDate(sunday)).build();
+        dispatchService.addRecord(currentLoginUser,dispatchRecordReqDTO);
+
+        //周其他情况-新增
+        //OtherRecordReqDTO otherRecordReqDTO = OtherRecordReqDTO.builder().dataType(CommonConstants.DATA_TYPE_DAILY).dataDate(DateUtil.parseDate(today)).build();
+        //otherRecordService.add(currentLoginUser,otherRecordReqDTO);
 
     }
 

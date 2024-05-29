@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.dto.req.vehicle.CrewBusinessReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.CrewBusinessResDTO;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
@@ -40,14 +41,14 @@ public class CrewBusinessServiceImpl implements CrewBusinessService {
     }
 
     @Override
-    public void add(CrewBusinessReqDTO crewBusinessReqDTO) {
+    public void add(CurrentLoginUser currentLoginUser,CrewBusinessReqDTO crewBusinessReqDTO) {
         // 判断新增数据所属时间是否已存在数据
         Integer result = crewBusinessMapper.selectIsExist(crewBusinessReqDTO);
         if (result > 0) {
             throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期乘务中心业务情况数据已存在，无法重复新增");
         }
         crewBusinessReqDTO.setId(TokenUtils.getUuId());
-        crewBusinessReqDTO.setCreateBy(TokenUtils.getCurrentPersonId());
+        crewBusinessReqDTO.setCreateBy(currentLoginUser.getPersonId());
         crewBusinessMapper.add(crewBusinessReqDTO);
     }
 

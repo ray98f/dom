@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.dto.req.vehicle.CrewSummaryReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.CrewSummaryResDTO;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
@@ -40,14 +41,14 @@ public class CrewSummaryServiceImpl implements CrewSummaryService {
     }
 
     @Override
-    public void add(CrewSummaryReqDTO crewSummaryReqDTO) {
+    public void add(CurrentLoginUser currentLoginUser,CrewSummaryReqDTO crewSummaryReqDTO) {
         // 判断新增数据所属时间是否已存在数据
         Integer result = crewSummaryMapper.selectIsExist(crewSummaryReqDTO);
         if (result > 0) {
             throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期乘务中心情况总结数据已存在，无法重复新增");
         }
         crewSummaryReqDTO.setId(TokenUtils.getUuId());
-        crewSummaryReqDTO.setCreateBy(TokenUtils.getCurrentPersonId());
+        crewSummaryReqDTO.setCreateBy(currentLoginUser.getPersonId());
         crewSummaryMapper.add(crewSummaryReqDTO);
     }
 

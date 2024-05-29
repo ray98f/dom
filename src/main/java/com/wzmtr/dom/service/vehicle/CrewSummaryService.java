@@ -3,6 +3,7 @@ package com.wzmtr.dom.service.vehicle;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.vehicle.CrewSummaryReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.CrewSummaryResDTO;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public interface CrewSummaryService {
      * 新增乘务中心情况总结
      * @param crewSummaryReqDTO 乘务中心情况总结参数
      */
-    void add(CrewSummaryReqDTO crewSummaryReqDTO);
+    void add(CurrentLoginUser currentLoginUser,CrewSummaryReqDTO crewSummaryReqDTO);
 
     /**
      * 编辑乘务中心情况总结

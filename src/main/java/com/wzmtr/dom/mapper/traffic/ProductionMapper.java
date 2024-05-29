@@ -152,7 +152,7 @@ public interface ProductionMapper {
      * @param recordId 入参数
      * @param createBy 入参数
      */
-    void createProductionApprovalRelation(String id,String approvalId,String recordId,String createBy);
+    void createProductionApprovalRelation(String id,String recordId,String approvalId,String createBy);
 
     /**
      *  更新安全生产情况审核记录s
