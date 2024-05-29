@@ -41,6 +41,8 @@ public class DailyDataModifyTask {
     private DispatchService dispatchService;
     @Autowired
     private DispatchHandoverService dispatchHandoverService;
+    @Autowired
+    private DrivingAttentionService drivingAttentionService;
 
     // TODO
     // 每日凌晨5点 更新一些需要同步其他系统数据的日报数据
@@ -162,9 +164,11 @@ public class DailyDataModifyTask {
         DispatchRecordReqDTO dispatchRecordReqDTO = DispatchRecordReqDTO.builder().dataType(CommonConstants.DATA_TYPE_DAILY).dataDate(DateUtil.parseDate(today)).startDate(DateUtil.parseDate(today)).endDate(DateUtil.parseDate(today)).build();
         dispatchService.addRecord(currentLoginUser,dispatchRecordReqDTO);
 
-        //车场调度员交接班情况
+        //车场调度员交接班情况-新增
         DispatchHandoverReqDTO dispatchHandoverReqDTO = DispatchHandoverReqDTO.builder().dataDate(DateUtil.parseDate(today)).build();
         dispatchHandoverService.add(currentLoginUser,dispatchHandoverReqDTO);
+
+        //行车注意事项-新增
 
 
 
