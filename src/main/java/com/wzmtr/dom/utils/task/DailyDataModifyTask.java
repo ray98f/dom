@@ -55,6 +55,10 @@ public class DailyDataModifyTask {
     private CrewBusinessService crewBusinessService;
     @Autowired
     private CrewSummaryService crewSummaryService;
+    @Autowired
+    private SecurityService securityService;
+    @Autowired
+    private CrewAttentionService crewAttentionService;
 
     // TODO
     // 每日凌晨5点 更新一些需要同步其他系统数据的日报数据
@@ -237,12 +241,13 @@ public class DailyDataModifyTask {
         crewSummaryService.add(currentLoginUser,crewSummaryReqDTO);
 
         //周调度命令-新增
-        DispatchRecordReqDTO dispatchRecordReqDTO = DispatchRecordReqDTO.builder().dataType(CommonConstants.DATA_TYPE_DAILY).dataDate(DateUtil.parseDate(monday)).startDate(DateUtil.parseDate(monday)).endDate(DateUtil.parseDate(sunday)).build();
+        DispatchRecordReqDTO dispatchRecordReqDTO = DispatchRecordReqDTO.builder().dataType(CommonConstants.DATA_TYPE_WEEKLY).dataDate(DateUtil.parseDate(monday)).startDate(DateUtil.parseDate(monday)).endDate(DateUtil.parseDate(sunday)).build();
         dispatchService.addRecord(currentLoginUser,dispatchRecordReqDTO);
 
         //周其他情况-新增
-        //OtherRecordReqDTO otherRecordReqDTO = OtherRecordReqDTO.builder().dataType(CommonConstants.DATA_TYPE_DAILY).dataDate(DateUtil.parseDate(today)).build();
-        //otherRecordService.add(currentLoginUser,otherRecordReqDTO);
+        OtherRecordReqDTO otherRecordReqDTO = OtherRecordReqDTO.builder().dataType(CommonConstants.DATA_TYPE_WEEKLY).dataDate(DateUtil.parseDate(monday)).startDate(DateUtil.parseDate(monday)).endDate(DateUtil.parseDate(sunday)).build();
+        otherRecordService.add(currentLoginUser,otherRecordReqDTO);
+
 
     }
 
@@ -251,5 +256,58 @@ public class DailyDataModifyTask {
      * */
     private void vehicleMonthlyAuto(CurrentLoginUser currentLoginUser,String monthStart,String monthEnd){
 
+        //安全运营概述
+        SecurityReqDTO securityReqDTO = SecurityReqDTO.builder().dataType(CommonConstants.DATA_TYPE_MONTHLY).startDate(monthStart).endDate(monthEnd).build();
+        securityService.add(currentLoginUser,securityReqDTO);
+
+        //重要指标-新增
+        IndicatorReqDTO indicatorReqDTO = IndicatorReqDTO.builder().dataType(CommonConstants.DATA_TYPE_MONTHLY).startDate(monthStart).endDate(monthEnd).build();
+        indicatorService.add(currentLoginUser,indicatorReqDTO);
+
+        //行车情况-新增
+        DrivingRecordReqDTO drivingRecordReqDTO = DrivingRecordReqDTO.builder().dataType(CommonConstants.DATA_TYPE_MONTHLY).startDate(monthStart).endDate(monthEnd).build();
+        drivingService.add(currentLoginUser,drivingRecordReqDTO);
+
+        //正线及车场情况-新增
+        LineEventRecordReqDTO lineEventRecordReqDTO = LineEventRecordReqDTO.builder().dataType(CommonConstants.DATA_TYPE_MONTHLY).startDate(monthStart).endDate(monthEnd).build();
+        lineEventService.add(currentLoginUser,lineEventRecordReqDTO);
+
+        //乘务中心行车事件总结-新增
+        CrewEventSummaryReqDTO crewEventSummaryReqDTO = CrewEventSummaryReqDTO.builder().dataType(CommonConstants.DATA_TYPE_MONTHLY).startDate(monthStart).endDate(monthEnd).build();
+        crewEventService.add(currentLoginUser,crewEventSummaryReqDTO);
+
+        //乘务中心注意事项-新增
+        CrewAttentionReqDTO crewAttentionReqDTO = CrewAttentionReqDTO.builder().dataType(CommonConstants.DATA_TYPE_MONTHLY).startDate(DateUtil.parseDate(monthStart)).endDate(DateUtil.parseDate(monthEnd)).build();
+        crewAttentionService.add(currentLoginUser,crewAttentionReqDTO);
+
+        //乘务中心班组培训情况-新增
+        TrainRecordReqDTO trainRecordReqDTO = TrainRecordReqDTO.builder().dataType(CommonConstants.DATA_TYPE_MONTHLY).startDate(DateUtil.parseDate(monthStart)).endDate(DateUtil.parseDate(monthEnd)).build();
+        trainRecordService.add(currentLoginUser,trainRecordReqDTO);
+
+        //乘务中心班组演练情况-新增
+        CrewDrillReqDTO crewDrillReqDTO = CrewDrillReqDTO.builder().dataType(CommonConstants.DATA_TYPE_MONTHLY).startDate(DateUtil.parseDate(monthStart)).endDate(DateUtil.parseDate(monthEnd)).build();
+        crewDrillService.add(currentLoginUser,crewDrillReqDTO);
+
+        //乘务中心班组业务情况-新增
+        CrewBusinessReqDTO crewBusinessReqDTO = CrewBusinessReqDTO.builder().dataType(CommonConstants.DATA_TYPE_MONTHLY).startDate(DateUtil.parseDate(monthStart)).endDate(DateUtil.parseDate(monthEnd)).build();
+        crewBusinessService.add(currentLoginUser,crewBusinessReqDTO);
+
+        //车场及施工情况记录-新增
+        DepotConstructRecordReqDTO depot280ConstructRecordReqDTO = DepotConstructRecordReqDTO.builder().depotCode(CommonConstants.STATION_280).dataType(CommonConstants.DATA_TYPE_MONTHLY).startDate(monthStart).endDate(monthEnd).build();
+        depotConstructService.add(currentLoginUser,depot280ConstructRecordReqDTO);
+        DepotConstructRecordReqDTO depot281ConstructRecordReqDTO = DepotConstructRecordReqDTO.builder().depotCode(CommonConstants.STATION_281).dataType(CommonConstants.DATA_TYPE_MONTHLY).startDate(monthStart).endDate(monthEnd).build();
+        depotConstructService.add(currentLoginUser,depot281ConstructRecordReqDTO);
+
+        //乘务中心情况总结-新增
+        CrewSummaryReqDTO crewSummaryReqDTO = CrewSummaryReqDTO.builder().dataType(CommonConstants.DATA_TYPE_MONTHLY).startDate(DateUtil.parseDate(monthStart)).endDate(DateUtil.parseDate(monthEnd)).build();
+        crewSummaryService.add(currentLoginUser,crewSummaryReqDTO);
+
+        //调度命令-新增
+        DispatchRecordReqDTO dispatchRecordReqDTO = DispatchRecordReqDTO.builder().dataType(CommonConstants.DATA_TYPE_MONTHLY).dataDate(DateUtil.parseDate(monthStart)).startDate(DateUtil.parseDate(monthStart)).endDate(DateUtil.parseDate(monthEnd)).build();
+        dispatchService.addRecord(currentLoginUser,dispatchRecordReqDTO);
+
+        //其他情况-新增
+        OtherRecordReqDTO otherRecordReqDTO = OtherRecordReqDTO.builder().dataType(CommonConstants.DATA_TYPE_MONTHLY).dataDate(DateUtil.parseDate(monthStart)).startDate(DateUtil.parseDate(monthStart)).endDate(DateUtil.parseDate(monthEnd)).build();
+        otherRecordService.add(currentLoginUser,otherRecordReqDTO);
     }
 }

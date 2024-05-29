@@ -3,6 +3,7 @@ package com.wzmtr.dom.service.vehicle;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.vehicle.CrewAttentionReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.CrewAttentionResDTO;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public interface CrewAttentionService {
      * 新增乘务中心注意事项
      * @param crewAttentionReqDTO 乘务中心注意事项参数
      */
-    void add(CrewAttentionReqDTO crewAttentionReqDTO);
+    void add(CurrentLoginUser currentLoginUser,CrewAttentionReqDTO crewAttentionReqDTO);
 
     /**
      * 编辑乘务中心注意事项

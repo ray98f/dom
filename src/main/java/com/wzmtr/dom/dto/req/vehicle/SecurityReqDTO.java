@@ -2,8 +2,7 @@ package com.wzmtr.dom.dto.req.vehicle;
 
 import com.wzmtr.dom.entity.BaseEntity;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 /**
  * 日数据请求类
@@ -13,6 +12,9 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class SecurityReqDTO extends BaseEntity {
 
     @ApiModelProperty(value = "数据类型:1日报 2月报 3周报")

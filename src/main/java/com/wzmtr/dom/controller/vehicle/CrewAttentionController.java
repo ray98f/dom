@@ -1,8 +1,10 @@
 package com.wzmtr.dom.controller.vehicle;
 
+import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.dto.req.vehicle.CrewAttentionReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.CrewAttentionResDTO;
 import com.wzmtr.dom.entity.BaseIdsEntity;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.entity.response.PageResponse;
@@ -66,8 +68,8 @@ public class CrewAttentionController {
      */
     @PostMapping("/add")
     @ApiOperation(value = "新增-乘务中心注意事项")
-    public DataResponse<T> add(@RequestBody CrewAttentionReqDTO crewAttentionReqDTO) {
-        crewAttentionService.add(crewAttentionReqDTO);
+    public DataResponse<T> add(@CurrUser CurrentLoginUser currentLoginUser, @RequestBody CrewAttentionReqDTO crewAttentionReqDTO) {
+        crewAttentionService.add(currentLoginUser,crewAttentionReqDTO);
         return DataResponse.success();
     }
 

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.dto.req.vehicle.CrewAttentionReqDTO;
 import com.wzmtr.dom.dto.res.vehicle.CrewAttentionResDTO;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
@@ -40,14 +41,14 @@ public class CrewAttentionServiceImpl implements CrewAttentionService {
     }
 
     @Override
-    public void add(CrewAttentionReqDTO crewAttentionReqDTO) {
+    public void add(CurrentLoginUser currentLoginUser,CrewAttentionReqDTO crewAttentionReqDTO) {
         // 判断新增数据所属时间是否已存在数据
         Integer result = crewAttentionMapper.selectIsExist(crewAttentionReqDTO);
         if (result > 0) {
             throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期乘务中心注意事项数据已存在，无法重复新增");
         }
         crewAttentionReqDTO.setId(TokenUtils.getUuId());
-        crewAttentionReqDTO.setCreateBy(TokenUtils.getCurrentPersonId());
+        crewAttentionReqDTO.setCreateBy(currentLoginUser.getPersonId());
         crewAttentionMapper.add(crewAttentionReqDTO);
     }
 
