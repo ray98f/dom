@@ -92,6 +92,7 @@ public class ThirdServiceImpl implements ThirdService {
             page.setSize(0);
             return page;
         }
+        
         List<OpenConstructPlanResDTO> openList = JSONArray.parseArray(res.getJSONObject(
                 CommonConstants.API_RES_DATA).getJSONArray(CommonConstants.API_RES_LIST).toJSONString(),
                 OpenConstructPlanResDTO.class);
