@@ -2,8 +2,16 @@ package com.wzmtr.dom.utils.task;
 
 import cn.hutool.core.date.DateUtil;
 import com.wzmtr.dom.constant.CommonConstants;
+import com.wzmtr.dom.dto.req.traffic.PassengerRecordReqDTO;
+import com.wzmtr.dom.dto.req.traffic.ProductionSummaryRecordReqDTO;
+import com.wzmtr.dom.dto.req.traffic.TicketUseReqDTO;
+import com.wzmtr.dom.dto.req.traffic.hotline.HotLineHandoverAddReqDTO;
+import com.wzmtr.dom.dto.req.traffic.hotline.HotLineSummaryAddReqDTO;
+import com.wzmtr.dom.dto.req.traffic.income.IncomeAddReqDTO;
+import com.wzmtr.dom.dto.req.traffic.onewaysale.OnewaySaleAddReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.*;
 import com.wzmtr.dom.entity.CurrentLoginUser;
+import com.wzmtr.dom.service.traffic.*;
 import com.wzmtr.dom.service.vehicle.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,6 +68,21 @@ public class DailyDataModifyTask {
     @Autowired
     private CrewAttentionService crewAttentionService;
 
+    @Autowired
+    private PassengerService trafficService;
+    @Autowired
+    private IncomeService incomeService;
+    @Autowired
+    private TicketUseService ticketUseService;
+    @Autowired
+    private OnewaySaleService onewaySaleService;
+    @Autowired
+    private HotLineSummaryService hotLineSummaryService;
+    @Autowired
+    private HotLineHandoverService hotLineHandoverService;
+    @Autowired
+    private ProductionSummaryService productionSummaryService;
+
     // TODO
     // 每日凌晨5点 更新一些需要同步其他系统数据的日报数据
     // 更新前一天的日报数据
@@ -79,7 +102,7 @@ public class DailyDataModifyTask {
         Date monthEnd = DateUtil.endOfMonth(DateUtil.parseDate(today));
         CurrentLoginUser currentLoginUser = CurrentLoginUser.builder().personId(CommonConstants.ADMIN).personNo(CommonConstants.ADMIN).build();
 
-                //创建本日数据
+        //创建本日数据
         vehicleDailyAuto(currentLoginUser,today);
 
         //创建本周数据
@@ -101,6 +124,24 @@ public class DailyDataModifyTask {
     @Transactional(rollbackFor = Exception.class)
     public void trafficAutoCreateTask() {
         String today = DateUtil.today();
+        Date monday = DateUtil.beginOfWeek(DateUtil.parseDate(today));
+        Date sunday = DateUtil.endOfWeek(DateUtil.parseDate(today));
+        Date monthStart = DateUtil.beginOfMonth(DateUtil.parseDate(today));
+        Date monthEnd = DateUtil.endOfMonth(DateUtil.parseDate(today));
+        CurrentLoginUser currentLoginUser = CurrentLoginUser.builder().personId(CommonConstants.ADMIN).personNo(CommonConstants.ADMIN).build();
+
+        //创建本日数据
+        vehicleDailyAuto(currentLoginUser,today);
+
+        //创建本周数据
+        if(today.equals(DateUtil.formatDate(sunday))){
+            vehicleWeeklyAuto(currentLoginUser,DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
+        }
+
+        //创建本月数据
+        if(today.equals(DateUtil.formatDate(monthEnd))){
+            vehicleMonthlyAuto(currentLoginUser,DateUtil.formatDate(monthStart),DateUtil.formatDate(monthEnd));
+        }
 
     }
 
@@ -309,5 +350,78 @@ public class DailyDataModifyTask {
         //其他情况-新增
         OtherRecordReqDTO otherRecordReqDTO = OtherRecordReqDTO.builder().dataType(CommonConstants.DATA_TYPE_MONTHLY).dataDate(DateUtil.parseDate(monthStart)).startDate(DateUtil.parseDate(monthStart)).endDate(DateUtil.parseDate(monthEnd)).build();
         otherRecordService.add(currentLoginUser,otherRecordReqDTO);
+    }
+
+    /**
+     * 客运部每日数据新增
+     * */
+    private void trafficDailyAuto(CurrentLoginUser currentLoginUser,String today){
+
+        // 客流总体情况-新增
+        PassengerRecordReqDTO passengerRecordReqDTO = PassengerRecordReqDTO.builder().dataType(CommonConstants.DATA_TYPE_DAILY).startDate(today).endDate(today).build();
+        trafficService.add(currentLoginUser,passengerRecordReqDTO);
+
+        //收益总体情况-新增
+        IncomeAddReqDTO incomeAddReqDTO = IncomeAddReqDTO.builder().dataType(CommonConstants.DATA_TYPE_DAILY).dataDate(today).startDate(today).endDate(today).build();
+        incomeService.add(currentLoginUser,incomeAddReqDTO);
+
+        //线网车票过闸使用情况-新增
+        TicketUseReqDTO ticketUseReqDTO = TicketUseReqDTO.builder().dataType(CommonConstants.DATA_TYPE_DAILY).dataDate(DateUtil.parseDate(today)).startDate(DateUtil.parseDate(today)).endDate(DateUtil.parseDate(today)).build();
+        ticketUseService.add(currentLoginUser,ticketUseReqDTO);
+
+        //线网单程票发售情况-新增
+        OnewaySaleAddReqDTO onewaySaleAddReqDTO = OnewaySaleAddReqDTO.builder().dataType(CommonConstants.DATA_TYPE_DAILY).dataDate(DateUtil.parseDate(today)).startDate(DateUtil.parseDate(today)).endDate(DateUtil.parseDate(today)).build();
+        onewaySaleService.add(currentLoginUser,onewaySaleAddReqDTO);
+
+        //服务热线汇总(热线重要内容记录)-新增
+        HotLineSummaryAddReqDTO hotLineSummaryAddReqDTO = HotLineSummaryAddReqDTO.builder().dataType(CommonConstants.DATA_TYPE_DAILY).dataDate(DateUtil.parseDate(today)).startDate(DateUtil.parseDate(today)).endDate(DateUtil.parseDate(today)).build();
+        hotLineSummaryService.add(currentLoginUser,hotLineSummaryAddReqDTO);
+
+        //需要转交其他部门-新增
+        HotLineHandoverAddReqDTO handoverAddReqDTO = HotLineHandoverAddReqDTO.builder().dataType(CommonConstants.DATA_TYPE_DAILY).dataDate(DateUtil.parseDate(today)).startDate(DateUtil.parseDate(today)).endDate(DateUtil.parseDate(today)).build();
+        hotLineHandoverService.addRecord(currentLoginUser,handoverAddReqDTO);
+
+        //安全生产情况汇总-新增
+        for(String s:CommonConstants.S2_STATION_ARRAY){
+            currentLoginUser.setStationCode(s);
+            ProductionSummaryRecordReqDTO productionSummaryRecordReqDTO = ProductionSummaryRecordReqDTO.builder().dataType(CommonConstants.DATA_TYPE_DAILY).dataDate(today).startDate(today).endDate(today).build();
+            productionSummaryService.add(currentLoginUser, productionSummaryRecordReqDTO);
+        }
+
+    }
+
+    /**
+     * 客运部每周数据新增
+     * */
+    private void trafficWeeklyAuto(CurrentLoginUser currentLoginUser,String monday,String sunday){
+
+    }
+
+    /**
+     * 客运部每月数据新增
+     * */
+    private void trafficMonthlyAuto(CurrentLoginUser currentLoginUser,String monthStart,String monthEnd){
+
+    }
+
+    /**
+     * 运营日报每日数据新增
+     * */
+    private void operateDailyAuto(CurrentLoginUser currentLoginUser,String today){
+
+    }
+
+    /**
+     * 运营日报每周数据新增
+     * */
+    private void operateWeeklyAuto(CurrentLoginUser currentLoginUser,String monday,String sunday){
+
+    }
+
+    /**
+     * 运营日报每月数据新增
+     * */
+    private void operateMonthlyAuto(CurrentLoginUser currentLoginUser,String monthStart,String monthEnd){
+
     }
 }

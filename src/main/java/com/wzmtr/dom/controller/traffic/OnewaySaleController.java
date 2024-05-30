@@ -65,8 +65,8 @@ public class OnewaySaleController {
      */
     @PostMapping("/add")
     @ApiOperation(value = "单程票发售情况-新增")
-    public DataResponse<T> add(@RequestBody OnewaySaleAddReqDTO reqDTO) {
-        onewaySaleService.add(reqDTO);
+    public DataResponse<T> add(@CurrUser CurrentLoginUser currentLoginUser,@RequestBody OnewaySaleAddReqDTO reqDTO) {
+        onewaySaleService.add(currentLoginUser,reqDTO);
         return DataResponse.success();
     }
 

@@ -10,7 +10,10 @@ import com.wzmtr.dom.utils.DateUtils;
 import com.wzmtr.dom.utils.StringUtils;
 import com.wzmtr.dom.utils.TokenUtils;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 
@@ -22,6 +25,9 @@ import java.util.Date;
  */
 @Data
 @Slf4j
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class IncomeAddReqDTO extends BaseEntity {
     @ApiModelProperty("ID")
     private String id;

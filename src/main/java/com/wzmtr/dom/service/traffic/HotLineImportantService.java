@@ -15,7 +15,7 @@ public interface HotLineImportantService {
 
     List<HotLineImportantDetailResDTO> detail(String date, String startDate, String endDate, String dataType);
 
-    void add(HotLineImportantAddReqDTO reqDTO);
+    void add(CurrentLoginUser currentLoginUser,HotLineImportantAddReqDTO reqDTO);
 
     void modify(CurrentLoginUser currentLoginUser, HotLineImportantAddReqDTO passengerRecordReqDTO);
 

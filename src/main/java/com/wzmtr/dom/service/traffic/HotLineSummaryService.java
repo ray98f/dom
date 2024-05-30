@@ -20,7 +20,7 @@ public interface HotLineSummaryService {
 
     HotLineSummaryDetailResDTO detail(HotLineSummaryDetailReqDTO reqDTO);
 
-    void add(HotLineSummaryAddReqDTO reqDTO);
+    void add(CurrentLoginUser currentLoginUser,HotLineSummaryAddReqDTO reqDTO);
 
     void modify(CurrentLoginUser currentLoginUser, HotLineSummaryAddReqDTO passengerRecordReqDTO);
 

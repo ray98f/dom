@@ -3,8 +3,7 @@ package com.wzmtr.dom.dto.req.traffic.hotline;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wzmtr.dom.entity.BaseEntity;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
@@ -15,6 +14,9 @@ import java.util.Date;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class HotLineHandoverAddReqDTO extends BaseEntity {
     /**
      * 需转交件数
@@ -35,7 +37,7 @@ public class HotLineHandoverAddReqDTO extends BaseEntity {
      * 数据类型 1:日报 2:周报 3:月报
      */
     @ApiModelProperty(value = "数据类型 1:日报 2:周报 3:月报")
-    private Integer dataType;
+    private String dataType;
 
     /**
      * 数据起始日期

@@ -64,8 +64,8 @@ public class HotLineSummaryController {
      */
     @PostMapping("/add")
     @ApiOperation(value = "服务热线汇总-新增")
-    public DataResponse<T> add(@RequestBody HotLineSummaryAddReqDTO reqDTO) {
-        hotLineSummaryService.add(reqDTO);
+    public DataResponse<T> add(@CurrUser CurrentLoginUser currentLoginUser,@RequestBody HotLineSummaryAddReqDTO reqDTO) {
+        hotLineSummaryService.add(currentLoginUser,reqDTO);
         return DataResponse.success();
     }
 

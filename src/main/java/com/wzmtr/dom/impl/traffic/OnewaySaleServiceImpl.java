@@ -50,7 +50,7 @@ public class OnewaySaleServiceImpl implements OnewaySaleService {
     }
 
     @Override
-    public void add(OnewaySaleAddReqDTO reqDTO) {
+    public void add(CurrentLoginUser currentLoginUser,OnewaySaleAddReqDTO reqDTO) {
         TrafficOnewaySaleDO onewaySaleDO = reqDTO.toDO(reqDTO);
         Integer result = onewaySaleMapper.checkExist(onewaySaleDO);
         if (result > 0) {

@@ -4,7 +4,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wzmtr.dom.dataobject.traffic.TrafficOnewaySaleDO;
 import com.wzmtr.dom.utils.BeanUtils;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
@@ -14,6 +17,9 @@ import java.util.Date;
  * Date: 2024/3/22 15:03
  */
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class OnewaySaleAddReqDTO {
     /**
      * 现金购票

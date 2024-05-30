@@ -51,13 +51,13 @@ public class IncomeServiceImpl implements IncomeService {
     }
 
     @Override
-    public void add(IncomeAddReqDTO reqDTO) {
+    public void add(CurrentLoginUser currentLoginUser,IncomeAddReqDTO reqDTO) {
         Integer result = incomeMapper.checkExist(reqDTO);
         if (result > 0) {
             throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期收益总体情况数据已存在，无法重复新增");
         }
-        reqDTO.setCreateBy(TokenUtils.getCurrentPersonId());
-        reqDTO.setUpdateBy(TokenUtils.getCurrentPersonId());
+        reqDTO.setCreateBy(currentLoginUser.getPersonId());
+        reqDTO.setUpdateBy(currentLoginUser.getPersonId());
         reqDTO.setId(TokenUtils.getUuId());
         incomeMapper.add(reqDTO);
         //周报/月报数据统计

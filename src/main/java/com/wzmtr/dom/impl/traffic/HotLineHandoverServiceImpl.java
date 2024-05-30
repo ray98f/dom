@@ -8,6 +8,7 @@ import com.wzmtr.dom.dto.req.traffic.hotline.HandoverAddDataReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineHandoverAddReqDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineHandoverDetailResDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineHandoverListResDTO;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
@@ -48,14 +49,14 @@ public class HotLineHandoverServiceImpl implements HotLineHandoverService {
     }
 
     @Override
-    public void addRecord(HotLineHandoverAddReqDTO handoverAddReqDTO) {
+    public void addRecord(CurrentLoginUser currentLoginUser,HotLineHandoverAddReqDTO handoverAddReqDTO) {
         Integer result = hotLineHandoverMapper.selectRecordIsExist(handoverAddReqDTO);
         if (result > 0) {
             throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期调度命令记录数据已存在，无法重复新增");
         }
         handoverAddReqDTO.setId(TokenUtils.getUuId());
         handoverAddReqDTO.setHandoverCount(0L);
-        handoverAddReqDTO.setCreateBy(TokenUtils.getCurrentPersonId());
+        handoverAddReqDTO.setCreateBy(currentLoginUser.getPersonId());
         hotLineHandoverMapper.addRecord(handoverAddReqDTO);
 
         //周报/月报 新增时，统计数据

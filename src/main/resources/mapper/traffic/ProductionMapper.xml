@@ -16,7 +16,7 @@
         <if test="endDate!=null and endDate!=''">
             AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
         </if>
-        ORDER BY CREATE_DATE desc
+        ORDER BY START_DATE desc
     </select>
 
     <select id="listAll" resultType="com.wzmtr.dom.dto.res.traffic.ProductionRecordResDTO">
@@ -41,7 +41,7 @@
         FROM TRAFFIC_PRODUCTION_RECORD
         WHERE DEL_FLAG='0'
         AND DATA_TYPE=#{dataType}
-        <if test="stationCode!=null and stationCode！=''">
+        <if test="stationCode!=null and stationCode!=''">
             AND STATION_CODE=#{stationCode}
         </if>
         <if test="startDate!=null">
