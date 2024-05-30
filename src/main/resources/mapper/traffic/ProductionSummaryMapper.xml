@@ -57,7 +57,9 @@
         FROM TRAFFIC_PRODUCTION_SUMMARY
         WHERE DEL_FLAG = '0'
         AND DATA_TYPE=#{dataType}
-        AND STATION_CODE=#{stationCode}
+        <if test="dataType=='1'.toString()">
+            AND STATION_CODE=#{stationCode}
+        </if>
         <if test="startDate!=null">
             AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
@@ -113,36 +115,60 @@
     </select>
 
     <insert id="add">
-        INSERT INTO TRAFFIC_PRODUCTION_SUMMARY (ID,
-        TYPE1_COUNT,
-        TYPE2_COUNT,
-        TYPE3_COUNT,
-        TYPE4_COUNT,
-        TYPE5_COUNT,
-        TYPE6_COUNT,
-        STATION_CODE,
-        DATA_TYPE,
-        <if test="dataDate!=null">
+        <if test='dataType == "1"'>
+            INSERT INTO TRAFFIC_PRODUCTION_SUMMARY (ID,
+            TYPE1_COUNT,
+            TYPE2_COUNT,
+            TYPE3_COUNT,
+            TYPE4_COUNT,
+            TYPE5_COUNT,
+            TYPE6_COUNT,
+            STATION_CODE,
+            DATA_TYPE,
             DATA_DATE,
-        </if>
-        START_DATE,
-        END_DATE,
-        CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
-        VALUES
-        (#{id},
-        (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND STATION_CODE=#{stationCode} AND PRODUCTION_TYPE = '1' AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
-        (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND STATION_CODE=#{stationCode} AND PRODUCTION_TYPE = '2' AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
-        (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND STATION_CODE=#{stationCode} AND PRODUCTION_TYPE = '3' AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
-        (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND STATION_CODE=#{stationCode} AND PRODUCTION_TYPE = '4' AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
-        (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND STATION_CODE=#{stationCode} AND PRODUCTION_TYPE = '5' AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
-        (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND STATION_CODE=#{stationCode} AND PRODUCTION_TYPE = '6' AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
-        #{stationCode},#{dataType},
-        <if test="dataDate!=null">
+            START_DATE,
+            END_DATE,
+            CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+            VALUES
+            (#{id},
+            (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND STATION_CODE=#{stationCode} AND PRODUCTION_TYPE = '1' AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+            (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND STATION_CODE=#{stationCode} AND PRODUCTION_TYPE = '2' AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+            (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND STATION_CODE=#{stationCode} AND PRODUCTION_TYPE = '3' AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+            (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND STATION_CODE=#{stationCode} AND PRODUCTION_TYPE = '4' AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+            (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND STATION_CODE=#{stationCode} AND PRODUCTION_TYPE = '5' AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+            (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND STATION_CODE=#{stationCode} AND PRODUCTION_TYPE = '6' AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+            #{stationCode},#{dataType},
             to_date(#{dataDate},'yyyy-mm-dd hh24:mi:ss'),
+            to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
+            to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
+            #{createBy}, sysdate,#{createBy}, sysdate)
         </if>
-        to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
-        to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
-        #{createBy}, sysdate,#{createBy}, sysdate)
+
+        <if test='dataType == "2" or dataType == "3"'>
+            INSERT INTO TRAFFIC_PRODUCTION_SUMMARY (ID,
+            TYPE1_COUNT,
+            TYPE2_COUNT,
+            TYPE3_COUNT,
+            TYPE4_COUNT,
+            TYPE5_COUNT,
+            TYPE6_COUNT,
+            DATA_TYPE,
+            START_DATE,
+            END_DATE,
+            CREATE_BY, CREATE_DATE,UPDATE_BY,UPDATE_DATE)
+            VALUES
+            (#{id},
+            (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND PRODUCTION_TYPE = '1' AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+            (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND PRODUCTION_TYPE = '2' AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+            (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND PRODUCTION_TYPE = '3' AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+            (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND PRODUCTION_TYPE = '4' AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+            (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND PRODUCTION_TYPE = '5' AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+            (select count(1) FROM TRAFFIC_PRODUCTION_INFO where DATA_TYPE = '1' AND PRODUCTION_TYPE = '6' AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+            #{dataType},
+            to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss'),
+            to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
+            #{createBy}, sysdate,#{createBy}, sysdate)
+        </if>
     </insert>
 
     <update id="modify">
@@ -193,7 +219,7 @@
     </update>
 
     <update id="autoModify">
-        <if test="stationCode!=null and stationCode!=''">
+        <if test='dataType == "1"'>
             UPDATE TRAFFIC_PRODUCTION_SUMMARY SET
             (TYPE1_PRE_COUNT,TYPE2_PRE_COUNT,TYPE3_PRE_COUNT,TYPE4_PRE_COUNT,TYPE5_PRE_COUNT,TYPE6_PRE_COUNT) =
             (SELECT
@@ -217,7 +243,7 @@
             AND START_DATE=to_date(#{startDate}, 'yyyy-mm-dd hh24:mi:ss')
             AND END_DATE=to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss')
         </if>
-        <if test="stationCode==null and dataType=='2'">
+        <if test='dataType == "2"'>
             UPDATE TRAFFIC_PRODUCTION_SUMMARY SET
             (TYPE1_PRE_COUNT,TYPE2_PRE_COUNT,TYPE3_PRE_COUNT,TYPE4_PRE_COUNT,TYPE5_PRE_COUNT,TYPE6_PRE_COUNT) =
             (SELECT
@@ -252,7 +278,7 @@
             AND START_DATE=to_date(#{startDate}, 'yyyy-mm-dd hh24:mi:ss')
             AND END_DATE=to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss')
         </if>
-        <if test="stationCode==null and dataType=='3'">
+        <if test='dataType == "3"'>
             UPDATE TRAFFIC_PRODUCTION_SUMMARY SET
             (TYPE1_PRE_COUNT,TYPE2_PRE_COUNT,TYPE3_PRE_COUNT,TYPE4_PRE_COUNT,TYPE5_PRE_COUNT,TYPE6_PRE_COUNT) =
             (SELECT
