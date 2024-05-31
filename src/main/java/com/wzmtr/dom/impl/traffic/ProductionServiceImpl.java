@@ -120,6 +120,7 @@ public class ProductionServiceImpl implements ProductionService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void add(CurrentLoginUser currentLoginUser, ProductionRecordReqDTO productionRecordReqDTO) {
         if (currentLoginUser.getStationCode() == null) {
             throw new CommonException(ErrorCode.USER_NOT_BIND_STATION);
@@ -168,7 +169,7 @@ public class ProductionServiceImpl implements ProductionService {
         if (CommonConstants.DATA_TYPE_MONTHLY.equals(productionRecordReqDTO.getDataType())
                 || CommonConstants.DATA_TYPE_WEEKLY.equals(productionRecordReqDTO.getDataType())) {
             productionMapper.modifyRecordCount(productionRecordReqDTO.getId(),
-                    productionRecordReqDTO.getStationCode(),
+                    productionRecordReqDTO.getStationCode(),productionRecordReqDTO.getDataType(),
                     productionRecordReqDTO.getStartDate(),
                     productionRecordReqDTO.getEndDate());
         }
@@ -435,6 +436,7 @@ public class ProductionServiceImpl implements ProductionService {
                     //更新记录统计数据
                     productionMapper.modifyRecordCount(item.getId(),
                             stationCode,
+                            item.getDataType(),
                             DateUtil.formatDate(item.getStartDate()),
                             DateUtil.formatDate(item.getEndDate()));
                     //更新汇总统计数据

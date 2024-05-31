@@ -40,7 +40,14 @@ public class ProductionSummaryServiceImpl implements ProductionSummaryService {
     @Override
     public Page<ProductionSummaryResDTO> list(String dataType, String stationCode, String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return productionSummaryMapper.list(pageReqDTO.of(), dataType, stationCode, startDate, endDate);
+        //日报按车站隔离
+        Page<ProductionSummaryResDTO> list;
+        if(CommonConstants.DATA_TYPE_DAILY.equals(dataType)){
+            list = productionSummaryMapper.list(pageReqDTO.of(), dataType, stationCode, startDate, endDate);
+        }else{
+            list = productionSummaryMapper.listByWeekOrMonth(pageReqDTO.of(), dataType, startDate, endDate);
+        }
+        return list;
     }
 
 

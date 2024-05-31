@@ -2,6 +2,7 @@ package com.wzmtr.dom.utils.task;
 
 import cn.hutool.core.date.DateUtil;
 import com.wzmtr.dom.constant.CommonConstants;
+import com.wzmtr.dom.dto.req.operate.HotLineReqDTO;
 import com.wzmtr.dom.dto.req.traffic.PassengerRecordReqDTO;
 import com.wzmtr.dom.dto.req.traffic.ProductionRecordReqDTO;
 import com.wzmtr.dom.dto.req.traffic.ProductionSummaryRecordReqDTO;
@@ -12,6 +13,7 @@ import com.wzmtr.dom.dto.req.traffic.income.IncomeAddReqDTO;
 import com.wzmtr.dom.dto.req.traffic.onewaysale.OnewaySaleAddReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.*;
 import com.wzmtr.dom.entity.CurrentLoginUser;
+import com.wzmtr.dom.service.operate.HotLineService;
 import com.wzmtr.dom.service.traffic.*;
 import com.wzmtr.dom.service.vehicle.*;
 import lombok.RequiredArgsConstructor;
@@ -85,6 +87,8 @@ public class DailyDataModifyTask {
     private ProductionSummaryService productionSummaryService;
     @Autowired
     private ProductionService productionService;
+    @Autowired
+    private HotLineService hotLineService;
 
     // TODO
     // 每日凌晨5点 更新一些需要同步其他系统数据的日报数据
@@ -134,16 +138,16 @@ public class DailyDataModifyTask {
         CurrentLoginUser currentLoginUser = CurrentLoginUser.builder().personId(CommonConstants.ADMIN).personNo(CommonConstants.ADMIN).build();
 
         //创建本日数据
-        vehicleDailyAuto(currentLoginUser,today);
+        trafficDailyAuto(currentLoginUser,today);
 
         //创建本周数据
         if(today.equals(DateUtil.formatDate(sunday))){
-            vehicleWeeklyAuto(currentLoginUser,DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
+            trafficWeeklyAuto(currentLoginUser,DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
         }
 
         //创建本月数据
         if(today.equals(DateUtil.formatDate(monthEnd))){
-            vehicleMonthlyAuto(currentLoginUser,DateUtil.formatDate(monthStart),DateUtil.formatDate(monthEnd));
+            trafficMonthlyAuto(currentLoginUser,DateUtil.formatDate(monthStart),DateUtil.formatDate(monthEnd));
         }
 
     }
@@ -401,7 +405,40 @@ public class DailyDataModifyTask {
      * */
     private void trafficWeeklyAuto(CurrentLoginUser currentLoginUser,String monday,String sunday){
 
+        // 本周重点工作落实-新增traffic/important
+        HotLineReqDTO hotLineReqDTO = HotLineReqDTO.builder().dataType(CommonConstants.DATA_TYPE_WEEKLY).startDate(DateUtil.parseDate(monday)).endDate(DateUtil.parseDate(sunday)).build();
+        hotLineService.add(currentLoginUser,hotLineReqDTO);
+
         // 客流总体情况-新增
+        PassengerRecordReqDTO passengerRecordReqDTO = PassengerRecordReqDTO.builder().dataType(CommonConstants.DATA_TYPE_WEEKLY).startDate(monday).endDate(sunday).build();
+        trafficService.add(currentLoginUser,passengerRecordReqDTO);
+
+        //收益总体情况-新增
+        IncomeAddReqDTO incomeAddReqDTO = IncomeAddReqDTO.builder().dataType(CommonConstants.DATA_TYPE_WEEKLY).dataDate(monday).startDate(monday).endDate(sunday).build();
+        incomeService.add(currentLoginUser,incomeAddReqDTO);
+
+        //线网车票过闸使用情况-新增
+        TicketUseReqDTO ticketUseReqDTO = TicketUseReqDTO.builder().dataType(CommonConstants.DATA_TYPE_WEEKLY).dataDate(DateUtil.parseDate(monday)).startDate(DateUtil.parseDate(monday)).endDate(DateUtil.parseDate(sunday)).build();
+        ticketUseService.add(currentLoginUser,ticketUseReqDTO);
+
+        //线网单程票发售情况-新增
+        OnewaySaleAddReqDTO onewaySaleAddReqDTO = OnewaySaleAddReqDTO.builder().dataType(CommonConstants.DATA_TYPE_WEEKLY).startDate(DateUtil.parseDate(monday)).endDate(DateUtil.parseDate(sunday)).build();
+        onewaySaleService.add(currentLoginUser,onewaySaleAddReqDTO);
+
+        //服务热线汇总(热线重要内容记录)-新增
+        HotLineSummaryAddReqDTO hotLineSummaryAddReqDTO = HotLineSummaryAddReqDTO.builder().dataType(CommonConstants.DATA_TYPE_WEEKLY).startDate(DateUtil.parseDate(monday)).endDate(DateUtil.parseDate(sunday)).build();
+        hotLineSummaryService.add(currentLoginUser,hotLineSummaryAddReqDTO);
+
+        //需要转交其他部门-新增
+        HotLineHandoverAddReqDTO handoverAddReqDTO = HotLineHandoverAddReqDTO.builder().dataType(CommonConstants.DATA_TYPE_WEEKLY).startDate(DateUtil.parseDate(monday)).endDate(DateUtil.parseDate(sunday)).build();
+        hotLineHandoverService.addRecord(currentLoginUser,handoverAddReqDTO);
+
+        //安全生产汇总-新增
+        ProductionSummaryRecordReqDTO productionSummaryRecordReqDTO = ProductionSummaryRecordReqDTO.builder().dataType(CommonConstants.DATA_TYPE_WEEKLY).startDate(monday).endDate(sunday).build();
+        productionSummaryService.add(currentLoginUser, productionSummaryRecordReqDTO);
+        //安全生产情况-新增
+        ProductionRecordReqDTO productionRecordReqDTO = ProductionRecordReqDTO.builder().dataType(CommonConstants.DATA_TYPE_WEEKLY).startDate(monday).endDate(sunday).build();
+        productionService.add(currentLoginUser,productionRecordReqDTO);
     }
 
     /**

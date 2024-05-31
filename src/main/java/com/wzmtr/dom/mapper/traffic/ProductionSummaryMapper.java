@@ -36,6 +36,15 @@ public interface ProductionSummaryMapper {
      * 列表
      * @param page 分页参数
      * @param dataType 查询参数
+     * @param startDate 查询参数
+     * @param endDate 查询参数
+     * @return 列表
+     */
+    Page<ProductionSummaryResDTO> listByWeekOrMonth(Page<ProductionSummaryResDTO> page, String dataType,String startDate, String endDate);
+
+    /**
+     * 列表
+     * @param dataType 查询参数
      * @param stationCode 查询参数
      * @param startDate 查询参数
      * @param endDate 查询参数

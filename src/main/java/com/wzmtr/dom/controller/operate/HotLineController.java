@@ -1,9 +1,11 @@
 package com.wzmtr.dom.controller.operate;
 
+import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.dto.req.operate.HotLineReqDTO;
 import com.wzmtr.dom.dto.res.operate.HotLineResDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineSummaryDetailResDTO;
 import com.wzmtr.dom.entity.BaseIdsEntity;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.entity.response.PageResponse;
@@ -67,8 +69,8 @@ public class HotLineController {
      */
     @PostMapping("/add")
     @ApiOperation(value = "新增-服务热线情况")
-    public DataResponse<T> add(@RequestBody HotLineReqDTO hotLineReqDTO) {
-        hotLineService.add(hotLineReqDTO);
+    public DataResponse<T> add(@CurrUser CurrentLoginUser currentLoginUser, @RequestBody HotLineReqDTO hotLineReqDTO) {
+        hotLineService.add(currentLoginUser,hotLineReqDTO);
         return DataResponse.success();
     }
 

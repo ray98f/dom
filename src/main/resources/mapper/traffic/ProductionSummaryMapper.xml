@@ -19,6 +19,20 @@
         ORDER BY START_DATE desc
     </select>
 
+    <select id="listByWeekOrMonth" resultType="com.wzmtr.dom.dto.res.traffic.ProductionSummaryResDTO">
+        SELECT *
+        FROM TRAFFIC_PRODUCTION_SUMMARY
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE=#{dataType}
+        <if test="startDate!=null and startDate!=''">
+            AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+        </if>
+        ORDER BY START_DATE desc
+    </select>
+
     <select id="listAll" resultType="com.wzmtr.dom.dto.res.traffic.ProductionSummaryResDTO">
         SELECT *
         FROM TRAFFIC_PRODUCTION_SUMMARY
