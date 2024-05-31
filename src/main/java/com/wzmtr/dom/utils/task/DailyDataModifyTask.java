@@ -3,10 +3,7 @@ package com.wzmtr.dom.utils.task;
 import cn.hutool.core.date.DateUtil;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.operate.HotLineReqDTO;
-import com.wzmtr.dom.dto.req.traffic.PassengerRecordReqDTO;
-import com.wzmtr.dom.dto.req.traffic.ProductionRecordReqDTO;
-import com.wzmtr.dom.dto.req.traffic.ProductionSummaryRecordReqDTO;
-import com.wzmtr.dom.dto.req.traffic.TicketUseReqDTO;
+import com.wzmtr.dom.dto.req.traffic.*;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineHandoverAddReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineSummaryAddReqDTO;
 import com.wzmtr.dom.dto.req.traffic.income.IncomeAddReqDTO;
@@ -89,6 +86,8 @@ public class DailyDataModifyTask {
     private ProductionService productionService;
     @Autowired
     private HotLineService hotLineService;
+    @Autowired
+    private MaintenanceService maintenanceService;
 
     // TODO
     // 每日凌晨5点 更新一些需要同步其他系统数据的日报数据
@@ -436,9 +435,14 @@ public class DailyDataModifyTask {
         //安全生产汇总-新增
         ProductionSummaryRecordReqDTO productionSummaryRecordReqDTO = ProductionSummaryRecordReqDTO.builder().dataType(CommonConstants.DATA_TYPE_WEEKLY).startDate(monday).endDate(sunday).build();
         productionSummaryService.add(currentLoginUser, productionSummaryRecordReqDTO);
+
         //安全生产情况-新增
         ProductionRecordReqDTO productionRecordReqDTO = ProductionRecordReqDTO.builder().dataType(CommonConstants.DATA_TYPE_WEEKLY).startDate(monday).endDate(sunday).build();
         productionService.add(currentLoginUser,productionRecordReqDTO);
+
+        //设备维保施工情况-新增
+        MaintenanceRecordReqDTO maintenanceRecordReqDTO = MaintenanceRecordReqDTO.builder().dataType(CommonConstants.DATA_TYPE_WEEKLY).startDate(monday).endDate(sunday).build();
+        maintenanceService.add(currentLoginUser,maintenanceRecordReqDTO);
     }
 
     /**

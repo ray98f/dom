@@ -20,30 +20,14 @@
 
     <select id="pageInfo" resultType="com.wzmtr.dom.dto.res.traffic.hotline.HotLineHandoverDetailResDTO">
         SELECT hh.ID, hh.MAIN_CONTENT, hh.SOURCE, hh.COUNT, hh.RESULT, hh.VERSION
-        FROM TRAFFIC_HANDOVER_RECORD hr
-        LEFT JOIN TRAFFIC_HOTLINE_HANDOVER hh ON hh.RECORD_ID=hr.ID AND hh.DEL_FLAG='0'
+        FROM TRAFFIC_HOTLINE_HANDOVER hh
         WHERE hh.DEL_FLAG='0'
-        <if test="id!=null and id!=''">
-            AND hr.ID=#{id}
+
+        <if test="startDate!=null and startDate!=''">
+            AND hh.START_DATE>=to_date(#{startDate},'YYYY-MM-DD')
         </if>
-        <if test="dataType!=null and dataType!=''">
-            AND hr.DATA_TYPE=#{dataType}
-        </if>
-        <if test="dataType=='1'.toString()">
-            <if test="startDate!=null and startDate!=''">
-                AND hr.DATA_DATE>=to_date(#{startDate},'YYYY-MM-DD')
-            </if>
-            <if test="endDate!=null and endDate!=''">
-                AND to_date(#{endDate},'YYYY-MM-DD')>=hr.DATA_DATE
-            </if>
-        </if>
-        <if test="dataType!='1'.toString()">
-            <if test="startDate!=null and startDate!=''">
-                AND hr.START_DATE>=to_date(#{startDate},'YYYY-MM-DD')
-            </if>
-            <if test="endDate!=null and endDate!=''">
-                AND to_date(#{endDate},'YYYY-MM-DD')>=hr.END_DATE
-            </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'YYYY-MM-DD')>=hh.END_DATE
         </if>
         ORDER BY hh.CREATE_DATE ASC
     </select>
