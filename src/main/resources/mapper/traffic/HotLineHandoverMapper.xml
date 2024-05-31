@@ -218,7 +218,7 @@
 
     <update id="autoModifyByDaily">
         UPDATE TRAFFIC_HANDOVER_RECORD SET
-        HANDOVER_COUNT = (SELECT SUM(HANDOVER_COUNT) AS HANDOVER_COUNT FROM TRAFFIC_HANDOVER_RECORD WHERE DEL_FLAG = '0' AND DATA_TYPE = '1' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
+        HANDOVER_COUNT = (SELECT COUNT(1) AS HANDOVER_COUNT FROM TRAFFIC_HOTLINE_HANDOVER WHERE DEL_FLAG = '0' AND START_DATE >= to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss') AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE),
         UPDATE_DATE=sysdate
         WHERE  DEL_FLAG = '0'
         AND DATA_TYPE = #{dataType}
