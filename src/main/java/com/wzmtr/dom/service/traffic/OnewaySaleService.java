@@ -16,7 +16,7 @@ public interface OnewaySaleService {
 
     OnewaySaleDetailResDTO detail(OneWaySaleDetailReqDTO reqDTO);
 
-    void add(OnewaySaleAddReqDTO reqDTO);
+    void add(CurrentLoginUser currentLoginUser,OnewaySaleAddReqDTO reqDTO);
 
     void modify(CurrentLoginUser currentLoginUser, OnewaySaleAddReqDTO passengerRecordReqDTO);
 

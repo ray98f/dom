@@ -8,6 +8,7 @@ import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.traffic.TicketUseReqDTO;
 import com.wzmtr.dom.dto.res.traffic.TicketUseResDTO;
 import com.wzmtr.dom.dto.res.traffic.oneway.OnewaySaleDetailResDTO;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
@@ -64,14 +65,14 @@ public class TicketUseServiceImpl implements TicketUseService {
     }
 
     @Override
-    public void add(TicketUseReqDTO ticketUseReqDTO) {
+    public void add(CurrentLoginUser currentLoginUser, TicketUseReqDTO ticketUseReqDTO) {
         // 判断新增数据所属时间是否已存在数据
         Integer result = ticketUseMapper.selectIsExist(ticketUseReqDTO);
         if (result > 0) {
             throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期线网车票过闸使用情况数据已存在，无法重复新增");
         }
         ticketUseReqDTO.setId(TokenUtils.getUuId());
-        ticketUseReqDTO.setCreateBy(TokenUtils.getCurrentPersonId());
+        ticketUseReqDTO.setCreateBy(currentLoginUser.getPersonId());
         ticketUseMapper.add(ticketUseReqDTO);
 
         // 统计周/月报数据

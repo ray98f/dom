@@ -60,14 +60,14 @@ public class HotLineSummaryServiceImpl implements HotLineSummaryService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void add(HotLineSummaryAddReqDTO reqDTO) {
+    public void add(CurrentLoginUser currentLoginUser,HotLineSummaryAddReqDTO reqDTO) {
         try{
             TrafficHotlineSummaryDO trafficHotlineSummaryDO = reqDTO.toDO(reqDTO);
-            trafficHotlineSummaryDO.setCreateBy(TokenUtils.getCurrentPersonId());
+            trafficHotlineSummaryDO.setCreateBy(currentLoginUser.getPersonId());
             trafficHotlineSummaryDO.setId(TokenUtils.getUuId());
             trafficHotlineSummaryDO.setDelFlag("0");
             trafficHotlineSummaryDO.setCreateDate(DateUtils.currentDate());
-            trafficHotlineSummaryDO.setCreateBy(TokenUtils.getCurrentPersonId());
+            trafficHotlineSummaryDO.setCreateBy(currentLoginUser.getPersonId());
             trafficHotlineSummaryDO.setVersion("1");
             Integer result = hotLineSummaryMapper.selectIsExist(trafficHotlineSummaryDO);
             if (result > 0) {
@@ -77,7 +77,7 @@ public class HotLineSummaryServiceImpl implements HotLineSummaryService {
             // 初始化重要热线内容
             HotLineImportantAddReqDTO req = new HotLineImportantAddReqDTO();
             org.springframework.beans.BeanUtils.copyProperties(reqDTO, req);
-            hotLineImportantService.add(req);
+            hotLineImportantService.add(currentLoginUser,req);
         }catch (Exception e){
             throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期数据已存在，无法重复新增");
         }

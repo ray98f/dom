@@ -103,4 +103,11 @@ public class MdmSyncController {
         mdmSyncService.syncAllEmpJob();
         return DataResponse.success();
     }
+
+    @ApiOperation(value = "全量获取车站人员数据")
+    @GetMapping("/syncStationUser")
+    public DataResponse<T> syncStationUser() {
+        mdmSyncService.syncStationUser();
+        return DataResponse.success();
+    }
 }

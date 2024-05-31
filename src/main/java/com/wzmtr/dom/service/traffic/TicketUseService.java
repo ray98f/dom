@@ -3,6 +3,7 @@ package com.wzmtr.dom.service.traffic;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.traffic.TicketUseReqDTO;
 import com.wzmtr.dom.dto.res.traffic.TicketUseResDTO;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 
 import java.util.List;
@@ -45,7 +46,7 @@ public interface TicketUseService {
      * 新增线网车票过闸使用情况
      * @param ticketUseReqDTO 线网车票过闸使用情况参数
      */
-    void add(TicketUseReqDTO ticketUseReqDTO);
+    void add(CurrentLoginUser currentLoginUser, TicketUseReqDTO ticketUseReqDTO);
 
     /**
      * 编辑线网车票过闸使用情况

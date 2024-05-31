@@ -1,8 +1,10 @@
 package com.wzmtr.dom.controller.traffic;
 
+import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.dto.req.traffic.TicketUseReqDTO;
 import com.wzmtr.dom.dto.res.traffic.TicketUseResDTO;
 import com.wzmtr.dom.entity.BaseIdsEntity;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.entity.response.PageResponse;
@@ -82,8 +84,8 @@ public class TicketUseController {
      */
     @PostMapping("/add")
     @ApiOperation(value = "新增-线网车票过闸使用情况")
-    public DataResponse<T> add(@RequestBody TicketUseReqDTO ticketUseReqDTO) {
-        ticketUseService.add(ticketUseReqDTO);
+    public DataResponse<T> add(@CurrUser CurrentLoginUser currentLoginUser, @RequestBody TicketUseReqDTO ticketUseReqDTO) {
+        ticketUseService.add(currentLoginUser,ticketUseReqDTO);
         return DataResponse.success();
     }
 

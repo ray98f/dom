@@ -144,4 +144,7 @@ public class UserCenterInfoResDTO {
      */
     @ApiModelProperty(value = "用户权限")
     private List<UserRoleResDTO> userRoles;
+
+    @ApiModelProperty(value = "所属车站")
+    private String stationName;
 }

@@ -1,14 +1,19 @@
 package com.wzmtr.dom.impl.common;
 
+import cn.hutool.http.HttpUtil;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.wzmtr.dom.config.PersonDefaultConfig;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.res.common.OrgParentResDTO;
+import com.wzmtr.dom.dto.res.system.StationPersonResDTO;
 import com.wzmtr.dom.entity.SysOffice;
 import com.wzmtr.dom.entity.SysOrgUser;
 import com.wzmtr.dom.entity.SysUser;
 import com.wzmtr.dom.mapper.common.OrganizationMapper;
 import com.wzmtr.dom.mapper.common.UserAccountMapper;
 import com.wzmtr.dom.service.common.MdmSyncService;
+import com.wzmtr.dom.utils.HttpUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
@@ -77,6 +82,12 @@ public class MdmSyncServiceImpl implements MdmSyncService {
      */
     @Value("${mdm.emp-job.address}")
     private String mdmEmpJobAddress;
+
+    /**
+     * 主数据员工所属站点接口地址
+     */
+    @Value("${mdm.station-person.address}")
+    private String mdmStationPersonAddress;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -309,6 +320,14 @@ public class MdmSyncServiceImpl implements MdmSyncService {
         if (!empJobList.isEmpty()) {
             doEmpJobInsertBatch(empJobList);
         }
+    }
+
+    @Override
+    public void syncStationUser() {
+        JSONObject res = JSONObject.parseObject(HttpUtils.doGet(mdmStationPersonAddress,null), JSONObject.class);
+        List<StationPersonResDTO> list = JSONArray.parseArray(res.getJSONArray(CommonConstants.API_RES_DATA).toJSONString(), StationPersonResDTO.class);
+
+        List<SysUser> userList = new ArrayList<>();
     }
 
     /**

@@ -52,14 +52,14 @@ public class HotLineImportantServiceImpl implements HotLineImportantService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void add(HotLineImportantAddReqDTO req) {
+    public void add(CurrentLoginUser currentLoginUser,HotLineImportantAddReqDTO req) {
         List<TrafficHotlineImportantDO> list = new ArrayList<>();
         List<DictResDTO> dictList = dictMapper.list(CommonConstants.HOTLINE_TYPE, null, CommonConstants.ZERO_STRING);
         if (StringUtils.isNotEmpty(dictList)) {
             for (DictResDTO dict : dictList) {
                 TrafficHotlineImportantDO res = new TrafficHotlineImportantDO();
                 res.setId(TokenUtils.getUuId());
-                res.setCreateBy(TokenUtils.getCurrentPersonId());
+                res.setCreateBy(currentLoginUser.getPersonId());
                 res.setDataDate(req.getDataDate());
                 res.setStartDate(req.getStartDate());
                 res.setEndDate(req.getEndDate());

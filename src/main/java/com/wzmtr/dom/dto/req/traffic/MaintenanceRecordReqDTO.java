@@ -2,8 +2,7 @@ package com.wzmtr.dom.dto.req.traffic;
 
 import com.wzmtr.dom.entity.BaseEntity;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 /**
  * description:
@@ -14,6 +13,9 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class MaintenanceRecordReqDTO extends BaseEntity {
 
     /**

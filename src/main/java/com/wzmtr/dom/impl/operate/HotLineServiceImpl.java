@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.dto.req.operate.HotLineReqDTO;
 import com.wzmtr.dom.dto.res.operate.HotLineResDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineSummaryDetailResDTO;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
@@ -44,15 +45,17 @@ public class HotLineServiceImpl implements HotLineService {
     }
 
     @Override
-    public void add(HotLineReqDTO securityCleaningReqDTO) {
+    public void add(CurrentLoginUser currentLoginUser,HotLineReqDTO securityCleaningReqDTO) {
         // 判断新增数据所属时间是否已存在数据
         Integer result = hotLineMapper.selectIsExist(securityCleaningReqDTO);
         if (result > 0) {
             throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期服务热线情况数据已存在，无法重复新增");
         }
         securityCleaningReqDTO.setId(TokenUtils.getUuId());
-        securityCleaningReqDTO.setCreateBy(TokenUtils.getCurrentPersonId());
+        securityCleaningReqDTO.setCreateBy(currentLoginUser.getPersonId());
         hotLineMapper.add(securityCleaningReqDTO);
+
+        //TODO 统计 从客运部日报获取
     }
 
     @Override

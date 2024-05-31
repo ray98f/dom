@@ -120,6 +120,7 @@ public class ProductionServiceImpl implements ProductionService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void add(CurrentLoginUser currentLoginUser, ProductionRecordReqDTO productionRecordReqDTO) {
         if (currentLoginUser.getStationCode() == null) {
             throw new CommonException(ErrorCode.USER_NOT_BIND_STATION);
@@ -168,7 +169,7 @@ public class ProductionServiceImpl implements ProductionService {
         if (CommonConstants.DATA_TYPE_MONTHLY.equals(productionRecordReqDTO.getDataType())
                 || CommonConstants.DATA_TYPE_WEEKLY.equals(productionRecordReqDTO.getDataType())) {
             productionMapper.modifyRecordCount(productionRecordReqDTO.getId(),
-                    productionRecordReqDTO.getStationCode(),
+                    productionRecordReqDTO.getStationCode(),productionRecordReqDTO.getDataType(),
                     productionRecordReqDTO.getStartDate(),
                     productionRecordReqDTO.getEndDate());
         }
@@ -179,7 +180,7 @@ public class ProductionServiceImpl implements ProductionService {
     public void submitApproval(CurrentLoginUser currentLoginUser, ProductionRecordReqDTO productionRecordReqDTO) {
         productionRecordReqDTO.setUpdateBy(currentLoginUser.getPersonId());
 
-        
+
         //设置为审核中
         productionRecordReqDTO.setStatus(CommonConstants.ONE_STRING);
         try {
@@ -254,10 +255,17 @@ public class ProductionServiceImpl implements ProductionService {
 
                 if (StringUtils.isNotEmpty(submitStation)) {
                     List<String> submitStationList = Arrays.asList(submitStation.split(CommonConstants.COMMA));
+                    List<String> newSubmitStationList = new ArrayList<>();
 
                     // 已提交车站中删除该车站
-                    submitStationList.removeIf(item -> item.equals(approvalRelationRes.getSubmitStation()));
-                    submitStation = String.join(CommonConstants.COMMA, submitStationList);
+                    for(String s:submitStationList){
+                        if(!s.equals(approvalRelationRes.getSubmitStation())){
+                            newSubmitStationList.add(s);
+                        }
+                    }
+                    //submitStationList.removeIf(item -> item.equals(approvalRelationRes.getSubmitStation()));
+
+                    submitStation = String.join(CommonConstants.COMMA, newSubmitStationList);
                 }
 
                 ProductionApprovalReqDTO approvalReq = new ProductionApprovalReqDTO();
@@ -428,6 +436,7 @@ public class ProductionServiceImpl implements ProductionService {
                     //更新记录统计数据
                     productionMapper.modifyRecordCount(item.getId(),
                             stationCode,
+                            item.getDataType(),
                             DateUtil.formatDate(item.getStartDate()),
                             DateUtil.formatDate(item.getEndDate()));
                     //更新汇总统计数据

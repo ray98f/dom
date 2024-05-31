@@ -1,10 +1,12 @@
 package com.wzmtr.dom.controller.traffic;
 
+import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.dto.req.traffic.hotline.HandoverAddDataReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineHandoverAddReqDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineHandoverDetailResDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineHandoverListResDTO;
 import com.wzmtr.dom.entity.BaseIdsEntity;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.entity.response.PageResponse;
@@ -77,8 +79,8 @@ public class HotLineHandoverController {
      */
     @PostMapping("/record/add")
     @ApiOperation(value = "新增需转交其他部门做处理事项记录")
-    public DataResponse<T> addRecord(@RequestBody HotLineHandoverAddReqDTO handoverAddReqDTO) {
-        hotLineHandoverService.addRecord(handoverAddReqDTO);
+    public DataResponse<T> addRecord(@CurrUser CurrentLoginUser currentLoginUser, @RequestBody HotLineHandoverAddReqDTO handoverAddReqDTO) {
+        hotLineHandoverService.addRecord(currentLoginUser,handoverAddReqDTO);
         return DataResponse.success();
     }
 

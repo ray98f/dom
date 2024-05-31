@@ -23,7 +23,7 @@ public interface IncomeService {
 
     IncomeDetailResDTO detail(IncomeDetailReqDTO reqDTO);
 
-    void add(IncomeAddReqDTO reqDTO);
+    void add(CurrentLoginUser currentLoginUser,IncomeAddReqDTO reqDTO);
 
     void modify(CurrentLoginUser currentLoginUser, IncomeAddReqDTO passengerRecordReqDTO);
 

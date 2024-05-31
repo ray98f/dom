@@ -59,8 +59,8 @@ public class IncomeController {
      */
     @PostMapping("/add")
     @ApiOperation(value = "收益总体情况-新增")
-    public DataResponse<T> add(@RequestBody IncomeAddReqDTO reqDTO) {
-        incomeService.add(reqDTO);
+    public DataResponse<T> add(@CurrUser CurrentLoginUser currentLoginUser,@RequestBody IncomeAddReqDTO reqDTO) {
+        incomeService.add(currentLoginUser,reqDTO);
         return DataResponse.success();
     }
 

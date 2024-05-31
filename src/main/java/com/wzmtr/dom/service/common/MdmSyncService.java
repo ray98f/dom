@@ -16,4 +16,5 @@ public interface MdmSyncService {
 
     void syncAllEmpJob();
 
+    void syncStationUser();
 }

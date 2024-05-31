@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.operate.HotLineReqDTO;
 import com.wzmtr.dom.dto.res.operate.HotLineResDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineSummaryDetailResDTO;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 
 import java.util.List;
@@ -40,7 +41,7 @@ public interface HotLineService {
      * 新增服务热线情况
      * @param hotLineReqDTO 服务热线情况参数
      */
-    void add(HotLineReqDTO hotLineReqDTO);
+    void add(CurrentLoginUser currentLoginUser,HotLineReqDTO hotLineReqDTO);
 
     /**
      * 删除服务热线情况

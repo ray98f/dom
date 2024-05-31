@@ -5,6 +5,7 @@ import com.wzmtr.dom.dto.req.traffic.hotline.HandoverAddDataReqDTO;
 import com.wzmtr.dom.dto.req.traffic.hotline.HotLineHandoverAddReqDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineHandoverDetailResDTO;
 import com.wzmtr.dom.dto.res.traffic.hotline.HotLineHandoverListResDTO;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 
 import java.util.List;
@@ -44,7 +45,7 @@ public interface HotLineHandoverService {
      * 新增需转交其他部门做处理事项记录
      * @param handoverAddReqDTO 需转交其他部门做处理事项记录
      */
-    void addRecord(HotLineHandoverAddReqDTO handoverAddReqDTO);
+    void addRecord(CurrentLoginUser currentLoginUser,HotLineHandoverAddReqDTO handoverAddReqDTO);
 
     /**
      * 新增需转交其他部门做处理事项详情

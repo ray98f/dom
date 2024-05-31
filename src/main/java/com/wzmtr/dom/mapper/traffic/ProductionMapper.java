@@ -95,7 +95,7 @@ public interface ProductionMapper {
      * @param startDate 入参数
      * @param endDate 入参数
      */
-    void modifyRecordCount(String id,String stationCode,String startDate, String endDate);
+    void modifyRecordCount(String id,String stationCode,String dataType,String startDate, String endDate);
 
     /**
      * 编辑

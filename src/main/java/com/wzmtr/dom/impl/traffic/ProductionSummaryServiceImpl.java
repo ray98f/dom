@@ -18,6 +18,7 @@ import com.wzmtr.dom.utils.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,14 @@ public class ProductionSummaryServiceImpl implements ProductionSummaryService {
     @Override
     public Page<ProductionSummaryResDTO> list(String dataType, String stationCode, String startDate, String endDate, PageReqDTO pageReqDTO) {
         PageHelper.startPage(pageReqDTO.getPageNo(), pageReqDTO.getPageSize());
-        return productionSummaryMapper.list(pageReqDTO.of(), dataType, stationCode, startDate, endDate);
+        //日报按车站隔离
+        Page<ProductionSummaryResDTO> list;
+        if(CommonConstants.DATA_TYPE_DAILY.equals(dataType)){
+            list = productionSummaryMapper.list(pageReqDTO.of(), dataType, stationCode, startDate, endDate);
+        }else{
+            list = productionSummaryMapper.listByWeekOrMonth(pageReqDTO.of(), dataType, startDate, endDate);
+        }
+        return list;
     }
 
 
@@ -61,6 +69,7 @@ public class ProductionSummaryServiceImpl implements ProductionSummaryService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void add(CurrentLoginUser currentLoginUser, ProductionSummaryRecordReqDTO productionSummaryRecordReqDTO) {
         if (currentLoginUser.getStationCode() == null) {
             throw new CommonException(ErrorCode.USER_NOT_BIND_STATION);

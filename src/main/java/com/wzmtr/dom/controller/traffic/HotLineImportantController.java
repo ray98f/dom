@@ -68,8 +68,8 @@ public class HotLineImportantController {
      */
     @PostMapping("/add")
     @ApiOperation(value = "重要热线内容-新增")
-    public DataResponse<T> add(@RequestBody HotLineImportantAddReqDTO reqDTO) {
-        hotLineImportantService.add(reqDTO);
+    public DataResponse<T> add(@CurrUser CurrentLoginUser currentLoginUser,@RequestBody HotLineImportantAddReqDTO reqDTO) {
+        hotLineImportantService.add(currentLoginUser,reqDTO);
         return DataResponse.success();
     }
 

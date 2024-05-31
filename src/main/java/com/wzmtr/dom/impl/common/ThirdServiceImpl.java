@@ -83,12 +83,22 @@ public class ThirdServiceImpl implements ThirdService {
 
         String reqData = JSONObject.toJSONString(constructPlanReqDTO);
         JSONObject res = JSONObject.parseObject(HttpUtils.doPost(constructPlanApi, reqData, null), JSONObject.class);
+        Page<ConstructPlanResDTO> page = new Page<>();
+        if(Objects.isNull(res.getJSONObject(CommonConstants.API_RES_DATA))){
+            page.setRecords(null);
+            page.setCurrent(1);
+            page.setPages(1);
+            page.setTotal(0);
+            page.setSize(0);
+            return page;
+        }
+
         List<OpenConstructPlanResDTO> openList = JSONArray.parseArray(res.getJSONObject(
                 CommonConstants.API_RES_DATA).getJSONArray(CommonConstants.API_RES_LIST).toJSONString(),
                 OpenConstructPlanResDTO.class);
         List<ConstructPlanResDTO> list = new ArrayList<>();
         PageHelper.startPage(constructPlanReqDTO.getPage(), constructPlanReqDTO.getLimit());
-        Page<ConstructPlanResDTO> page = new Page<>();
+
         for(OpenConstructPlanResDTO o: openList){
             list.add(convertDTO(o));
         }
