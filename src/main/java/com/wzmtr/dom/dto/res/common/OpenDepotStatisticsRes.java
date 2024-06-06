@@ -1,7 +1,10 @@
 package com.wzmtr.dom.dto.res.common;
 
+import com.wzmtr.dom.constant.CommonConstants;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+import java.util.Optional;
 
 /**
  * description:
@@ -45,4 +48,68 @@ public class OpenDepotStatisticsRes {
     private Integer departureInterval;
     @ApiModelProperty("计划开行列次")
     private Integer scheduleCount;
+
+    public Integer getXtPlanDepartureCount() {
+        return Optional.ofNullable(xtPlanDepartureCount).orElse(0);
+    }
+
+    public Integer getXtActualDepartureCount() {
+        return Optional.ofNullable(xtActualDepartureCount).orElse(0);
+    }
+
+    public Integer getXtPlanArrivalCount() {
+        return Optional.ofNullable(xtPlanArrivalCount).orElse(0);
+    }
+
+    public Integer getXtActualArrivalCount() {
+        return Optional.ofNullable(xtActualArrivalCount).orElse(0);
+    }
+
+    public Integer getTtPlanDepartureCount() {
+        return Optional.ofNullable(ttPlanDepartureCount).orElse(0);
+    }
+
+    public Integer getTtActualDepartureCount() {
+        return Optional.ofNullable(ttActualDepartureCount).orElse(0);
+    }
+
+    public Integer getTtPlanArrivalCount() {
+        return Optional.ofNullable(ttPlanArrivalCount).orElse(0);
+    }
+
+    public Integer getTtActualArrivalCount() {
+        return Optional.ofNullable(ttActualArrivalCount).orElse(0);
+    }
+
+    public Integer getXtShuntingCount() {
+        return Optional.ofNullable(xtShuntingCount).orElse(0);
+    }
+
+    public Integer getXtShuntingHookCount() {
+        return Optional.ofNullable(xtShuntingHookCount).orElse(0);
+    }
+
+    public Integer getXtShuntingTime() {
+        return Optional.ofNullable(xtShuntingTime).orElse(0);
+    }
+
+    public Integer getXtWashCount() {
+        return Optional.ofNullable(xtWashCount).orElse(0);
+    }
+
+    public Integer getTtShuntingCount() {
+        return Optional.ofNullable(ttShuntingCount).orElse(0);
+    }
+
+    public String getSchedule() {
+        return Optional.ofNullable(schedule).orElse("");
+    }
+
+    public Integer getDepartureInterval() {
+        return Optional.ofNullable(departureInterval).orElse(0);
+    }
+
+    public Integer getScheduleCount() {
+        return Optional.ofNullable(scheduleCount).orElse(0);
+    }
 }

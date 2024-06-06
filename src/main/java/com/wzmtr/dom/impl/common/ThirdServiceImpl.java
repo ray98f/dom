@@ -61,6 +61,9 @@ public class ThirdServiceImpl implements ThirdService {
     @Value("${open-api.eam.trainMile}")
     private String trainMile;
 
+    @Value("${open-api.ocm.driverInfo}")
+    private String driverInfoApi;
+
     @Override
     public List<UnsaturationConstructResDTO> getUnsaturationConstruct(String startTime,String endTime) {
         JSONObject res = JSONObject.parseObject(HttpUtils.doGet(unsaturationConstructApi+"?planBeginTime="+startTime+"&planEndTime="+endTime,null), JSONObject.class);
@@ -159,7 +162,7 @@ public class ThirdServiceImpl implements ThirdService {
         if(Objects.nonNull(res)){
             return JSON.parseObject(res.getJSONObject(CommonConstants.API_RES_DATA).toJSONString(),OpenDepotStatisticsRes.class);
         }
-        return null;
+        return new OpenDepotStatisticsRes();
     }
 
     @Override
@@ -190,8 +193,15 @@ public class ThirdServiceImpl implements ThirdService {
 
     @Override
     public OpenDriverInfoRes getDriverInfo(String date) {
+        String result = HttpUtil.createGet(driverInfoApi+"?date="+date)
+                .execute()
+                .body();
+        JSONObject res = JSONObject.parseObject(result, JSONObject.class);
+        if(Objects.nonNull(res)){
 
-        return null;
+            return JSONObject.parseObject(res.getJSONObject(CommonConstants.API_RES_DATA).toJSONString(),OpenDriverInfoRes.class);
+        }
+        return new OpenDriverInfoRes();
     }
 
     private ConstructPlanResDTO convertDTO(OpenConstructPlanResDTO openConstructPlan){

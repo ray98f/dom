@@ -30,7 +30,7 @@ spring:
 
 excluded:
   swagger-pages: /dom/csrf,/dom/,/dom/v2/api-docs
-  pages: /dom/user/getToken, /dom/,/dom/cas,/dom/index,/dom/login,/dom/logout
+  pages: /dom/user/getToken, /dom/,/dom/cas,/dom/index,/dom/login,/dom/logout,/dom/mdm/sync/syncStationUser,/dom/test1
 
 sso:
   url: http://zxgd.softether.net:4443/cas

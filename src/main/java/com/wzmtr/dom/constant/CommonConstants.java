@@ -100,6 +100,7 @@ public class CommonConstants {
     public static final long ONE_HUNDRED_LONG = 100L;
     public static final int TEN_THOUSAND = 10000;
     public static final double TEN_THOUSAND_DOUBLE = 10000.0;
+    public static final double DEFAULT_MILE = 0.00;
     public static final double ZERO_DOUBLE = 0.0;
 
     /**

@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Optional;
+
 /**
  * description:
  *
@@ -83,4 +85,23 @@ public class OpenDriverInfoRes {
      * */
     private String otherLeave;
 
+    public Integer getDriverNumber() {
+        return Optional.ofNullable(driverNumber).orElse(0);
+    }
+
+    public Integer getShouldWorkNumber() {
+        return Optional.ofNullable(shouldWorkNumber).orElse(0);
+    }
+
+    public Integer getDidWorkNumber() {
+        return Optional.ofNullable(didWorkNumber).orElse(0);
+    }
+
+    public String getTotalDistance() {
+        return Optional.ofNullable(totalDistance).orElse("0.00");
+    }
+
+    public String getAverageDistance() {
+        return Optional.ofNullable(averageDistance).orElse("0.00");
+    }
 }

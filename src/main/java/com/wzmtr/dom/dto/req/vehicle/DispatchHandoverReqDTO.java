@@ -3,9 +3,7 @@ package com.wzmtr.dom.dto.req.vehicle;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wzmtr.dom.entity.BaseEntity;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
@@ -19,6 +17,8 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class DispatchHandoverReqDTO extends BaseEntity {
 
     /**

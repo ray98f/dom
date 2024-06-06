@@ -477,6 +477,10 @@ public class DailyDataModifyTask {
         Date sunday = DateUtil.endOfWeek(previousDay);
 
         //基本由日报自动更新,有特殊遗漏项在下方补充更新
+
+        //行车情况-更新
+        drivingService.syncData(currentLoginUser,null,CommonConstants.DATA_TYPE_WEEKLY,DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
+
         //乘务中心行车事件总结
         crewEventService.autoModify(CommonConstants.DATA_TYPE_WEEKLY,DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
     }
@@ -491,6 +495,9 @@ public class DailyDataModifyTask {
         Date monthEnd = DateUtil.endOfMonth(previousDay);
 
         //基本由日报自动更新,有特殊遗漏项在下方补充更新
+
+        //行车情况-更新
+        drivingService.syncData(currentLoginUser,null,CommonConstants.DATA_TYPE_WEEKLY,DateUtil.formatDate(monthStart),DateUtil.formatDate(monthEnd));
 
         //乘务中心行车事件总结
         crewEventService.autoModify(CommonConstants.DATA_TYPE_MONTHLY,DateUtil.formatDate(monthStart),DateUtil.formatDate(monthEnd));

@@ -42,7 +42,18 @@
         VERSION
         FROM VEHICLE_DRIVING_INFO
         WHERE DEL_FLAG='0'
+        <if test="recordId!=null and recordId!=''">
         AND RECORD_ID=#{recordId}
+        </if>
+        <if test="dataType!=null and dataType!=''">
+            AND DATA_TYPE=#{dataType}
+        </if>
+        <if test="startDate!=null and startDate!=''">
+            AND START_DATE=to_date(#{startDate},'YYYY-MM-DD')
+        </if>
+        <if test="endDate!=null and endDate!=''">
+            AND END_DATE = to_date(#{endDate},'YYYY-MM-DD')
+        </if>
     </select>
 
     <select id="queryInfoById" resultType="com.wzmtr.dom.dto.res.vehicle.DrivingRecordDetailResDTO">
@@ -303,6 +314,34 @@
         AND VERSION=#{version}
     </update>
 
+    <update id="modifyDepotByDate">
+        UPDATE VEHICLE_DRIVING_DEPOT SET
+        <if test="planDeparture !=null">
+            PLAN_DEPARTURE=#{planDeparture},
+        </if>
+        <if test="planReceive !=null">
+            PLAN_RECEIVE=#{planReceive},
+        </if>
+        <if test="realDeparture !=null">
+            REAL_DEPARTURE=#{realDeparture},
+        </if>
+        <if test="realReceive !=null">
+            REAL_RECEIVE=#{realReceive},
+        </if>
+        <if test="railcarDeparture !=null">
+            RAILCAR_DEPARTURE=#{railcarDeparture},
+        </if>
+        <if test="railcarReceive !=null">
+            RAILCAR_RECEIVE=#{railcarReceive},
+        </if>
+        UPDATE_DATE=sysdate
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE=#{dataType}
+        AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        AND DEPOT_CODE=#{depotCode}
+    </update>
+
     <update id="modifyDepotCount">
         UPDATE VEHICLE_DRIVING_DEPOT SET
         (PLAN_DEPARTURE,PLAN_RECEIVE,REAL_DEPARTURE,REAL_RECEIVE,RAILCAR_DEPARTURE,RAILCAR_RECEIVE)
@@ -420,6 +459,38 @@
         UPDATE_DATE=sysdate
         WHERE ID=#{id}
         AND VERSION=#{version}
+    </update>
+
+    <update id="modifyDriveInfo">
+        UPDATE VEHICLE_DRIVING_INFO SET
+        <if test="driverCount !=null">
+            DRIVER_COUNT=#{driverCount},
+        </if>
+        <if test="planAttend !=null">
+            PLAN_ATTEND=#{planAttend},
+        </if>
+        <if test="realAttend !=null">
+            REAL_ATTEND=#{realAttend},
+        </if>
+        <if test="supportCount !=null">
+            SUPPORT_COUNT=#{supportCount},
+        </if>
+        <if test="mileage !=null">
+            MILEAGE=#{mileage},
+        </if>
+        <if test="testMileage !=null">
+            TEST_MILEAGE=#{testMileage},
+        </if>
+        <if test="mileageTotal !=null">
+            MILEAGE_TOTAL=#{mileageTotal},
+        </if>
+        <if test="avgMileage !=null">
+            AVG_MILEAGE=#{avgMileage},
+        </if>
+        UPDATE_DATE=sysdate
+        WHERE DATA_TYPE =#{dataType}
+        AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
     </update>
 
     <update id="modifyInfoCount">

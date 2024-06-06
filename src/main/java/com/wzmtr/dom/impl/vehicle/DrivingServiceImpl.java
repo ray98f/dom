@@ -8,6 +8,7 @@ import com.wzmtr.dom.dto.req.vehicle.DrivingCountReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.DrivingDepotReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.DrivingInfoReqDTO;
 import com.wzmtr.dom.dto.req.vehicle.DrivingRecordReqDTO;
+import com.wzmtr.dom.dto.res.OpenDriverInfoRes;
 import com.wzmtr.dom.dto.res.common.OpenDepotStatisticsRes;
 import com.wzmtr.dom.dto.res.vehicle.*;
 import com.wzmtr.dom.entity.CurrentLoginUser;
@@ -25,6 +26,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -65,7 +68,7 @@ public class DrivingServiceImpl implements DrivingService {
             // 车场情况
             detail.setDepotList(drivingMapper.depot(detail.getId()));
             // 司机驾驶情况
-            detail.setDriveInfo(drivingMapper.driveInfo(detail.getId()));
+            detail.setDriveInfo(drivingMapper.driveInfo(detail.getId(),null,null,null));
         }
         return detail;
     }
@@ -154,14 +157,12 @@ public class DrivingServiceImpl implements DrivingService {
 
             DrivingRecordDetailResDTO  detail = drivingMapper.queryInfoById(recordId, dataType, startDate, endDate);
 
-            //TODO  乘务系统 数据接口
-
             //日报场景
-            if(CommonConstants.DATA_TYPE_DAILY.equals(detail.getDataType())){
+            if(Objects.nonNull(detail) && CommonConstants.DATA_TYPE_DAILY.equals(detail.getDataType())){
 
                 //同步每日行车调度数据
                 OpenDepotStatisticsRes res = thirdService.getOdmDepotStatistics(DateUtil.formatDate(detail.getStartDate()));
-
+                DrivingCountReqDTO countReqDTO = new DrivingCountReqDTO();
                 //更新车场数据
                 for(String i: CommonConstants.STATION_280_281){
                     DrivingDepotReqDTO depotReqDTO = new DrivingDepotReqDTO();
@@ -176,47 +177,69 @@ public class DrivingServiceImpl implements DrivingService {
                         depotReqDTO.setPlanReceive(res.getXtPlanArrivalCount());
                         depotReqDTO.setRealDeparture(res.getXtActualDepartureCount());
                         depotReqDTO.setRealReceive(res.getXtActualArrivalCount());
+                        countReqDTO.setTrainCount1(res.getXtActualDepartureCount());
                     //汀田计划及实际收发车
                     }else{
                         depotReqDTO.setPlanDeparture(res.getTtPlanDepartureCount());
                         depotReqDTO.setPlanReceive(res.getTtPlanArrivalCount());
                         depotReqDTO.setRealDeparture(res.getTtActualDepartureCount());
                         depotReqDTO.setRealReceive(res.getTtActualArrivalCount());
+                        countReqDTO.setTrainCount1(res.getTtActualDepartureCount());
                     }
                     //更新车场数据
-                    drivingMapper.modifyDepotData(depotReqDTO);
+                    drivingMapper.modifyDepotByDate(depotReqDTO);
                 }
+
+                //前一天的记录
+                Date preDate = DateUtil.offsetDay(DateUtil.parseDate(startDate),-1);
+                DrivingInfoResDTO preDriveInfo = drivingMapper.driveInfo(null, dataType,
+                        DateUtil.formatDate(preDate), DateUtil.formatDate(preDate));
+                Double preMileageTotal = CommonConstants.DEFAULT_MILE;
+                Double preAvgMileage = CommonConstants.DEFAULT_MILE;
+                if(Objects.nonNull(preDriveInfo)){
+                    preMileageTotal = preDriveInfo.getMileageTotal();
+                    preAvgMileage = preDriveInfo.getAvgMileage();
+                }
+
+                // 同步乘务系统数据
+                OpenDriverInfoRes openDriverInfoRes = thirdService.getDriverInfo(startDate);
+
+                //更新记录中的统计数据 更新总里程
+                // 驾驶总公里数 = 前一日驾驶总公里数+当日所有司机【公里数统计报表】中公里数之和
+                // 累计人均公里数=当日所有司机【公里数统计报表】中公里数之和/司机总人数+前一日的数据
+                DrivingInfoReqDTO drivingInfoReqDTO = DrivingInfoReqDTO.builder()
+                        .driverCount(openDriverInfoRes.getDriverNumber())
+                        .planAttend(openDriverInfoRes.getShouldWorkNumber())
+                        .realAttend(openDriverInfoRes.getDidWorkNumber())
+                        .mileageTotal(preMileageTotal + Double.parseDouble(openDriverInfoRes.getTotalDistance()))
+                        .avgMileage(preAvgMileage +  Double.parseDouble(openDriverInfoRes.getAverageDistance()))
+                        .dataType(dataType)
+                        .startDate(startDate)
+                        .endDate(endDate)
+                        .build();
+                drivingMapper.modifyDriveInfo(drivingInfoReqDTO);
+
+                //更新记录数据统计
+                countReqDTO.setId(detail.getId());
+                countReqDTO.setDriverCount(drivingInfoReqDTO.getDriverCount());
+                countReqDTO.setMileageTotal(drivingInfoReqDTO.getMileageTotal());
+                drivingMapper.modifyDayCount(countReqDTO);
+
+                // 更新重要指标统计
+                indicatorService.autoModifyByDaily(detail.getDataType(),DateUtil.formatDate(detail.getStartDate()),DateUtil.formatDate(detail.getEndDate()));
 
             // 从日报获取统计数据更新
             }else{
                 for(String i: CommonConstants.STATION_280_281){
                     updateDepotCount(i,dataType,startDate,endDate);
                 }
+                updateDriverCount(dataType,startDate,endDate);
+                drivingMapper.modifyRecordCount(null,dataType, startDate, endDate);
+                indicatorService.autoModifyByDaily(CommonConstants.DATA_TYPE_DAILY, startDate,endDate);
             }
-
-            //modify driver info data
-
-            //更新记录中的统计数据 更新总里程  TODO async
-            // 驾驶总公里数 = 前一日驾驶总公里数+当日所有司机【公里数统计报表】中公里数之和
-            // TODO 当日所有司机【公里数统计报表】中公里数 由乘务系统提供接口
-            //前一日的recordId
-            // String preRecordId = DateUtil.formatDate(DateUtil.offsetDay(DateUtil.parseDate(recordId), -1));
-            //获取前一日的总里程和累计人均公里数
-            DrivingCountReqDTO countReqDTO = new DrivingCountReqDTO();
-            countReqDTO.setId(recordId);
-            countReqDTO.setTrainCount1(0);
-            countReqDTO.setTrainCount2(0);
-            //TODO
-
-            // 更新重要指标统计
-            //indicatorService.autoModifyByDaily(detail.getDataType(),DateUtil.formatDate(detail.getStartDate()),DateUtil.formatDate(detail.getEndDate()));
         }catch (Exception e){
             throw new CommonException(ErrorCode.UPDATE_ERROR);
         }
-
-
-
-
     }
 
     @Override
