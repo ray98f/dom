@@ -1,7 +1,8 @@
 # 中兴开发环境
 spring:
   datasource:
-    url: jdbc:oracle:thin:@192.168.0.3:1523/xe
+#    url: jdbc:oracle:thin:@192.168.0.3:1523/xe
+    url: jdbc:oracle:thin:@36.139.239.105:1523/xe
     username: dom
     password: dom@123
     driver-class-name: oracle.jdbc.OracleDriver
@@ -72,6 +73,8 @@ mdm:
     address: "http://esb.wzmtr.com:7003/mdmwebservice/ps/getAllSuppContactsList?wsdl"
   person-plus:
     address: "http://esb.wzmtr.com:7003/mdmwebservice/ps/getAllPersonPlusList?wsdl"
+  station-person:
+    address: "http://dxp.wzmtr.com:9080/v2/NOSM/NOSM2"
 
 local:
   base-url: http://192.168.30.140:8900/dom
@@ -85,7 +88,7 @@ minio:
 
 #乘务、eam、施工调度、行车调度
 ocm:
-  host: http://nocm.wzmtr.com:2443
+  host: http://192.168.34.101:9518
 eam:
   host: http://192.168.30.140:8002
 csm:
@@ -106,6 +109,11 @@ open-api:
   acc:
     api-app-key: "EvbhN1NZFmsuFM0j1T3Fi3tKQAxpd52r"
     person-count: "http://dxp.wzmtr.com:9080/v2/ACC/ACC13"
+  eam:
+    faultStatistics: ${eam.host}/eam/statistic/subject/fault/open
+    trainMile: ${eam.host}/eam/train/mile/daily/sum/open
+  ocm:
+    driverInfo: ${ocm.host}/api/share/driver/getDriverInfoByDate
 
 pro:
   name: dom

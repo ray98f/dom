@@ -33,6 +33,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -147,48 +148,58 @@ public class OperatePassengerFlowServiceImpl implements OperatePassengerFlowServ
         }
     }
 
-    private void syncACCdata(PassengerFlowAddReqDTO addReqDTO) {
-        HashMap<String, Object> res = JSONObject.parseObject(HttpUtils.doGet(
-                accPersonCountApi + "?businessDay=" + addReqDTO.getStartDate(), null, apiAppKey), HashMap.class);
-        if (CollectionUtil.isEmpty(res)) {
-            return;
-        }
-        JSONArray jsonArray = JSONArray.parseArray(String.valueOf(res.get("data")));
-        List<HashMap> personCountList = JSONArray.parseArray(jsonArray.toJSONString(), HashMap.class);
-        List<PassengerInfoReqDTO> infoReqDTOList = new ArrayList<>();
-        if (personCountList != null && personCountList.size() > 0) {
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void syncACCdata(PassengerFlowAddReqDTO addReqDTO) {
+        try{
+            //防止ID为空的情况下，同步出错
+            OperatePassengerFlowDetailDO detail = passengerFlowDetailMapper.info(addReqDTO.getId(), addReqDTO.getDataType(), addReqDTO.getStartDate(), addReqDTO.getEndDate());
 
-            // 本日S2线客流
-            Integer dayPersonCount = 0;
-            for (HashMap<String, Object> item : personCountList) {
+            HashMap<String, Object> res = JSONObject.parseObject(HttpUtils.doGet(
+                    accPersonCountApi + "?businessDay=" + addReqDTO.getStartDate(), null, apiAppKey), HashMap.class);
+            if (CollectionUtil.isEmpty(res)) {
+                return;
+            }
+            JSONArray jsonArray = JSONArray.parseArray(String.valueOf(res.get("data")));
+            List<HashMap> personCountList = JSONArray.parseArray(jsonArray.toJSONString(), HashMap.class);
+            List<PassengerInfoReqDTO> infoReqDTOList = new ArrayList<>();
+            if (personCountList != null && personCountList.size() > 0) {
 
-                // S2线
-                if (CommonConstants.TWO_STRING.equals(item.get("LINE_ID").toString())) {
-                    PassengerInfoReqDTO infoReqDTO = new PassengerInfoReqDTO();
-                    infoReqDTO.setId(TokenUtils.getUuId());
-                    infoReqDTO.setRecordId(addReqDTO.getId());
-                    infoReqDTO.setDataType(addReqDTO.getDataType());
-                    infoReqDTO.setDataDate(addReqDTO.getStartDate());
-                    infoReqDTO.setStartDate(addReqDTO.getStartDate());
-                    infoReqDTO.setEndDate(addReqDTO.getEndDate());
-                    infoReqDTO.setCreateBy(addReqDTO.getCreateBy());
-                    infoReqDTO.setUpdateBy(addReqDTO.getUpdateBy());
-                    infoReqDTO.setStationCode(HexUtil.toHex(Integer.parseInt(item.get("STATION_ID").toString())));
-                    int totalIn = Integer.parseInt(item.get("TOTAL_IN").toString());
-                    dayPersonCount += totalIn;
+                // 本日S2线客流
+                Integer dayPersonCount = 0;
+                for (HashMap<String, Object> item : personCountList) {
 
-                    // 换算成万人
-                    Double passenger = new Double(Math.round(totalIn * 10000 / CommonConstants.TEN_THOUSAND) / CommonConstants.TEN_THOUSAND_DOUBLE);
-                    infoReqDTO.setPassenger(passenger);
-                    infoReqDTOList.add(infoReqDTO);
+                    // S2线
+                    if (CommonConstants.TWO_STRING.equals(item.get("LINE_ID").toString())) {
+                        PassengerInfoReqDTO infoReqDTO = new PassengerInfoReqDTO();
+                        infoReqDTO.setId(TokenUtils.getUuId());
+                        infoReqDTO.setRecordId(detail.getId());
+                        infoReqDTO.setDataType(detail.getDataType());
+                        infoReqDTO.setDataDate(DateUtil.formatDate(detail.getStartDate()));
+                        infoReqDTO.setStartDate(DateUtil.formatDate(detail.getStartDate()));
+                        infoReqDTO.setEndDate(DateUtil.formatDate(detail.getEndDate()));
+                        infoReqDTO.setCreateBy(detail.getCreateBy());
+                        infoReqDTO.setUpdateBy(detail.getUpdateBy());
+                        infoReqDTO.setStationCode(HexUtil.toHex(Integer.parseInt(item.get("STATION_ID").toString())));
+                        int totalIn = Integer.parseInt(item.get("TOTAL_IN").toString());
+                        dayPersonCount += totalIn;
+
+                        // 换算成万人
+                        Double passenger = new Double(Math.round(totalIn * 10000 / CommonConstants.TEN_THOUSAND) / CommonConstants.TEN_THOUSAND_DOUBLE);
+                        infoReqDTO.setPassenger(passenger);
+                        infoReqDTOList.add(infoReqDTO);
+                    }
                 }
+                // 新增
+                if (infoReqDTOList != null && infoReqDTOList.size() > 0) {
+                    doCreatePassengerBatch(detail,infoReqDTOList);
+                }
+                passengerFlowDetailMapper.autoModifyCount(detail.getDataType(), DateUtil.formatDate(detail.getStartDate()), DateUtil.formatDate(detail.getEndDate()));
             }
-            // 新增
-            if (infoReqDTOList != null && infoReqDTOList.size() > 0) {
-                doCreatePassengerBatch(infoReqDTOList);
-            }
+        }catch (Exception e){
 
         }
+
     }
 
 
@@ -208,8 +219,11 @@ public class OperatePassengerFlowServiceImpl implements OperatePassengerFlowServ
     /**
      * 新增车站客流
      */
-    private void doCreatePassengerBatch(List<PassengerInfoReqDTO> infoReqDTOList) {
+    @Transactional(rollbackFor = Exception.class)
+    private void doCreatePassengerBatch(OperatePassengerFlowDetailDO detail,List<PassengerInfoReqDTO> infoReqDTOList) {
 
+        operatePassengerFlowInfoMapper.deleteStationPassenger(detail.getDataType(),
+                DateUtil.formatDate(detail.getStartDate()),DateUtil.formatDate(detail.getEndDate()));
         SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH, false);
         try {
             OperatePassengerFlowInfoMapper mapper = sqlSession.getMapper(OperatePassengerFlowInfoMapper.class);

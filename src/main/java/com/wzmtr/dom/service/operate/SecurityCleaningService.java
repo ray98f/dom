@@ -3,6 +3,7 @@ package com.wzmtr.dom.service.operate;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.operate.SecurityCleaningReqDTO;
 import com.wzmtr.dom.dto.res.operate.SecurityCleaningResDTO;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public interface SecurityCleaningService {
      * 新增安检及保洁情况
      * @param securityCleaningReqDTO 安检及保洁情况参数
      */
-    void add(SecurityCleaningReqDTO securityCleaningReqDTO);
+    void add(CurrentLoginUser currentLoginUser,SecurityCleaningReqDTO securityCleaningReqDTO);
 
     /**
      * 编辑安检及保洁情况

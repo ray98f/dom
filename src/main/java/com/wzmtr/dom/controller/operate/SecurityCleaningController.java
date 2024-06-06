@@ -1,8 +1,10 @@
 package com.wzmtr.dom.controller.operate;
 
+import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.dto.req.operate.SecurityCleaningReqDTO;
 import com.wzmtr.dom.dto.res.operate.SecurityCleaningResDTO;
 import com.wzmtr.dom.entity.BaseIdsEntity;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.entity.response.PageResponse;
@@ -66,8 +68,8 @@ public class SecurityCleaningController {
      */
     @PostMapping("/add")
     @ApiOperation(value = "新增-安检及保洁情况")
-    public DataResponse<T> add(@RequestBody SecurityCleaningReqDTO securityCleaningReqDTO) {
-        securityCleaningService.add(securityCleaningReqDTO);
+    public DataResponse<T> add(@CurrUser CurrentLoginUser currentLoginUser, @RequestBody SecurityCleaningReqDTO securityCleaningReqDTO) {
+        securityCleaningService.add(currentLoginUser,securityCleaningReqDTO);
         return DataResponse.success();
     }
 

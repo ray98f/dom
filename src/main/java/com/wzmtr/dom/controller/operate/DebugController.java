@@ -1,11 +1,13 @@
 package com.wzmtr.dom.controller.operate;
 
+import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.dto.req.operate.DebugInfoReqDTO;
 import com.wzmtr.dom.dto.req.operate.DebugRecordReqDTO;
 import com.wzmtr.dom.dto.res.operate.ConstructPlanResDTO;
 import com.wzmtr.dom.dto.res.operate.DebugInfoResDTO;
 import com.wzmtr.dom.dto.res.operate.DebugRecordResDTO;
 import com.wzmtr.dom.entity.BaseIdsEntity;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.entity.response.PageResponse;
@@ -75,8 +77,8 @@ public class DebugController {
      */
     @PostMapping("/record/add")
     @ApiOperation(value = "新增-调试情况记录")
-    public DataResponse<T> addRecord(@RequestBody DebugRecordReqDTO debugRecordReqDTO) {
-        debugService.addRecord(debugRecordReqDTO);
+    public DataResponse<T> addRecord(@CurrUser CurrentLoginUser currentLoginUser, @RequestBody DebugRecordReqDTO debugRecordReqDTO) {
+        debugService.addRecord(currentLoginUser,debugRecordReqDTO);
         return DataResponse.success();
     }
 

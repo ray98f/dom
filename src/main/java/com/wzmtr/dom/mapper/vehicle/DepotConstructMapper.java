@@ -36,7 +36,7 @@ public interface DepotConstructMapper {
      * @param id 入参数
      * @return 详情
      */
-    DepotConstructDetailResDTO queryInfoById(String id);
+    DepotConstructDetailResDTO queryInfoById(String id,String depotCode,String dataType,String startDate,String endDate);
 
     /**
      * 校验数据是否存在

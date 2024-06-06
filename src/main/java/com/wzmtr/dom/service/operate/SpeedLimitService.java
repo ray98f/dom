@@ -5,6 +5,7 @@ import com.wzmtr.dom.dto.req.operate.SpeedLimitInfoReqDTO;
 import com.wzmtr.dom.dto.req.operate.SpeedLimitRecordReqDTO;
 import com.wzmtr.dom.dto.res.operate.SpeedLimitInfoResDTO;
 import com.wzmtr.dom.dto.res.operate.SpeedLimitRecordResDTO;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 
 import java.util.List;
@@ -38,7 +39,7 @@ public interface SpeedLimitService {
      * 新增线路限速情况记录
      * @param speedLimitRecordReqDTO 线路限速情况记录参数
      */
-    void addRecord(SpeedLimitRecordReqDTO speedLimitRecordReqDTO);
+    void addRecord(CurrentLoginUser currentLoginUser,SpeedLimitRecordReqDTO speedLimitRecordReqDTO);
 
     /**
      * 新增线路限速情况详情

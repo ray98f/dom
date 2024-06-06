@@ -110,6 +110,9 @@ open-api:
     person-count: "http://dxp.wzmtr.com:9080/v2/ACC/ACC13"
   eam:
     faultStatistics: ${eam.host}/eam/statistic/subject/fault/open
+    trainMile: ${eam.host}/eam/train/mile/daily/sum/open
+  ocm:
+    driverInfo: ${ocm.host}/api/share/driver/getDriverInfoByDate
 
 pro:
   name: dom

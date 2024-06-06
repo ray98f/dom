@@ -162,7 +162,7 @@ public class DepotConstructController {
     @ApiOperation(value = "行车情况-数据提取")
     public DataResponse<T> syncData(@CurrUser CurrentLoginUser currentLoginUser,
                                     @RequestParam String recordId) {
-        depotConstructService.syncData(currentLoginUser,recordId);
+        depotConstructService.syncData(currentLoginUser,recordId,null,null,null,null);
         return DataResponse.success();
     }
 }

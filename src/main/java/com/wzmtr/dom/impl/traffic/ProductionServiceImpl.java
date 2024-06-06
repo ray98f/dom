@@ -7,8 +7,6 @@ import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.traffic.ProductionApprovalReqDTO;
 import com.wzmtr.dom.dto.req.traffic.ProductionInfoReqDTO;
 import com.wzmtr.dom.dto.req.traffic.ProductionRecordReqDTO;
-import com.wzmtr.dom.dto.res.operate.OperateEventDetailResDTO;
-import com.wzmtr.dom.dto.res.operate.OperateEventInfoResDTO;
 import com.wzmtr.dom.dto.res.system.StationRoleResDTO;
 import com.wzmtr.dom.dto.res.traffic.*;
 import com.wzmtr.dom.entity.CurrentLoginUser;
@@ -125,7 +123,7 @@ public class ProductionServiceImpl implements ProductionService {
         if (currentLoginUser.getStationCode() == null) {
             throw new CommonException(ErrorCode.USER_NOT_BIND_STATION);
         }
-        int existFlag = 0;
+        int existFlag;
 
         //日报按车站隔离
         if(CommonConstants.DATA_TYPE_DAILY.equals(productionRecordReqDTO.getDataType())){
@@ -187,7 +185,7 @@ public class ProductionServiceImpl implements ProductionService {
             //查询本日是否已有审核记录
             ProductionApprovalResDTO approvalRes = productionMapper.queryApprovalByDate(productionRecordReqDTO.getDataType(),
                     productionRecordReqDTO.getStartDate(), productionRecordReqDTO.getEndDate());
-            String approvalId = "";
+            String approvalId;
 
             if (approvalRes == null) {
 
@@ -254,7 +252,7 @@ public class ProductionServiceImpl implements ProductionService {
                 String submitStation = approvalRelationRes.getSubmitStation();
 
                 if (StringUtils.isNotEmpty(submitStation)) {
-                    List<String> submitStationList = Arrays.asList(submitStation.split(CommonConstants.COMMA));
+                    String[] submitStationList = submitStation.split(CommonConstants.COMMA);
                     List<String> newSubmitStationList = new ArrayList<>();
 
                     // 已提交车站中删除该车站
@@ -263,8 +261,6 @@ public class ProductionServiceImpl implements ProductionService {
                             newSubmitStationList.add(s);
                         }
                     }
-                    //submitStationList.removeIf(item -> item.equals(approvalRelationRes.getSubmitStation()));
-
                     submitStation = String.join(CommonConstants.COMMA, newSubmitStationList);
                 }
 
@@ -351,7 +347,7 @@ public class ProductionServiceImpl implements ProductionService {
             productionMapper.createEventDetail(currentLoginUser.getPersonId(),productionInfoReqDTO.getId(), productionInfoReqDTO.getEventDetailList());
         }
 
-        //更新事件统计 TODO
+        //更新事件统计
         updateSummaryCount(productionInfoReqDTO.getStationCode(), productionInfoReqDTO.getStartDate(), productionInfoReqDTO.getEndDate());
         autoModifyByDaily(productionInfoReqDTO.getStationCode(),productionInfoReqDTO.getDataType(),productionInfoReqDTO.getStartDate(),productionInfoReqDTO.getEndDate());
     }

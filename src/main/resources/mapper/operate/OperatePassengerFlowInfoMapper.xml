@@ -18,6 +18,11 @@
         to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss'),
         #{createBy}, sysdate,#{createBy}, sysdate)
     </insert>
+    <delete id="deleteStationPassenger">
+        delete from OPERATE_PASSENGER_FLOW_INFO where DEL_FLAG='0'
+        AND START_DATE=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+    </delete>
     <update id="modifyStationPassenger">
         UPDATE OPERATE_PASSENGER_FLOW_INFO
         SET PASSENGER=#{passenger},

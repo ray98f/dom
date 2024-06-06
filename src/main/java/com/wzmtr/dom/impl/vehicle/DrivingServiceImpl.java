@@ -154,7 +154,7 @@ public class DrivingServiceImpl implements DrivingService {
 
             DrivingRecordDetailResDTO  detail = drivingMapper.queryInfoById(recordId, dataType, startDate, endDate);
 
-            //TODO 行车调度 乘务系统 数据接口
+            //TODO  乘务系统 数据接口
 
             //日报场景
             if(CommonConstants.DATA_TYPE_DAILY.equals(detail.getDataType())){
@@ -165,25 +165,35 @@ public class DrivingServiceImpl implements DrivingService {
                 //更新车场数据
                 for(String i: CommonConstants.STATION_280_281){
                     DrivingDepotReqDTO depotReqDTO = new DrivingDepotReqDTO();
+                    depotReqDTO.setUpdateBy(currentLoginUser.getPersonId());
                     depotReqDTO.setDataType(detail.getDataType());
                     depotReqDTO.setStartDate(DateUtil.formatDate(detail.getStartDate()));
                     depotReqDTO.setEndDate(DateUtil.formatDate(detail.getEndDate()));
                     depotReqDTO.setDepotCode(i);
+                    //下塘计划及实际收发车
                     if(CommonConstants.STATION_280.equals(i)){
-
+                        depotReqDTO.setPlanDeparture(res.getXtPlanDepartureCount());
+                        depotReqDTO.setPlanReceive(res.getXtPlanArrivalCount());
+                        depotReqDTO.setRealDeparture(res.getXtActualDepartureCount());
+                        depotReqDTO.setRealReceive(res.getXtActualArrivalCount());
+                    //汀田计划及实际收发车
                     }else{
-
+                        depotReqDTO.setPlanDeparture(res.getTtPlanDepartureCount());
+                        depotReqDTO.setPlanReceive(res.getTtPlanArrivalCount());
+                        depotReqDTO.setRealDeparture(res.getTtActualDepartureCount());
+                        depotReqDTO.setRealReceive(res.getTtActualArrivalCount());
                     }
+                    //更新车场数据
+                    drivingMapper.modifyDepotData(depotReqDTO);
                 }
 
             // 从日报获取统计数据更新
             }else{
-
+                for(String i: CommonConstants.STATION_280_281){
+                    updateDepotCount(i,dataType,startDate,endDate);
+                }
             }
 
-
-
-            // modify depot data
             //modify driver info data
 
             //更新记录中的统计数据 更新总里程  TODO async

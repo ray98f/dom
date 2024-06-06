@@ -2,7 +2,10 @@ package com.wzmtr.dom.dto.req.operate.passengerflow;
 
 import com.wzmtr.dom.entity.BaseEntity;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
@@ -12,6 +15,9 @@ import java.util.List;
  * Date: 2024/3/26 18:19
  */
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class PassengerFlowAddReqDTO extends BaseEntity {
 
     /**

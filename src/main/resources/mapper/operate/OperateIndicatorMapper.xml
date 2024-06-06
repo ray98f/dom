@@ -231,6 +231,81 @@
         AND VERSION=#{version}
     </update>
 
+    <update id="autoModify">
+        UPDATE OPERATE_INDICATOR_RECORD SET
+        <if test="runCode!=null and runCode!=''">
+            RUN_CODE=#{runCode},
+        </if>
+        <if test="trainCount!=null">
+            TRAIN_COUNT=#{trainCount},
+        </if>
+        <if test="sendTimeInterval!=null">
+            SEND_TIME_INTERVAL=#{sendTimeInterval},
+        </if>
+        <if test="noAccidentDay!=null">
+            NO_ACCIDENT_DAY=#{noAccidentDay},
+        </if>
+        <if test="planRunCount!=null">
+            PLAN_RUN_COUNT=#{planRunCount},
+        </if>
+        <if test="planPromiseCount!=null">
+            PLAN_PROMISE_COUNT=#{planPromiseCount},
+        </if>
+        <if test="addCount!=null">
+            ADD_COUNT=#{addCount},
+        </if>
+        <if test="realRunCount!=null">
+            REAL_RUN_COUNT=#{realRunCount},
+        </if>
+        <if test="stopCount!=null">
+            STOP_COUNT=#{stopCount},
+        </if>
+        <if test="rutineGuestCount!=null">
+            RUTINE_GUEST_COUNT=#{rutineGuestCount},
+        </if>
+        <if test="rescueCount!=null">
+            RESCUE_COUNT=#{rescueCount},
+        </if>
+        <if test="offLineCount!=null">
+            OFF_LINE_COUNT=#{offLineCount},
+        </if>
+        <if test="delayCount!=null">
+            DELAY_COUNT=#{delayCount},
+        </if>
+        <if test="delay2Count!=null">
+            DELAY2_COUNT=#{delay2Count},
+        </if>
+        <if test="delay3Count!=null">
+            DELAY3_COUNT=#{delay3Count},
+        </if>
+        <if test="delay4Count!=null">
+            DELAY4_COUNT=#{delay4Count},
+        </if>
+        <if test="operate1Kilometer!=null">
+            OPERATE1_KILOMETER=#{operate1Kilometer},
+        </if>
+        <if test="operate2Kilometer!=null">
+            OPERATE2_KILOMETER=#{operate2Kilometer},
+        </if>
+        <if test="run1Kilometer!=null">
+            RUN1_KILOMETER=#{run1Kilometer},
+        </if>
+        <if test="run2Kilometer!=null">
+            RUN2_KILOMETER=#{run2Kilometer},
+        </if>
+        <if test="operateEvent5!=null">
+            OPERATE_EVENT5=#{operateEvent5},
+        </if>
+        <if test="event5Rate!=null">
+            EVENT5_RATE=#{event5Rate},
+        </if>
+        UPDATE_DATE=sysdate
+        WHERE DEL_FLAG = '0'
+        AND DATA_TYPE=#{dataType}
+        AND START_DATE=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+    </update>
+
     <insert id="addInfo">
         INSERT INTO OPERATE_INDICATOR_INFO (ID, RECORD_ID,
         INDICATOR_TYPE,

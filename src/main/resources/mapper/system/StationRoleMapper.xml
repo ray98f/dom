@@ -10,6 +10,14 @@
         ORDER BY sr.CREATE_DATE desc
     </select>
 
+    <select id="queryByDate" resultType="com.wzmtr.dom.dto.res.system.StationRoleResDTO">
+        SELECT sr.ID, sr.STATION_CODE, sr.STATION_NAME, sr.START_TIME, sr.END_TIME
+        FROM SYS_STATION_ROLE sr
+        WHERE sr.DEL_FLAG='0'
+        AND START_TIME=to_date(#{startDate},'YYYY-MM-DD')
+        AND END_TIME=to_date(#{endDate},'YYYY-MM-DD')
+    </select>
+
     <select id="detail" resultType="com.wzmtr.dom.dto.res.system.StationRoleResDTO">
         SELECT sr.ID, sr.STATION_CODE, sr.STATION_NAME, sr.START_TIME, sr.END_TIME, sr.CREATE_DATE, u.NAME AS CREATE_BY
         FROM SYS_STATION_ROLE sr

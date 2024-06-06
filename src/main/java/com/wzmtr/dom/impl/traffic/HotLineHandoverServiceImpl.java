@@ -80,8 +80,7 @@ public class HotLineHandoverServiceImpl implements HotLineHandoverService {
         hotLineHandoverMapper.modifyRecord(handoverAddReq);
 
         //更新周报/月报统计数据
-
-            autoModifyByDaily(handoverAddDataReqDTO.getDataType()+"",
+        autoModifyByDaily(handoverAddDataReqDTO.getDataType()+"",
                     DateUtil.formatDate(handoverAddDataReqDTO.getStartDate())
                     ,DateUtil.formatDate(handoverAddDataReqDTO.getEndDate()));
 

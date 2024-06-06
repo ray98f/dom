@@ -144,7 +144,7 @@ public class OperateConstructServiceImpl implements OperateConstructService {
     public ConstructRecordResDTO detail(String id, String dataType,String startDate, String endDate) {
         ConstructRecordResDTO detail = operateConstructMapper.queryInfoById(id, dataType,startDate, endDate);
 
-        // TODO 增加不饱和施工数据
+        // 施工不饱和统计
         if (StringUtils.isNotNull(detail)) {
             if(CommonConstants.DATA_TYPE_WEEKLY.equals(detail.getDataType()) || CommonConstants.DATA_TYPE_MONTHLY.equals(detail.getDataType())){
                 detail.setUnsaturationConstruct(thirdService.getUnsaturationConstruct(DateUtil.formatDate(detail.getStartDate()),
@@ -217,13 +217,11 @@ public class OperateConstructServiceImpl implements OperateConstructService {
         Date monday = DateUtil.beginOfWeek(DateUtil.parseDate(startDate));
         Date sunday = DateUtil.endOfWeek(DateUtil.parseDate(startDate));
 
-
         operateConstructMapper.autoModifyByDaily(CommonConstants.DATA_TYPE_WEEKLY,DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
         //获取月 月初、月末
         Date monthStart = DateUtil.beginOfMonth(DateUtil.parseDate(startDate));
         Date monthEnd = DateUtil.endOfMonth(DateUtil.parseDate(startDate));
         operateConstructMapper.autoModifyByDaily(CommonConstants.DATA_TYPE_MONTHLY,DateUtil.formatDate(monthStart),DateUtil.formatDate(monthEnd));
-
 
     }
 

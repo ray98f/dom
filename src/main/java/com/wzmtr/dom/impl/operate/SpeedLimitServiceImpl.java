@@ -6,6 +6,7 @@ import com.wzmtr.dom.dto.req.operate.SpeedLimitInfoReqDTO;
 import com.wzmtr.dom.dto.req.operate.SpeedLimitRecordReqDTO;
 import com.wzmtr.dom.dto.res.operate.SpeedLimitInfoResDTO;
 import com.wzmtr.dom.dto.res.operate.SpeedLimitRecordResDTO;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
@@ -43,7 +44,7 @@ public class SpeedLimitServiceImpl implements SpeedLimitService {
     }
 
     @Override
-    public void addRecord(SpeedLimitRecordReqDTO speedLimitRecordReqDTO) {
+    public void addRecord(CurrentLoginUser currentLoginUser,SpeedLimitRecordReqDTO speedLimitRecordReqDTO) {
         // 判断新增数据所属时间是否已存在数据
         Integer result = speedLimitMapper.selectRecordIsExist(speedLimitRecordReqDTO);
         if (result > 0) {

@@ -91,4 +91,10 @@ public interface UserAccountMapper {
      */
     List<UserRoleResDTO> getUserRoles(@Param("userId") String userId);
 
+    /**
+     * 修改用户所属车站
+     * @param sysUser 用户信息
+     */
+    void updatePersonStation(SysUser sysUser);
+
 }

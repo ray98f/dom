@@ -121,11 +121,6 @@ public class LineEventServiceImpl implements LineEventService {
         }
 
         //更新事件统计
-
-        //List<String> ids = new ArrayList<>();
-        //ids.add(lineEventInfoReqDTO.getId());
-        //LineEventInfoResDTO eventInfo = lineEventMapper.queryDateRange(ids);
-        //updateSummaryCount(DateUtil.formatDate(eventInfo.getStartDate()),DateUtil.formatDate(eventInfo.getEndDate()));
         if(CommonConstants.DATA_TYPE_DAILY.equals(lineEventInfoReqDTO.getDataType())){
             autoModifyByDaily(CommonConstants.DATA_TYPE_DAILY,lineEventInfoReqDTO.getStartDate()
                     ,lineEventInfoReqDTO.getEndDate());
@@ -146,8 +141,6 @@ public class LineEventServiceImpl implements LineEventService {
             }
 
             //更新事件统计
-            //updateSummaryCount(DateUtil.formatDate(eventInfo.getStartDate()),DateUtil.formatDate(eventInfo.getEndDate()));
-            //TODO 先默认只在日报界面删除数据
             autoModifyByDaily(CommonConstants.DATA_TYPE_DAILY,DateUtil.formatDate(eventInfo.getStartDate())
                     ,DateUtil.formatDate(eventInfo.getEndDate()));
         }

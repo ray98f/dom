@@ -77,7 +77,7 @@ public class DepotConstructServiceImpl implements DepotConstructService {
 
     @Override
     public DepotConstructDetailResDTO detail(String id) {
-        return depotConstructMapper.queryInfoById(id);
+        return depotConstructMapper.queryInfoById(id,null,null,null,null);
     }
 
     @Override
@@ -135,8 +135,8 @@ public class DepotConstructServiceImpl implements DepotConstructService {
     }
 
     @Override
-    public void syncData(CurrentLoginUser currentLoginUser, String recordId) {
-        DepotConstructDetailResDTO resDTO = depotConstructMapper.queryInfoById(recordId);
+    public void syncData(CurrentLoginUser currentLoginUser, String recordId,String depotCode,String dataType,String startDate,String endDate) {
+        DepotConstructDetailResDTO resDTO = depotConstructMapper.queryInfoById(recordId,depotCode,dataType,startDate,endDate);
         if(CommonConstants.DATA_TYPE_DAILY.equals(resDTO.getDataType())){
             //TODO 调取数据 施工计划统计 行车调度统计
 

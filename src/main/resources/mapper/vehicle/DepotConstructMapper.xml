@@ -36,7 +36,22 @@
         REMARK,
         VERSION, DATA_DATE,DATA_TYPE,START_DATE,END_DATE
         FROM VEHICLE_CONSTRUCT_RECORD
-        WHERE ID=#{id} AND DEL_FLAG = '0'
+        WHERE DEL_FLAG = '0'
+        <if test="id != null">
+            AND ID=#{id}
+        </if>
+        <if test="dataType != null">
+            AND DATA_TYPE=#{dataType}
+        </if>
+        <if test="depotCode != null">
+            AND DEPOT_CODE=#{depotCode}
+        </if>
+        <if test="startDate != null">
+            AND START_DATE = to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
+        <if test="endDate != null">
+            AND END_DATE = to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+        </if>
     </select>
 
     <select id="checkExist" resultType="java.lang.Integer">

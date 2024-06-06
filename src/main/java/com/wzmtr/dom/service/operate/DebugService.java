@@ -6,6 +6,7 @@ import com.wzmtr.dom.dto.req.operate.DebugRecordReqDTO;
 import com.wzmtr.dom.dto.res.operate.ConstructPlanResDTO;
 import com.wzmtr.dom.dto.res.operate.DebugInfoResDTO;
 import com.wzmtr.dom.dto.res.operate.DebugRecordResDTO;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 
 import java.util.List;
@@ -42,7 +43,7 @@ public interface DebugService {
      * 新增调试情况记录
      * @param debugRecordReqDTO 调试情况记录参数
      */
-    void addRecord(DebugRecordReqDTO debugRecordReqDTO);
+    void addRecord(CurrentLoginUser currentLoginUser, DebugRecordReqDTO debugRecordReqDTO);
 
     /**
      * 新增调试情况详情
