@@ -107,6 +107,13 @@
 
     </select>
 
+    <update id="showOrHide">
+        UPDATE TRAFFIC_HOTLINE_IMPORTANT SET
+        IS_HIDE = #{isHide},
+        UPDATE_DATE=sysdate
+        WHERE ID=#{id}
+    </update>
+
     <update id="autoModify">
         UPDATE TRAFFIC_HOTLINE_IMPORTANT SET
         COUNT = #{count},

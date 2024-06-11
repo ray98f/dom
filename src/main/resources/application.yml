@@ -1,5 +1,5 @@
 server:
-  port: 8101
+  port: 8100
   tomcat:
     uri-encoding: UTF-8
   servlet:
@@ -16,7 +16,7 @@ server:
 
 spring:
   profiles:
-    active: zte_cloud
+    active: zte_devs
   jmx:
     enabled: false
   main:
