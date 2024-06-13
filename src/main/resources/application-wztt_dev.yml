@@ -72,6 +72,8 @@ mdm:
     address: "http://esb.wzmtr.com:7003/mdmwebservice/ps/getAllSuppContactsList?wsdl"
   person-plus:
     address: "http://esb.wzmtr.com:7003/mdmwebservice/ps/getAllPersonPlusList?wsdl"
+  station-person:
+    address: "http://dxp.wzmtr.com:9080/v2/NOSM/NOSM2"
 
 local:
   base-url: http://192.168.30.140:8900/dom
