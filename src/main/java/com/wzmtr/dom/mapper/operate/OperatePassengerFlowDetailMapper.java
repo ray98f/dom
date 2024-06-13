@@ -31,4 +31,6 @@ public interface OperatePassengerFlowDetailMapper extends BaseMapper<OperatePass
     int modify(PassengerFlowAddReqDTO req);
 
     void modifyCount(String id, String startDate, String endDate);
+
+    void autoModifyCount(String dataType, String startDate, String endDate);
 }

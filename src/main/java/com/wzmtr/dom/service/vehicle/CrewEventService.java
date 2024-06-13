@@ -78,4 +78,6 @@ public interface CrewEventService {
      * @param ids ids
      */
     void deleteEvent(List<String> ids);
+
+    void autoModify(String dataType,String startDate, String endDate);
 }

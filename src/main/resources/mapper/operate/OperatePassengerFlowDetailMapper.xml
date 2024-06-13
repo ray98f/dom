@@ -111,6 +111,27 @@
         WHERE ID=#{id}
     </update>
 
+    <update id="autoModifyCount">
+        UPDATE OPERATE_PASSENGER_FLOW_DETAIL
+        SET DAILY_PASS=(SELECT SUM(PASSENGER) AS PASSENGER_SUM
+        FROM TRAFFIC_PASSENGER_INFO
+        WHERE START_DATE = to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss')
+        AND END_DATE = to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss')),
+        MONTH_PASS=(SELECT SUM(PASSENGER) AS PASSENGER_SUM
+        FROM TRAFFIC_PASSENGER_INFO
+        WHERE TO_CHAR(START_DATE, 'YYYY-MM') =
+        TO_CHAR(to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss'), 'YYYY-MM')),
+        YEAR_PASS=(SELECT SUM(PASSENGER) AS PASSENGER_SUM
+        FROM TRAFFIC_PASSENGER_INFO
+        WHERE TO_CHAR(START_DATE, 'YYYY') =
+        TO_CHAR(to_date(#{endDate}, 'yyyy-mm-dd hh24:mi:ss'), 'YYYY')),
+        UPDATE_DATE=sysdate
+        WHERE DEL_FLAG='0'
+        AND DATA_TYPE=#{dataType}
+        AND START_DATE=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND END_DATE=to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')
+    </update>
+
     <select id="list" resultType="com.wzmtr.dom.dto.res.operate.passengerflow.PassengerFlowListResDTO">
         SELECT *
         FROM OPERATE_PASSENGER_FLOW_DETAIL
@@ -134,21 +155,11 @@
         <if test="dataType!=null and dataType!=''">
             AND DATA_TYPE=#{dataType}
         </if>
-        <if test="dataType=='1'.toString()">
-            <if test="startDate!=null and startDate!=''">
-                AND DATA_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
-            </if>
-            <if test="endDate!=null and endDate!=''">
-                AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>DATA_DATE
-            </if>
+        <if test="startDate!=null and startDate!=''">
+            AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
-        <if test="dataType!='1'.toString()">
-            <if test="startDate!=null and startDate!=''">
-                AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
-            </if>
-            <if test="endDate!=null and endDate!=''">
-                AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>END_DATE
-            </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
         </if>
     </select>
 

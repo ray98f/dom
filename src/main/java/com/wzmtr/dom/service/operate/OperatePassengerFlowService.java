@@ -44,4 +44,6 @@ public interface OperatePassengerFlowService {
     void modifyStationPassenger(PassengerInfoReqDTO req);
 
     void modify(PassengerFlowAddReqDTO req);
+
+    void syncACCdata(PassengerFlowAddReqDTO addReqDTO);
 }

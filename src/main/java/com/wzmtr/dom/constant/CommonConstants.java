@@ -100,6 +100,8 @@ public class CommonConstants {
     public static final long ONE_HUNDRED_LONG = 100L;
     public static final int TEN_THOUSAND = 10000;
     public static final double TEN_THOUSAND_DOUBLE = 10000.0;
+    public static final double DEFAULT_MILE = 0.00;
+    public static final double ZERO_DOUBLE = 0.0;
 
     /**
      *  专业编号
@@ -191,6 +193,7 @@ public class CommonConstants {
 
     public static final String DEFAULT_PRODUCTION_TITLE = "安全生产情况";
     public static final String[] S2_STATION_ARRAY = {"231","232","233","234","235","236","237","238","239","240","241","242","243","244","245","246","247","248","249","250"};
+    public static final String[] S2_STATION_NAME = {"清东路站","旭阳路站","万岙站","盐盆站","新望站","翁垟站","柳市东站","灵昆站","机场站","永兴站","沙城站","天河站","海城站","鲍田站","大典下站","汀田站","莘塍站","上望站","上东路站","东山站"};
 
     public static final String VEHICLE_DAILY_REPORT = "VEHICLE_DAILY_REPORT";
     public static final String VEHICLE_WEEKLY_REPORT = "VEHICLE_WEEKLY_REPORT";
@@ -238,6 +241,8 @@ public class CommonConstants {
     public static final String[] OPERATE_INDICATOR_TYPE = {"1","2"};
 
     public static final String SYNC_DATA_TIME = " 05:00:00";
+
+    public static final String END_DATA_TIME = " 23:59:59";
 
     //车辆和信号调试作业
     public static final String CONSTRUCT_DEBUG = "A1";

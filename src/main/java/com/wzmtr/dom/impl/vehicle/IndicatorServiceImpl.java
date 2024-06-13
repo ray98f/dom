@@ -70,12 +70,6 @@ public class IndicatorServiceImpl implements IndicatorService {
         }catch (Exception e){
             throw new CommonException(ErrorCode.INSERT_ERROR);
         }
-
-        //周报/月报数据统计
-//        if(CommonConstants.DATA_TYPE_WEEKLY.equals(indicatorReqDTO.getDataType())
-//                || CommonConstants.DATA_TYPE_MONTHLY.equals(indicatorReqDTO.getDataType())){
-//            updateRecordCount(indicatorReqDTO.getId(),indicatorReqDTO.getStartDate(),indicatorReqDTO.getEndDate());
-//        }
     }
 
     @Override
@@ -127,7 +121,7 @@ public class IndicatorServiceImpl implements IndicatorService {
         Date monthStart = DateUtil.beginOfMonth(DateUtil.parseDate(startDate));
         Date monthEnd = DateUtil.endOfMonth(DateUtil.parseDate(startDate));
 
-        indicatorMapper.autoModifyByDaily(CommonConstants.DATA_TYPE_MONTHLY,DateUtil.formatDate(monday),DateUtil.formatDate(sunday));
+        indicatorMapper.autoModifyByDaily(CommonConstants.DATA_TYPE_MONTHLY,DateUtil.formatDate(monthStart),DateUtil.formatDate(monthEnd));
     }
 
     /**

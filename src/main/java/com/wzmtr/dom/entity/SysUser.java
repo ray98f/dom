@@ -80,4 +80,7 @@ public class SysUser extends BaseEntity{
 
     @ApiModelProperty(value = "mdm人员ID")
     private String personId;
+
+    @ApiModelProperty(value = "所属车站编码")
+    private String stationCode;
 }

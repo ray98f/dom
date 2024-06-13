@@ -120,6 +120,30 @@
         GROUP BY MAJOR_TYPE
     </select>
 
+    <select id="eventCountByType" resultType="com.wzmtr.dom.dto.res.operate.NewEventCountResDTO">
+        SELECT
+        SUM(OFF_LINE_COUNT) AS OFF_LINE_COUNT,
+        SUM(RESCUE_COUNT) AS RESCUE_COUNT,
+        SUM(RUTINE_GUEST_COUNT) AS RUTINE_GUEST_COUNT,
+        SUM(ADD_COUNT) AS ADD_COUNT,
+        SUM(DELAY1_COUNT) AS DELAY1_COUNT,
+        SUM(DELAY2_COUNT) AS DELAY2_COUNT,
+        SUM(STOP_COUNT) AS STOP_COUNT,
+        SUM(DELAY1_EVENT_COUNT) AS DELAY1_EVENT_COUNT,
+        SUM(DELAY1_VEHICLE_COUNT) AS DELAY1_VEHICLE_COUNT,
+        SUM(DELAY2_EVENT_COUNT) AS DELAY2_EVENT_COUNT,
+        SUM(DELAY2_VEHICLE_COUNT) AS DELAY2_VEHICLE_COUNT,
+        SUM(GATE_FAULT_COUNT) AS GATE_FAULT_COUNT,
+        SUM(LINE_FAULT_COUNT) AS LINE_FAULT_COUNT,
+        SUM(VEHICLE_FAULT_COUNT) AS VEHICLE_FAULT_COUNT,
+        SUM(SIGNAL_FAULT_COUNT) AS SIGNAL_FAULT_COUNT,
+        SUM(POWER_FAULT_COUNT) AS POWER_FAULT_COUNT
+        FROM OPERATE_EVENT_INFO
+        WHERE DEL_FLAG='0'
+        AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
+        AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
+    </select>
+
     <select id="queryDateRange" resultType="com.wzmtr.dom.dto.res.operate.OperateEventInfoResDTO">
         SELECT MIN(START_DATE) AS START_DATE,MAX(END_DATE) AS END_DATE
         FROM OPERATE_EVENT_INFO

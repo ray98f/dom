@@ -27,6 +27,14 @@ public interface StationRoleMapper {
     Page<StationRoleResDTO> page(Page<StationRoleResDTO> page);
 
     /**
+     * 查询审核站
+     * @param startDate startDate
+     * @param endDate endDate
+     * @return 查询审核站
+     */
+    StationRoleResDTO queryByDate(String startDate, String endDate);
+
+    /**
      * 获取审核站权限详情
      * @param id id
      * @return 审核站权限详情

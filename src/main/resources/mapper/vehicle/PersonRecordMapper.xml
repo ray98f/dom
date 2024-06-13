@@ -212,6 +212,66 @@
         WHERE ID=#{id} and VERSION=#{version}
     </update>
 
+    <update id="modifyBySync">
+        UPDATE VEHICLE_PERSON_RECORD SET
+        <if test="dispatchXtDay!=null">
+            DISPATCH_XT_DAY=#{dispatchXtDay},
+        </if>
+        <if test="dispatchXtNight!=null">
+            DISPATCH_XT_NIGHT=#{dispatchXtNight},
+        </if>
+        <if test="dispatchTtDay!=null">
+            DISPATCH_TT_DAY=#{dispatchTtDay},
+        </if>
+        <if test="dispatchTtNight!=null">
+            DISPATCH_TT_NIGHT=#{dispatchTtNight},
+        </if>
+        <if test="dccXtDay!=null">
+            DCC_XT_DAY=#{dccXtDay},
+        </if>
+        <if test="dccXtNight!=null">
+            DCC_XT_NIGHT=#{dccXtNight},
+        </if>
+        <if test="dccTtDay!=null">
+            DCC_TT_DAY=#{dccTtDay},
+        </if>
+        <if test="dccTtNight!=null">
+            DCC_TT_NIGHT=#{dccTtNight},
+        </if>
+        <if test="mainDriverDay!=null">
+            MAIN_DRIVER_DAY=#{mainDriverDay},
+        </if>
+        <if test="mainDriverNight!=null">
+            MAIN_DRIVER_NIGHT=#{mainDriverNight},
+        </if>
+        <if test="guideDriverDay!=null">
+            GUIDE_DRIVER_DAY=#{guideDriverDay},
+        </if>
+        <if test="guideDriverNight!=null">
+            GUIDE_DRIVER_NIGHT=#{guideDriverNight},
+        </if>
+        <if test="relief!=null">
+            RELIEF=#{relief},
+        </if>
+        <if test="leavePersonal!=null">
+            LEAVE_PERSONAL=#{leavePersonal},
+        </if>
+        <if test="leaveSick!=null">
+            LEAVE_SICK=#{leaveSick},
+        </if>
+        <if test="leaveAnnual!=null">
+            LEAVE_ANNUAL=#{leaveAnnual},
+        </if>
+        <if test="leaveOther!=null">
+            LEAVE_OTHER=#{leaveOther},
+        </if>
+        <if test="postWaiting!=null">
+            POST_WAITING=#{postWaiting},
+        </if>
+        UPDATE_DATE=sysdate
+        WHERE DATA_DATE = to_date(#{date},'YYYY-MM-DD')
+    </update>
+
     <update id="delete">
         UPDATE VEHICLE_PERSON_RECORD SET
         DEL_FLAG='1', UPDATE_BY=#{userId}, UPDATE_DATE=sysdate

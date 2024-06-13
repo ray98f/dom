@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.operate.OperateEventInfoReqDTO;
 import com.wzmtr.dom.dto.req.operate.OperateEventReqDTO;
 import com.wzmtr.dom.dto.res.operate.EventCountResDTO;
+import com.wzmtr.dom.dto.res.operate.NewEventCountResDTO;
 import com.wzmtr.dom.dto.res.operate.OperateEventInfoResDTO;
 import com.wzmtr.dom.dto.res.operate.OperateEventResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
@@ -60,6 +61,8 @@ public interface OperateEventService {
      * @return 事件信息列表
      */
     List<EventCountResDTO> eventCount(String startDate, String endDate);
+
+    NewEventCountResDTO eventCountByType(String startDate, String endDate);
 
     /**
      * 事件信息-新增

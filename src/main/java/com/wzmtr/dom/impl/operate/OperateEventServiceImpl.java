@@ -6,10 +6,7 @@ import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.operate.OperateEventInfoReqDTO;
 import com.wzmtr.dom.dto.req.operate.OperateEventReqDTO;
-import com.wzmtr.dom.dto.res.operate.EventCountResDTO;
-import com.wzmtr.dom.dto.res.operate.OperateEventDetailResDTO;
-import com.wzmtr.dom.dto.res.operate.OperateEventInfoResDTO;
-import com.wzmtr.dom.dto.res.operate.OperateEventResDTO;
+import com.wzmtr.dom.dto.res.operate.*;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.ErrorCode;
@@ -96,6 +93,11 @@ public class OperateEventServiceImpl implements OperateEventService {
     @Override
     public List<EventCountResDTO> eventCount(String startDate, String endDate) {
         return operateEventMapper.eventCount(startDate,endDate);
+    }
+
+    @Override
+    public NewEventCountResDTO eventCountByType(String startDate, String endDate) {
+        return operateEventMapper.eventCountByType(startDate,endDate);
     }
 
     @Override

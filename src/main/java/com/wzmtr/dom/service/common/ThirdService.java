@@ -3,9 +3,11 @@ package com.wzmtr.dom.service.common;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wzmtr.dom.dto.req.common.OpenConstructPlanReqDTO;
 import com.wzmtr.dom.dto.req.common.OpenDispatchOrderReqDTO;
+import com.wzmtr.dom.dto.res.OpenDriverInfoRes;
 import com.wzmtr.dom.dto.res.common.OpenDepotStatisticsRes;
 import com.wzmtr.dom.dto.res.common.OpenDispatchOrderRes;
 import com.wzmtr.dom.dto.res.common.OpenFaultStatisticsRes;
+import com.wzmtr.dom.dto.res.common.OpenTrainMileRes;
 import com.wzmtr.dom.dto.res.operate.ConstructPlanResDTO;
 import com.wzmtr.dom.dto.res.operate.PlanStatisticsResDTO;
 import com.wzmtr.dom.dto.res.operate.UnsaturationConstructResDTO;
@@ -57,5 +59,19 @@ public interface ThirdService {
     OpenDepotStatisticsRes getOdmDepotStatistics(String date);
 
     List<OpenFaultStatisticsRes> getEamFaultStatistics(String startTime,String endTime);
+
+    /**
+     * 获取走行公里数、运营公里数
+     * @param day 查询参数
+     * @return 获取走行公里数总和
+     */
+    OpenTrainMileRes getEamTrainMile(String day);
+
+    /**
+     * 获取乘务系统当日司机信息
+     * @param date 查询参数
+     * @return 获取乘务系统当日司机信息
+     */
+    OpenDriverInfoRes getDriverInfo(String date);
 
 }

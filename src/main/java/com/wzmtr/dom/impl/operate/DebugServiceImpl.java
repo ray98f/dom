@@ -10,6 +10,7 @@ import com.wzmtr.dom.dto.req.operate.DebugRecordReqDTO;
 import com.wzmtr.dom.dto.res.operate.ConstructPlanResDTO;
 import com.wzmtr.dom.dto.res.operate.DebugInfoResDTO;
 import com.wzmtr.dom.dto.res.operate.DebugRecordResDTO;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
@@ -56,14 +57,14 @@ public class DebugServiceImpl implements DebugService {
     }
 
     @Override
-    public void addRecord(DebugRecordReqDTO debugRecordReqDTO) {
+    public void addRecord(CurrentLoginUser currentLoginUser, DebugRecordReqDTO debugRecordReqDTO) {
         // 判断新增数据所属时间是否已存在数据
         Integer result = debugMapper.selectRecordIsExist(debugRecordReqDTO);
         if (result > 0) {
             throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期调试情况记录数据已存在，无法重复新增");
         }
         debugRecordReqDTO.setId(TokenUtils.getUuId());
-        debugRecordReqDTO.setCreateBy(TokenUtils.getCurrentPersonId());
+        debugRecordReqDTO.setCreateBy(currentLoginUser.getPersonId());
         debugMapper.addRecord(debugRecordReqDTO);
     }
 

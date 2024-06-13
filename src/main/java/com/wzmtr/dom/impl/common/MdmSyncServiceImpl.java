@@ -7,16 +7,22 @@ import com.wzmtr.dom.config.PersonDefaultConfig;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.res.common.OrgParentResDTO;
 import com.wzmtr.dom.dto.res.system.StationPersonResDTO;
+import com.wzmtr.dom.dto.res.system.StationResDTO;
 import com.wzmtr.dom.entity.SysOffice;
 import com.wzmtr.dom.entity.SysOrgUser;
 import com.wzmtr.dom.entity.SysUser;
 import com.wzmtr.dom.mapper.common.OrganizationMapper;
 import com.wzmtr.dom.mapper.common.UserAccountMapper;
+import com.wzmtr.dom.mapper.system.StationMapper;
 import com.wzmtr.dom.service.common.MdmSyncService;
 import com.wzmtr.dom.utils.HttpUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
+import org.apache.ibatis.executor.BatchResult;
+import org.apache.ibatis.session.ExecutorType;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -88,6 +94,12 @@ public class MdmSyncServiceImpl implements MdmSyncService {
      */
     @Value("${mdm.station-person.address}")
     private String mdmStationPersonAddress;
+
+    @Autowired
+    private SqlSessionFactory sqlSessionFactory;
+
+    @Autowired
+    private StationMapper stationMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -324,10 +336,27 @@ public class MdmSyncServiceImpl implements MdmSyncService {
 
     @Override
     public void syncStationUser() {
+
+        //获取站务人员列表
         JSONObject res = JSONObject.parseObject(HttpUtils.doGet(mdmStationPersonAddress,null), JSONObject.class);
         List<StationPersonResDTO> list = JSONArray.parseArray(res.getJSONArray(CommonConstants.API_RES_DATA).toJSONString(), StationPersonResDTO.class);
+        List<StationResDTO> stationList = stationMapper.allList(CommonConstants.LINE_CODE_TWO);
 
+        //更新人员所属车站
         List<SysUser> userList = new ArrayList<>();
+        for(StationPersonResDTO p:list){
+            for(StationResDTO s:stationList){
+                if(p.getStationCode()!=null && s.getId() != null && p.getStationCode().equals(s.getId())){
+                    SysUser sysUser = new SysUser();
+                    sysUser.setId(p.getUserNum());
+                    sysUser.setStationCode(s.getStationCode());
+                    userList.add(sysUser);
+                }
+            }
+        }
+        if(userList.size() > 0){
+            doPersonUpdateBatch(userList);
+        }
     }
 
     /**
@@ -542,6 +571,30 @@ public class MdmSyncServiceImpl implements MdmSyncService {
             if (!StringUtils.isEmpty(item.get(CommonConstants.ID).toString())) {
                 userAccountMapper.updatePersonPlus(item);
             }
+        }
+    }
+
+    /**
+     * 批量更新人员所属车站
+     */
+    private void doPersonUpdateBatch(List<SysUser> list) {
+
+        SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH, false);
+        try {
+            UserAccountMapper mapper = sqlSession.getMapper(UserAccountMapper.class);
+            for (SysUser sysUser : list) {
+                if (!StringUtils.isEmpty(sysUser.getId())) {
+                    mapper.updatePersonStation(sysUser);
+                }
+            }
+            sqlSession.commit();
+            List<BatchResult> batchResults = sqlSession.flushStatements();
+            sqlSession.clearCache();
+            sqlSession.close();
+            batchResults.clear();
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.info(e.getMessage());
         }
     }
 }

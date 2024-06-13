@@ -2,6 +2,7 @@ package com.wzmtr.dom.mapper.operate;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.wzmtr.dom.dataobject.operate.OperatePassengerFlowInfoDO;
+import com.wzmtr.dom.dto.req.operate.passengerflow.PassengerFlowAddReqDTO;
 import com.wzmtr.dom.dto.req.traffic.PassengerInfoReqDTO;
 import com.wzmtr.dom.dto.res.traffic.PassengerInfoResDTO;
 import org.apache.ibatis.annotations.Mapper;
@@ -19,6 +20,7 @@ public interface OperatePassengerFlowInfoMapper extends BaseMapper<OperatePassen
 
     List<PassengerInfoResDTO> eachStation(String startDate, String endDate);
 
+    void deleteStationPassenger(String dataType,String startDate,String endDate);
     void createStationPassenger(PassengerInfoReqDTO item);
 
     List<String> topThree(String startDate,String endDate,String dataType);

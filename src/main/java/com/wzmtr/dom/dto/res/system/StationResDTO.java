@@ -36,4 +36,5 @@ public class StationResDTO {
     @ApiModelProperty(value = "序号")
     private Integer stationOrder;
 
+    private String id;
 }

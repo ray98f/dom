@@ -1,6 +1,7 @@
 package com.wzmtr.dom.controller.common;
 
 import com.wzmtr.dom.dto.req.common.OpenConstructPlanReqDTO;
+import com.wzmtr.dom.dto.res.OpenDriverInfoRes;
 import com.wzmtr.dom.dto.res.operate.PlanStatisticsResDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.service.common.ThirdService;
@@ -58,14 +59,9 @@ public class CommonController {
 
     @ApiOperation(value = "测试")
     @GetMapping(value = "/test1")
-    public DataResponse<PlanStatisticsResDTO> test1(@RequestParam String startTime, String endTime) {
-        OpenConstructPlanReqDTO req = new OpenConstructPlanReqDTO();
-        req.setPlanbeginTime(startTime);
-        req.setPlanendTime(endTime);
-        req.setPage(1);
-        req.setLimit(10);
-       thirdService.getCsmConstructPlan(req);
-        return null;
+    public DataResponse<OpenDriverInfoRes> test1(@RequestParam String date) {
+
+        return DataResponse.of(thirdService.getDriverInfo(date));
     }
 
     /**

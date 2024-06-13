@@ -7,16 +7,17 @@ import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.operate.IndicatorInfoReqDTO;
 import com.wzmtr.dom.dto.req.operate.IndicatorPowerReqDTO;
 import com.wzmtr.dom.dto.req.operate.IndicatorRecordReqDTO;
-import com.wzmtr.dom.dto.res.operate.IndicatorDetailResDTO;
-import com.wzmtr.dom.dto.res.operate.IndicatorInfoResDTO;
-import com.wzmtr.dom.dto.res.operate.IndicatorPowerResDTO;
-import com.wzmtr.dom.dto.res.operate.IndicatorRecordResDTO;
+import com.wzmtr.dom.dto.res.common.OpenDepotStatisticsRes;
+import com.wzmtr.dom.dto.res.common.OpenTrainMileRes;
+import com.wzmtr.dom.dto.res.operate.*;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.DataType;
 import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
 import com.wzmtr.dom.mapper.operate.OperateIndicatorMapper;
+import com.wzmtr.dom.service.common.ThirdService;
+import com.wzmtr.dom.service.operate.OperateEventService;
 import com.wzmtr.dom.service.operate.OperateIndicatorService;
 import com.wzmtr.dom.utils.StringUtils;
 import com.wzmtr.dom.utils.TokenUtils;
@@ -27,9 +28,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.DecimalFormat;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 /**
  * 运营日报-初期运营指标
@@ -40,6 +40,10 @@ import java.util.stream.Collectors;
 @Service
 public class OperateIndicatorServiceImpl implements OperateIndicatorService {
 
+    @Autowired
+    private OperateEventService operateEventService;
+    @Autowired
+    private ThirdService thirdService;
     @Autowired
     private OperateIndicatorMapper operateIndicatorMapper;
 
@@ -136,15 +140,90 @@ public class OperateIndicatorServiceImpl implements OperateIndicatorService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void syncData(String dataType, String startDate, String endDate) {
-        //TODO
-        // 行调数据接口
-        // 乘务数据接口
-        // EAM数据接口
+
+        try{
+            //日报数据 同步
+            if(CommonConstants.DATA_TYPE_DAILY.equals(dataType)){
+
+                IndicatorRecordReqDTO indicatorRecordReqDTO = new IndicatorRecordReqDTO();
+                indicatorRecordReqDTO.setDataType(dataType);
+                indicatorRecordReqDTO.setStartDate(startDate);
+                indicatorRecordReqDTO.setEndDate(endDate);
+
+                //获取运营事件统计
+                IndicatorDetailResDTO detail = operateIndicatorMapper.queryInfoById(null, dataType, startDate, endDate);
+                if(Objects.nonNull(detail)){
+                    NewEventCountResDTO newEventCountResDTO = operateEventService.eventCountByType(startDate,endDate);
+
+                    //停运列次
+                    indicatorRecordReqDTO.setStopCount(newEventCountResDTO.getStopCount());
+
+                    //计划兑现列次 计划开行列次-停运列次
+                    indicatorRecordReqDTO.setPlanPromiseCount(detail.getPlanRunCount() - newEventCountResDTO.getStopCount());
+
+                    //加开列次
+                    indicatorRecordReqDTO.setAddCount(newEventCountResDTO.getAddCount());
+
+                    //实际开行列次 计划兑现列次+加开列次
+                    indicatorRecordReqDTO.setRealRunCount(detail.getPlanRunCount() - newEventCountResDTO.getStopCount() + newEventCountResDTO.getAddCount());
+
+                    //清客列次
+                    indicatorRecordReqDTO.setRutineGuestCount(newEventCountResDTO.getRutineGuestCount());
+
+                    //救援列次
+                    indicatorRecordReqDTO.setRescueCount(newEventCountResDTO.getRescueCount());
+
+                    //掉线次数
+                    indicatorRecordReqDTO.setOffLineCount(newEventCountResDTO.getOffLineCount());
+
+                    //晚点5分钟以上
+                    indicatorRecordReqDTO.setDelayCount(newEventCountResDTO.getDelay2Count());
+
+                    //晚点5分钟以内 3-5分钟
+                    indicatorRecordReqDTO.setDelay2Count(newEventCountResDTO.getDelay1Count());
+
+                    //延误 15分钟以内 5-15分钟延误
+                    indicatorRecordReqDTO.setDelay3Count(newEventCountResDTO.getDelay1VehicleCount());
+
+                    //延误 15分钟以上
+                    indicatorRecordReqDTO.setDelay4Count(newEventCountResDTO.getDelay2VehicleCount());
+
+                    //行调数据接口
+                    OpenDepotStatisticsRes openDepotStatisticsRes = thirdService.getOdmDepotStatistics(startDate);
+                    indicatorRecordReqDTO.setRunCode(openDepotStatisticsRes.getSchedule());
+                    indicatorRecordReqDTO.setSendTimeInterval(openDepotStatisticsRes.getDepartureInterval());
+                    indicatorRecordReqDTO.setPlanRunCount(openDepotStatisticsRes.getScheduleCount());
+
+                    //运营车公里（万列公里）
+                    OpenTrainMileRes openTrainMileRes =  thirdService.getEamTrainMile(startDate);
+                    indicatorRecordReqDTO.setOperate1Kilometer(Double.valueOf(openTrainMileRes.getSumDailyWorkMile()));
+                    //运营车公里（万车公里）：运营车公里（万列公里）*4
+                    indicatorRecordReqDTO.setOperate2Kilometer(Double.valueOf(openTrainMileRes.getSumDailyWorkMile()) * CommonConstants.FOUR);
+
+                    //走行车公里（万列公里）EAM系统-设备维护，走行公里数维护，当日所有车组的增加公里数之和/10000
+                    if(openTrainMileRes.getSumDailyMile() > 0){
+                        DecimalFormat df = new DecimalFormat(CommonConstants.DECIMAL_FMT_STRING);
+                        indicatorRecordReqDTO.setRun1Kilometer(Double.parseDouble(df.format(openTrainMileRes.getSumDailyMile()/CommonConstants.TEN_THOUSAND_DOUBLE)));
+
+                    }else{
+                        indicatorRecordReqDTO.setRun1Kilometer(CommonConstants.ZERO_DOUBLE);
+                    }
+                    //走行车公里（万车公里） 走行车公里（万列公里）*4
+                    indicatorRecordReqDTO.setRun2Kilometer(indicatorRecordReqDTO.getRun1Kilometer() * 4);
+
+                    operateIndicatorMapper.autoModify(indicatorRecordReqDTO);
+                }
+
+            }
+        }catch (Exception e){
+            throw new CommonException(ErrorCode.UPDATE_ERROR);
+        }
 
     }
 
-    private IndicatorDetailResDTO buildIndicatorDetail(IndicatorDetailResDTO detail){
+    private void buildIndicatorDetail(IndicatorDetailResDTO detail){
 
         DecimalFormat decimalFormat = new DecimalFormat(CommonConstants.DECIMAL_FMT_STRING);
         // 正点率 (实际开行列此-晚点次数) / 实际开行列次
@@ -182,7 +261,6 @@ public class OperateIndicatorServiceImpl implements OperateIndicatorService {
             detail.setEvent4Rate(CommonConstants.ZERO_STRING);
         }
 
-        return detail;
     }
     @NotNull
     private static IndicatorInfoReqDTO buildIndicatorInfo(CurrentLoginUser currentLoginUser, IndicatorRecordReqDTO indicatorRecordReqDTO, String sType) {

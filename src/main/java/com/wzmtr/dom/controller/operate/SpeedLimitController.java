@@ -1,10 +1,12 @@
 package com.wzmtr.dom.controller.operate;
 
+import com.wzmtr.dom.config.annotation.CurrUser;
 import com.wzmtr.dom.dto.req.operate.SpeedLimitInfoReqDTO;
 import com.wzmtr.dom.dto.req.operate.SpeedLimitRecordReqDTO;
 import com.wzmtr.dom.dto.res.operate.SpeedLimitInfoResDTO;
 import com.wzmtr.dom.dto.res.operate.SpeedLimitRecordResDTO;
 import com.wzmtr.dom.entity.BaseIdsEntity;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.entity.response.DataResponse;
 import com.wzmtr.dom.entity.response.PageResponse;
@@ -69,8 +71,8 @@ public class SpeedLimitController {
      */
     @PostMapping("/record/add")
     @ApiOperation(value = "新增-线路限速情况记录")
-    public DataResponse<T> addRecord(@RequestBody SpeedLimitRecordReqDTO speedLimitRecordReqDTO) {
-        speedLimitService.addRecord(speedLimitRecordReqDTO);
+    public DataResponse<T> addRecord(@CurrUser CurrentLoginUser currentLoginUser, @RequestBody SpeedLimitRecordReqDTO speedLimitRecordReqDTO) {
+        speedLimitService.addRecord(currentLoginUser,speedLimitRecordReqDTO);
         return DataResponse.success();
     }
 

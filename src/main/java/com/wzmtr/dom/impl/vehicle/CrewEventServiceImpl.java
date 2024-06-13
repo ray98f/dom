@@ -135,6 +135,12 @@ public class CrewEventServiceImpl implements CrewEventService {
         }
     }
 
+    @Override
+    public void autoModify(String dataType, String startDate, String endDate) {
+        updateSummaryCount(startDate,endDate);
+    }
+
+
     /**
      * 事件统计更新
      * */

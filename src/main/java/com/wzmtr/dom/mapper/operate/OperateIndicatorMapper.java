@@ -90,6 +90,12 @@ public interface OperateIndicatorMapper {
 
     /**
      * 编辑
+     * @param indicatorRecordReqDTO 入参数
+     */
+    int autoModify(IndicatorRecordReqDTO indicatorRecordReqDTO);
+
+    /**
+     * 编辑
      * @param indicatorInfoReqDTO 入参数
      */
     int modifyInfo(IndicatorInfoReqDTO indicatorInfoReqDTO);

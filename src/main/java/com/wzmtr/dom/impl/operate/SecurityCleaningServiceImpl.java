@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.dto.req.operate.SecurityCleaningReqDTO;
 import com.wzmtr.dom.dto.res.operate.SecurityCleaningResDTO;
+import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
@@ -40,14 +41,14 @@ public class SecurityCleaningServiceImpl implements SecurityCleaningService {
     }
 
     @Override
-    public void add(SecurityCleaningReqDTO securityCleaningReqDTO) {
+    public void add(CurrentLoginUser currentLoginUser,SecurityCleaningReqDTO securityCleaningReqDTO) {
         // 判断新增数据所属时间是否已存在数据
         Integer result = securityCleaningMapper.selectIsExist(securityCleaningReqDTO);
         if (result > 0) {
             throw new CommonException(ErrorCode.NORMAL_ERROR, "所属日期安检及保洁情况数据已存在，无法重复新增");
         }
         securityCleaningReqDTO.setId(TokenUtils.getUuId());
-        securityCleaningReqDTO.setCreateBy(TokenUtils.getCurrentPersonId());
+        securityCleaningReqDTO.setCreateBy(currentLoginUser.getPersonId());
         securityCleaningMapper.add(securityCleaningReqDTO);
     }
 

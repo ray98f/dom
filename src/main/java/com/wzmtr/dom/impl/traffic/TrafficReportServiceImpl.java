@@ -121,7 +121,7 @@ public class TrafficReportServiceImpl implements TrafficReportService {
             dailyReportReqDTO.setId(reportId);
             trafficReportMapper.addDaily(dailyReportReqDTO);
 
-            //增加客流、热线、安全生产 三个子报表 TODO
+            //增加客流、热线、安全生产 三个子报表
             String[] typeArray = CommonConstants.TRAFFIC_REPORT_TYPE;
             for (String s : typeArray) {
                 dailyReportReqDTO.setId("sub" + s + "-" + TokenUtils.getUuId());

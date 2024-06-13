@@ -168,6 +168,11 @@
         where id =#{id}
     </update>
 
+    <update id="updatePersonStation"   parameterType ="java.util.Map">
+        update SYS_USER set station_code=#{stationCode}
+        where id =#{id}
+    </update>
+
     <select id="userCenterInfo" resultType="com.wzmtr.dom.dto.res.common.UserCenterInfoResDTO">
         SELECT * FROM (
         SELECT

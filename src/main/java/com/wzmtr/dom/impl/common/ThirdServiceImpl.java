@@ -10,10 +10,8 @@ import com.sun.org.apache.bcel.internal.generic.RETURN;
 import com.wzmtr.dom.constant.CommonConstants;
 import com.wzmtr.dom.dto.req.common.OpenConstructPlanReqDTO;
 import com.wzmtr.dom.dto.req.common.OpenDispatchOrderReqDTO;
-import com.wzmtr.dom.dto.res.common.OpenConstructPlanResDTO;
-import com.wzmtr.dom.dto.res.common.OpenDepotStatisticsRes;
-import com.wzmtr.dom.dto.res.common.OpenDispatchOrderRes;
-import com.wzmtr.dom.dto.res.common.OpenFaultStatisticsRes;
+import com.wzmtr.dom.dto.res.OpenDriverInfoRes;
+import com.wzmtr.dom.dto.res.common.*;
 import com.wzmtr.dom.dto.res.operate.ConstructPlanResDTO;
 import com.wzmtr.dom.dto.res.operate.PlanStatisticsResDTO;
 import com.wzmtr.dom.dto.res.operate.UnsaturationConstructResDTO;
@@ -59,6 +57,13 @@ public class ThirdServiceImpl implements ThirdService {
 
     @Value("${open-api.eam.faultStatistics}")
     private String faultStatistics;
+
+    @Value("${open-api.eam.trainMile}")
+    private String trainMile;
+
+    @Value("${open-api.ocm.driverInfo}")
+    private String driverInfoApi;
+
     @Override
     public List<UnsaturationConstructResDTO> getUnsaturationConstruct(String startTime,String endTime) {
         JSONObject res = JSONObject.parseObject(HttpUtils.doGet(unsaturationConstructApi+"?planBeginTime="+startTime+"&planEndTime="+endTime,null), JSONObject.class);
@@ -157,7 +162,7 @@ public class ThirdServiceImpl implements ThirdService {
         if(Objects.nonNull(res)){
             return JSON.parseObject(res.getJSONObject(CommonConstants.API_RES_DATA).toJSONString(),OpenDepotStatisticsRes.class);
         }
-        return null;
+        return new OpenDepotStatisticsRes();
     }
 
     @Override
@@ -173,6 +178,31 @@ public class ThirdServiceImpl implements ThirdService {
         return null;
     }
 
+    @Override
+    public OpenTrainMileRes getEamTrainMile(String day) {
+        String result = HttpUtil.createGet(trainMile+"?day="+day)
+                .execute()
+                .body();
+        JSONObject res = JSONObject.parseObject(result, JSONObject.class);
+        if(Objects.nonNull(res)){
+
+            return JSONObject.parseObject(res.getJSONObject(CommonConstants.API_RES_DATA).toJSONString(),OpenTrainMileRes.class);
+        }
+        return OpenTrainMileRes.builder().sumDailyWorkMile(CommonConstants.ZERO).sumDailyMile(CommonConstants.ZERO).build();
+    }
+
+    @Override
+    public OpenDriverInfoRes getDriverInfo(String date) {
+        String result = HttpUtil.createGet(driverInfoApi+"?date="+date)
+                .execute()
+                .body();
+        JSONObject res = JSONObject.parseObject(result, JSONObject.class);
+        if(Objects.nonNull(res)){
+
+            return JSONObject.parseObject(res.getJSONObject(CommonConstants.API_RES_DATA).toJSONString(),OpenDriverInfoRes.class);
+        }
+        return new OpenDriverInfoRes();
+    }
 
     private ConstructPlanResDTO convertDTO(OpenConstructPlanResDTO openConstructPlan){
 

@@ -108,6 +108,8 @@ public interface DrivingMapper {
      */
     int modifyDepotData(DrivingDepotReqDTO drivingDepotReqDTO);
 
+    void modifyDepotByDate(DrivingDepotReqDTO drivingDepotReqDTO);
+
     /**
      * 车场
      * @param recordId 入参数
@@ -129,6 +131,8 @@ public interface DrivingMapper {
      */
     int modifyInfoData(DrivingInfoReqDTO drivingInfoReqDTO);
 
+    void modifyDriveInfo(DrivingInfoReqDTO drivingInfoReqDTO);
+
     /**
      * 获取司机驾驶情况
      * @param id 入参数
@@ -149,7 +153,7 @@ public interface DrivingMapper {
      * @param recordId 入参数
      * @return 司机驾驶情况
      */
-    DrivingInfoResDTO driveInfo(String recordId);
+    DrivingInfoResDTO driveInfo(String recordId,String dataType,String startDate,String endDate);
 
     void autoModifyByDaily(String dataType,String startDate,String endDate);
 

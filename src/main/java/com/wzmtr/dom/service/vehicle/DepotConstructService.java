@@ -58,7 +58,7 @@ public interface DepotConstructService {
      * @param currentLoginUser 入参数
      * @param recordId 入参数
      */
-    void syncData(CurrentLoginUser currentLoginUser,String recordId);
+    void syncData(CurrentLoginUser currentLoginUser,String recordId,String depotCode,String dataType,String startDate,String endDate);
 
     /**
      * 选择施工计划-列表

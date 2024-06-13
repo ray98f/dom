@@ -2,8 +2,7 @@ package com.wzmtr.dom.dto.req.vehicle;
 
 import com.wzmtr.dom.entity.BaseEntity;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -15,6 +14,9 @@ import java.math.BigDecimal;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class DrivingInfoReqDTO extends BaseEntity {
 
     @ApiModelProperty(value = "行车情况记录ID")

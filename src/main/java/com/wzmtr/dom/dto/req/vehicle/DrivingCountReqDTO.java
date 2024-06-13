@@ -29,4 +29,9 @@ public class DrivingCountReqDTO extends BaseEntity {
 
     @ApiModelProperty(value = "驾驶总公里数")
     private Double mileageTotal;
+
+
+    private String dataType;
+    private String startDate;
+    private String endDate;
 }
