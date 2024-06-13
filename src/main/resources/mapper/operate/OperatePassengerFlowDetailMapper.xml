@@ -155,21 +155,11 @@
         <if test="dataType!=null and dataType!=''">
             AND DATA_TYPE=#{dataType}
         </if>
-        <if test="dataType=='1'.toString()">
-            <if test="startDate!=null and startDate!=''">
-                AND DATA_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
-            </if>
-            <if test="endDate!=null and endDate!=''">
-                AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>DATA_DATE
-            </if>
+        <if test="startDate!=null and startDate!=''">
+            AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
         </if>
-        <if test="dataType!='1'.toString()">
-            <if test="startDate!=null and startDate!=''">
-                AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
-            </if>
-            <if test="endDate!=null and endDate!=''">
-                AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>END_DATE
-            </if>
+        <if test="endDate!=null and endDate!=''">
+            AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
         </if>
     </select>
 

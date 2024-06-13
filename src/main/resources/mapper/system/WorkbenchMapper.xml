@@ -260,4 +260,17 @@
         FROM DOM_FLOW_NODE
         WHERE NODE_ID=#{nodeId} AND DEL_FLAG='0'
     </select>
+
+    <select id="queryAuditorByReport" resultType="java.lang.String">
+        SELECT NAME
+        FROM SYS_USER
+        WHERE ID IN (        SELECT DISTINCT APPROVAL_USER
+        FROM DOM_APPROVAL_HISTORY t1
+        WHERE DEL_FLAG = '0'
+        AND TODO_TYPE = '1'
+        AND STATUS = '1'
+        AND PROCESS_KEY = #{id}
+        AND REPORT_ID = #{reportId})
+
+    </select>
 </mapper>
