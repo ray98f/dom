@@ -57,13 +57,13 @@
         LEFT JOIN TRAFFIC_HOTLINE_IMPORTANT thi ON thi.DATA_TYPE=oh.DATA_TYPE AND thi.START_DATE=oh.START_DATE
         AND thi.END_DATE=oh.END_DATE
         WHERE oh.DEL_FLAG='0' AND oh.ID=#{id}
-        ORDER BY thi.HOTLINE_TYPE ASC
         <if test="startDate!=null and startDate!=''">
             AND oh.START_DATE>=to_date(#{startDate},'YYYY-MM-DD')
         </if>
         <if test="endDate!=null and endDate!=''">
             AND to_date(#{endDate},'YYYY-MM-DD')>=oh.END_DATE
         </if>
+        ORDER BY thi.HOTLINE_TYPE ASC
     </select>
 
     <select id="selectIsExist" resultType="java.lang.Integer">

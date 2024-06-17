@@ -269,7 +269,7 @@
         WHERE DEL_FLAG = '0'
         AND TODO_TYPE = '1'
         AND STATUS = '1'
-        AND PROCESS_KEY = #{id}
+        AND PROCESS_KEY = #{processKey}
         AND REPORT_ID = #{reportId})
 
     </select>
