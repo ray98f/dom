@@ -463,6 +463,9 @@ public class DailyDataModifyTask {
         depotConstructService.syncData(currentLoginUser,null,CommonConstants.STATION_280,CommonConstants.DATA_TYPE_DAILY,DateUtil.formatDate(previousDay),DateUtil.formatDate(previousDay));
         depotConstructService.syncData(currentLoginUser,null,CommonConstants.STATION_281,CommonConstants.DATA_TYPE_DAILY,DateUtil.formatDate(previousDay),DateUtil.formatDate(previousDay));
 
+        //当日人员情况
+        personRecordService.syncData(DateUtil.formatDate(previousDay));
+
         //调度命令记录
         dispatchService.autoModifyByDaily(CommonConstants.DATA_TYPE_DAILY,DateUtil.formatDate(previousDay),DateUtil.formatDate(previousDay));
     }

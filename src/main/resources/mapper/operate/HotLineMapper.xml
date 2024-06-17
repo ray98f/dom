@@ -34,7 +34,7 @@
     <select id="detailSummary" resultType="com.wzmtr.dom.dto.res.traffic.hotline.HotLineSummaryDetailResDTO">
         SELECT oh.ID, ths.COMPLAINT_TOTAL, ths.PRAISE_TOTAL, ths.ANSWER_TOTAL, ths.APP_ANSWER, ths.CONSULT, ths.RESORT,
         ths.TYPE1_COMPLAINT, ths.TYPE2_COMPLAINT, ths.TYPE1_PRAISE, ths.TYPE2_PRAISE, ths.PENNANT, ths.S1_SWITCH,
-        ths.OTHER, oh.VERSION, oh.DATA_DATE, oh.DATA_TYPE, oh.START_DATE, oh.END_DATE
+        ths.OTHER,ths.REMARK, oh.VERSION, oh.DATA_DATE, oh.DATA_TYPE, oh.START_DATE, oh.END_DATE
         FROM OPERATE_HOTLINE oh
         LEFT JOIN TRAFFIC_HOTLINE_SUMMARY ths ON ths.DATA_TYPE=oh.DATA_TYPE AND ths.START_DATE=oh.START_DATE
         AND ths.END_DATE=oh.END_DATE

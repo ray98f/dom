@@ -31,6 +31,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 运营-运营报表
@@ -51,6 +52,7 @@ public class OperateReportServiceImpl implements OperateReportService {
     @Autowired
     private DictMapper dictMapper;
 
+
     @Override
     public String getSafeDay() throws ParseException {
         List<DictResDTO> dict = dictMapper.list(CommonConstants.OPERATE_DAY, CommonConstants.ONE_STRING, null);
@@ -69,7 +71,16 @@ public class OperateReportServiceImpl implements OperateReportService {
 
     @Override
     public DailyReportResDTO detailDaily(String id) {
-        return operateReportMapper.detailDaily(id);
+        DailyReportResDTO res = operateReportMapper.detailDaily(id);
+
+        //审核通过后展示审核人信息
+        if(CommonConstants.TWO_STRING.equals(res.getStatus())){
+            List<String> authorList = workbenchService.getApprovals(CommonConstants.OPERATE_DAILY,id);
+            if(Objects.nonNull(authorList)){
+                res.setAuditor(String.join(CommonConstants.COMMA,authorList));
+            }
+        }
+        return res;
     }
 
     @Override
@@ -110,7 +121,15 @@ public class OperateReportServiceImpl implements OperateReportService {
 
     @Override
     public WeeklyReportResDTO detailWeekly(String id) {
-        return operateReportMapper.detailWeekly(id);
+        WeeklyReportResDTO res = operateReportMapper.detailWeekly(id);
+        //审核通过后展示审核人信息
+        if(CommonConstants.TWO_STRING.equals(res.getStatus())){
+            List<String> authorList = workbenchService.getApprovals(CommonConstants.OPERATE_WEEKLY,id);
+            if(Objects.nonNull(authorList)){
+                res.setAuditor(String.join(CommonConstants.COMMA,authorList));
+            }
+        }
+        return res;
     }
 
     @Override
@@ -151,7 +170,16 @@ public class OperateReportServiceImpl implements OperateReportService {
 
     @Override
     public MonthlyReportResDTO detailMonthly(String id) {
-        return operateReportMapper.detailMonthly(id);
+        MonthlyReportResDTO res = operateReportMapper.detailMonthly(id);
+
+        //审核通过后展示审核人信息
+        if(CommonConstants.TWO_STRING.equals(res.getStatus())){
+            List<String> authorList = workbenchService.getApprovals(CommonConstants.OPERATE_MONTHLY,id);
+            if(Objects.nonNull(authorList)){
+                res.setAuditor(String.join(CommonConstants.COMMA,authorList));
+            }
+        }
+        return res;
     }
 
     @Override

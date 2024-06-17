@@ -86,4 +86,20 @@ public class HotLineImportantController {
         hotLineImportantService.modify(currentLoginUser, req);
         return DataResponse.success();
     }
+
+    /**
+     * 重要热线内容-展示/隐藏
+     *
+     * @return 成功
+     */
+    @GetMapping("/showOrHide")
+    @ApiOperation(value = "重要热线内容-展示/隐藏")
+    public DataResponse<T> remove(@CurrUser CurrentLoginUser currentLoginUser,
+                                  @RequestParam String id,
+                                  @RequestParam String isHide) {
+        hotLineImportantService.showOrHide(currentLoginUser, id,isHide);
+        return DataResponse.success();
+    }
+
+
 }

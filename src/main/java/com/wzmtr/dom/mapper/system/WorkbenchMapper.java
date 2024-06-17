@@ -130,4 +130,12 @@ public interface WorkbenchMapper {
      * @return  审批角色
      */
     List<String> queryUserByRole(List<String> ids);
+
+    /**
+     * 获取审批人员
+     * @param processKey
+     * @param reportId
+     * @return  获取审批人员
+     */
+    List<String> queryAuditorByReport(String processKey,String reportId);
 }

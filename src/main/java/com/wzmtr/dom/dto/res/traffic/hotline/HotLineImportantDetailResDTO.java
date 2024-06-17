@@ -83,5 +83,6 @@ public class HotLineImportantDetailResDTO {
     @ApiModelProperty("版本号(乐观锁)")
     private String version;
 
-
+    @ApiModelProperty("隐藏标识")
+    private String isHide;
 }

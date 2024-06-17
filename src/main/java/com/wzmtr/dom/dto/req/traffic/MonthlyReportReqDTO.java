@@ -88,6 +88,36 @@ public class MonthlyReportReqDTO extends BaseEntity {
     private String ifProductionInfo;
 
     /**
+     * 本月重点工作落实情况 0否1是
+     */
+    @ApiModelProperty(value = "本月重点工作落实情况 0否1是")
+    private String ifImportantWork;
+
+    /**
+     * 本月主要工作 0否1是
+     */
+    @ApiModelProperty(value = "本月主要工作 0否1是")
+    private String ifMainWork;
+
+    /**
+     * 存在问题 0否1是
+     */
+    @ApiModelProperty(value = "存在问题 0否1是")
+    private String ifProblem;
+
+    /**
+     * 本月工作总结 0否1是
+     */
+    @ApiModelProperty(value = "本月工作总结 0否1是")
+    private String ifMonthSummary;
+
+    /**
+     * 下月计划 0否1是
+     */
+    @ApiModelProperty(value = "下月计划 0否1是")
+    private String ifNextPlan;
+
+    /**
      * 周报起始日期
      */
     @ApiModelProperty(value = "月报起始日期")

@@ -91,7 +91,14 @@ public class HotLineImportantServiceImpl implements HotLineImportantService {
         // 日报数据更新时,更新周报/月报
         if((CommonConstants.ONE_STRING).equals(reqDTO.getDataType())){
             autoModifyByDaily(reqDTO.getDataType(),DateUtil.formatDate(reqDTO.getStartDate()),DateUtil.formatDate(reqDTO.getEndDate()));
+        }else{
+            hotLineSummaryMapper.autoModifyByDaily(reqDTO.getDataType(),DateUtil.formatDate(reqDTO.getStartDate()),DateUtil.formatDate(reqDTO.getEndDate()));
         }
+    }
+
+    @Override
+    public void showOrHide(CurrentLoginUser currentLoginUser, String id, String isHide) {
+        hotLineImportantMapper.showOrHide(id,isHide);
     }
 
 

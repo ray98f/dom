@@ -137,6 +137,11 @@ public class WorkbenchServiceImpl implements WorkbenchService {
         }
     }
 
+    @Override
+    public List<String> getApprovals(String processKey, String reportId) {
+        return workbenchMapper.queryAuditorByReport(processKey,reportId);
+    }
+
     /**
      * 车辆部报表审批
      * @param todoReqDTO 任务督办审批请求对象

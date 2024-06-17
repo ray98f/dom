@@ -234,6 +234,19 @@ public class CommonConstants {
     public static final String OPERATE_WEEKLY_NODE1 ="operate_weekly_node1";
     public static final String OPERATE_MONTHLY_NODE1 ="operate_monthly_node1";
 
+    public static final String VEHICLE_DAILY ="vehicle_daily";
+    public static final String VEHICLE_WEEKLY ="vehicle_weekly";
+    public static final String VEHICLE_MONTHLY ="vehicle_monthly";
+
+    public static final String TRAFFIC_DAILY ="traffic_daily";
+    public static final String TRAFFIC_WEEKLY ="traffic_weekly";
+    public static final String TRAFFIC_MONTHLY ="traffic_monthly";
+
+    public static final String OPERATE_DAILY ="operate_daily";
+    public static final String OPERATE_WEEKLY ="operate_weekly";
+    public static final String OPERATE_MONTHLY ="operate_monthly";
+
+
     //运营开始日期
     public static final String OPERATE_START_DAY = "2023-08-26";
 

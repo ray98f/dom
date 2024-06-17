@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 客运部-客运部报表
@@ -95,6 +96,14 @@ public class TrafficReportServiceImpl implements TrafficReportService {
             }
         }
         detail.setSubDailyReport(subDailyReportNew);
+
+        //审核通过后展示审核人信息
+        if(CommonConstants.TWO_STRING.equals(detail.getStatus())){
+            List<String> authorList = workbenchService.getApprovals(CommonConstants.TRAFFIC_DAILY,detail.getId());
+            if(Objects.nonNull(authorList)){
+                detail.setAuditor(String.join(CommonConstants.COMMA,authorList));
+            }
+        }
 
         return detail;
     }
@@ -265,6 +274,14 @@ public class TrafficReportServiceImpl implements TrafficReportService {
         }
         detail.setSubWeeklyReport(subWeeklyReportNew);
 
+        //审核通过后展示审核人信息
+        if(CommonConstants.TWO_STRING.equals(detail.getStatus())){
+            List<String> authorList = workbenchService.getApprovals(CommonConstants.TRAFFIC_WEEKLY,detail.getId());
+            if(Objects.nonNull(authorList)){
+                detail.setAuditor(String.join(CommonConstants.COMMA,authorList));
+            }
+        }
+
         return detail;
     }
 
@@ -430,6 +447,14 @@ public class TrafficReportServiceImpl implements TrafficReportService {
             }
         }
         detail.setSubMonthlyReport(subWeeklyReportNew);
+
+        //审核通过后展示审核人信息
+        if(CommonConstants.TWO_STRING.equals(detail.getStatus())){
+            List<String> authorList = workbenchService.getApprovals(CommonConstants.TRAFFIC_MONTHLY,detail.getId());
+            if(Objects.nonNull(authorList)){
+                detail.setAuditor(String.join(CommonConstants.COMMA,authorList));
+            }
+        }
 
         return detail;
     }

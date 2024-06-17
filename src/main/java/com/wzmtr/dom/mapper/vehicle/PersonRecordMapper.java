@@ -54,6 +54,12 @@ public interface PersonRecordMapper {
     void modify(PersonRecordReqDTO personRecordReqDTO);
 
     /**
+     * 更新当日人员情况
+     * @param personRecordReqDTO 当日人员情况参数
+     */
+    void modifyBySync(PersonRecordReqDTO personRecordReqDTO);
+
+    /**
      * 删除当日人员情况
      * @param ids ids
      * @param userId 用户id

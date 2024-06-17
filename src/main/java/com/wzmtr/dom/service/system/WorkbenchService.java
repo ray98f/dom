@@ -6,6 +6,8 @@ import com.wzmtr.dom.dto.req.system.TodoReqDTO;
 import com.wzmtr.dom.dto.res.system.TodoResDTO;
 import com.wzmtr.dom.entity.PageReqDTO;
 
+import java.util.List;
+
 /**
  * 系统-工作台
  * @author  Ray
@@ -40,4 +42,6 @@ public interface WorkbenchService {
      * @param approvalReqDTO 督办审批参数
      */
     void commitApproval(ApprovalReqDTO approvalReqDTO);
+
+    List<String> getApprovals(String processKey,String reportId);
 }

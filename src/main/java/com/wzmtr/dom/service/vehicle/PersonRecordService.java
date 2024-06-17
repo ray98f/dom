@@ -34,10 +34,10 @@ public interface PersonRecordService {
 
     /**
      * 提取乘务系统当日人员情况
-     * @param time 日期
+     * @param date 日期
      * @return 当日人员情况
      */
-    PersonRecordResDTO getOcmPersonRecord(String time);
+    PersonRecordResDTO syncData(String date);
 
     /**
      * 新增当日人员情况

@@ -123,6 +123,9 @@ public class HotLineSummaryServiceImpl implements HotLineSummaryService {
             //hotLineImportantService
             hotLineImportantService.autoModifyByDaily(reqDTO.getDataType(), DateUtil.formatDate(reqDTO.getStartDate()),
                     DateUtil.formatDate(reqDTO.getEndDate()));
+        }else{
+            hotLineSummaryMapper.autoModifyByDaily(reqDTO.getDataType(), DateUtil.formatDate(reqDTO.getStartDate()),
+                    DateUtil.formatDate(reqDTO.getEndDate()));
         }
     }
 

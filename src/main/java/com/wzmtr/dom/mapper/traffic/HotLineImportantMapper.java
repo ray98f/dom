@@ -29,6 +29,8 @@ public interface HotLineImportantMapper extends BaseMapper<TrafficHotlineImporta
 
     List<HotLineImportantDetailResDTO> selectByDate(String date, String startDate, String endDate, String dataType);
 
+    void showOrHide(String id,String isHide);
+
     void autoModify(Long count,String hotlineType,String dataType,String startDate, String endDate);
 
     void autoModifyByDaily(String hotlineType,String dataType,String startDate, String endDate);

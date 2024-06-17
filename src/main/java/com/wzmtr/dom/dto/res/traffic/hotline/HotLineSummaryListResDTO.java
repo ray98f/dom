@@ -42,7 +42,11 @@ public class HotLineSummaryListResDTO {
      */
     @ApiModelProperty("咨询")
     private Long consult;
-
+    /**
+     * 建议
+     */
+    @ApiModelProperty("建议")
+    private Long suggest;
 
     @ApiModelProperty(value = "数据所属日期")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

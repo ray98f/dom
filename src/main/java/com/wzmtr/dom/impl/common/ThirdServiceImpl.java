@@ -68,7 +68,7 @@ public class ThirdServiceImpl implements ThirdService {
     public List<UnsaturationConstructResDTO> getUnsaturationConstruct(String startTime,String endTime) {
         JSONObject res = JSONObject.parseObject(HttpUtils.doGet(unsaturationConstructApi+"?planBeginTime="+startTime+"&planEndTime="+endTime,null), JSONObject.class);
         if(Objects.isNull(res) || Objects.isNull(res.getJSONArray(CommonConstants.API_RES_DATA))){
-            return null;
+            return new ArrayList<>();
         }
         return res.getJSONArray(CommonConstants.API_RES_DATA).toJavaList(UnsaturationConstructResDTO.class);
     }
@@ -80,7 +80,7 @@ public class ThirdServiceImpl implements ThirdService {
             List<PlanStatisticsResDTO> result = res.getJSONArray(CommonConstants.API_RES_DATA).toJavaList(PlanStatisticsResDTO.class);
             return result;
         }
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
@@ -175,7 +175,7 @@ public class ThirdServiceImpl implements ThirdService {
         if(Objects.nonNull(res)){
             return res.getJSONArray(CommonConstants.API_RES_DATA).toJavaList(OpenFaultStatisticsRes.class);
         }
-        return null;
+        return new ArrayList<>();
     }
 
     @Override

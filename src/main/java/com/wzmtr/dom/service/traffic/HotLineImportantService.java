@@ -19,6 +19,8 @@ public interface HotLineImportantService {
 
     void modify(CurrentLoginUser currentLoginUser, HotLineImportantAddReqDTO passengerRecordReqDTO);
 
+    void showOrHide(CurrentLoginUser currentLoginUser, String id,String isHide);
+
     List<HotLineImportantDetailResDTO> acc(SidReqDTO reqDTO);
 
     /**

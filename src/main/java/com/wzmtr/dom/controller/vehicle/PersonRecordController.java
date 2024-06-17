@@ -61,13 +61,13 @@ public class PersonRecordController {
 
     /**
      * 提取乘务系统当日人员情况
-     * @param time 日期
+     * @param date 日期
      * @return 当日人员情况
      */
-    @GetMapping("/ocm")
+    @GetMapping("/syncData")
     @ApiOperation(value = "提取乘务系统当日人员情况")
-    public DataResponse<PersonRecordResDTO> getOcmPersonRecord(@RequestParam(required = false) String time) {
-        return DataResponse.of(personRecordService.getOcmPersonRecord(time));
+    public DataResponse<PersonRecordResDTO> syncData(@RequestParam String date) {
+        return DataResponse.of(personRecordService.syncData(date));
     }
 
     /**

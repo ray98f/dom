@@ -81,6 +81,12 @@ public class DailyReportResDTO {
     private String status;
 
     /**
+     * 审核人
+     */
+    @ApiModelProperty(value = "审核人")
+    private String auditor;
+
+    /**
      * 开始日期
      */
     @ApiModelProperty(value = "开始日期")

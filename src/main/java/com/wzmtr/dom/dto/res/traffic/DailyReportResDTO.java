@@ -129,6 +129,12 @@ public class DailyReportResDTO {
     private String status;
 
     /**
+     * 审核人
+     */
+    @ApiModelProperty(value = "审核人")
+    private String auditor;
+
+    /**
      * 创建者
      */
     @ApiModelProperty(value = "创建者")

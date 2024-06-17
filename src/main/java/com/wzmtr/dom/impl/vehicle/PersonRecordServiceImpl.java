@@ -1,14 +1,17 @@
 package com.wzmtr.dom.impl.vehicle;
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
 import com.wzmtr.dom.dto.req.vehicle.PersonRecordReqDTO;
+import com.wzmtr.dom.dto.res.OpenDriverInfoRes;
 import com.wzmtr.dom.dto.res.vehicle.PersonRecordResDTO;
 import com.wzmtr.dom.entity.CurrentLoginUser;
 import com.wzmtr.dom.entity.PageReqDTO;
 import com.wzmtr.dom.enums.ErrorCode;
 import com.wzmtr.dom.exception.CommonException;
 import com.wzmtr.dom.mapper.vehicle.PersonRecordMapper;
+import com.wzmtr.dom.service.common.ThirdService;
 import com.wzmtr.dom.service.vehicle.PersonRecordService;
 import com.wzmtr.dom.utils.StringUtils;
 import com.wzmtr.dom.utils.TokenUtils;
@@ -27,6 +30,9 @@ import java.util.List;
 public class PersonRecordServiceImpl implements PersonRecordService {
 
     @Autowired
+    private ThirdService thirdService;
+
+    @Autowired
     private PersonRecordMapper trainRecordMapper;
 
     @Override
@@ -41,8 +47,20 @@ public class PersonRecordServiceImpl implements PersonRecordService {
     }
 
     @Override
-    public PersonRecordResDTO getOcmPersonRecord(String time) {
-        // todo 调用 乘务系统接口 根据日期获取当日人员情况
+    public PersonRecordResDTO syncData(String date) {
+        OpenDriverInfoRes res = thirdService.getDriverInfo(date);
+        PersonRecordReqDTO personRecordReqDTO = PersonRecordReqDTO.builder()
+                .mainDriverDay(res.getDayHeadDriver())
+                .mainDriverNight(res.getNightHeadDriver())
+                .guideDriverDay(res.getDayGuideDriver())
+                .guideDriverNight(res.getNightGuideDriver())
+                .leavePersonal(res.getPersonalLeave())
+                .leaveSick(res.getSickLeave())
+                .leaveAnnual(res.getAnnualLeave())
+                .leaveOther(res.getOtherLeave())
+                .dataDate(DateUtil.parseDate(date))
+                .build();
+        trainRecordMapper.modifyBySync(personRecordReqDTO);
         return new PersonRecordResDTO();
     }
 

@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 车辆部-车辆部报表
@@ -52,7 +53,18 @@ public class VehicleReportServiceImpl implements VehicleReportService {
 
     @Override
     public DailyReportResDTO detailDaily(String id) {
-        return vehicleReportMapper.detailDaily(id);
+
+        DailyReportResDTO res = vehicleReportMapper.detailDaily(id);
+
+        //审核通过后展示审核人信息
+        if(CommonConstants.TWO_STRING.equals(res.getStatus())){
+            List<String> authorList = workbenchService.getApprovals(CommonConstants.VEHICLE_DAILY,id);
+            if(Objects.nonNull(authorList)){
+                res.setAuditor(String.join(CommonConstants.COMMA,authorList));
+            }
+        }
+
+        return res;
     }
 
     @Override
@@ -99,7 +111,18 @@ public class VehicleReportServiceImpl implements VehicleReportService {
 
     @Override
     public WeeklyReportResDTO detailWeekly(String id) {
-        return vehicleReportMapper.detailWeekly(id);
+
+        WeeklyReportResDTO res = vehicleReportMapper.detailWeekly(id);
+
+        //审核通过后展示审核人信息
+        if(CommonConstants.TWO_STRING.equals(res.getStatus())){
+            List<String> authorList = workbenchService.getApprovals(CommonConstants.VEHICLE_WEEKLY,id);
+            if(Objects.nonNull(authorList)){
+                res.setAuditor(String.join(CommonConstants.COMMA,authorList));
+            }
+        }
+
+        return res;
     }
 
     @Override
@@ -140,7 +163,18 @@ public class VehicleReportServiceImpl implements VehicleReportService {
 
     @Override
     public MonthlyReportResDTO detailMonthly(String id) {
-        return vehicleReportMapper.detailMonthly(id);
+
+        MonthlyReportResDTO res = vehicleReportMapper.detailMonthly(id);
+
+        //审核通过后展示审核人信息
+        if(CommonConstants.TWO_STRING.equals(res.getStatus())){
+            List<String> authorList = workbenchService.getApprovals(CommonConstants.VEHICLE_MONTHLY,id);
+            if(Objects.nonNull(authorList)){
+                res.setAuditor(String.join(CommonConstants.COMMA,authorList));
+            }
+        }
+
+        return res;
     }
 
     @Override
