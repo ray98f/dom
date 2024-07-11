@@ -192,7 +192,7 @@ public class DrivingServiceImpl implements DrivingService {
                 }
 
                 //前一天的记录
-                Date preDate = DateUtil.offsetDay(DateUtil.parseDate(startDate),-1);
+                Date preDate = DateUtil.offsetDay(detail.getStartDate(),-1);
                 DrivingInfoResDTO preDriveInfo = drivingMapper.driveInfo(null, dataType,
                         DateUtil.formatDate(preDate), DateUtil.formatDate(preDate));
                 Double preMileageTotal = CommonConstants.DEFAULT_MILE;
@@ -203,7 +203,7 @@ public class DrivingServiceImpl implements DrivingService {
                 }
 
                 // 同步乘务系统数据
-                OpenDriverInfoRes openDriverInfoRes = thirdService.getDriverInfo(startDate);
+                OpenDriverInfoRes openDriverInfoRes = thirdService.getDriverInfo(DateUtil.formatDate(detail.getStartDate()));
 
                 //更新记录中的统计数据 更新总里程
                 // 驾驶总公里数 = 前一日驾驶总公里数+当日所有司机【公里数统计报表】中公里数之和
