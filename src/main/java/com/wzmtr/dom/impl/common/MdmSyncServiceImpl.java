@@ -341,22 +341,38 @@ public class MdmSyncServiceImpl implements MdmSyncService {
         JSONObject res = JSONObject.parseObject(HttpUtils.doGet(mdmStationPersonAddress,null), JSONObject.class);
         List<StationPersonResDTO> list = JSONArray.parseArray(res.getJSONArray(CommonConstants.API_RES_DATA).toJSONString(), StationPersonResDTO.class);
         List<StationResDTO> stationList = stationMapper.allList(CommonConstants.LINE_CODE_TWO);
-
         //更新人员所属车站
         List<SysUser> userList = new ArrayList<>();
-        for(StationPersonResDTO p:list){
-            for(StationResDTO s:stationList){
-                if(p.getStationCode()!=null && s.getId() != null && p.getStationCode().equals(s.getId())){
-                    SysUser sysUser = new SysUser();
-                    sysUser.setId(p.getUserNum());
-                    sysUser.setStationCode(s.getStationCode());
-                    userList.add(sysUser);
-                }
+
+        Map<String, String> stationMap = new HashMap<>();
+        stationList.forEach(item->{
+            stationMap.put(padWithZeros(item.getStationCode(),4), item.getStationCode());
+        });
+        list.forEach(item->{
+            String value = stationMap.get(item.getStationCode());
+            if (StringUtils.isBlank(item.getStationCode())){
+                return;
             }
-        }
+            SysUser sysUser = new SysUser();
+            sysUser.setId(item.getUserNum());
+            sysUser.setStationCode(value);
+            userList.add(sysUser);
+        });
+
+
+
         if(userList.size() > 0){
             doPersonUpdateBatch(userList);
         }
+    }
+
+    public static String padWithZeros(String str, int length) {
+        StringBuilder sb = new StringBuilder();
+        while (sb.length() + str.length() < length) {
+            sb.append('0');
+        }
+        sb.append(str);
+        return sb.toString();
     }
 
     /**

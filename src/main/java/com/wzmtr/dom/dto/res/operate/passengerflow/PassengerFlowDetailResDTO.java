@@ -107,70 +107,70 @@ public class PassengerFlowDetailResDTO {
      * 正常进站客流
      */
     @ApiModelProperty("正常进站客流")
-    private Integer normEntrance;
+    private String normEntrance;
     /**
      * 工作卡进站客流
      */
     @ApiModelProperty("工作卡进站客流")
-    private Integer workEntrance;
+    private String workEntrance;
     /**
      * 正常出站客流
      */
     @ApiModelProperty("正常出站客流")
-    private Integer normExit;
+    private String normExit;
     /**
      * 工作卡出站客流
      */
     @ApiModelProperty("工作卡出站客流")
-    private Integer workExit;
+    private String workExit;
     /**
      * S1线换入S2线客流
      */
     @ApiModelProperty("S1线换入S2线客流")
-    private Integer s1S2Transfer;
+    private String s1S2Transfer;
     /**
      * 本日客运量
      */
     @ApiModelProperty("本日客运量")
-    private Integer dailyPass;
+    private String dailyPass;
     /**
      * 月累计客运量
      */
     @ApiModelProperty("月累计客运量")
-    private Integer monthPass;
+    private String monthPass;
     /**
      * 年累计客运量
      */
     @ApiModelProperty("年累计客运量")
-    private Integer yearPass;
+    private String yearPass;
     /**
      * 开通至今累计客运量
      */
     @ApiModelProperty("开通至今累计客运量")
-    private Integer totalPass;
+    private String totalPass;
     /**
      * 本月日均客运量
      */
     @ApiModelProperty("本月日均客运量")
-    private Integer dayAvgThisMonth;
+    private String dayAvgThisMonth;
     /**
      * 年累计日均客运量
      */
     @ApiModelProperty("年累计日均客运量")
-    private Integer dayAvgYear;
+    private String dayAvgYear;
     /**
      * 开通至今累计日均客运量
      */
     @ApiModelProperty("开通至今累计日均客运量")
-    private Integer dayAvgTotal;
+    private String dayAvgTotal;
     /**
      * 本日进站
      */
-    private Integer todayInCount;
+    private String todayInCount;
     /**
      * 本日出站
      */
-    private Integer todayOutCount;
+    private String todayOutCount;
 
     /**
      * 小时单向最大断面位置
@@ -179,5 +179,15 @@ public class PassengerFlowDetailResDTO {
     /**
      * 小时单向最大断面客流量
      */
-    private Integer hourMaxPass;
+    private String hourMaxPass;
+
+    /**
+     * 小时单向最大断面开始时间
+     */
+    private String hourMaxTimeStart;
+    /**
+     * 小时单向最大断面结束时间
+     */
+    private String hourMaxTimeEnd;
+
 }

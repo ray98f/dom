@@ -146,7 +146,11 @@
         ORDER BY START_DATE desc
     </select>
     <select id="info" resultType="com.wzmtr.dom.dataobject.operate.OperatePassengerFlowDetailDO">
-        SELECT *
+        SELECT
+        "ID", "DATA_DATE", "DATA_TYPE",
+        "START_DATE", "END_DATE", "DEL_FLAG", "VERSION", "CREATE_DATE", "CREATE_BY", "UPDATE_DATE", "UPDATE_BY", "NORM_ENTRANCE", "WORK_ENTRANCE", "NORM_EXIT", "WORK_EXIT", "S1_S2_TRANSFER", "DAILY_PASS", "MONTH_PASS", "YEAR_PASS", "TOTAL_PASS", "DAY_AVG_THIS_MONTH", "DAY_AVG_YEAR", "DAY_AVG_TOTAL", "TODAY_IN_COUNT", "TODAY_OUT_COUNT", "HOUR_MAX_POSITION", "HOUR_MAX_PASS",
+        to_char("HOUR_MAX_START_TIME",'yyyy-mm-dd HH24:mi:ss') as hourMaxTimeStart,
+        to_char("HOUR_MAX_END_TIME",'yyyy-mm-dd HH24:mi:ss') as hourMaxTimeEnd
         FROM OPERATE_PASSENGER_FLOW_DETAIL
         WHERE DEL_FLAG='0'
         <if test="id!=null and id!=''">

@@ -96,7 +96,7 @@
         <if test="endDate!=null">
             AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
         </if>
-        ORDER BY CREATE_DATE desc
+        ORDER BY CREATE_DATE
     </select>
 
     <select id="eventDetailById" resultType="com.wzmtr.dom.dto.res.operate.OperateEventDetailResDTO">
