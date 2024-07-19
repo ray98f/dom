@@ -31,7 +31,7 @@
                 AND DATA_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
             </if>
             <if test="endDate!=null">
-                AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>DATA_DATE
+                AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=DATA_DATE
             </if>
         </if>
         <if test="dataType!='1'.toString()">
@@ -39,7 +39,7 @@
                 AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
             </if>
             <if test="endDate!=null">
-                AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>END_DATE
+                AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
             </if>
         </if>
     </select>
@@ -101,7 +101,7 @@
                 AND DATA_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
             </if>
             <if test="endDate!=null">
-                AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>DATA_DATE
+                AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=DATA_DATE
             </if>
         </if>
         <if test="dataType!='1'.toString()">
@@ -109,7 +109,7 @@
                 AND START_DATE>=to_date(#{startDate},'yyyy-mm-dd hh24:mi:ss')
             </if>
             <if test="endDate!=null">
-                AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>END_DATE
+                AND to_date(#{endDate},'yyyy-mm-dd hh24:mi:ss')>=END_DATE
             </if>
         </if>
         ORDER BY START_DATE desc

@@ -330,7 +330,9 @@
     </delete>
 
     <select id="eventList" resultType="com.wzmtr.dom.dto.res.operate.ConstructEventResDTO">
-        SELECT *
+        SELECT "ID", "RECORD_ID", "TITLE",
+            to_char("EVENT_TIME",'yyyy-mm-dd HH24:mi') as eventTime,
+            "EVENT_CONTENT", "PROJECT_COUNT", "PLAN1_COUNT", "PLAN2_COUNT", "PLAN3_COUNT", "TOTAL_COUNT", "ENGINEERING_VEHICLE", "DEBUGGING_VEHICLE", "CANCEL_COUNT", "MASK1_DELAY", "MASK2_DELAY", "IS_CLOSE", "IS_IMPORTANT", "DATA_DATE", "DATA_TYPE", "START_DATE", "END_DATE", "DEL_FLAG", "VERSION", "CREATE_DATE", "CREATE_BY", "UPDATE_DATE", "UPDATE_BY"
         FROM OPERATE_CONSTRUCT_EVENT
         WHERE DEL_FLAG='0'
         <if test="startDate!=null">

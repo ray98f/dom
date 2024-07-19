@@ -101,22 +101,22 @@ public class PassengerFlowListResDTO {
      * 月累计客运量
      */
     @ApiModelProperty("月累计客运量")
-    private Integer monthPass;
+    private String monthPass;
 
     /**
      * 本月日均客运量
      */
     @ApiModelProperty("本月日均客运量")
-    private Integer dayAvgThisMonth;
+    private String dayAvgThisMonth;
 
     /**
      * 本日进站
      */
-    private Integer todayInCount;
+    private String todayInCount;
     /**
      * 本日出站
      */
-    private Integer todayOutCount;
+    private String todayOutCount;
     /**
      * 周报客流前三车站
      */
