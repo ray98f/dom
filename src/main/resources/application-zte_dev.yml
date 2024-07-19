@@ -87,7 +87,7 @@ minio:
 
 #乘务、eam、施工调度、行车调度
 ocm:
-  host: http://nocm.wzmtr.com:2443
+  host: http://10.11.82.27:83/crew-admin
 eam:
   host: http://192.168.30.140:8002
 csm:

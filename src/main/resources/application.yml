@@ -16,7 +16,7 @@ server:
 
 spring:
   profiles:
-    active: wztt_dev
+    active: zte_dev
   jmx:
     enabled: false
   main:

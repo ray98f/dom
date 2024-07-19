@@ -214,9 +214,9 @@ public class DrivingServiceImpl implements DrivingService {
                         .realAttend(openDriverInfoRes.getDidWorkNumber())
                         .mileageTotal(preMileageTotal + Double.parseDouble(openDriverInfoRes.getTotalDistance()))
                         .avgMileage(preAvgMileage +  Double.parseDouble(openDriverInfoRes.getAverageDistance()))
-                        .dataType(dataType)
-                        .startDate(startDate)
-                        .endDate(endDate)
+                        .dataType(detail.getDataType())
+                        .startDate(DateUtil.formatDate(detail.getStartDate()))
+                        .endDate(DateUtil.formatDate(detail.getEndDate()))
                         .build();
                 drivingMapper.modifyDriveInfo(drivingInfoReqDTO);
 
